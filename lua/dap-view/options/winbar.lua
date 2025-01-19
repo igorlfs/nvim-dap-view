@@ -9,7 +9,9 @@ local winbar_info = {
         keymap = "B",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "breakpoints") then
-                require("dap-view.breakpoints.view").show()
+                require("dap-view.views").switch(function()
+                    require("dap-view.breakpoints.view").show()
+                end)
             end
         end,
     },
@@ -18,7 +20,9 @@ local winbar_info = {
         keymap = "E",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "exceptions") then
-                require("dap-view.exceptions.view").show()
+                require("dap-view.views").switch(function()
+                    require("dap-view.exceptions.view").show()
+                end)
             end
         end,
     },
@@ -27,18 +31,34 @@ local winbar_info = {
         keymap = "W",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "watches") then
-                require("dap-view.watches.view").show()
+                require("dap-view.views").switch(function()
+                    require("dap-view.watches.view").show()
+                end)
             end
+        end,
+    },
+    repl = {
+        desc = "REPL [R]",
+        keymap = "R",
+        action = function()
+            local winnr = state.winnr
+            -- Jump to dap-view's window to make the experience seamless
+            local cmd = "lua vim.api.nvim_set_current_win(" .. winnr .. ")"
+            local repl_buf, _ = require("dap").repl.open(nil, cmd)
+            -- The REPL is a new buffer, so we need to set the winbar keymaps again
+            M.set_winbar_action_keymaps(repl_buf)
+            M.update_winbar("repl")
         end,
     },
 }
 
-M.set_winbar_action_keymaps = function()
+---@param bufnr? integer
+M.set_winbar_action_keymaps = function(bufnr)
     if state.bufnr then
         for _, value in pairs(winbar_info) do
             vim.keymap.set("n", value.keymap, function()
                 value.action()
-            end, { buffer = state.bufnr })
+            end, { buffer = bufnr or state.bufnr })
         end
     end
 end

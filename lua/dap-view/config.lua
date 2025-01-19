@@ -9,7 +9,7 @@ local M = {}
 ---@class WindowsConfig
 ---@field height integer
 
---- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"'
+--- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
 ---@class Config
 ---@field winbar WinbarConfig
@@ -17,7 +17,7 @@ local M = {}
 M.config = {
     winbar = {
         show = true,
-        sections = { "watches", "exceptions", "breakpoints" },
+        sections = { "watches", "exceptions", "breakpoints", "repl" },
         default_section = "watches",
     },
     windows = {

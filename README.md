@@ -8,6 +8,7 @@
 ![watches view](https://github.com/user-attachments/assets/c6838700-95ed-4b39-9ab5-e0ed0e753995)
 ![exceptions view](https://github.com/user-attachments/assets/86edd829-d9d8-4fae-b0c0-8b79339b0c33)
 ![breakpoints view](https://github.com/user-attachments/assets/b8c23809-2f23-4a39-8aef-b880f2b3eef9)
+![repl view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
 > [!WARNING]  
 > **Currently requires a neovim nightly (0.11+)**
@@ -53,7 +54,7 @@ return {
 
 ## Features
 
-The plugin provides 3 "views" that share the same window (so there's clutter)
+The plugin provides 4 "views" that share the same window (so there's clutter)
 
 - Watches view
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
@@ -68,6 +69,12 @@ The plugin provides 3 "views" that share the same window (so there's clutter)
         - Uses syntax highlighting[^2]
         - Shows filename and number line
     - Jump to a breakpoint with `<CR>`
+- REPL view
+    - Use REPL provided by nvim-dap
+
+You can also interact with the console provided by nvim-dap (though, arguably, that's not a feature from nvim-dap-view). The console has its own window. However, its default size (height) is resized to match you nvim-dap-view configuration.
+
+![console](https://github.com/user-attachments/assets/0980962c-e3da-4f16-af4c-786ef7fa4b18)
 
 ## Documentation
 
@@ -154,7 +161,7 @@ request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=e
 
 - Breakpoints view doesn't show breakpoint conditions
     - That's a limitation with the current breakpoints API from `nvim-dap`. We
-    could use an workaround, but a new API is
+    could use a workaround, but a new API is
     [planned](https://github.com/mfussenegger/nvim-dap/issues/1388)
 
 ## Acknowledgements
