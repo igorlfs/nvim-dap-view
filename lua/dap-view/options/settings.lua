@@ -15,7 +15,6 @@ M.set_options = function()
     win.cursorline = true
     win.statuscolumn = ""
     win.foldcolumn = "0"
-    win.winfixbuf = true
 
     local buf = vim.bo[state.bufnr]
     buf.buftype = "nofile"

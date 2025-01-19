@@ -26,4 +26,17 @@ M.cleanup_view = function(cond, message)
     return cond
 end
 
+local switch_to_dapview_buf = function()
+    -- The REPL is actually another buffer
+    if state.current_section == "repl" then
+        vim.cmd("buffer " .. state.bufnr)
+    end
+end
+
+---@param callback fun(): nil
+M.switch = function(callback)
+    switch_to_dapview_buf()
+    callback()
+end
+
 return M

@@ -13,6 +13,11 @@ local api = vim.api
 
 local M = {}
 
+-- The REPL requires jumping to dapview's window to not mess up the layout
+M._jump_to_dapview_buf = function()
+    vim.api.nvim_set_current_win(state.winnr)
+end
+
 M.toggle = function()
     if state.bufnr then
         M.close()
@@ -24,6 +29,9 @@ end
 M.close = function()
     if not dap.session() then
         term.close_term_buf_win()
+        if vim.tbl_contains(setup.config.winbar.sections, "repl") then
+            dap.repl.close()
+        end
     end
     if state.winnr and api.nvim_win_is_valid(state.winnr) then
         api.nvim_win_close(state.winnr, true)
