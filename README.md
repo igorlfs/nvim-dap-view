@@ -34,7 +34,7 @@ For a better experience, consider adding `nvim-dap-view` **as a dependency** for
 
 By default, when launching a session, `nvim-dap`'s terminal window takes half
 the screen. As a saner default, `nvim-dap-view` hijacks the terminal window
-(even if not invoked), making the split take only 12 (configurable) screen lines.
+(even if not invoked), making the split take only 12 (configurable) lines.
 
 </details>
 
@@ -72,7 +72,7 @@ The plugin provides 4 "views" that share the same window (so there's clutter)
 - REPL view
     - Use REPL provided by nvim-dap
 
-You can also interact with the console provided by nvim-dap (though, arguably, that's not a feature from nvim-dap-view). The console has its own window. However, its default size (height) is resized to match you nvim-dap-view configuration.
+You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match you `nvim-dap-view` configuration.
 
 ![console](https://github.com/user-attachments/assets/0980962c-e3da-4f16-af4c-786ef7fa4b18)
 
@@ -87,7 +87,7 @@ You can also interact with the console provided by nvim-dap (though, arguably, t
 return {
     winbar = {
         show = true,
-        sections = { "watches", "exceptions", "breakpoints" },
+        sections = { "watches", "exceptions", "breakpoints", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
     },
@@ -145,6 +145,23 @@ vim.keymap.set("n", "<leader>v", function()
     require("dap-view").toggle()
 end, { desc = "Toggle nvim-dap-view" })
 ```
+
+### Highlight Groups
+
+`nvim-dap-view` defines 8 highlight groups:
+
+```lua
+NvimDapViewMissingData
+NvimDapViewWatchText
+NvimDapViewWatchTextChanged
+NvimDapViewExceptionFilterEnabled
+NvimDapViewExceptionFilterDisabled
+NvimDapViewBreakpointFileName
+NvimDapViewBreakpointLineNumber
+NvimDapViewBreakpointSeparator
+```
+
+They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`.
 
 ## Roadmap
 
