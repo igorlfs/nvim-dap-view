@@ -19,6 +19,7 @@ M.set_options = function()
     local buf = vim.bo[state.bufnr]
     buf.buftype = "nofile"
     buf.swapfile = false
+    buf.filetype = "dap-view"
 end
 
 M.set_keymaps = function()
