@@ -82,10 +82,18 @@ end
 
 M.add_expr = function()
     local expression = expr.eval_expression()
-
     require("dap-view.watches.actions").add_watch_expr(expression)
 
-    require("dap-view.watches.view").show()
+    if state.current_section == "repl" then
+        local winnr = vim.api.nvim_get_current_win()
+        vim.api.nvim_set_current_win(state.winnr)
+        require("dap-view.views").switch(function()
+            require("dap-view.watches.view").show()
+        end)
+        vim.api.nvim_set_current_win(winnr)
+    else
+        require("dap-view.watches.view").show()
+    end
 end
 
 return M
