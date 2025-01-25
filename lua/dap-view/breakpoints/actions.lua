@@ -58,7 +58,7 @@ M._jump_to_breakpoint = function()
         if bufnr == -1 then
             vim.cmd("buffer " .. abs_path)
         else
-            vim.cmd("buffer " .. bufnr)
+            api.nvim_set_current_buf(bufnr)
         end
     end)
 

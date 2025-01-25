@@ -84,16 +84,13 @@ M.add_expr = function()
     local expression = expr.eval_expression()
     require("dap-view.watches.actions").add_watch_expr(expression)
 
+    -- If repl view is selected we need to set current buf to "watchers"
     if state.current_section == "repl" then
-        local winnr = vim.api.nvim_get_current_win()
-        vim.api.nvim_set_current_win(state.winnr)
-        require("dap-view.views").switch(function()
-            require("dap-view.watches.view").show()
+        api.nvim_win_call(state.winnr, function()
+            api.nvim_set_current_buf(state.bufnr)
         end)
-        vim.api.nvim_set_current_win(winnr)
-    else
-        require("dap-view.watches.view").show()
     end
+    require("dap-view.watches.view").show()
 end
 
 return M

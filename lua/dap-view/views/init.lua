@@ -29,7 +29,7 @@ end
 local switch_to_dapview_buf = function()
     -- The REPL is actually another buffer
     if state.current_section == "repl" then
-        vim.cmd("buffer " .. state.bufnr)
+        api.nvim_set_current_buf(state.bufnr)
     end
 end
 
