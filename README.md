@@ -3,6 +3,21 @@
 
 # nvim-dap-view
 
+<!--toc:start-->
+- [nvim-dap-view](#nvim-dap-view)
+  - [Installation](#installation)
+    - [Via lazy.nvim](#via-lazynvim)
+  - [Features](#features)
+  - [Documentation](#documentation)
+    - [Configuration](#configuration)
+    - [Usage](#usage)
+    - [Highlight Groups](#highlight-groups)
+    - [Filetypes and autocommands](#filetypes-and-autocommands)
+  - [Roadmap](#roadmap)
+  - [Known Issues](#known-issues)
+  - [Acknowledgements](#acknowledgements)
+<!--toc:end-->
+
 > minimalistic [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) alternative
 
 ![watches view](https://github.com/user-attachments/assets/c6838700-95ed-4b39-9ab5-e0ed0e753995)
@@ -162,6 +177,33 @@ NvimDapViewBreakpointSeparator
 ```
 
 They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`.
+
+### Filetypes and autocommands
+
+`nvim-dap-view` sets buffer filetypes for the following Views
+
+| Window                           | Filetype      |
+| -------------------------------- | ------------- |
+| watches, exceptions, breakpoints | dap-view      |
+| terminal                         | dap-view-term |
+
+These filetypes can be used to override buffer and window options set by `nvim-dap-view`
+
+<details>
+    <summary>Example autocommands</summary>
+
+Map q to quit in `nvim-dap-view` filetypes:
+
+```lua
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `dap`
+  callback = function(evt)
+    vim.api.nvim_buf_set_keymap(evt.buf, "n", "q", "<cmd>q<CR>", { noremap = true, silent = true })
+  end,
+})
+```
+
+</details>
 
 ## Roadmap
 
