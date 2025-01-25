@@ -11,7 +11,7 @@ local M = {}
 ---@field terminal TerminalConfig
 
 ---@class TerminalConfig
----@field split 'right' | 'left'
+---@field position 'right' | 'left'
 
 --- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
@@ -27,7 +27,7 @@ M.config = {
     windows = {
         height = 12,
         terminal = {
-            split = "right",
+            position = "left",
         },
     },
 }
