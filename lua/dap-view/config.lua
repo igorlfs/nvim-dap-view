@@ -8,6 +8,10 @@ local M = {}
 
 ---@class WindowsConfig
 ---@field height integer
+---@field terminal TerminalConfig
+
+---@class TerminalConfig
+---@field split 'right' | 'left'
 
 --- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
@@ -22,6 +26,9 @@ M.config = {
     },
     windows = {
         height = 12,
+        terminal = {
+            split = "right",
+        },
     },
 }
 

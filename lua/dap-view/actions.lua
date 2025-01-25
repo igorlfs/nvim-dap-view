@@ -59,7 +59,7 @@ M.open = function()
     local config = setup.config
 
     local winnr = api.nvim_open_win(bufnr, false, {
-        split = "right",
+        split = config.windows.terminal.split,
         win = term_winnr,
         height = config.windows.height,
     })
