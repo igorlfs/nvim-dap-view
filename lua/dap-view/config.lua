@@ -9,11 +9,15 @@ local M = {}
 ---@class WindowsConfig
 ---@field height integer
 
+---@class TerminalConfig
+---@field exclude_adapters string[] Disable the terminal view for selected adapters.
+
 --- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
 ---@class Config
 ---@field winbar WinbarConfig
 ---@field windows WindowsConfig
+---@field terminal TerminalConfig
 M.config = {
     winbar = {
         show = true,
@@ -22,6 +26,9 @@ M.config = {
     },
     windows = {
         height = 12,
+    },
+    terminal = {
+        exclude_adapters = {},
     },
 }
 

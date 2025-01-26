@@ -8,50 +8,74 @@ local api = vim.api
 
 local M = {}
 
-M.close_term_buf_win = function()
-    if state.term_winnr then
-        api.nvim_win_close(state.term_winnr, true)
-        state.term_winnr = nil
-    end
-    if state.term_bufnr then
-        api.nvim_buf_delete(state.term_bufnr, { force = true })
-        state.term_bufnr = nil
+---@type integer?
+local term_winnr = nil
+---@type integer?
+local term_bufnr = nil
+
+M.clear_term_bufnr = function()
+    if term_bufnr then
+        api.nvim_buf_delete(term_bufnr, { force = true })
+        term_bufnr = nil
     end
 end
 
-M.term_buf_win_init = function()
-    -- Should NOT close the term buffer, since it contains the data from the session
+M.close_term_buf_win = function()
+    if term_winnr and api.nvim_win_is_valid(term_winnr) then
+        api.nvim_win_close(term_winnr, true)
+        term_winnr = nil
+    end
+    -- Only delete the buffer if there's no active session
+    if term_bufnr and not dap.session() then
+        api.nvim_buf_delete(term_bufnr, { force = true })
+        term_bufnr = nil
+    end
+end
 
-    if not state.term_bufnr then
-        local term_bufnr = api.nvim_create_buf(true, false)
+---@return integer?
+M.open_term_buf_win = function()
+    -- When (re)opening the terminal we should NOT close it,
+    -- since it's the default standard output for most adapters
+    -- Therefore, closing it could delete useful information from past sessions
 
-        assert(term_bufnr ~= 0, "Failed to create dap-view buffer")
+    if term_bufnr == nil then
+        term_bufnr = api.nvim_create_buf(true, false)
 
-        state.term_bufnr = term_bufnr
+        assert(term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
+
+        util_buf.quit_buf_autocmd(term_bufnr, M.close_term_buf_win)
     end
 
-    if not state.term_winnr then
-        local config = setup.config
-        local term_winnr = api.nvim_open_win(state.term_bufnr, false, {
-            split = "below",
-            win = -1,
-            height = config.windows.height,
-        })
+    local config = setup.config
 
-        assert(term_winnr ~= 0, "Failed to create dap-view terminal window")
+    if term_winnr == nil then
+        for _, adapter in ipairs(config.terminal.exclude_adapters) do
+            dap.defaults[adapter].terminal_win_cmd = function(session)
+                state.last_active_adapter = session.type
 
-        state.term_winnr = term_winnr
+                return term_bufnr
+            end
+        end
 
-        require("dap-view.term.options").set_options()
+        dap.defaults.fallback.terminal_win_cmd = function(session)
+            state.last_active_adapter = session.type
 
-        util_buf.quit_buf_autocmd(state.term_bufnr, M.close_term_buf_win)
+            local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr) or false
+            term_winnr = api.nvim_open_win(term_bufnr, false, {
+                split = is_win_valid and "left" or "below",
+                win = is_win_valid and state.winnr or -1,
+                height = config.windows.height,
+            })
 
-        dap.defaults.fallback.terminal_win_cmd = function()
-            return state.term_bufnr, state.term_winnr
+            assert(term_winnr ~= 0, "Failed to create nvim-dap-view terminal window")
+
+            require("dap-view.term.options").set_options(term_winnr, term_bufnr)
+
+            return term_bufnr, term_winnr
         end
     end
 
-    return state.term_winnr
+    return term_winnr
 end
 
 return M
