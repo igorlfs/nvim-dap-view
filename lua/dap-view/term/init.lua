@@ -49,6 +49,13 @@ M.term_buf_win_init = function()
         dap.defaults.fallback.terminal_win_cmd = function()
             return state.term_bufnr, state.term_winnr
         end
+
+        -- Terminal has winfixbuf set so when it is on the left dap loads
+        -- buffer breakpoint in main window.  Set to "useopen" to stop dap from
+        -- loading breakpoint in View window
+        if config.windows.terminal.position == "left" then
+            dap.defaults.fallback.switchbuf = "useopen"
+        end
     end
 
     return state.term_winnr
