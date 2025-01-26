@@ -27,9 +27,14 @@ M.cleanup_view = function(cond, message)
 end
 
 local switch_to_dapview_buf = function()
+    if not (state.winnr and api.nvim_win_is_valid(state.winnr)) then
+        return
+    end
     -- The REPL is actually another buffer
     if state.current_section == "repl" then
-        vim.cmd("buffer " .. state.bufnr)
+        api.nvim_win_call(state.winnr, function()
+            api.nvim_set_current_buf(state.bufnr)
+        end)
     end
 end
 

@@ -82,10 +82,9 @@ end
 
 M.add_expr = function()
     local expression = expr.eval_expression()
-
     require("dap-view.watches.actions").add_watch_expr(expression)
 
-    require("dap-view.watches.view").show()
+    require("dap-view.views").switch(require("dap-view.watches.view").show)
 end
 
 return M
