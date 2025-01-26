@@ -3,7 +3,6 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local watches = require("dap-view.watches.view")
-local exceptions = require("dap-view.exceptions")
 local term = require("dap-view.term.init")
 local eval = require("dap-view.watches.eval")
 
@@ -41,10 +40,6 @@ dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
             end)
         end
     end
-end
-
-dap.listeners.after.launch[SUBSCRIPTION_ID] = function()
-    exceptions.update_exception_breakpoints_filters()
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
