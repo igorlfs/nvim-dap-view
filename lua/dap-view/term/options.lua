@@ -15,7 +15,7 @@ M.set_options = function()
 
     local buf = vim.bo[state.term_bufnr]
     buf.filetype = "dap-view-term"
-    vim.api.nvim_set_option_value("buftype", "nofile", { scope = "local", buf = state.term_bufnr })
+    buf.buftype = "nofile"
 end
 
 return M
