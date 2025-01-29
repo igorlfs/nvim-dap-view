@@ -48,7 +48,7 @@ M._jump_to_breakpoint = function()
         local config = setup.config
         prev_or_new_window = api.nvim_open_win(0, true, {
             split = "above",
-            win = 0,
+            win = -1,
             height = vim.o.lines - config.windows.height,
         })
     end
