@@ -17,6 +17,19 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
 ==============================================================================
 1. nvim-dap-view                                 *nvim-dap-view-nvim-dap-view*
 
+- |nvim-dap-view-nvim-dap-view|
+    - |nvim-dap-view-installation|
+        - |nvim-dap-view-via-lazy.nvim|
+    - |nvim-dap-view-features|
+    - |nvim-dap-view-documentation|
+        - |nvim-dap-view-configuration|
+        - |nvim-dap-view-usage|
+        - |nvim-dap-view-highlight-groups|
+        - |nvim-dap-view-filetypes-and-autocommands|
+    - |nvim-dap-view-roadmap|
+    - |nvim-dap-view-known-issues|
+    - |nvim-dap-view-acknowledgements|
+
 
   minimalistic nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui> alternative
 
@@ -176,6 +189,31 @@ HIGHLIGHT GROUPS ~
 They are linked to (somewhat) reasonable defaults, but they may look odd with
 your colorscheme. Consider contributing to your colorscheme by sending a PR to
 add support to `nvim-dap-view`.
+
+
+FILETYPES AND AUTOCOMMANDS ~
+
+`nvim-dap-view` sets buffer filetypes for the following Views
+
+  Window                             Filetype
+  ---------------------------------- ---------------
+  watches, exceptions, breakpoints   dap-view
+  terminal                           dap-view-term
+These filetypes can be used to override buffer and window options set by
+`nvim-dap-view`
+
+Example autocommand ~
+
+Map q to quit in `nvim-dap-view` filetypes:
+
+>lua
+    vim.api.nvim_create_autocmd({ "FileType" }, {
+      pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
+      callback = function(evt)
+        vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
+      end,
+    })
+<
 
 
 ROADMAP                                  *nvim-dap-view-nvim-dap-view-roadmap*
