@@ -3,7 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local watches = require("dap-view.watches.view")
-local exceptions = require("dap-view.exceptions")
+local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
 local eval = require("dap-view.watches.eval")
 
@@ -43,16 +43,25 @@ dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
     end
 end
 
-dap.listeners.after.launch[SUBSCRIPTION_ID] = function()
-    exceptions.update_exception_breakpoints_filters()
-end
-
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
-    state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters)
-        :map(function(filter)
-            return { enabled = filter.default, exception_filter = filter }
-        end)
-        :totable()
+    if session.capabilities.exceptionBreakpointFilters then
+        state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters)
+            :map(function(filter)
+                return { enabled = filter.default, exception_filter = filter }
+            end)
+            :totable()
+    end
+    -- Remove applied filters from view when initializing a new session
+    -- Since we don't store the applied filters between sessions
+    -- (i.e., we always override with the defaults from the adapter on a new session)
+    -- Therefore, the exceptions view could look outdated
+    --
+    -- Another approach would be to actually store the filters and reapply them.
+    -- However, to handle different adapters, we'd have to filter and keep only
+    -- the options for the current adapter
+    if state.current_section == "exceptions" then
+        exceptions.show()
+    end
 end
 
 dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()

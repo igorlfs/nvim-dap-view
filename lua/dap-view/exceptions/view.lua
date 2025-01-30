@@ -1,6 +1,9 @@
+local dap = require("dap")
+
 local winbar = require("dap-view.options.winbar")
 local globals = require("dap-view.globals")
 local state = require("dap-view.state")
+local views = require("dap-view.views")
 
 local M = {}
 
@@ -12,6 +15,16 @@ M.show = function()
     if state.bufnr then
         -- Clear previous content
         api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
+
+        if
+            views.cleanup_view(not dap.session(), "No active session.")
+            or views.cleanup_view(
+                state.exceptions_options == nil,
+                "Not supported by debug adapter."
+            )
+        then
+            return
+        end
 
         if state.exceptions_options then
             local content = vim.iter(state.exceptions_options)

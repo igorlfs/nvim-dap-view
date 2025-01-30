@@ -48,7 +48,7 @@ M._jump_to_breakpoint = function()
         local config = setup.config
         prev_or_new_window = api.nvim_open_win(0, true, {
             split = "above",
-            win = 0,
+            win = -1,
             height = vim.o.lines - config.windows.height,
         })
     end
@@ -58,7 +58,7 @@ M._jump_to_breakpoint = function()
         if bufnr == -1 then
             vim.cmd("buffer " .. abs_path)
         else
-            vim.cmd("buffer " .. bufnr)
+            api.nvim_set_current_buf(bufnr)
         end
     end)
 
