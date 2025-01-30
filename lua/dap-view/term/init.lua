@@ -50,12 +50,9 @@ M.term_buf_win_init = function()
             return state.term_bufnr, state.term_winnr
         end
 
-        -- Terminal has winfixbuf set so when it is on the left dap loads
-        -- buffer breakpoint in main window.  Set to "useopen" to stop dap from
-        -- loading breakpoint in View window
-        if config.windows.terminal.position == "left" then
-            dap.defaults.fallback.switchbuf = "useopen"
-        end
+        -- Terminal has winfixbuf set so set nvim-dap switchbuf to "useopen" to
+        -- prevent from using dap-view window from being used to focus breakpint
+        dap.defaults.fallback.switchbuf = "useopen"
     end
 
     return state.term_winnr
