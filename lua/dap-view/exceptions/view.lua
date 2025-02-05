@@ -1,9 +1,9 @@
 local dap = require("dap")
 
 local winbar = require("dap-view.options.winbar")
-local globals = require("dap-view.globals")
 local state = require("dap-view.state")
 local views = require("dap-view.views")
+local hl = require("dap-view.util.hl")
 
 local M = {}
 
@@ -34,11 +34,11 @@ M.show = function()
             api.nvim_buf_set_lines(state.bufnr, 0, -1, false, content)
 
             for i, opt in ipairs(state.exceptions_options) do
-                api.nvim_buf_set_extmark(state.bufnr, globals.NAMESPACE, i - 1, 0, {
-                    end_col = 4,
-                    hl_group = opt.enabled and "NvimDapViewExceptionFilterEnabled"
-                        or "NvimDapViewExceptionFilterDisabled",
-                })
+                hl.hl_range(
+                    "NvimDapViewExceptionFilter" .. opt.enabled and "Enabled" or "Disabled",
+                    { i - 1, 0 },
+                    { i - 1, 4 }
+                )
             end
         end
     end

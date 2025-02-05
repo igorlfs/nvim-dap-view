@@ -1,10 +1,10 @@
 local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
-local globals = require("dap-view.globals")
 local vendor = require("dap-view.breakpoints.vendor")
 local extmarks = require("dap-view.breakpoints.util.extmarks")
 local treesitter = require("dap-view.breakpoints.util.treesitter")
 local views = require("dap-view.views")
+local hl = require("dap-view.util.hl")
 
 local api = vim.api
 
@@ -18,37 +18,10 @@ local highlight_file_name_and_line_number = function(row, len_path, len_lnum)
         local lnum_start = len_path + 1
         local lnum_end = lnum_start + len_lnum
 
-        api.nvim_buf_set_extmark(
-            state.bufnr,
-            globals.NAMESPACE,
-            row,
-            0,
-            { end_col = len_path, hl_group = "NvimDapViewBreakpointFileName" }
-        )
-
-        api.nvim_buf_set_extmark(
-            state.bufnr,
-            globals.NAMESPACE,
-            row,
-            lnum_start,
-            { end_col = lnum_end, hl_group = "NvimDapViewBreakpointLineNumber" }
-        )
-
-        api.nvim_buf_set_extmark(
-            state.bufnr,
-            globals.NAMESPACE,
-            row,
-            lnum_start - 1,
-            { end_col = lnum_start, hl_group = "NvimDapViewBreakpointSeparator" }
-        )
-
-        api.nvim_buf_set_extmark(
-            state.bufnr,
-            globals.NAMESPACE,
-            row,
-            lnum_end,
-            { end_col = lnum_end + 1, hl_group = "NvimDapViewBreakpointSeparator" }
-        )
+        hl.hl_range("NvimDapViewBreakpointFileName", { row, 0 }, { row, len_path })
+        hl.hl_range("NvimDapViewBreakpointLineNumber", { row, lnum_start }, { row, lnum_end })
+        hl.hl_range("NvimDapViewBreakpointSeparator", { row, lnum_start - 1 }, { row, lnum_start })
+        hl.hl_range("NvimDapViewBreakpointSeparator", { row, lnum_end }, { row, lnum_end + 1 })
     end
 end
 
