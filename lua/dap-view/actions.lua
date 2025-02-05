@@ -38,6 +38,28 @@ M.close = function()
     end
 end
 
+-- Calculate the window width based on parent window and
+-- configuration. Numbers between 0 and 1 are interpreted
+-- as a percentage.
+local function get_window_size(config)
+    local win_width = 0.5
+
+    local parent_width = vim.api.nvim_win_get_width(0)
+    if config.windows.width > 1 then
+        win_width = config.windows.width
+    end
+
+    if config.windows.width < 1 then
+        win_width = math.floor(parent_width * config.windows.width)
+    end
+
+    if config.windows.width == 1 then
+        win_width = parent_width
+    end
+
+    return win_width
+end
+
 M.open = function()
     M.close()
 
@@ -59,9 +81,10 @@ M.open = function()
     local config = setup.config
 
     local winnr = api.nvim_open_win(bufnr, false, {
-        split = "right",
+        split = config.windows.position,
         win = term_winnr,
         height = config.windows.height,
+        width = get_window_size(config),
     })
 
     assert(winnr ~= 0, "Failed to create dap-view window")

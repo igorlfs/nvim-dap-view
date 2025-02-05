@@ -46,6 +46,10 @@ M.term_buf_win_init = function()
 
         util_buf.quit_buf_autocmd(state.term_bufnr, M.close_term_buf_win)
 
+        if config.windows.width == 1 then
+            vim.api.nvim_win_hide(state.term_winnr)
+        end
+
         dap.defaults.fallback.terminal_win_cmd = function()
             return state.term_bufnr, state.term_winnr
         end
