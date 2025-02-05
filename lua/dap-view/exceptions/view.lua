@@ -34,11 +34,8 @@ M.show = function()
             api.nvim_buf_set_lines(state.bufnr, 0, -1, false, content)
 
             for i, opt in ipairs(state.exceptions_options) do
-                hl.hl_range(
-                    "NvimDapViewExceptionFilter" .. opt.enabled and "Enabled" or "Disabled",
-                    { i - 1, 0 },
-                    { i - 1, 4 }
-                )
+                local hl_type = opt.enabled and "Enabled" or "Disabled"
+                hl.hl_range("NvimDapViewExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
             end
         end
     end
