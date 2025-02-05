@@ -17,6 +17,11 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
 ==============================================================================
 1. nvim-dap-view                                 *nvim-dap-view-nvim-dap-view*
 
+
+  minimalistic nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui> alternative
+
+<https://github.com/user-attachments/assets/01c461f7-b77b-4232-bed5-4630f3e7c039>
+
 - |nvim-dap-view-nvim-dap-view|
     - |nvim-dap-view-installation|
         - |nvim-dap-view-via-lazy.nvim|
@@ -29,10 +34,6 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
     - |nvim-dap-view-roadmap|
     - |nvim-dap-view-known-issues|
     - |nvim-dap-view-acknowledgements|
-
-
-  minimalistic nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui> alternative
-
 
 
   [!WARNING] **Currently requires a neovim nightly (0.11+)**
@@ -83,15 +84,18 @@ The plugin provides 4 "views" that share the same window (so there’s clutter)
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
         - Including adding the variable under the cursor
+
 - Exceptions view
     - Control when the debugger should stop, outside of breakpoints (e.g.,
         whenever an exception is thrown, or when an exception is caught).
     - Toggle filter with `<CR>`
+
 - Breakpoints view
     - List all breakpoints
         - Uses syntax highlighting
         - Shows filename and number line
     - Jump to a breakpoint with `<CR>`
+
 - REPL view
     - Use REPL provided by nvim-dap
 
@@ -208,10 +212,10 @@ Map q to quit in `nvim-dap-view` filetypes:
 
 >lua
     vim.api.nvim_create_autocmd({ "FileType" }, {
-      pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
-      callback = function(evt)
-        vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
-      end,
+        pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
+        callback = function(evt)
+            vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
+        end,
     })
 <
 
