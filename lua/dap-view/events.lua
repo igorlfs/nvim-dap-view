@@ -32,14 +32,12 @@ dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
 end
 
 dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
-    if state.current_section == "watches" then
-        for i, expr in ipairs(state.watched_expressions) do
-            eval.eval_expr(expr, function(result)
-                state.updated_evaluations[i] = state.expression_results[i]
-                    and state.expression_results[i] ~= result
-                state.expression_results[i] = result
-            end)
-        end
+    for i, expr in ipairs(state.watched_expressions) do
+        eval.eval_expr(expr, function(result)
+            state.updated_evaluations[i] = state.expression_results[i]
+                and state.expression_results[i] ~= result
+            state.expression_results[i] = result
+        end)
     end
 end
 
