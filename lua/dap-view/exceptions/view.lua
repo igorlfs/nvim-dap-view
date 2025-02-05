@@ -17,11 +17,8 @@ M.show = function()
         api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
 
         if
-            views.cleanup_view(not dap.session(), "No active session.")
-            or views.cleanup_view(
-                state.exceptions_options == nil,
-                "Not supported by debug adapter."
-            )
+            views.cleanup_view(not dap.session(), "No active session")
+            or views.cleanup_view(not state.exceptions_options, "Not supported by debug adapter")
         then
             return
         end
