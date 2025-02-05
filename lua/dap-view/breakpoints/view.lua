@@ -61,7 +61,7 @@ local populate_buf_with_breakpoints = function()
 
         local line_count = 0
 
-        if views.cleanup_view(vim.tbl_isempty(breakpoints), "No Breakpoints") then
+        if views.cleanup_view(vim.tbl_isempty(breakpoints), "No breakpoints") then
             return
         end
 
