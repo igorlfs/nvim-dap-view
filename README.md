@@ -3,27 +3,24 @@
 
 # nvim-dap-view
 
-<!--toc:start-->
-- [nvim-dap-view](#nvim-dap-view)
-  - [Installation](#installation)
-    - [Via lazy.nvim](#via-lazynvim)
-  - [Features](#features)
-  - [Documentation](#documentation)
-    - [Configuration](#configuration)
-    - [Usage](#usage)
-    - [Highlight Groups](#highlight-groups)
-    - [Filetypes and autocommands](#filetypes-and-autocommands)
-  - [Roadmap](#roadmap)
-  - [Known Issues](#known-issues)
-  - [Acknowledgements](#acknowledgements)
-<!--toc:end-->
-
 > minimalistic [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) alternative
 
-![watches view](https://github.com/user-attachments/assets/c6838700-95ed-4b39-9ab5-e0ed0e753995)
-![exceptions view](https://github.com/user-attachments/assets/86edd829-d9d8-4fae-b0c0-8b79339b0c33)
-![breakpoints view](https://github.com/user-attachments/assets/b8c23809-2f23-4a39-8aef-b880f2b3eef9)
-![repl view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
+<https://github.com/user-attachments/assets/01c461f7-b77b-4232-bed5-4630f3e7c039>
+
+<!--toc:start-->
+- [nvim-dap-view](#nvim-dap-view)
+    - [Installation](#installation)
+        - [Via lazy.nvim](#via-lazynvim)
+    - [Features](#features)
+    - [Documentation](#documentation)
+        - [Configuration](#configuration)
+        - [Usage](#usage)
+        - [Highlight Groups](#highlight-groups)
+        - [Filetypes and autocommands](#filetypes-and-autocommands)
+    - [Roadmap](#roadmap)
+    - [Known Issues](#known-issues)
+    - [Acknowledgements](#acknowledgements)
+<!--toc:end-->
 
 > [!WARNING]  
 > **Currently requires a neovim nightly (0.11+)**
@@ -75,17 +72,28 @@ The plugin provides 4 "views" that share the same window (so there's clutter)
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
         - Including adding the variable under the cursor
+
+![watches view](https://github.com/user-attachments/assets/c6838700-95ed-4b39-9ab5-e0ed0e753995)
+
 - Exceptions view
     - Control when the debugger should stop, outside of breakpoints (e.g.,
     whenever an exception is thrown, or when an exception is caught[^1]).
     - Toggle filter with `<CR>`
+
+![exceptions view](https://github.com/user-attachments/assets/86edd829-d9d8-4fae-b0c0-8b79339b0c33)
+
 - Breakpoints view
     - List all breakpoints
         - Uses syntax highlighting[^2]
         - Shows filename and number line
     - Jump to a breakpoint with `<CR>`
+
+![breakpoints view](https://github.com/user-attachments/assets/b8c23809-2f23-4a39-8aef-b880f2b3eef9)
+
 - REPL view
     - Use REPL provided by nvim-dap
+
+![repl view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
 You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match you `nvim-dap-view` configuration.
 
@@ -196,10 +204,10 @@ Map q to quit in `nvim-dap-view` filetypes:
 
 ```lua
 vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
-  callback = function(evt)
-    vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
-  end,
+    pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
+    callback = function(evt)
+        vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
+    end,
 })
 ```
 
