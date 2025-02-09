@@ -57,11 +57,7 @@ local populate_buf_with_breakpoints = function()
                 treesitter.copy_highlights(buf, entry.lnum - 1, line_count, col_offset)
                 extmarks.copy_extmarks(buf, entry.lnum - 1, line_count, col_offset)
 
-                highlight_file_name_and_line_number(
-                    line_count,
-                    #relative_path,
-                    #tostring(entry.lnum)
-                )
+                highlight_file_name_and_line_number(line_count, #relative_path, #tostring(entry.lnum))
 
                 line_count = line_count + 1
             end

@@ -9,7 +9,7 @@ local M = {}
 ---@class WindowsConfig
 ---@field height integer
 
---- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
+---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
 ---@class Config
 ---@field winbar WinbarConfig
