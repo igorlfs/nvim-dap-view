@@ -8,6 +8,7 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
   - Features                            |nvim-dap-view-nvim-dap-view-features|
   - Documentation                  |nvim-dap-view-nvim-dap-view-documentation|
   - Roadmap                              |nvim-dap-view-nvim-dap-view-roadmap|
+  - Non-goals                          |nvim-dap-view-nvim-dap-view-non-goals|
   - Known Issues                    |nvim-dap-view-nvim-dap-view-known-issues|
   - Acknowledgements            |nvim-dap-view-nvim-dap-view-acknowledgements|
 2. Links                                                 |nvim-dap-view-links|
@@ -230,6 +231,32 @@ ROADMAP                                  *nvim-dap-view-nvim-dap-view-roadmap*
 
 Missing something? Create an issue with a feature request
 <https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+>!
+
+
+NON-GOALS                              *nvim-dap-view-nvim-dap-view-non-goals*
+
+Implement every feature from nvim-dap-ui
+<https://github.com/rcarriga/nvim-dap-ui>. More specifically,
+
+- **There will be no “scopes” view** (i.e., list all variables in scope). The rationale is that `nvim-dap` already provides a very nice UI for that, using widgets (see |dap-widgets|). The TLDR is that you can use
+
+>lua
+    function()
+        local widgets = require("dap.ui.widgets")
+        widgets.centered_float(widgets.scopes, { border = "rounded" })
+    end
+<
+
+to create a nice, centered floating window, where you can navigate and explore
+variables. A major advantage from this approach is that you’re not limited to
+a small window at the bottom of your screen (which can be troublesome in noisy
+environments or languages).
+
+- Likewise, **there will be no “hover” view**, since it’s also perfectly handled by `nvim-dap`’s widgets. You can use
+
+>lua
+    function() require("dap.ui.widgets").hover(nil, { border = "rounded" }) end
+<
 
 
 KNOWN ISSUES                        *nvim-dap-view-nvim-dap-view-known-issues*
