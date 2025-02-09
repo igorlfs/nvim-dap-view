@@ -1,4 +1,4 @@
-*nvim-dap-view.txt*     For Neovim >= 0.11.0     Last change: 2025 February 05
+*nvim-dap-view.txt*     For Neovim >= 0.11.0     Last change: 2025 February 09
 
 ==============================================================================
 Table of Contents                            *nvim-dap-view-table-of-contents*
@@ -254,6 +254,7 @@ ACKNOWLEDGEMENTS                *nvim-dap-view-nvim-dap-view-acknowledgements*
     for the inspiration for handling breakpoint exceptions;
 - Kulala <https://github.com/mistweaverco/kulala.nvim> for the creative usage
     of neovim’s `'winbar'` to handle multiple views.
+- blink.cmp <https://github.com/Saghen/blink.cmp/blob/main/lua/blink/cmp/config/utils.lua> for the config validation (which is partialy taken from a PR to indent-blankline <https://github.com/lukas-reineke/indent-blankline.nvim/pull/934/files#diff-09ebcaa8c75cd1e92d25640e377ab261cfecaf8351c9689173fd36c2d0c23d94R16>)
 
 ==============================================================================
 2. Links                                                 *nvim-dap-view-links*
