@@ -30,6 +30,8 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
     - |nvim-dap-view-documentation|
         - |nvim-dap-view-configuration|
         - |nvim-dap-view-usage|
+        - |nvim-dap-view-recommended-setup|
+            - |nvim-dap-view-hide-terminal|
         - |nvim-dap-view-highlight-groups|
         - |nvim-dap-view-filetypes-and-autocommands|
     - |nvim-dap-view-roadmap|
