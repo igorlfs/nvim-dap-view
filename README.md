@@ -15,6 +15,8 @@
     - [Documentation](#documentation)
         - [Configuration](#configuration)
         - [Usage](#usage)
+        - [Recommended Setup](#recommended-setup)
+            - [Hide Terminal](#hide-terminal)
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
     - [Roadmap](#roadmap)
