@@ -1,9 +1,9 @@
 local M = {}
 
-local state = require("dap-view.state")
-
-M.set_options = function()
-    local win = vim.wo[state.term_winnr][0]
+---@param winnr integer
+---@param bufnr integer
+M.set_options = function(winnr, bufnr)
+    local win = vim.wo[winnr][0]
     win.scrolloff = 0
     win.wrap = false
     win.number = false
@@ -13,7 +13,7 @@ M.set_options = function()
     win.foldcolumn = "0"
     win.winfixbuf = true
 
-    local buf = vim.bo[state.term_bufnr]
+    local buf = vim.bo[bufnr]
     buf.filetype = "dap-view-term"
     buf.buftype = "nofile"
 end

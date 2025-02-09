@@ -6,8 +6,12 @@ local M = {}
 ---@field default_section SectionType
 ---@field show boolean
 
+---@class TerminalConfig
+---@field hide string[] Hide the terminal for listed adapters.
+
 ---@class WindowsConfig
 ---@field height integer
+---@field terminal TerminalConfig
 
 ---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
@@ -22,6 +26,9 @@ M.config = {
     },
     windows = {
         height = 12,
+        terminal = {
+            hide = {},
+        },
     },
 }
 

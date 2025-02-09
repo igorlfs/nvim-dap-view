@@ -9,8 +9,28 @@ local eval = require("dap-view.watches.eval")
 
 local SUBSCRIPTION_ID = "dap-view"
 
-dap.listeners.before.initialize[SUBSCRIPTION_ID] = function()
-    term.term_buf_win_init()
+dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
+    -- When initializing a new session, there might a leftover terminal buffer
+    -- Usually, this wouldn't be a problem, but it can cause inconsistencies when starting a session that
+    --
+    -- (A) Doesn't use the terminal, after a session that does
+    -- The problem here is that the terminal could be used if it was left open from the earlier session
+    --
+    -- (B) Uses the terminal, after a session that doesn't
+    -- The terminal wouldn't show up, since it's hidden
+    --
+    -- To handle these scenarios, we have to close the terminal buffer
+    -- However, if we always close the terminal, dap-view will be shifted very quickly (if open),
+    -- causing a flickering effect.
+    --
+    -- To address that, we only close the terminal if the new session has a different adapter
+    -- (which should cover most scenarios where the flickering would occur)
+    if state.last_active_adapter ~= session.config.type then
+        term.clear_term_bufnr()
+    end
+    state.last_active_adapter = session.config.type
+
+    term.open_term_buf_win()
 end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
