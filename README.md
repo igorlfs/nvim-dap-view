@@ -95,7 +95,7 @@ The plugin provides 4 "views" that share the same window (so there's clutter)
 
 ![repl view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
-You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match you `nvim-dap-view` configuration.
+You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match your `nvim-dap-view` configuration. You can also completely [hide](#hide-terminal) it, if it's not being used.
 
 ![console](https://github.com/user-attachments/assets/0980962c-e3da-4f16-af4c-786ef7fa4b18)
 
@@ -116,6 +116,10 @@ return {
     },
     windows = {
         height = 12,
+        terminal = {
+            -- List of adapters for which the terminal should be hidden
+            hide = {},
+        },
     },
 }
 ```
@@ -169,11 +173,32 @@ vim.keymap.set("n", "<leader>v", function()
 end, { desc = "Toggle nvim-dap-view" })
 ```
 
+### Recommended Setup
+
+#### Hide Terminal
+
+Some debug adapters don't use the integrated terminal (console). To avoid having a useless window lying around, you can completely hide the terminal for them. To achieve that, add the following snippet to your `nvim-dap-view` setup:
+
+```lua
+-- Goes into your opts table (if using lazy.nvim), otherwise goes into the setup function
+-- No need to include the "return" statement (or the outer curly braces)
+return {
+    windows = {
+        terminal = {
+            -- NOTE Don't copy paste this snippet
+            -- Use the actual names for the adapters you want to hide
+            -- `delve` is known to not use the terminal
+            hide = { "delve", "some-other-adapter" },
+        },
+    },
+}
+```
+
 ### Highlight Groups
 
 `nvim-dap-view` defines 8 highlight groups:
 
-```lua
+```
 NvimDapViewMissingData
 NvimDapViewWatchText
 NvimDapViewWatchTextChanged
