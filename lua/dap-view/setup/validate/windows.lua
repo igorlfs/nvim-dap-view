@@ -1,10 +1,17 @@
 local M = {}
 
+local validate = require("dap-view.setup.validate.util").validate
+
 ---@param config WindowsConfig
 function M.validate(config)
-    require("dap-view.setup.validate.util").validate("windows", {
+    validate("windows", {
         height = { config.height, "number" },
+        terminal = { config.terminal, "table" },
     }, config)
+
+    validate("windows.terminal", {
+        hide = { config.terminal.hide, "table" },
+    }, config.terminal)
 end
 
 return M

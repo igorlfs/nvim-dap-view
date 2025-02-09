@@ -19,7 +19,7 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     -- (B) Uses the terminal, after a session that doesn't
     -- The terminal wouldn't show up, since it's hidden
     --
-    -- To handle scenarios, we have to close the terminal buffer
+    -- To handle these scenarios, we have to close the terminal buffer
     -- However, if we always close the terminal, dap-view will be shifted very quickly (if open),
     -- causing a flickering effect.
     --
@@ -28,6 +28,7 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     if state.last_active_adapter ~= session.config.type then
         term.clear_term_bufnr()
     end
+    state.last_active_adapter = session.config.type
 
     term.open_term_buf_win()
 end

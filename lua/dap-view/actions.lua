@@ -55,7 +55,7 @@ M.open = function()
 
     local config = setup.config
 
-    local is_term_win_valid = term_winnr ~= nil and api.nvim_win_is_valid(term_winnr) or false
+    local is_term_win_valid = term_winnr ~= nil and api.nvim_win_is_valid(term_winnr)
 
     local winnr = api.nvim_open_win(bufnr, false, {
         split = is_term_win_valid and "right" or "below",

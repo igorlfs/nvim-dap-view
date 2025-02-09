@@ -36,9 +36,9 @@ end
 M.open_term_buf_win = function()
     -- When (re)opening the terminal we should NOT close it,
     -- since it's the default standard output for most adapters
-    -- Therefore, closing it could delete useful information from past sessions
+    -- Therefore, closing it could delete useful information from the last session
 
-    if term_bufnr == nil then
+    if not term_bufnr then
         term_bufnr = api.nvim_create_buf(true, false)
 
         assert(term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
@@ -48,19 +48,15 @@ M.open_term_buf_win = function()
 
     local config = setup.config
 
-    if term_winnr == nil then
-        for _, adapter in ipairs(config.terminal.exclude_adapters) do
-            dap.defaults[adapter].terminal_win_cmd = function(session)
-                state.last_active_adapter = session.type
-
+    if not term_winnr then
+        for _, adapter in ipairs(config.windows.terminal.hide) do
+            dap.defaults[adapter].terminal_win_cmd = function()
                 return term_bufnr
             end
         end
 
-        dap.defaults.fallback.terminal_win_cmd = function(session)
-            state.last_active_adapter = session.type
-
-            local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr) or false
+        dap.defaults.fallback.terminal_win_cmd = function()
+            local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
             term_winnr = api.nvim_open_win(term_bufnr, false, {
                 split = is_win_valid and "left" or "below",
                 win = is_win_valid and state.winnr or -1,
