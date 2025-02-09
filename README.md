@@ -245,6 +245,7 @@ request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=e
 for the inspiration for handling breakpoint exceptions;
 - [Kulala](https://github.com/mistweaverco/kulala.nvim) for the creative usage
 of neovim's `'winbar'` to handle multiple views.
+- [blink.cmp](https://github.com/Saghen/blink.cmp/blob/main/lua/blink/cmp/config/utils.lua) for the config validation (which is partialy taken from a PR to [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim/pull/934/files#diff-09ebcaa8c75cd1e92d25640e377ab261cfecaf8351c9689173fd36c2d0c23d94R16))
 
 [^1]: Filters depend on the debug adapter's capabilities
 [^2]: From treesitter and extmarks (e.g., semantic highlighting from LSP)
