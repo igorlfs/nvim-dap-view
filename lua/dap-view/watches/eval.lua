@@ -8,10 +8,8 @@ M.eval_expr = function(expr, callback)
     coroutine.wrap(function()
         local frame_id = session.current_frame and session.current_frame.id
 
-        local err, result = session:request(
-            "evaluate",
-            { expression = expr, context = "watch", frameId = frame_id }
-        )
+        local err, result =
+            session:request("evaluate", { expression = expr, context = "watch", frameId = frame_id })
 
         local expr_result = result and result.result or err and tostring(err):gsub("%s+", " ") or ""
 

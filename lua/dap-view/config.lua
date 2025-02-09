@@ -12,7 +12,7 @@ local M = {}
 ---@class TerminalConfig
 ---@field exclude_adapters string[] Disable the terminal view for selected adapters.
 
---- @alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
+---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"'
 
 ---@class Config
 ---@field winbar WinbarConfig
