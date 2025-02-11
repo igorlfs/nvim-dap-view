@@ -49,7 +49,7 @@ M.set_keymaps = function()
 
             watches_view.show()
         end
-    end, { buffer = state.bufnr })
+    end, { buffer = state.bufnr, nowait = true })
 
     vim.keymap.set("n", "e", function()
         if state.current_section == "watches" then
