@@ -35,6 +35,11 @@ M.close = function()
     end
 end
 
+M.hide = function()
+    M.close()
+    term.hide_term_buf()
+end
+
 M.open = function()
     M.close()
 

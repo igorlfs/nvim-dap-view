@@ -19,6 +19,10 @@ M.close = function()
     actions.close()
 end
 
+M.hide = function()
+    actions.hide()
+end
+
 M.toggle = function()
     actions.toggle()
 end
