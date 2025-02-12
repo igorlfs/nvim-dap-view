@@ -15,7 +15,7 @@ M.show = function()
         -- Clear previous content
         api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
 
-        if views.cleanup_view(#state.watched_expressions == 0, "No Expressions") then
+        if views.cleanup_view(#state.watched_expressions == 0, "No expressions") then
             return
         end
 

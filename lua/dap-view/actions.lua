@@ -22,11 +22,8 @@ M.toggle = function()
 end
 
 M.close = function()
-    if not dap.session() then
-        term.close_term_buf_win()
-        if vim.tbl_contains(setup.config.winbar.sections, "repl") then
-            dap.repl.close()
-        end
+    if vim.tbl_contains(setup.config.winbar.sections, "repl") then
+        dap.repl.close()
     end
     if state.winnr and api.nvim_win_is_valid(state.winnr) then
         api.nvim_win_close(state.winnr, true)
@@ -43,7 +40,7 @@ M.open = function()
 
     local bufnr = api.nvim_create_buf(false, false)
 
-    assert(bufnr ~= 0, "Failed to create dap-view buffer")
+    assert(bufnr ~= 0, "Failed to create nvim-dap-view buffer")
 
     state.bufnr = bufnr
 
@@ -54,7 +51,7 @@ M.open = function()
 
     api.nvim_buf_set_name(bufnr, globals.MAIN_BUF_NAME)
 
-    local term_winnr = term.term_buf_win_init()
+    local term_winnr = term.open_term_buf_win()
 
     local config = setup.config
 
@@ -68,7 +65,7 @@ M.open = function()
         height = config.windows.height,
     })
 
-    assert(winnr ~= 0, "Failed to create dap-view window")
+    assert(winnr ~= 0, "Failed to create nvim-dap-view window")
 
     state.winnr = winnr
 

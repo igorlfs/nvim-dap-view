@@ -1,4 +1,4 @@
-*nvim-dap-view.txt*      For Neovim >= 0.11.0     Last change: 2025 January 29
+*nvim-dap-view.txt*     For Neovim >= 0.11.0     Last change: 2025 February 11
 
 ==============================================================================
 Table of Contents                            *nvim-dap-view-table-of-contents*
@@ -8,6 +8,7 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
   - Features                            |nvim-dap-view-nvim-dap-view-features|
   - Documentation                  |nvim-dap-view-nvim-dap-view-documentation|
   - Roadmap                              |nvim-dap-view-nvim-dap-view-roadmap|
+  - Non-goals                          |nvim-dap-view-nvim-dap-view-non-goals|
   - Known Issues                    |nvim-dap-view-nvim-dap-view-known-issues|
   - Acknowledgements            |nvim-dap-view-nvim-dap-view-acknowledgements|
 2. Links                                                 |nvim-dap-view-links|
@@ -17,6 +18,11 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
 ==============================================================================
 1. nvim-dap-view                                 *nvim-dap-view-nvim-dap-view*
 
+
+  minimalistic nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui> alternative
+
+<https://github.com/user-attachments/assets/01c461f7-b77b-4232-bed5-4630f3e7c039>
+
 - |nvim-dap-view-nvim-dap-view|
     - |nvim-dap-view-installation|
         - |nvim-dap-view-via-lazy.nvim|
@@ -24,15 +30,13 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
     - |nvim-dap-view-documentation|
         - |nvim-dap-view-configuration|
         - |nvim-dap-view-usage|
+        - |nvim-dap-view-recommended-setup|
+            - |nvim-dap-view-hide-terminal|
         - |nvim-dap-view-highlight-groups|
         - |nvim-dap-view-filetypes-and-autocommands|
     - |nvim-dap-view-roadmap|
     - |nvim-dap-view-known-issues|
     - |nvim-dap-view-acknowledgements|
-
-
-  minimalistic nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui> alternative
-
 
 
   [!WARNING] **Currently requires a neovim nightly (0.11+)**
@@ -83,22 +87,26 @@ The plugin provides 4 "views" that share the same window (so there’s clutter)
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
         - Including adding the variable under the cursor
+
 - Exceptions view
     - Control when the debugger should stop, outside of breakpoints (e.g.,
         whenever an exception is thrown, or when an exception is caught).
     - Toggle filter with `<CR>`
+
 - Breakpoints view
     - List all breakpoints
         - Uses syntax highlighting
         - Shows filename and number line
     - Jump to a breakpoint with `<CR>`
+
 - REPL view
     - Use REPL provided by nvim-dap
 
 You can also interact with the console provided by `nvim-dap` (though,
 arguably, that’s not a feature from `nvim-dap-view`). The console has its own
-window. However, its default size (height) is resized to match you
-`nvim-dap-view` configuration.
+window. However, its default size (height) is resized to match your
+`nvim-dap-view` configuration. You can also completely |nvim-dap-view-hide| it,
+if it’s not being used.
 
 
 DOCUMENTATION                      *nvim-dap-view-nvim-dap-view-documentation*
@@ -118,6 +126,10 @@ Default options ~
         },
         windows = {
             height = 12,
+            terminal = {
+                -- List of adapters for which the terminal should be hidden
+                hide = {},
+            },
         },
     }
 <
@@ -171,11 +183,36 @@ course). An example for the toggle functionality, using the lua API:
 <
 
 
+RECOMMENDED SETUP ~
+
+
+HIDE TERMINAL
+
+Some debug adapters don’t use the integrated terminal (console). To avoid
+having a useless window lying around, you can completely hide the terminal for
+them. To achieve that, add the following snippet to your `nvim-dap-view` setup:
+
+>lua
+    -- Goes into your opts table (if using lazy.nvim), otherwise goes into the setup function
+    -- No need to include the "return" statement (or the outer curly braces)
+    return {
+        windows = {
+            terminal = {
+                -- NOTE Don't copy paste this snippet
+                -- Use the actual names for the adapters you want to hide
+                -- `delve` is known to not use the terminal
+                hide = { "delve", "some-other-adapter" },
+            },
+        },
+    }
+<
+
+
 HIGHLIGHT GROUPS ~
 
 `nvim-dap-view` defines 8 highlight groups:
 
->lua
+>
     NvimDapViewMissingData
     NvimDapViewWatchText
     NvimDapViewWatchTextChanged
@@ -208,10 +245,10 @@ Map q to quit in `nvim-dap-view` filetypes:
 
 >lua
     vim.api.nvim_create_autocmd({ "FileType" }, {
-      pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
-      callback = function(evt)
-        vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
-      end,
+        pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
+        callback = function(evt)
+            vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
+        end,
     })
 <
 
@@ -226,6 +263,32 @@ ROADMAP                                  *nvim-dap-view-nvim-dap-view-roadmap*
 
 Missing something? Create an issue with a feature request
 <https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+>!
+
+
+NON-GOALS                              *nvim-dap-view-nvim-dap-view-non-goals*
+
+Implement every feature from nvim-dap-ui
+<https://github.com/rcarriga/nvim-dap-ui>. More specifically,
+
+- **There will be no “scopes” view** (i.e., list all variables in scope). The rationale is that `nvim-dap` already provides a very nice UI for that, using widgets (see |dap-widgets|). The TLDR is that you can use
+
+>lua
+    function()
+        local widgets = require("dap.ui.widgets")
+        widgets.centered_float(widgets.scopes, { border = "rounded" })
+    end
+<
+
+to create a nice, centered floating window, where you can navigate and explore
+variables. A major advantage from this approach is that you’re not limited to
+a small window at the bottom of your screen (which can be troublesome in noisy
+environments or languages).
+
+- Likewise, **there will be no “hover” view**, since it’s also perfectly handled by `nvim-dap`’s widgets. You can use
+
+>lua
+    function() require("dap.ui.widgets").hover(nil, { border = "rounded" }) end
+<
 
 
 KNOWN ISSUES                        *nvim-dap-view-nvim-dap-view-known-issues*
@@ -250,6 +313,7 @@ ACKNOWLEDGEMENTS                *nvim-dap-view-nvim-dap-view-acknowledgements*
     for the inspiration for handling breakpoint exceptions;
 - Kulala <https://github.com/mistweaverco/kulala.nvim> for the creative usage
     of neovim’s `'winbar'` to handle multiple views.
+- blink.cmp <https://github.com/Saghen/blink.cmp/blob/main/lua/blink/cmp/config/utils.lua> for the config validation (which is partialy taken from a PR to indent-blankline <https://github.com/lukas-reineke/indent-blankline.nvim/pull/934/files#diff-09ebcaa8c75cd1e92d25640e377ab261cfecaf8351c9689173fd36c2d0c23d94R16>)
 
 ==============================================================================
 2. Links                                                 *nvim-dap-view-links*
