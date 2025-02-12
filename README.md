@@ -11,6 +11,7 @@
   - [Documentation](#documentation)
     - [Configuration](#configuration)
     - [Usage](#usage)
+    - [Terminal configuration](#terminal-configuration)
     - [Highlight Groups](#highlight-groups)
     - [Filetypes and autocommands](#filetypes-and-autocommands)
   - [Roadmap](#roadmap)
@@ -166,6 +167,24 @@ vim.keymap.set("n", "<leader>v", function()
     require("dap-view").toggle()
 end, { desc = "Toggle nvim-dap-view" })
 ```
+
+### Terminal configuration
+
+When setting `windows.terminal.position` to `right` the views window may be used
+to display the current breakpoint because `nvim-dap` defaults to the global
+`switchbuf` setting.  You can override the `switchbuf` setting with:
+
+```lua
+-- to set fallback switchbuf
+require("dap").defaults.fallback.switchbuf = "useopen"
+-- to set for python configuration
+require("dap").defaults.python.switchbuf = "useopen"
+```
+
+If you are using an adapter that does not natively support the `nvim-dap` integrated
+terminal, you can get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
+`dap-view.state` and use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view`
+terminal!  An example can be found [here](https://github.com/catgoose/nvim/blob/a783e0fe931a5e417c4e3cc7e964793d895862e6/lua/config/dap/go.lua)
 
 ### Highlight Groups
 
