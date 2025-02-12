@@ -26,10 +26,11 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     -- To address that, we only close the terminal if the new session has a different adapter
     -- (which should cover most scenarios where the flickering would occur)
     if state.last_active_adapter ~= session.config.type then
-        term.clear_term_bufnr()
+        term.delete_term_buf()
     end
     state.last_active_adapter = session.config.type
 
+    term.setup_term()
     term.open_term_buf_win()
 end
 

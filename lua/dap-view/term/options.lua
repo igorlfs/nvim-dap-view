@@ -15,7 +15,6 @@ M.set_options = function(winnr, bufnr)
 
     local buf = vim.bo[bufnr]
     buf.filetype = "dap-view-term"
-    buf.buftype = "nofile"
 end
 
 return M
