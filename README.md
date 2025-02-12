@@ -110,8 +110,10 @@ return {
         height = 12,
         terminal = {
             -- 'left'|'right': Terminal position in layout
-            position = "left"
-        }
+            position = "left",
+            -- List of adapters for which the terminal should be hidden
+            hide = {},
+        },
     },
 }
 ```

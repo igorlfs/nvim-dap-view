@@ -49,10 +49,6 @@ M.term_buf_win_init = function()
         dap.defaults.fallback.terminal_win_cmd = function()
             return state.term_bufnr, state.term_winnr
         end
-
-        -- Terminal has winfixbuf set so set nvim-dap switchbuf to "useopen" to
-        -- prevent from using dap-view window from being used to focus breakpint
-        dap.defaults.fallback.switchbuf = "useopen"
     end
 
     return state.term_winnr
