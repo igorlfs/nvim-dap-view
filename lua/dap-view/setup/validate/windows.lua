@@ -10,6 +10,7 @@ function M.validate(config)
     }, config)
 
     validate("windows.terminal", {
+        position = { config.terminal.position, "string" },
         hide = { config.terminal.hide, "table" },
     }, config.terminal)
 end
