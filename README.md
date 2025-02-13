@@ -17,6 +17,7 @@
         - [Usage](#usage)
         - [Recommended Setup](#recommended-setup)
             - [Hide Terminal](#hide-terminal)
+            - [Terminal Position and Integration](#terminal-position-and-integration)
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
     - [Roadmap](#roadmap)
@@ -119,6 +120,8 @@ return {
     windows = {
         height = 12,
         terminal = {
+            -- 'left'|'right': Terminal position in layout
+            position = "left",
             -- List of adapters for which the terminal should be hidden
             hide = {},
         },
@@ -195,6 +198,21 @@ return {
     },
 }
 ```
+
+#### Terminal Position and Integration
+
+When setting `windows.terminal.position` to `right` the views window may be used
+to display the current breakpoint because `nvim-dap` defaults to the global
+`switchbuf` setting.  A common solution is to set `switchbuf` to "useopen":
+
+```lua
+require("dap").defaults.fallback.switchbuf = "useopen"
+```
+
+If you are using an adapter that does not natively support the `nvim-dap` integrated
+terminal, you can get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
+`dap-view.state` and use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view`
+terminal!  An example can be found [here](https://github.com/catgoose/nvim/blob/a783e0fe931a5e417c4e3cc7e964793d895862e6/lua/config/dap/go.lua)
 
 ### Highlight Groups
 

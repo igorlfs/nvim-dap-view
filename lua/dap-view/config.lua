@@ -8,6 +8,7 @@ local M = {}
 
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
+---@field position 'right' | 'left'
 
 ---@class WindowsConfig
 ---@field height integer
@@ -27,6 +28,7 @@ M.config = {
     windows = {
         height = 12,
         terminal = {
+            position = "left",
             hide = {},
         },
     },
