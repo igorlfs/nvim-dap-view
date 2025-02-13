@@ -13,9 +13,14 @@ local api = vim.api
 
 local M = {}
 
-M.toggle = function()
+---@param hide_terminal? boolean
+M.toggle = function(hide_terminal)
     if state.bufnr then
-        M.close()
+        if hide_terminal then
+            M.hide()
+        else
+            M.close()
+        end
     else
         M.open()
     end

@@ -23,8 +23,9 @@ M.hide = function()
     actions.hide()
 end
 
-M.toggle = function()
-    actions.toggle()
+---@param hide_terminal? boolean
+M.toggle = function(hide_terminal)
+    actions.toggle(hide_terminal)
 end
 
 M.add_expr = function()

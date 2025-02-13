@@ -6,10 +6,12 @@ local watches = require("dap-view.watches.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
 local eval = require("dap-view.watches.eval")
+local config = require("dap-view.setup").config
 
 local SUBSCRIPTION_ID = "dap-view"
 
 dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
+    local adapter = session.config.type
     -- When initializing a new session, there might a leftover terminal buffer
     -- Usually, this wouldn't be a problem, but it can cause inconsistencies when starting a session that
     --
@@ -25,13 +27,15 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     --
     -- To address that, we only close the terminal if the new session has a different adapter
     -- (which should cover most scenarios where the flickering would occur)
-    if state.last_active_adapter ~= session.config.type then
+    if state.last_active_adapter ~= adapter then
         term.delete_term_buf()
     end
-    state.last_active_adapter = session.config.type
+    state.last_active_adapter = adapter
 
     term.setup_term()
-    term.open_term_buf_win()
+    if not config.windows.terminal.start_hidden then
+        term.open_term_buf_win()
+    end
 end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()

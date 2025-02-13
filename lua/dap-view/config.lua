@@ -9,6 +9,7 @@ local M = {}
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
 ---@field position 'right' | 'left'
+---@field start_hidden boolean
 
 ---@class WindowsConfig
 ---@field height integer
@@ -30,6 +31,7 @@ M.config = {
         terminal = {
             position = "left",
             hide = {},
+            start_hidden = false,
         },
     },
 }

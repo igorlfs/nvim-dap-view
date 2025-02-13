@@ -124,6 +124,8 @@ return {
             position = "left",
             -- List of adapters for which the terminal should be hidden
             hide = {},
+            -- Hide the terminal when starting a new session
+            start_hidden = false,
         },
     },
 }

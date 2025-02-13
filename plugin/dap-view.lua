@@ -8,5 +8,11 @@ command("DapViewClose", function(opts)
         require("dap-view").close()
     end
 end, { bang = true })
-command("DapViewToggle", require("dap-view").toggle, {})
+command("DapViewToggle", function(opts)
+    if opts.bang then
+        require("dap-view").toggle(true)
+    else
+        require("dap-view").toggle()
+    end
+end, { bang = true })
 command("DapViewWatch", require("dap-view").add_expr, {})
