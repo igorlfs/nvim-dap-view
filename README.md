@@ -203,13 +203,10 @@ return {
 
 When setting `windows.terminal.position` to `right` the views window may be used
 to display the current breakpoint because `nvim-dap` defaults to the global
-`switchbuf` setting.  You can override the `switchbuf` setting with:
+`switchbuf` setting.  A common solution is to set `switchbuf` to "useopen":
 
 ```lua
--- to set fallback switchbuf
 require("dap").defaults.fallback.switchbuf = "useopen"
--- to set for python configuration
-require("dap").defaults.python.switchbuf = "useopen"
 ```
 
 If you are using an adapter that does not natively support the `nvim-dap` integrated
