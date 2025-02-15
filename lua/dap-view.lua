@@ -20,10 +20,6 @@ M.close = function(hide_terminal)
     actions.close(hide_terminal)
 end
 
-M.hide = function()
-    actions.close(true)
-end
-
 ---@param hide_terminal? boolean
 M.toggle = function(hide_terminal)
     actions.toggle(hide_terminal)

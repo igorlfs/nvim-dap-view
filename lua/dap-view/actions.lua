@@ -16,11 +16,7 @@ local M = {}
 ---@param hide_terminal? boolean
 M.toggle = function(hide_terminal)
     if state.bufnr then
-        if hide_terminal then
-            M.close(true)
-        else
-            M.close()
-        end
+        M.close(hide_terminal)
     else
         M.open()
     end
