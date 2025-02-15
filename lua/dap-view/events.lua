@@ -6,7 +6,7 @@ local watches = require("dap-view.watches.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
 local eval = require("dap-view.watches.eval")
-local config = require("dap-view.setup").config
+local setup = require("dap-view.setup")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -33,7 +33,7 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     state.last_active_adapter = adapter
 
     term.setup_term()
-    if not config.windows.terminal.start_hidden then
+    if not setup.config.windows.terminal.start_hidden then
         term.open_term_buf_win()
     end
 end
