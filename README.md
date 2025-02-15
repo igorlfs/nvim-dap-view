@@ -98,7 +98,7 @@ The plugin provides 4 "views" that share the same window (so there's clutter)
 
 ![repl view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
-You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match your `nvim-dap-view` configuration. You can also completely [hide](#hide-terminal) it, if it's not being used.
+You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](#hide-terminal) it (if it's not being used at all) or hide it only during session initialization.
 
 ![console](https://github.com/user-attachments/assets/0980962c-e3da-4f16-af4c-786ef7fa4b18)
 
@@ -122,8 +122,10 @@ return {
         terminal = {
             -- 'left'|'right': Terminal position in layout
             position = "left",
-            -- List of adapters for which the terminal should be hidden
+            -- List of debug adapters for which the terminal should be ALWAYS hidden
             hide = {},
+            -- Hide the terminal when starting a new session
+            start_hidden = false,
         },
     },
 }
@@ -159,13 +161,18 @@ In total, there are 4 commands:
 - `DapViewToggle`
 - `DapViewWatch`
 
+Additionally, you can use `DapViewClose!` and `DapViewToggle!` to also hide the
+terminal window, if you prefer a tidy view.
+
 If you prefer using lua functions, I got you covered! The following provide the
 same functionality as above:
 
 ```lua
 require("dap-view").open()
 require("dap-view").close()
+require("dap-view").close(true) -- Same as `DapViewClose!`
 require("dap-view").toggle()
+require("dap-view").toggle(true) -- Same as `DapViewToggle!`
 require("dap-view").add_expr()
 ```
 
