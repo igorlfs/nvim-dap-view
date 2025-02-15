@@ -15,6 +15,7 @@ M.set_options = function(winnr, bufnr)
 
     local buf = vim.bo[bufnr]
     buf.filetype = "dap-view-term"
+    -- Can't set the buftype here, see https://github.com/neovim/neovim/issues/31457
 end
 
 return M
