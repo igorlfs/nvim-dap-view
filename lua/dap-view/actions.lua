@@ -17,7 +17,7 @@ local M = {}
 M.toggle = function(hide_terminal)
     if state.bufnr then
         if hide_terminal then
-            M.hide()
+            M.close(true)
         else
             M.close()
         end
@@ -26,7 +26,8 @@ M.toggle = function(hide_terminal)
     end
 end
 
-M.close = function()
+---@param hide_terminal? boolean
+M.close = function(hide_terminal)
     if vim.tbl_contains(setup.config.winbar.sections, "repl") then
         dap.repl.close()
     end
@@ -38,11 +39,9 @@ M.close = function()
         api.nvim_buf_delete(state.bufnr, { force = true })
         state.bufnr = nil
     end
-end
-
-M.hide = function()
-    M.close()
-    term.hide_term_buf()
+    if hide_terminal then
+        term.hide_term_buf()
+    end
 end
 
 M.open = function()

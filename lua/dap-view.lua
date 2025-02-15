@@ -15,12 +15,13 @@ M.open = function()
     actions.open()
 end
 
-M.close = function()
-    actions.close()
+---@param hide_terminal? boolean
+M.close = function(hide_terminal)
+    actions.close(hide_terminal)
 end
 
 M.hide = function()
-    actions.hide()
+    actions.close(true)
 end
 
 ---@param hide_terminal? boolean
