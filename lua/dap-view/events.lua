@@ -33,7 +33,8 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     state.last_active_adapter = adapter
 
     term.setup_term()
-    if not setup.config.windows.terminal.start_hidden then
+    local terminal = setup.config.windows.terminal
+    if not (terminal.start_hidden or terminal.ignore_session) then
         term.open_term_buf_win()
     end
 end

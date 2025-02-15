@@ -31,7 +31,7 @@ M.create_term_buf = function(callback)
 end
 
 M.hide_term_buf = function()
-    if M.state.winnr and api.nvim_win_is_valid(M.term_winnr) then
+    if M.state.winnr and api.nvim_win_is_valid(M.state.winnr) then
         api.nvim_win_hide(M.state.winnr)
     end
 end
@@ -55,13 +55,17 @@ M.open_term_buf_win = function()
     M.create_term_buf()
 
     local is_term_hidden = vim.tbl_contains(config.windows.terminal.hide, state.last_active_adapter)
-    if (config.windows.terminal.ignore_session or dap.session()) and M.state.bufnr and not is_term_hidden then
-        if M.state.winnr == nil or M.term_winnr and not api.nvim_win_is_valid(M.term_winnr) then
-            local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
+    local ignore_session = config.windows.terminal.ignore_session
+    if (ignore_session or dap.session()) and M.state.bufnr and not is_term_hidden then
+        if M.state.winnr == nil or M.state.winnr and not api.nvim_win_is_valid(M.state.winnr) then
+            local is_win_valid = M.state.winnr ~= nil and api.nvim_win_is_valid(M.state.winnr)
 
+            local position = config.windows.terminal.position
             M.state.winnr = api.nvim_open_win(M.state.bufnr, false, {
-                split = is_win_valid and "left" or "below",
-                win = is_win_valid and state.winnr or -1,
+                split = is_win_valid
+                        and (ignore_session and (position == "left" and "right" or "left") or position)
+                    or "below",
+                win = is_win_valid and M.state.winnr or -1,
                 height = config.windows.height,
             })
 
