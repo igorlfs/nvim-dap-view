@@ -1,4 +1,4 @@
-*nvim-dap-view.txt*     For Neovim >= 0.11.0     Last change: 2025 February 13
+*nvim-dap-view.txt*     For Neovim >= 0.11.0     Last change: 2025 February 15
 
 ==============================================================================
 Table of Contents                            *nvim-dap-view-table-of-contents*
@@ -106,8 +106,9 @@ The plugin provides 4 "views" that share the same window (so there’s clutter)
 You can also interact with the console provided by `nvim-dap` (though,
 arguably, that’s not a feature from `nvim-dap-view`). The console has its own
 window. However, its default size (height) is resized to match your
-`nvim-dap-view` configuration. You can also completely |nvim-dap-view-hide| it,
-if it’s not being used.
+`nvim-dap-view` configuration. You can also either completely
+|nvim-dap-view-hide| it (if it’s not being used at all) or hide it only
+during session initialization.
 
 
 DOCUMENTATION                      *nvim-dap-view-nvim-dap-view-documentation*
@@ -130,8 +131,10 @@ Default options ~
             terminal = {
                 -- 'left'|'right': Terminal position in layout
                 position = "left",
-                -- List of adapters for which the terminal should be hidden
+                -- List of debug adapters for which the terminal should be ALWAYS hidden
                 hide = {},
+                -- Hide the terminal when starting a new session
+                start_hidden = false,
             },
         },
     }
@@ -166,13 +169,18 @@ In total, there are 4 commands:
 - `DapViewToggle`
 - `DapViewWatch`
 
+Additionally, you can use `DapViewClose!` and `DapViewToggle!` to also hide the
+terminal window, if you prefer a tidy view.
+
 If you prefer using lua functions, I got you covered! The following provide the
 same functionality as above:
 
 >lua
     require("dap-view").open()
     require("dap-view").close()
+    require("dap-view").close(true) -- Same as `DapViewClose!`
     require("dap-view").toggle()
+    require("dap-view").toggle(true) -- Same as `DapViewToggle!`
     require("dap-view").add_expr()
 <
 
