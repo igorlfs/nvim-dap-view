@@ -9,20 +9,21 @@
 
 <!--toc:start-->
 - [nvim-dap-view](#nvim-dap-view)
-    - [Installation](#installation)
-        - [Via lazy.nvim](#via-lazynvim)
-    - [Features](#features)
-    - [Documentation](#documentation)
-        - [Configuration](#configuration)
-        - [Usage](#usage)
-        - [Recommended Setup](#recommended-setup)
-            - [Hide Terminal](#hide-terminal)
-            - [Terminal Position and Integration](#terminal-position-and-integration)
-        - [Highlight Groups](#highlight-groups)
-        - [Filetypes and autocommands](#filetypes-and-autocommands)
-    - [Roadmap](#roadmap)
-    - [Known Issues](#known-issues)
-    - [Acknowledgements](#acknowledgements)
+  - [Installation](#installation)
+    - [Via lazy.nvim](#via-lazynvim)
+  - [Features](#features)
+  - [Documentation](#documentation)
+    - [Configuration](#configuration)
+    - [Usage](#usage)
+    - [Recommended Setup](#recommended-setup)
+      - [Hide Terminal](#hide-terminal)
+      - [Terminal Position and Integration](#terminal-position-and-integration)
+    - [Highlight Groups](#highlight-groups)
+    - [Filetypes and autocommands](#filetypes-and-autocommands)
+  - [Roadmap](#roadmap)
+  - [Non-goals](#non-goals)
+  - [Known Issues](#known-issues)
+  - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
 
 > [!WARNING]  
@@ -217,9 +218,22 @@ require("dap").defaults.fallback.switchbuf = "useopen"
 ```
 
 If you are using an adapter that does not natively support the `nvim-dap` integrated
-terminal, you can get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
-`dap-view.state` and use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view`
-terminal!  An example can be found [here](https://github.com/catgoose/nvim/blob/a783e0fe931a5e417c4e3cc7e964793d895862e6/lua/config/dap/go.lua)
+terminal, but you want to use the `nvim-dap-view` terminal to run your debug
+adapter before `nvim-dap` has started a session use the following setup configuration:
+
+```lua
+return {
+  windows = {
+    terminal = {
+      ignore_session = true,
+    },
+  },
+}
+```
+
+You can then get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
+`dap-view.term.init` and use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view`
+terminal! An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ade9cad0da934e10308dbbfc76b9540/lua/config/dap/go.lua#L19-L48)
 
 ### Highlight Groups
 
