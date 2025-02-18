@@ -291,11 +291,15 @@ end
 
 to create a nice, centered floating window, where you can navigate and explore variables. A major advantage from this approach is that you're not limited to a small window at the bottom of your screen (which can be troublesome in noisy environments or languages).
 
+![nvim-dap's Scopes widget](https://github.com/user-attachments/assets/f320392d-e0c8-4b70-8521-db97e115ef5e)
+
 - Likewise, **there will be no "hover" view**, since it's also perfectly handled by `nvim-dap`'s widgets. You can use
 
 ```lua
 function() require("dap.ui.widgets").hover(nil, { border = "rounded" }) end
 ```
+
+![nvim-dap's Hover widget](https://github.com/user-attachments/assets/bdb29360-65dd-426f-b59b-fa0b61377e9c)
 
 ## Known Issues
 
