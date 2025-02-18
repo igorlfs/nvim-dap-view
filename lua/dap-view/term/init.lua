@@ -56,9 +56,10 @@ M.open_term_buf_win = function()
     if dap.session() and term_bufnr and not is_term_hidden then
         if term_winnr == nil or term_winnr and not api.nvim_win_is_valid(term_winnr) then
             local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
+            local term_position = setup.config.windows.terminal.position
 
             term_winnr = api.nvim_open_win(term_bufnr, false, {
-                split = is_win_valid and "left" or "below",
+                split = is_win_valid and term_position or "below",
                 win = is_win_valid and state.winnr or -1,
                 height = setup.config.windows.height,
             })
