@@ -20,7 +20,7 @@ M._toggle_exception_filter = function()
     api.nvim_buf_set_lines(state.bufnr, cur_row - 1, cur_row, false, { content })
 
     local hl_type = curent_option.enabled and "Enabled" or "Disabled"
-    hl.hl_range("NvimDapViewExceptionFilter" .. hl_type, { cur_row - 1, 0 }, { cur_row - 1, 4 })
+    hl.hl_range("ExceptionFilter" .. hl_type, { cur_row - 1, 0 }, { cur_row - 1, 4 })
 
     exceptions.update_exception_breakpoints_filters()
 end

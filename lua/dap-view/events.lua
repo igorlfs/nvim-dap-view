@@ -3,6 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local watches = require("dap-view.watches.view")
+local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
 local eval = require("dap-view.watches.eval")
@@ -56,7 +57,15 @@ dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
     end
 end
 
-dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
+dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function()
+    if state.current_section == "threads" then
+        threads.show()
+    end
+end
+
+dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function(_, body)
+    state.stopped_thread = body.threadId
+    require("dap-view.threads").get_threads()
     for i, expr in ipairs(state.watched_expressions) do
         eval.eval_expr(expr, function(result)
             state.updated_evaluations[i] = state.expression_results[i]
@@ -88,6 +97,9 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
 end
 
 dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
+    if state.current_section == "threads" then
+        threads.show()
+    end
     for k in ipairs(state.expression_results) do
         state.expression_results[k] = nil
     end

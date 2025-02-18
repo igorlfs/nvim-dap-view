@@ -3,30 +3,32 @@ local setup = require("dap-view.setup")
 local M = {}
 
 local api = vim.api
+local log = vim.log.levels
 
-M._jump_to_breakpoint = function()
+---@param pattern string
+M.jump_to_location = function(pattern)
     local line = vim.fn.getline(".")
 
     if not line or line == "" then
-        vim.notify("No valid line under the cursor", vim.log.levels.ERROR)
+        vim.notify("No valid line under the cursor", log.ERROR)
         return
     end
 
-    local file, line_num = line:match("^(.-)|(%d+)|")
+    local file, line_num = line:match(pattern)
     if not file or not line_num then
-        vim.notify("Invalid format: " .. line, vim.log.levels.ERROR)
+        vim.notify("Invalid format: " .. line, log.ERROR)
         return
     end
 
     line_num = tonumber(line_num)
     if not line_num then
-        vim.notify("Invalid line number: " .. line_num, vim.log.levels.ERROR)
+        vim.notify("Invalid line number: " .. line_num, log.ERROR)
         return
     end
 
     local abs_path = vim.fn.fnamemodify(file, ":p")
     if not vim.uv.fs_stat(abs_path) then
-        vim.notify("File not found: " .. abs_path, vim.log.levels.ERROR)
+        vim.notify("File not found: " .. abs_path, log.ERROR)
         return
     end
 
@@ -37,29 +39,24 @@ M._jump_to_breakpoint = function()
     -- Or perhaps there's a way to respect the 'switchbuf' option
     local prev_or_new_window = vim.iter(windows)
         :filter(function(w)
-            local buf = api.nvim_win_get_buf(w)
-            return api.nvim_get_option_value("buftype", { buf = buf }) == ""
+            local bufnr = api.nvim_win_get_buf(w)
+            return vim.bo[bufnr].buftype == ""
         end)
         :find(function(w)
             return w
         end)
 
     if not prev_or_new_window then
-        local config = setup.config
         prev_or_new_window = api.nvim_open_win(0, true, {
             split = "above",
             win = -1,
-            height = vim.o.lines - config.windows.height,
+            height = vim.o.lines - setup.config.windows.height,
         })
     end
 
     api.nvim_win_call(prev_or_new_window, function()
-        local bufnr = vim.fn.bufnr(abs_path)
-        if bufnr == -1 then
-            vim.cmd("buffer " .. abs_path)
-        else
-            api.nvim_set_current_buf(bufnr)
-        end
+        local bufnr = vim.uri_to_bufnr(vim.uri_from_fname(abs_path))
+        api.nvim_set_current_buf(bufnr)
     end)
 
     api.nvim_win_set_cursor(prev_or_new_window, { line_num, 0 })

@@ -1,4 +1,5 @@
 local state = require("dap-view.state")
+local threads_view = require("dap-view.threads.view")
 local watches_view = require("dap-view.watches.view")
 local watches_actions = require("dap-view.watches.actions")
 
@@ -25,7 +26,9 @@ end
 M.set_keymaps = function()
     vim.keymap.set("n", "<CR>", function()
         if state.current_section == "breakpoints" then
-            require("dap-view.breakpoints.actions")._jump_to_breakpoint()
+            require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|")
+        elseif state.current_section == "threads" then
+            require("dap-view.threads.actions").jump_or_noop()
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions")._toggle_exception_filter()
         end
@@ -62,6 +65,13 @@ M.set_keymaps = function()
                     watches_actions.edit_watch_expr(input, line)
                 end
             end)
+        end
+    end, { buffer = state.bufnr })
+
+    vim.keymap.set("n", "t", function()
+        if state.current_section == "threads" then
+            state.subtle_frames = not state.subtle_frames
+            threads_view.show()
         end
     end, { buffer = state.bufnr })
 end

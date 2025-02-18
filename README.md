@@ -21,6 +21,7 @@
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
     - [Roadmap](#roadmap)
+    - [Non-goals](#non-goals)
     - [Known Issues](#known-issues)
     - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
@@ -69,7 +70,7 @@ return {
 
 ## Features
 
-The plugin provides 4 "views" that share the same window (so there's clutter)
+The plugin provides 5 "views" that share the same window (so there's clutter)
 
 - Watches view
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
@@ -93,10 +94,17 @@ The plugin provides 4 "views" that share the same window (so there's clutter)
 
 ![breakpoints view](https://github.com/user-attachments/assets/b8c23809-2f23-4a39-8aef-b880f2b3eef9)
 
+- Threads view
+    - List all threads and their stack traces
+    - Jump to a function in the call stack
+    - Toggle `subtle` (hidden) frames with `t`
+
+![threads view](https://github.com/user-attachments/assets/fb27d59b-30da-470f-a662-19940eae18a8)
+
 - REPL view
     - Use REPL provided by nvim-dap
 
-![repl view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
+![REPL view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
 You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). The console has its own window. However, its default size (height) is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](#hide-terminal) it (if it's not being used at all) or hide it only during session initialization.
 
@@ -113,7 +121,7 @@ You can also interact with the console provided by `nvim-dap` (though, arguably,
 return {
     winbar = {
         show = true,
-        sections = { "watches", "exceptions", "breakpoints", "repl" },
+        sections = { "watches", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
     },
@@ -149,7 +157,10 @@ watches view comes with 3 mappings:
 
 Though, the preferred way of adding a new expression is using the
 `:DapViewWatch` command. In normal mode, it adds the variable under the cursor
-to the watch list.
+to the watch list. The threads view has 2 mappings:
+
+- `<CR>` jumps to a location in the call stack
+- `t` toggles subtle frames
 
 When you finish your session, you can use `:DapViewClose` to close the
 `nvim-dap-view` window.
@@ -231,9 +242,9 @@ NvimDapViewWatchText
 NvimDapViewWatchTextChanged
 NvimDapViewExceptionFilterEnabled
 NvimDapViewExceptionFilterDisabled
-NvimDapViewBreakpointFileName
-NvimDapViewBreakpointLineNumber
-NvimDapViewBreakpointSeparator
+NvimDapViewFileName
+NvimDapViewLineNumber
+NvimDapViewSeparator
 ```
 
 They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`.
@@ -271,7 +282,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     - Actions
         - [ ] Expanding variables
         - [ ] Yank expression's value
-- [ ] Threads and Stacks view
 
 Missing something? Create an issue with a [feature
 request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+)!
@@ -310,6 +320,7 @@ function() require("dap.ui.widgets").hover(nil, { border = "rounded" }) end
 
 ## Acknowledgements
 
+- [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) is obviously a huge inspiration!
 - Code to inject treesitter highlights into line is taken from
 [`quicker.nvim`](https://github.com/stevearc/quicker.nvim);
 - Some snippets are directly extracted from `nvim-dap`:
