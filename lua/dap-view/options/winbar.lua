@@ -31,6 +31,15 @@ local winbar_info = {
             end
         end,
     },
+    threads = {
+        desc = "Threads [T]",
+        keymap = "T",
+        action = function()
+            if vim.tbl_contains(setup.config.winbar.sections, "threads") then
+                require("dap-view.views").switch(require("dap-view.threads.view").show)
+            end
+        end,
+    },
     repl = {
         desc = "REPL [R]",
         keymap = "R",
