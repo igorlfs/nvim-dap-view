@@ -3,6 +3,7 @@ local dap = require("dap")
 local winbar = require("dap-view.options.winbar")
 local views = require("dap-view.views")
 local state = require("dap-view.state")
+local hl = require("dap-view.util.hl")
 
 local M = {}
 
@@ -28,15 +29,40 @@ M.show = function()
             return
         end
 
-        local content = vim
-            .iter(state.threads)
-            ---@param t dap.Thread
-            :map(function(t)
-                return t.name
-            end)
-            :totable()
+        local line = 0
+        for _, thread in pairs(state.threads) do
+            api.nvim_buf_set_lines(state.bufnr, line, -1, false, { thread.name })
+            hl.hl_range("NvimDapViewThread", { line, 0 }, { line, -1 })
 
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, false, content)
+            local content = vim.iter(thread.frames):fold(
+                {},
+                ---@param acc string[]
+                ---@param t dap.StackFrame
+                function(acc, t)
+                    if not t.presentationHint or t.presentationHint ~= "subtle" then
+                        local path = t.source.path
+                        local relative_path = path and vim.fn.fnamemodify(path, ":.") or ""
+                        local label = "\t" .. t.name .. "|" .. relative_path .. "|" .. t.line
+                        table.insert(acc, label)
+                    end
+                    return acc
+                end
+            )
+
+            api.nvim_buf_set_lines(state.bufnr, line + 1, -1, false, content)
+
+            for i, c in pairs(content) do
+                local pipe1 = string.find(c, "|")
+                local pipe2 = #c - string.find(string.reverse(c), "|")
+
+                hl.hl_range("NvimDapViewSeparator", { line + i, pipe1 - 1 }, { line + i, pipe1 })
+                hl.hl_range("NvimDapViewFileName", { line + i, pipe1 }, { line + i, pipe2 })
+                hl.hl_range("NvimDapViewSeparator", { line + i, pipe2 }, { line + i, pipe2 + 1 })
+                hl.hl_range("NvimDapViewLineNumber", { line + i, pipe2 + 1 }, { line + i, -1 })
+            end
+
+            line = line + #thread.frames + 1
+        end
     end
 end
 
