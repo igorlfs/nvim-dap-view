@@ -34,31 +34,33 @@ M.show = function()
             api.nvim_buf_set_lines(state.bufnr, line, -1, false, { thread.name })
             hl.hl_range("NvimDapViewThread", { line, 0 }, { line, -1 })
 
-            local content = vim.iter(thread.frames):fold(
-                {},
-                ---@param acc string[]
-                ---@param t dap.StackFrame
-                function(acc, t)
-                    if not t.presentationHint or t.presentationHint ~= "subtle" then
-                        local path = t.source.path
-                        local relative_path = path and vim.fn.fnamemodify(path, ":.") or ""
-                        local label = "\t" .. t.name .. "|" .. relative_path .. "|" .. t.line
-                        table.insert(acc, label)
+            if thread.frames then
+                local content = vim.iter(thread.frames):fold(
+                    {},
+                    ---@param acc string[]
+                    ---@param t dap.StackFrame
+                    function(acc, t)
+                        if not t.presentationHint or t.presentationHint ~= "subtle" then
+                            local path = t.source.path
+                            local relative_path = path and vim.fn.fnamemodify(path, ":.") or ""
+                            local label = "\t" .. relative_path .. "|" .. t.line .. "|" .. t.name
+                            table.insert(acc, label)
+                        end
+                        return acc
                     end
-                    return acc
+                )
+
+                api.nvim_buf_set_lines(state.bufnr, line + 1, -1, false, content)
+
+                for i, c in pairs(content) do
+                    local pipe1 = string.find(c, "|")
+                    local pipe2 = #c - string.find(string.reverse(c), "|")
+
+                    hl.hl_range("NvimDapViewFileName", { line + i, 0 }, { line + i, pipe1 })
+                    hl.hl_range("NvimDapViewSeparator", { line + i, pipe1 - 1 }, { line + i, pipe1 })
+                    hl.hl_range("NvimDapViewLineNumber", { line + i, pipe1 }, { line + i, pipe2 })
+                    hl.hl_range("NvimDapViewSeparator", { line + i, pipe2 }, { line + i, pipe2 + 1 })
                 end
-            )
-
-            api.nvim_buf_set_lines(state.bufnr, line + 1, -1, false, content)
-
-            for i, c in pairs(content) do
-                local pipe1 = string.find(c, "|")
-                local pipe2 = #c - string.find(string.reverse(c), "|")
-
-                hl.hl_range("NvimDapViewSeparator", { line + i, pipe1 - 1 }, { line + i, pipe1 })
-                hl.hl_range("NvimDapViewFileName", { line + i, pipe1 }, { line + i, pipe2 })
-                hl.hl_range("NvimDapViewSeparator", { line + i, pipe2 }, { line + i, pipe2 + 1 })
-                hl.hl_range("NvimDapViewLineNumber", { line + i, pipe2 + 1 }, { line + i, -1 })
             end
 
             line = line + #thread.frames + 1
