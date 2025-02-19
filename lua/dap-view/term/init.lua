@@ -1,28 +1,21 @@
 local dap = require("dap")
 
 local state = require("dap-view.state")
-local config = require("dap-view.setup").config
+local setup = require("dap-view.setup")
 local util_buf = require("dap-view.util.buffer")
 
 local api = vim.api
 
-local M = {
-    state = {
-        ---@type integer?
-        winnr = nil,
-        ---@type integer?
-        bufnr = nil,
-    },
-}
+local M = {}
 
 ---@param callback? fun(): nil
 M.create_term_buf = function(callback)
-    if not M.state.bufnr then
-        M.state.bufnr = api.nvim_create_buf(true, false)
+    if not state.term_bufnr then
+        state.term_bufnr = api.nvim_create_buf(true, false)
 
-        assert(M.state.bufnr ~= 0, "Failed to create nvim-dap-view buffer")
+        assert(state.term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
 
-        util_buf.quit_buf_autocmd(M.state.bufnr, M.reset_term_buf)
+        util_buf.quit_buf_autocmd(state.term_bufnr, M.reset_term_buf)
 
         if callback then
             callback()
@@ -31,22 +24,22 @@ M.create_term_buf = function(callback)
 end
 
 M.hide_term_buf = function()
-    if M.state.winnr and api.nvim_win_is_valid(M.state.winnr) then
-        api.nvim_win_hide(M.state.winnr)
+    if state.term_winnr and api.nvim_win_is_valid(state.term_winnr) then
+        api.nvim_win_hide(state.term_winnr)
     end
 end
 
 M.delete_term_buf = function()
-    if M.state.bufnr then
-        api.nvim_buf_delete(M.state.bufnr, { force = true })
-        M.state.bufnr = nil
+    if state.term_bufnr then
+        api.nvim_buf_delete(state.term_bufnr, { force = true })
+        state.term_bufnr = nil
     end
 end
 
 M.reset_term_buf = function()
     -- Only reset the buffer if there's no active session
-    if M.state.bufnr and not (config.windows.terminal.ignore_session or dap.session()) then
-        M.state.bufnr = nil
+    if state.term_bufnr and not (setup.config.windows.terminal.bootstrap or dap.session()) then
+        state.term_bufnr = nil
     end
 end
 
@@ -54,34 +47,34 @@ end
 M.open_term_buf_win = function()
     M.create_term_buf()
 
-    local is_term_hidden = vim.tbl_contains(config.windows.terminal.hide, state.last_active_adapter)
-    local ignore_session = config.windows.terminal.ignore_session
-    if (ignore_session or dap.session()) and M.state.bufnr and not is_term_hidden then
-        if M.state.winnr == nil or M.state.winnr and not api.nvim_win_is_valid(M.state.winnr) then
-            local is_win_valid = M.state.winnr ~= nil and api.nvim_win_is_valid(M.state.winnr)
+    local is_term_hidden = vim.tbl_contains(setup.config.windows.terminal.hide, state.last_active_adapter)
+    local bootstrap = setup.config.windows.terminal.bootstrap
+    if (bootstrap or dap.session()) and state.term_bufnr and not is_term_hidden then
+        if state.term_winnr == nil or state.term_winnr and not api.nvim_win_is_valid(state.term_winnr) then
+            local is_win_valid = state.term_winnr ~= nil and api.nvim_win_is_valid(state.term_winnr)
 
-            local position = config.windows.terminal.position
-            M.state.winnr = api.nvim_open_win(M.state.bufnr, false, {
+            local position = setup.config.windows.terminal.position
+            state.term_winnr = api.nvim_open_win(state.term_bufnr, false, {
                 split = is_win_valid
-                        and (ignore_session and (position == "left" and "right" or "left") or position)
+                        and (bootstrap and (position == "left" and "right" or "left") or position)
                     or "below",
-                win = is_win_valid and M.state.winnr or -1,
-                height = config.windows.height,
+                win = is_win_valid and state.term_winnr or -1,
+                height = setup.config.windows.height,
             })
 
-            require("dap-view.term.options").set_options(M.state.winnr, M.state.bufnr)
+            require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
         end
     end
 
-    return M.state.winnr
+    return state.term_winnr
 end
 
 M.setup_term = function()
     M.create_term_buf(function()
         dap.defaults.fallback.terminal_win_cmd = function()
-            assert(M.state.bufnr, "Failed to get term bufnr")
+            assert(state.term_bufnr, "Failed to get term bufnr")
 
-            return M.state.bufnr
+            return state.term_bufnr
         end
     end)
 end

@@ -10,7 +10,7 @@ local M = {}
 ---@field hide string[] Hide the terminal for listed adapters.
 ---@field position 'right' | 'left'
 ---@field start_hidden boolean
----@field ignore_session boolean
+---@field bootstrap boolean
 
 ---@class WindowsConfig
 ---@field height integer
@@ -33,7 +33,7 @@ M.config = {
             position = "left",
             hide = {},
             start_hidden = false,
-            ignore_session = false,
+            bootstrap = false,
         },
     },
 }

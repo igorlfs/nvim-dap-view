@@ -9,21 +9,20 @@
 
 <!--toc:start-->
 - [nvim-dap-view](#nvim-dap-view)
-  - [Installation](#installation)
-    - [Via lazy.nvim](#via-lazynvim)
-  - [Features](#features)
-  - [Documentation](#documentation)
-    - [Configuration](#configuration)
-    - [Usage](#usage)
-    - [Recommended Setup](#recommended-setup)
-      - [Hide Terminal](#hide-terminal)
-      - [Terminal Position and Integration](#terminal-position-and-integration)
-    - [Highlight Groups](#highlight-groups)
-    - [Filetypes and autocommands](#filetypes-and-autocommands)
-  - [Roadmap](#roadmap)
-  - [Non-goals](#non-goals)
-  - [Known Issues](#known-issues)
-  - [Acknowledgements](#acknowledgements)
+    - [Installation](#installation)
+        - [Via lazy.nvim](#via-lazynvim)
+    - [Features](#features)
+    - [Documentation](#documentation)
+        - [Configuration](#configuration)
+        - [Usage](#usage)
+        - [Recommended Setup](#recommended-setup)
+            - [Hide Terminal](#hide-terminal)
+            - [Terminal Position and Integration](#terminal-position-and-integration)
+        - [Highlight Groups](#highlight-groups)
+        - [Filetypes and autocommands](#filetypes-and-autocommands)
+    - [Roadmap](#roadmap)
+    - [Known Issues](#known-issues)
+    - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
 
 > [!WARNING]  
@@ -127,6 +126,10 @@ return {
             hide = {},
             -- Hide the terminal when starting a new session
             start_hidden = false,
+            -- Create the terminal buffer immediately when `nvim-dap-view` is opened
+            -- Allows for initializing the terminal with a terminal job before dap session is started
+            -- Get terminal bufnr/winnr with require("dap-view.state")
+            bootstrap = false,
         },
     },
 }
@@ -218,14 +221,14 @@ require("dap").defaults.fallback.switchbuf = "useopen"
 ```
 
 If you are using an adapter that does not natively support the `nvim-dap` integrated
-terminal, but you want to use the `nvim-dap-view` terminal to run your debug
-adapter before `nvim-dap` has started a session use the following setup configuration:
+terminal, but you want to use the `nvim-dap-view` terminal anyway, you can set
+the following option:
 
 ```lua
 return {
   windows = {
     terminal = {
-      ignore_session = true,
+      bootstrap = true,
     },
   },
 }
