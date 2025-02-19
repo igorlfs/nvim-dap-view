@@ -1,7 +1,6 @@
 local dap = require("dap")
 
 local state = require("dap-view.state")
-local setup = require("dap-view.setup")
 local util_buf = require("dap-view.util.buffer")
 
 local api = vim.api
@@ -9,7 +8,7 @@ local api = vim.api
 local M = {}
 
 ---@param callback? fun(): nil
-M.create_term_buf = function(callback)
+local create_term_buf = function(callback)
     if not state.term_bufnr then
         state.term_bufnr = api.nvim_create_buf(true, false)
 
@@ -37,6 +36,7 @@ M.delete_term_buf = function()
 end
 
 M.reset_term_buf = function()
+    -- Only reset the buffer if there's no active session
     if state.term_bufnr and not dap.session() then
         state.term_bufnr = nil
     end
@@ -44,7 +44,7 @@ end
 
 ---@return integer?
 M.open_term_buf_win = function()
-    M.create_term_buf()
+    create_term_buf()
 
     if state.should_create_terminal() then
         state.term_winnr = api.nvim_open_win(state.term_bufnr, false, state.get_term_window_config())
@@ -56,7 +56,7 @@ M.open_term_buf_win = function()
 end
 
 M.setup_term = function()
-    M.create_term_buf(function()
+    create_term_buf(function()
         dap.defaults.fallback.terminal_win_cmd = function()
             assert(state.term_bufnr, "Failed to get term bufnr")
 
