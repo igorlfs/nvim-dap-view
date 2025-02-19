@@ -231,9 +231,9 @@ NvimDapViewWatchText
 NvimDapViewWatchTextChanged
 NvimDapViewExceptionFilterEnabled
 NvimDapViewExceptionFilterDisabled
-NvimDapViewBreakpointFileName
-NvimDapViewBreakpointLineNumber
-NvimDapViewBreakpointSeparator
+NvimDapViewFileName
+NvimDapViewLineNumber
+NvimDapViewSeparator
 ```
 
 They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`.

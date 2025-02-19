@@ -57,6 +57,7 @@ dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
 end
 
 dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
+    require("dap-view.threads").get_threads()
     for i, expr in ipairs(state.watched_expressions) do
         eval.eval_expr(expr, function(result)
             state.updated_evaluations[i] = state.expression_results[i]
