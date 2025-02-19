@@ -13,7 +13,6 @@ function M.validate(config)
         position = { config.terminal.position, "string" },
         hide = { config.terminal.hide, "table" },
         start_hidden = { config.terminal.start_hidden, "boolean" },
-        bootstrap = { config.terminal.bootstrap, "boolean" },
     }, config.terminal)
 end
 

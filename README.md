@@ -126,10 +126,6 @@ return {
             hide = {},
             -- Hide the terminal when starting a new session
             start_hidden = false,
-            -- Create the terminal buffer immediately when `nvim-dap-view` is opened
-            -- Allows for initializing the terminal with a terminal job before dap session is started
-            -- Get terminal bufnr/winnr with require("dap-view.state")
-            bootstrap = false,
         },
     },
 }
@@ -221,22 +217,10 @@ require("dap").defaults.fallback.switchbuf = "useopen"
 ```
 
 If you are using an adapter that does not natively support the `nvim-dap` integrated
-terminal, but you want to use the `nvim-dap-view` terminal anyway, you can set
-the following option:
-
-```lua
-return {
-  windows = {
-    terminal = {
-      bootstrap = true,
-    },
-  },
-}
-```
-
-You can then get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
-`dap-view.term.init` and use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view`
-terminal! An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ade9cad0da934e10308dbbfc76b9540/lua/config/dap/go.lua#L19-L48)
+terminal, but you want to use the `nvim-dap-view` terminal anyway, you can get
+the `winnr` and `bufnr` of the `nvim-dap-view` terminal via `dap-view.state` and
+use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view` terminal!
+An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ade9cad0da934e10308dbbfc76b9540/lua/config/dap/go.lua#L19-L48)
 
 ### Highlight Groups
 

@@ -37,8 +37,7 @@ M.delete_term_buf = function()
 end
 
 M.reset_term_buf = function()
-    -- Only reset the buffer if there's no active session
-    if state.term_bufnr and not (setup.config.windows.terminal.bootstrap or dap.session()) then
+    if state.term_bufnr and not dap.session() then
         state.term_bufnr = nil
     end
 end
@@ -47,23 +46,10 @@ end
 M.open_term_buf_win = function()
     M.create_term_buf()
 
-    local is_term_hidden = vim.tbl_contains(setup.config.windows.terminal.hide, state.last_active_adapter)
-    local bootstrap = setup.config.windows.terminal.bootstrap
-    if (bootstrap or dap.session()) and state.term_bufnr and not is_term_hidden then
-        if state.term_winnr == nil or state.term_winnr and not api.nvim_win_is_valid(state.term_winnr) then
-            local is_win_valid = state.term_winnr ~= nil and api.nvim_win_is_valid(state.term_winnr)
+    if state.should_create_terminal() then
+        state.term_winnr = api.nvim_open_win(state.term_bufnr, false, state.get_term_window_config())
 
-            local position = setup.config.windows.terminal.position
-            state.term_winnr = api.nvim_open_win(state.term_bufnr, false, {
-                split = is_win_valid
-                        and (bootstrap and (position == "left" and "right" or "left") or position)
-                    or "below",
-                win = is_win_valid and state.term_winnr or -1,
-                height = setup.config.windows.height,
-            })
-
-            require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
-        end
+        require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
     end
 
     return state.term_winnr
