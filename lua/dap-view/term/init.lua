@@ -2,6 +2,7 @@ local dap = require("dap")
 
 local state = require("dap-view.state")
 local util_buf = require("dap-view.util.buffer")
+local setup = require("dap-view.setup")
 
 local api = vim.api
 
@@ -46,10 +47,20 @@ end
 M.open_term_buf_win = function()
     create_term_buf()
 
-    if state.should_create_terminal() then
-        state.term_winnr = api.nvim_open_win(state.term_bufnr, false, state.get_term_window_config())
+    local is_term_hidden = vim.tbl_contains(setup.config.windows.terminal.hide, state.last_active_adapter)
+    if dap.session() and state.term_bufnr and not is_term_hidden then
+        if state.term_winnr == nil or state.term_winnr and not api.nvim_win_is_valid(state.term_winnr) then
+            local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
+            local term_position = setup.config.windows.terminal.position
 
-        require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
+            state.term_winnr = api.nvim_open_win(state.term_bufnr, false, {
+                split = is_win_valid and term_position or "below",
+                win = is_win_valid and state.winnr or -1,
+                height = setup.config.windows.height,
+            })
+
+            require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
+        end
     end
 
     return state.term_winnr
