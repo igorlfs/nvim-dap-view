@@ -27,11 +27,7 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     --
     -- To address that, we only close the terminal if the new session has a different adapter
     -- (which should cover most scenarios where the flickering would occur)
-    --
-    -- Since there has not been a `last_active_adapter` yet, we don't need to
-    -- call `delete_term_buf`, which conflicts with bootstrapping the terminal
-    -- window.  See: https://github.com/igorlfs/nvim-dap-view/issues/18
-    if state.last_active_adapter and state.last_active_adapter ~= adapter then
+    if state.last_active_adapter ~= adapter then
         term.delete_term_buf()
     end
     state.last_active_adapter = adapter
