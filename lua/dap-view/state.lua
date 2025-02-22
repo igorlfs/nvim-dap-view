@@ -5,6 +5,8 @@
 ---@class State
 ---@field bufnr? integer
 ---@field winnr? integer
+---@field term_bufnr? integer
+---@field term_winnr? integer
 ---@field last_active_adapter? string
 ---@field current_section? SectionType
 ---@field exceptions_options? ExceptionsOption[]
