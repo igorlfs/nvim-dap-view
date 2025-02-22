@@ -210,8 +210,8 @@ return {
         terminal = {
             -- NOTE Don't copy paste this snippet
             -- Use the actual names for the adapters you want to hide
-            -- `delve` is known to not use the terminal
-            hide = { "delve", "some-other-adapter" },
+            -- `go` is known to not use the terminal.
+            hide = { "go", "some-other-adapter" },
         },
     },
 }
@@ -228,9 +228,10 @@ require("dap").defaults.fallback.switchbuf = "useopen"
 ```
 
 If you are using an adapter that does not natively support the `nvim-dap` integrated
-terminal, you can get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
-`dap-view.state` and use `vim.fn.jobstart` to start your debugger in the `nvim-dap-view`
-terminal!  An example can be found [here](https://github.com/catgoose/nvim/blob/a783e0fe931a5e417c4e3cc7e964793d895862e6/lua/config/dap/go.lua)
+terminal, but you want to use the `nvim-dap-view` terminal anyway, you can get
+the `winnr` and `bufnr` of the `nvim-dap-view` terminal via `dap-view.state` and
+use `vim.fn.jobstart` to start your debug adapter in the `nvim-dap-view` terminal!
+An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ade9cad0da934e10308dbbfc76b9540/lua/config/dap/go.lua#L19-L48)
 
 ### Highlight Groups
 
