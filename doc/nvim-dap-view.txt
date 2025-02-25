@@ -249,7 +249,7 @@ you can get the `winnr` and `bufnr` of the `nvim-dap-view` terminal via
 
 HIGHLIGHT GROUPS ~
 
-`nvim-dap-view` defines 8 highlight groups:
+`nvim-dap-view` defines 10 highlight groups:
 
 >
     NvimDapViewMissingData
@@ -260,6 +260,8 @@ HIGHLIGHT GROUPS ~
     NvimDapViewFileName
     NvimDapViewLineNumber
     NvimDapViewSeparator
+    NvimDapViewThread
+    NvimDapViewThreadStopped
 <
 
 They are linked to (somewhat) reasonable defaults, but they may look odd with
