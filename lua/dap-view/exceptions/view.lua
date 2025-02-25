@@ -35,7 +35,7 @@ M.show = function()
 
             for i, opt in ipairs(state.exceptions_options) do
                 local hl_type = opt.enabled and "Enabled" or "Disabled"
-                hl.hl_range("NvimDapViewExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
+                hl.hl_range("ExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
             end
         end
     end

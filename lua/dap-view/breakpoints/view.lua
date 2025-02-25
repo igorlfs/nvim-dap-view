@@ -18,10 +18,10 @@ local highlight_file_name_and_line_number = function(row, len_path, len_lnum)
         local lnum_start = len_path + 1
         local lnum_end = lnum_start + len_lnum
 
-        hl.hl_range("NvimDapViewBreakpointFileName", { row, 0 }, { row, len_path })
-        hl.hl_range("NvimDapViewBreakpointLineNumber", { row, lnum_start }, { row, lnum_end })
-        hl.hl_range("NvimDapViewBreakpointSeparator", { row, lnum_start - 1 }, { row, lnum_start })
-        hl.hl_range("NvimDapViewBreakpointSeparator", { row, lnum_end }, { row, lnum_end + 1 })
+        hl.hl_range("FileName", { row, 0 }, { row, len_path })
+        hl.hl_range("LineNumber", { row, lnum_start }, { row, lnum_end })
+        hl.hl_range("Separator", { row, lnum_start - 1 }, { row, lnum_start })
+        hl.hl_range("Separator", { row, lnum_end }, { row, lnum_end + 1 })
     end
 end
 
