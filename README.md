@@ -235,7 +235,7 @@ An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ad
 
 ### Highlight Groups
 
-`nvim-dap-view` defines 8 highlight groups:
+`nvim-dap-view` defines 10 highlight groups:
 
 ```
 NvimDapViewMissingData
@@ -246,6 +246,8 @@ NvimDapViewExceptionFilterDisabled
 NvimDapViewFileName
 NvimDapViewLineNumber
 NvimDapViewSeparator
+NvimDapViewThread
+NvimDapViewThreadStopped
 ```
 
 They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`.
