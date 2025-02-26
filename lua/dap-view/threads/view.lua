@@ -38,8 +38,19 @@ M.show = function()
             local is_stopped_thread = state.stopped_thread == thread.id
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
 
-            if thread.frames then
-                local content = vim.iter(thread.frames):fold(
+            local valid_frames = vim.iter(thread.frames or {})
+                :filter(
+                    ---@param f dap.StackFrame
+                    function(f)
+                        return f.source and f.source.path and vim.uv.fs_stat(f.source.path) or false
+                    end
+                )
+                :totable()
+
+            if vim.tbl_isempty(valid_frames) then
+                line = line + 1
+            else
+                local content = vim.iter(valid_frames):fold(
                     {},
                     ---@param acc string[]
                     ---@param t dap.StackFrame
@@ -64,16 +75,15 @@ M.show = function()
                     local pipe1 = string.find(c, "|")
                     local pipe2 = #c - string.find(string.reverse(c), "|")
 
-                    state.frames_by_line[line + i] = thread.frames[i]
+                    state.frames_by_line[line + i] = valid_frames[i]
 
                     hl.hl_range("FileName", { line - 1 + i, 0 }, { line - 1 + i, pipe1 })
                     hl.hl_range("Separator", { line - 1 + i, pipe1 - 1 }, { line - 1 + i, pipe1 })
                     hl.hl_range("LineNumber", { line - 1 + i, pipe1 }, { line - 1 + i, pipe2 })
                     hl.hl_range("Separator", { line - 1 + i, pipe2 }, { line - 1 + i, pipe2 + 1 })
                 end
+
                 line = line + #thread.frames
-            else
-                line = line + 1
             end
         end
     end
