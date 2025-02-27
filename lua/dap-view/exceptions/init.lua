@@ -1,5 +1,7 @@
 local dap = require("dap")
+
 local state = require("dap-view.state")
+
 local M = {}
 
 M.update_exception_breakpoints_filters = function()

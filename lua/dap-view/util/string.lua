@@ -9,4 +9,5 @@ M.split_string_to_table = function(str)
     end
     return lines
 end
+
 return M

@@ -1,7 +1,7 @@
 local dap = require("dap")
 
 local state = require("dap-view.state")
-local util_buf = require("dap-view.util.buffer")
+local autocmd = require("dap-view.options.autocmd")
 local setup = require("dap-view.setup")
 
 local api = vim.api
@@ -15,7 +15,7 @@ local create_term_buf = function(callback)
 
         assert(state.term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
 
-        util_buf.quit_buf_autocmd(state.term_bufnr, M.reset_term_buf)
+        autocmd.quit_buf_autocmd(state.term_bufnr, M.reset_term_buf)
 
         if callback then
             callback()

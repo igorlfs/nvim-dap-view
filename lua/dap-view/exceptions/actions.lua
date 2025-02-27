@@ -6,21 +6,21 @@ local M = {}
 
 local api = vim.api
 
-M._toggle_exception_filter = function()
-    local cur_row = api.nvim_win_get_cursor(state.winnr)[1]
+M.toggle_exception_filter = function()
+    local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
-    local curent_option = state.exceptions_options[cur_row]
+    local current_option = state.exceptions_options[cursor_line]
 
-    curent_option.enabled = not curent_option.enabled
+    current_option.enabled = not current_option.enabled
 
-    local icon = curent_option.enabled and "" or ""
+    local icon = current_option.enabled and "" or ""
 
-    local content = "  " .. icon .. "  " .. curent_option.exception_filter.label
+    local content = "  " .. icon .. "  " .. current_option.exception_filter.label
 
-    api.nvim_buf_set_lines(state.bufnr, cur_row - 1, cur_row, false, { content })
+    api.nvim_buf_set_lines(state.bufnr, cursor_line - 1, cursor_line, false, { content })
 
-    local hl_type = curent_option.enabled and "Enabled" or "Disabled"
-    hl.hl_range("ExceptionFilter" .. hl_type, { cur_row - 1, 0 }, { cur_row - 1, 4 })
+    local hl_type = current_option.enabled and "Enabled" or "Disabled"
+    hl.hl_range("ExceptionFilter" .. hl_type, { cursor_line - 1, 0 }, { cursor_line - 1, 4 })
 
     exceptions.update_exception_breakpoints_filters()
 end

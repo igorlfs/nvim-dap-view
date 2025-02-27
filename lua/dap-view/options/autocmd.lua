@@ -7,7 +7,6 @@ local api = vim.api
 M.quit_buf_autocmd = function(bufnr, callback)
     api.nvim_create_autocmd("BufDelete", {
         buffer = bufnr,
-        once = true,
         callback = callback,
     })
 end

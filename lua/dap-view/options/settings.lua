@@ -30,7 +30,7 @@ M.set_keymaps = function()
         elseif state.current_section == "threads" then
             require("dap-view.threads.actions").jump_or_noop()
         elseif state.current_section == "exceptions" then
-            require("dap-view.exceptions.actions")._toggle_exception_filter()
+            require("dap-view.exceptions.actions").toggle_exception_filter()
         end
     end, { buffer = state.bufnr })
 

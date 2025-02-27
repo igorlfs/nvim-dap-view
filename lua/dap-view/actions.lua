@@ -2,12 +2,11 @@ local dap = require("dap")
 
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
-local util_buf = require("dap-view.util.buffer")
+local autocmd = require("dap-view.options.autocmd")
 local term = require("dap-view.term.init")
 local state = require("dap-view.state")
 local settings = require("dap-view.options.settings")
 local globals = require("dap-view.globals")
-local expr = require("dap-view.watches.vendor.expr")
 
 local api = vim.api
 
@@ -49,11 +48,6 @@ M.open = function()
 
     state.bufnr = bufnr
 
-    local prev_buf = require("dap-view.util").get_buf(globals.MAIN_BUF_NAME)
-    if prev_buf then
-        api.nvim_buf_delete(prev_buf, { force = true })
-    end
-
     api.nvim_buf_set_name(bufnr, globals.MAIN_BUF_NAME)
 
     local term_winnr = term.open_term_buf_win()
@@ -83,12 +77,11 @@ M.open = function()
     winbar.show_content(state.current_section)
 
     -- Properly handle exiting the window
-    util_buf.quit_buf_autocmd(state.bufnr, M.close)
+    autocmd.quit_buf_autocmd(state.bufnr, M.close)
 end
 
 M.add_expr = function()
-    local expression = expr.eval_expression()
-    require("dap-view.watches.actions").add_watch_expr(expression)
+    require("dap-view.watches.actions").add_watch_expr(vim.fn.expand("<cexpr>"))
 
     require("dap-view.views").switch(require("dap-view.watches.view").show)
 end

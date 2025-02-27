@@ -1,4 +1,3 @@
----@class ConfigModule
 local M = {}
 
 ---@class WinbarConfig
