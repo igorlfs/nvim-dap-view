@@ -21,21 +21,19 @@ M.cleanup_view = function(cond, message)
     return cond
 end
 
-local switch_to_dapview_buf = function()
-    if not (state.winnr and api.nvim_win_is_valid(state.winnr)) then
+---@param callback fun(): nil
+M.switch_to_view = function(callback)
+    if not state.bufnr or not state.winnr or not api.nvim_win_is_valid(state.winnr) then
         return
     end
-    -- The REPL is actually another buffer
+
+    -- Update buffer if on REPL
     if state.current_section == "repl" then
         api.nvim_win_call(state.winnr, function()
             api.nvim_set_current_buf(state.bufnr)
         end)
     end
-end
 
----@param callback fun(): nil
-M.switch = function(callback)
-    switch_to_dapview_buf()
     callback()
 end
 

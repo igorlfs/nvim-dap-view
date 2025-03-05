@@ -8,9 +8,9 @@ local state = require("dap-view.state")
 local settings = require("dap-view.options.settings")
 local globals = require("dap-view.globals")
 
-local api = vim.api
-
 local M = {}
+
+local api = vim.api
 
 ---@param hide_terminal? boolean
 M.toggle = function(hide_terminal)
@@ -81,9 +81,9 @@ M.open = function()
 end
 
 M.add_expr = function()
-    require("dap-view.watches.actions").add_watch_expr(vim.fn.expand("<cexpr>"))
-
-    require("dap-view.views").switch(require("dap-view.watches.view").show)
+    if require("dap-view.watches.actions").add_watch_expr(vim.fn.expand("<cexpr>")) then
+        require("dap-view.views").switch_to_view(require("dap-view.watches.view").show)
+    end
 end
 
 return M

@@ -48,6 +48,10 @@ M.show = function()
                 :totable()
 
             if vim.tbl_isempty(valid_frames) then
+                if thread.err then
+                    api.nvim_buf_set_lines(state.bufnr, line - 1, line, true, { thread.err })
+                    line = line + 1
+                end
                 line = line + 1
             else
                 local content = vim.iter(valid_frames):fold(

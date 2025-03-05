@@ -2,6 +2,9 @@
 ---@field exception_filter dap.ExceptionBreakpointsFilter
 ---@field enabled boolean
 
+---@class ThreadWithErr: dap.Thread
+---@field err? string
+
 ---@class State
 ---@field bufnr? integer
 ---@field winnr? integer
@@ -11,7 +14,7 @@
 ---@field last_active_adapter? string
 ---@field current_section? SectionType
 ---@field exceptions_options? ExceptionsOption[]
----@field threads dap.Thread[]
+---@field threads ThreadWithErr[]
 ---@field threads_err? string
 ---@field frames_by_line {[number]: dap.StackFrame[]}
 ---@field subtle_frames boolean

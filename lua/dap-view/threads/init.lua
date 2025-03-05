@@ -10,34 +10,31 @@ M.get_threads = function()
     coroutine.wrap(function()
         local err, result = session:request("threads", {})
 
-        if err then
-            state.threads_err = tostring(err)
-            return
-        end
-
         state.threads_err = nil
 
-        if result then
+        if err then
+            state.threads_err = tostring(err)
+            state.threads = {}
+        elseif result then
             state.threads = result.threads
         end
 
-        M.get_stack_frames()
+        M.get_stack_frames(session)
     end)()
 end
 
-M.get_stack_frames = function()
-    local session = assert(dap.session(), "has active session")
-
+---@param session dap.Session
+M.get_stack_frames = function(session)
     for _, thread in pairs(state.threads) do
         coroutine.wrap(function()
             local err, result = session:request("stackTrace", { threadId = thread.id })
 
-            if err then
-                -- TODO
-                return
-            end
+            thread.err = nil
 
-            if result then
+            if err then
+                thread.err = tostring(err)
+                thread.frames = {}
+            elseif result then
                 thread.frames = result.stackFrames
             end
         end)()

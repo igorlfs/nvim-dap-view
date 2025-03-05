@@ -5,19 +5,16 @@ local eval = require("dap-view.watches.eval")
 local M = {}
 
 ---@param expr string
-M.is_expr_valid = function(expr)
+local is_expr_valid = function(expr)
     -- Avoid duplicate expressions
     return #expr > 0 and not vim.tbl_contains(state.watched_expressions, expr)
 end
 
 ---@param expr string
+---@return boolean
 M.add_watch_expr = function(expr)
-    if not M.is_expr_valid(expr) then
-        return
-    end
-
-    if not guard.expect_session() then
-        return
+    if not is_expr_valid(expr) or not guard.expect_session() then
+        return false
     end
 
     eval.eval_expr(expr, function(result)
@@ -25,6 +22,8 @@ M.add_watch_expr = function(expr)
     end)
 
     table.insert(state.watched_expressions, expr)
+
+    return true
 end
 
 ---@param line number
@@ -36,7 +35,7 @@ end
 ---@param expr string
 ---@param line number
 M.edit_watch_expr = function(expr, line)
-    if not guard.expect_session() then
+    if not is_expr_valid(expr) or not guard.expect_session() then
         return
     end
 

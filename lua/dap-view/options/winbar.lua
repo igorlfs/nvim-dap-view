@@ -9,7 +9,7 @@ local winbar_info = {
         keymap = "B",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "breakpoints") then
-                require("dap-view.views").switch(require("dap-view.breakpoints.view").show)
+                require("dap-view.views").switch_to_view(require("dap-view.breakpoints.view").show)
             end
         end,
     },
@@ -18,7 +18,7 @@ local winbar_info = {
         keymap = "E",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "exceptions") then
-                require("dap-view.views").switch(require("dap-view.exceptions.view").show)
+                require("dap-view.views").switch_to_view(require("dap-view.exceptions.view").show)
             end
         end,
     },
@@ -27,7 +27,7 @@ local winbar_info = {
         keymap = "W",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "watches") then
-                require("dap-view.views").switch(require("dap-view.watches.view").show)
+                require("dap-view.views").switch_to_view(require("dap-view.watches.view").show)
             end
         end,
     },
@@ -36,7 +36,7 @@ local winbar_info = {
         keymap = "T",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "threads") then
-                require("dap-view.views").switch(require("dap-view.threads.view").show)
+                require("dap-view.views").switch_to_view(require("dap-view.threads.view").show)
             end
         end,
     },

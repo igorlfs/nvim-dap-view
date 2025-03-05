@@ -40,11 +40,9 @@ M.show = function()
                     end)
                     :totable()
 
-                if not vim.tbl_isempty(virt_lines) then
-                    api.nvim_buf_set_extmark(state.bufnr, globals.NAMESPACE, i - 1, 0, {
-                        virt_lines = virt_lines,
-                    })
-                end
+                api.nvim_buf_set_extmark(state.bufnr, globals.NAMESPACE, i - 1, 0, {
+                    virt_lines = virt_lines,
+                })
             end
         end
     end

@@ -16,27 +16,26 @@ M.show = function()
         -- Clear previous content
         api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
 
-        if
-            views.cleanup_view(not dap.session(), "No active session")
-            or views.cleanup_view(not state.exceptions_options, "Not supported by debug adapter")
-        then
+        if views.cleanup_view(not dap.session(), "No active session") then
             return
         end
 
-        if state.exceptions_options then
-            local content = vim.iter(state.exceptions_options)
-                :map(function(opt)
-                    local icon = opt.enabled and "" or ""
-                    return "  " .. icon .. "  " .. opt.exception_filter.label
-                end)
-                :totable()
+        if views.cleanup_view(not state.exceptions_options, "Not supported by debug adapter") then
+            return
+        end
 
-            api.nvim_buf_set_lines(state.bufnr, 0, -1, false, content)
+        local content = vim.iter(state.exceptions_options or {})
+            :map(function(opt)
+                local icon = opt.enabled and "" or ""
+                return "  " .. icon .. "  " .. opt.exception_filter.label
+            end)
+            :totable()
 
-            for i, opt in ipairs(state.exceptions_options) do
-                local hl_type = opt.enabled and "Enabled" or "Disabled"
-                hl.hl_range("ExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
-            end
+        api.nvim_buf_set_lines(state.bufnr, 0, -1, false, content)
+
+        for i, opt in ipairs(state.exceptions_options) do
+            local hl_type = opt.enabled and "Enabled" or "Disabled"
+            hl.hl_range("ExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
         end
     end
 end
