@@ -201,7 +201,7 @@ end, { desc = "Toggle nvim-dap-view" })
 
 #### Automatic Toggle
 
-If you find yourself constantly toggling `nvim-dap-view` once a session starts and then closing on session end, you might want to add the following snippeet to your configuration:
+If you find yourself constantly toggling `nvim-dap-view` once a session starts and then closing on session end, you might want to add the following snippet to your configuration:
 
 ```lua
 local dap, dv = require("dap"), require("dap-view")
@@ -357,7 +357,7 @@ to create a nice floating window to display the variable under the cursor.
 for the inspiration for handling breakpoint exceptions;
 - [Kulala](https://github.com/mistweaverco/kulala.nvim) for the creative usage
 of neovim's `'winbar'` to handle multiple views.
-- [blink.cmp](https://github.com/Saghen/blink.cmp/blob/main/lua/blink/cmp/config/utils.lua) for the config validation (which is partialy taken from a PR to [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim/pull/934/files#diff-09ebcaa8c75cd1e92d25640e377ab261cfecaf8351c9689173fd36c2d0c23d94R16))
+- [blink.cmp](https://github.com/Saghen/blink.cmp/blob/main/lua/blink/cmp/config/utils.lua) for the config validation (which is partially taken from a PR to [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim/pull/934/files#diff-09ebcaa8c75cd1e92d25640e377ab261cfecaf8351c9689173fd36c2d0c23d94R16))
 
 [^1]: Filters depend on the debug adapter's capabilities
 [^2]: From treesitter and extmarks (e.g., semantic highlighting from LSP)
