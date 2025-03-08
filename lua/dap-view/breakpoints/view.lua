@@ -10,19 +10,6 @@ local M = {}
 
 local api = vim.api
 
----@param row integer
----@param len_path integer
----@param len_lnum integer
-local highlight_file_name_and_line_number = function(row, len_path, len_lnum)
-    local lnum_start = len_path + 1
-    local lnum_end = lnum_start + len_lnum
-
-    hl.hl_range("FileName", { row, 0 }, { row, len_path })
-    hl.hl_range("LineNumber", { row, lnum_start }, { row, lnum_end })
-    hl.hl_range("Separator", { row, lnum_start - 1 }, { row, lnum_start })
-    hl.hl_range("Separator", { row, lnum_end }, { row, lnum_end + 1 })
-end
-
 M.show = function()
     winbar.update_winbar("breakpoints")
 
@@ -32,7 +19,7 @@ M.show = function()
 
         local breakpoints = vendor.get()
 
-        local line_count = 0
+        local line = 0
 
         if views.cleanup_view(vim.tbl_isempty(breakpoints), "No breakpoints") then
             return
@@ -46,18 +33,18 @@ M.show = function()
                 local buf_lines = api.nvim_buf_get_lines(buf, entry.lnum - 1, entry.lnum, true)
                 local text = table.concat(buf_lines, "\n")
 
-                local line_content = { relative_path .. "|" .. entry.lnum .. "|" .. text }
+                local content = { relative_path .. "|" .. entry.lnum .. "|" .. text }
 
-                api.nvim_buf_set_lines(state.bufnr, line_count, line_count, false, line_content)
+                api.nvim_buf_set_lines(state.bufnr, line, line, false, content)
 
                 local col_offset = #relative_path + #tostring(entry.lnum) + 2
 
-                treesitter.copy_highlights(buf, entry.lnum - 1, line_count, col_offset)
-                extmarks.copy_extmarks(buf, entry.lnum - 1, line_count, col_offset)
+                treesitter.copy_highlights(buf, entry.lnum - 1, line, col_offset)
+                extmarks.copy_extmarks(buf, entry.lnum - 1, line, col_offset)
 
-                highlight_file_name_and_line_number(line_count, #relative_path, #tostring(entry.lnum))
+                hl.highlight_file_name_and_line_number(line, #relative_path, #tostring(entry.lnum))
 
-                line_count = line_count + 1
+                line = line + 1
             end
         end
 

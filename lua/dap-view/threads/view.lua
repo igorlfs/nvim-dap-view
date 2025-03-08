@@ -79,12 +79,9 @@ M.show = function()
                     local pipe1 = string.find(c, "|")
                     local pipe2 = #c - string.find(string.reverse(c), "|")
 
-                    state.frames_by_line[line + i] = valid_frames[i]
+                    hl.highlight_file_name_and_line_number(line - 1 + i, pipe1 - 1, pipe2 - pipe1)
 
-                    hl.hl_range("FileName", { line - 1 + i, 0 }, { line - 1 + i, pipe1 })
-                    hl.hl_range("Separator", { line - 1 + i, pipe1 - 1 }, { line - 1 + i, pipe1 })
-                    hl.hl_range("LineNumber", { line - 1 + i, pipe1 }, { line - 1 + i, pipe2 })
-                    hl.hl_range("Separator", { line - 1 + i, pipe2 }, { line - 1 + i, pipe2 + 1 })
+                    state.frames_by_line[line + i] = valid_frames[i]
                 end
 
                 line = line + #thread.frames
