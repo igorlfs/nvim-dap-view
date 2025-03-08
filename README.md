@@ -16,6 +16,7 @@
         - [Configuration](#configuration)
         - [Usage](#usage)
         - [Recommended Setup](#recommended-setup)
+            - [Automatic Toggle](#automatic-toggle)
             - [Hide Terminal](#hide-terminal)
             - [Terminal Position and Integration](#terminal-position-and-integration)
         - [Highlight Groups](#highlight-groups)
@@ -198,6 +199,26 @@ end, { desc = "Toggle nvim-dap-view" })
 
 ### Recommended Setup
 
+#### Automatic Toggle
+
+If you find yourself constantly toggling `nvim-dap-view` once a session starts and then closing on session end, you might want to add the following snippeet to your configuration:
+
+```lua
+local dap, dv = require("dap"), require("dap-view")
+dap.listeners.before.attach["dap-view-config"] = function()
+    dv.open()
+end
+dap.listeners.before.launch["dap-view-config"] = function()
+    dv.open()
+end
+dap.listeners.before.event_terminated["dap-view-config"] = function()
+    dv.close()
+end
+dap.listeners.before.event_exited["dap-view-config"] = function()
+    dv.close()
+end
+```
+
 #### Hide Terminal
 
 Some debug adapters don't use the integrated terminal (console). To avoid having a useless window lying around, you can completely hide the terminal for them. To achieve that, add the following snippet to your `nvim-dap-view` setup:
@@ -296,21 +317,21 @@ Implement every feature from [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-
 - **There will be no "scopes" view** (i.e., list all variables in scope). The rationale is that `nvim-dap` already provides a very nice UI for that, using widgets (see `:h dap-widgets`). The TLDR is that you can use
 
 ```lua
-function()
-    local widgets = require("dap.ui.widgets")
-    widgets.centered_float(widgets.scopes, { border = "rounded" })
-end
+local widgets = require("dap.ui.widgets")
+widgets.centered_float(widgets.scopes, { border = "rounded" })
 ```
 
 to create a nice, centered floating window, where you can navigate and explore variables. A major advantage from this approach is that you're not limited to a small window at the bottom of your screen (which can be troublesome in noisy environments or languages).
 
 ![nvim-dap's Scopes widget](https://github.com/user-attachments/assets/f320392d-e0c8-4b70-8521-db97e115ef5e)
 
-- Likewise, **there will be no "hover" view**, since it's also perfectly handled by `nvim-dap`'s widgets. You can use
+- Likewise, **there will be no "hover" view**, since that's also perfectly handled by `nvim-dap`'s widgets. You can use
 
 ```lua
-function() require("dap.ui.widgets").hover(nil, { border = "rounded" }) end
+require("dap.ui.widgets").hover(nil, { border = "rounded" })
 ```
+
+to create a nice floating window to display the variable under the cursor.
 
 ![nvim-dap's Hover widget](https://github.com/user-attachments/assets/bdb29360-65dd-426f-b59b-fa0b61377e9c)
 
