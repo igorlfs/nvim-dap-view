@@ -6,7 +6,8 @@ local api = vim.api
 local log = vim.log.levels
 
 ---@param pattern string
-M.jump_to_location = function(pattern)
+---@param column? number
+M.jump_to_location = function(pattern, column)
     local line = vim.fn.getline(".")
 
     if not line or line == "" then
@@ -59,7 +60,7 @@ M.jump_to_location = function(pattern)
         api.nvim_set_current_buf(bufnr)
     end)
 
-    api.nvim_win_set_cursor(prev_or_new_window, { line_num, 0 })
+    api.nvim_win_set_cursor(prev_or_new_window, { line_num, column or 0 })
 
     api.nvim_set_current_win(prev_or_new_window)
 end

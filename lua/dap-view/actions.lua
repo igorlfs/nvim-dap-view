@@ -5,7 +5,6 @@ local setup = require("dap-view.setup")
 local autocmd = require("dap-view.options.autocmd")
 local term = require("dap-view.term.init")
 local state = require("dap-view.state")
-local settings = require("dap-view.options.settings")
 local globals = require("dap-view.globals")
 
 local M = {}
@@ -35,7 +34,7 @@ M.close = function(hide_terminal)
         state.bufnr = nil
     end
     if hide_terminal then
-        term.hide_term_buf()
+        term.hide_term_buf_win()
     end
 end
 
@@ -68,8 +67,8 @@ M.open = function()
 
     state.winnr = winnr
 
-    settings.set_options()
-    settings.set_keymaps()
+    require("dap-view.views.options").set_options()
+    require("dap-view.views.keymaps").set_keymaps()
 
     state.current_section = state.current_section or config.winbar.default_section
 

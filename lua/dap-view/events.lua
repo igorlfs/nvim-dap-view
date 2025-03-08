@@ -22,18 +22,22 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     -- (B) Uses the terminal, after a session that doesn't
     -- The terminal wouldn't show up, since it's hidden
     --
-    -- To handle these scenarios, we have to close the terminal buffer
+    -- To handle these scenarios, we have to delete the terminal buffer
     -- However, if we always close the terminal, dap-view will be shifted very quickly (if open),
     -- causing a flickering effect.
     --
-    -- To address that, we only close the terminal if the new session has a different adapter
+    -- To address that, we only delete the terminal buffer if the new session has a different adapter
     -- (which should cover most scenarios where the flickering would occur)
-    if state.last_active_adapter ~= adapter then
-        term.delete_term_buf()
+    --
+    -- However, do not try to delete the buffer on the first session,
+    -- as it conflicts with bootstrapping the terminal window.
+    -- See: https://github.com/igorlfs/nvim-dap-view/issues/18
+    if state.last_active_adapter and state.last_active_adapter ~= adapter then
+        term.force_delete_term_buf()
     end
     state.last_active_adapter = adapter
 
-    term.setup_term()
+    term.setup_term_win_cmd()
     if not setup.config.windows.terminal.start_hidden then
         term.open_term_buf_win()
     end

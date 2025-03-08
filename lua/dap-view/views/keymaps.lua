@@ -5,24 +5,6 @@ local watches_actions = require("dap-view.watches.actions")
 
 local M = {}
 
-M.set_options = function()
-    local win = vim.wo[state.winnr][0]
-    win.scrolloff = 0
-    win.wrap = false
-    win.number = false
-    win.relativenumber = false
-    win.winfixheight = true
-    win.cursorlineopt = "line"
-    win.cursorline = true
-    win.statuscolumn = ""
-    win.foldcolumn = "0"
-
-    local buf = vim.bo[state.bufnr]
-    buf.buftype = "nofile"
-    buf.swapfile = false
-    buf.filetype = "dap-view"
-end
-
 M.set_keymaps = function()
     vim.keymap.set("n", "<CR>", function()
         if state.current_section == "breakpoints" then
@@ -58,19 +40,21 @@ M.set_keymaps = function()
         if state.current_section == "watches" then
             local line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
-            local current_expr = state.watched_expressions[line]
-
-            vim.ui.input({ prompt = "Expression: ", default = current_expr }, function(input)
-                if input then
-                    watches_actions.edit_watch_expr(input, line)
+            vim.ui.input(
+                { prompt = "Expression: ", default = state.watched_expressions[line] },
+                function(input)
+                    if input then
+                        watches_actions.edit_watch_expr(input, line)
+                    end
                 end
-            end)
+            )
         end
     end, { buffer = state.bufnr })
 
     vim.keymap.set("n", "t", function()
         if state.current_section == "threads" then
             state.subtle_frames = not state.subtle_frames
+
             threads_view.show()
         end
     end, { buffer = state.bufnr })
