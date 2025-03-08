@@ -51,16 +51,14 @@ M.open = function()
 
     local term_winnr = term.open_term_buf_win()
 
-    local config = setup.config
-
     local is_term_win_valid = term_winnr ~= nil and api.nvim_win_is_valid(term_winnr)
 
-    local term_position = config.windows.terminal.position == "left" and "right" or "left"
+    local term_position = require("dap-view.util").inverted_directions[setup.config.windows.terminal.position]
 
     local winnr = api.nvim_open_win(bufnr, false, {
         split = is_term_win_valid and term_position or "below",
         win = is_term_win_valid and term_winnr or -1,
-        height = config.windows.height,
+        height = setup.config.windows.height,
     })
 
     assert(winnr ~= 0, "Failed to create nvim-dap-view window")
@@ -70,12 +68,12 @@ M.open = function()
     require("dap-view.views.options").set_options()
     require("dap-view.views.keymaps").set_keymaps()
 
-    state.current_section = state.current_section or config.winbar.default_section
+    state.current_section = state.current_section or setup.config.winbar.default_section
 
     winbar.set_winbar_action_keymaps()
     winbar.show_content(state.current_section)
 
-    -- Properly handle exiting the window
+    -- Properly handle deleting the buffer
     autocmd.quit_buf_autocmd(state.bufnr, M.close)
 end
 

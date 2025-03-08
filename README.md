@@ -129,7 +129,7 @@ return {
     windows = {
         height = 12,
         terminal = {
-            -- 'left'|'right': Terminal position in layout
+            -- 'left'|'right'|'above'|'below': Terminal position in layout
             position = "left",
             -- List of debug adapters for which the terminal should be ALWAYS hidden
             hide = {},

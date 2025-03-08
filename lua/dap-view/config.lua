@@ -7,7 +7,7 @@ local M = {}
 
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
----@field position 'right' | 'left'
+---@field position 'right' | 'left' | 'above' | 'below'
 ---@field start_hidden boolean
 
 ---@class WindowsConfig
