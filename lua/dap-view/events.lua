@@ -38,7 +38,9 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     state.last_active_adapter = adapter
 
     term.setup_term_win_cmd()
-    if not setup.config.windows.terminal.start_hidden then
+
+    local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
+    if not setup.config.windows.terminal.start_hidden and separate_term_win then
         term.open_term_buf_win()
     end
 end
