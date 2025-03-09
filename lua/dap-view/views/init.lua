@@ -27,8 +27,7 @@ M.switch_to_view = function(callback)
         return
     end
 
-    -- Update buffer if on REPL
-    if state.current_section == "repl" then
+    if vim.tbl_contains({ "repl", "console" }, state.current_section) then
         api.nvim_win_call(state.winnr, function()
             api.nvim_set_current_buf(state.bufnr)
         end)

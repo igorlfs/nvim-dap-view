@@ -56,6 +56,26 @@ local winbar_info = {
             end
         end,
     },
+    console = {
+        desc = "Console [C]", -- T was taken
+        keymap = "C",
+        action = function()
+            if vim.tbl_contains(setup.config.winbar.sections, "console") then
+                if not state.term_bufnr then
+                    require("dap-view.term.init").setup_term_win_cmd()
+                end
+
+                api.nvim_win_call(state.winnr, function()
+                    api.nvim_set_current_buf(state.term_bufnr)
+                end)
+
+                require("dap-view.term.options").set_options(state.winnr, state.term_bufnr)
+
+                M.set_winbar_action_keymaps(state.term_bufnr)
+                M.update_winbar("console")
+            end
+        end,
+    },
 }
 
 ---@param bufnr? integer

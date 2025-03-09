@@ -11,7 +11,6 @@ M.set_options = function(winnr, bufnr)
     win.winfixheight = true
     win.statuscolumn = ""
     win.foldcolumn = "0"
-    win.winfixbuf = true
 
     local buf = vim.bo[bufnr]
     buf.filetype = "dap-view-term"

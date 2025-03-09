@@ -13,7 +13,7 @@ local api = vim.api
 
 ---@param hide_terminal? boolean
 M.toggle = function(hide_terminal)
-    if state.bufnr then
+    if state.winnr and api.nvim_win_is_valid(state.winnr) then
         M.close(hide_terminal)
     else
         M.open()
@@ -49,9 +49,10 @@ M.open = function()
 
     api.nvim_buf_set_name(bufnr, globals.MAIN_BUF_NAME)
 
-    local term_winnr = term.open_term_buf_win()
+    local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
+    local term_winnr = separate_term_win and term.open_term_buf_win()
 
-    local is_term_win_valid = term_winnr ~= nil and api.nvim_win_is_valid(term_winnr)
+    local is_term_win_valid = term_winnr and api.nvim_win_is_valid(term_winnr)
 
     local term_position = require("dap-view.util").inverted_directions[setup.config.windows.terminal.position]
 

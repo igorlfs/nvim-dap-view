@@ -14,7 +14,7 @@ local M = {}
 ---@field height integer
 ---@field terminal TerminalConfig
 
----@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"'
+---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"'
 
 ---@class Config
 ---@field winbar WinbarConfig
