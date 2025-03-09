@@ -3,6 +3,8 @@ local setup = require("dap-view.setup")
 
 local M = {}
 
+local api = vim.api
+
 local winbar_info = {
     breakpoints = {
         desc = "Breakpoints [B]",
@@ -44,20 +46,21 @@ local winbar_info = {
         desc = "REPL [R]",
         keymap = "R",
         action = function()
-            local winnr = state.winnr
-            -- Jump to dap-view's window to make the experience seamless
-            local cmd = "lua vim.api.nvim_set_current_win(" .. winnr .. ")"
-            local repl_buf, _ = require("dap").repl.open(nil, cmd)
-            -- The REPL is a new buffer, so we need to set the winbar keymaps again
-            M.set_winbar_action_keymaps(repl_buf)
-            M.update_winbar("repl")
+            if vim.tbl_contains(setup.config.winbar.sections, "repl") then
+                -- Jump to dap-view's window to make the experience seamless
+                local cmd = "lua vim.api.nvim_set_current_win(" .. state.winnr .. ")"
+                local repl_buf, _ = require("dap").repl.open(nil, cmd)
+                -- The REPL is a new buffer, so we need to set the winbar keymaps again
+                M.set_winbar_action_keymaps(repl_buf)
+                M.update_winbar("repl")
+            end
         end,
     },
 }
 
 ---@param bufnr? integer
 M.set_winbar_action_keymaps = function(bufnr)
-    if state.bufnr then
+    if bufnr or state.bufnr then
         for _, value in pairs(winbar_info) do
             vim.keymap.set("n", value.keymap, function()
                 value.action()
@@ -68,7 +71,7 @@ end
 
 ---@param selected_section SectionType
 local set_winbar_opt = function(selected_section)
-    if state.winnr then
+    if state.winnr and api.nvim_win_is_valid(state.winnr) then
         local winbar = setup.config.winbar.sections
         local winbar_title = {}
 
@@ -94,21 +97,16 @@ local set_winbar_opt = function(selected_section)
     end
 end
 
----@param selected_section? SectionType
+---@param selected_section SectionType
 M.show_content = function(selected_section)
     winbar_info[selected_section].action()
 end
 
 ---@param section_name SectionType
-local _update_winbar = function(section_name)
-    state.current_section = section_name
-    set_winbar_opt(state.current_section)
-end
-
----@param section_name SectionType
 M.update_winbar = function(section_name)
     if setup.config.winbar.show then
-        _update_winbar(section_name)
+        state.current_section = section_name
+        set_winbar_opt(state.current_section)
     end
 end
 
