@@ -5,7 +5,7 @@ local state = require("dap-view.state")
 local M = {}
 
 M.update_exception_breakpoints_filters = function()
-    if state.exceptions_options == nil then
+    if vim.tbl_isempty(state.exceptions_options) then
         return
     end
 

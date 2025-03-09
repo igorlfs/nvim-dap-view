@@ -69,41 +69,45 @@ end
 
 dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function(_, body)
     state.stopped_thread = body.threadId
+
     require("dap-view.threads").get_threads()
+
     for i, expr in ipairs(state.watched_expressions) do
         eval.eval_expr(expr, function(result)
-            state.updated_evaluations[i] = state.expression_results[i]
-                and state.expression_results[i] ~= result
+            local has_changed = state.expression_results[i] ~= result
+            state.updated_evaluations[i] = state.expression_results[i] and has_changed
             state.expression_results[i] = result
         end)
     end
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
-    if session.capabilities.exceptionBreakpointFilters then
-        state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters)
-            :map(function(filter)
-                return { enabled = filter.default, exception_filter = filter }
-            end)
-            :totable()
-    end
+    state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters or {})
+        :map(function(filter)
+            return { enabled = filter.default, exception_filter = filter }
+        end)
+        :totable()
     -- Remove applied filters from view when initializing a new session
     -- Since we don't store the applied filters between sessions
     -- (i.e., we always override with the defaults from the adapter on a new session)
     -- Therefore, the exceptions view could look outdated
     --
-    -- Another approach would be to actually store the filters and reapply them.
-    -- However, to handle different adapters, we'd have to filter and keep only
-    -- the options for the current adapter
+    -- Also, we can't just update the filters at this stage (after the initialize request)
+    -- due to how the initialization works: setExceptionBreakpoints happens after initialize
+    -- (with the default configuration)
+    -- See https://microsoft.github.io/debug-adapter-protocol/specification#Events_Initialized
     if state.current_section == "exceptions" then
         exceptions.show()
     end
 end
 
 dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
+    -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
     end
+
+    -- Clear evaluations so new sessions don't get highlighted as changed
     for k in ipairs(state.expression_results) do
         state.expression_results[k] = nil
     end

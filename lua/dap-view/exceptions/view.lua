@@ -20,11 +20,13 @@ M.show = function()
             return
         end
 
-        if views.cleanup_view(not state.exceptions_options, "Not supported by debug adapter") then
+        if
+            views.cleanup_view(vim.tbl_isempty(state.exceptions_options), "Not supported by debug adapter")
+        then
             return
         end
 
-        local content = vim.iter(state.exceptions_options or {})
+        local content = vim.iter(state.exceptions_options)
             :map(function(opt)
                 local icon = opt.enabled and "" or ""
                 return "  " .. icon .. "  " .. opt.exception_filter.label

@@ -13,7 +13,7 @@
 ---@field stopped_thread? integer
 ---@field last_active_adapter? string
 ---@field current_section? SectionType
----@field exceptions_options? ExceptionsOption[]
+---@field exceptions_options ExceptionsOption[]
 ---@field threads ThreadWithErr[]
 ---@field threads_err? string
 ---@field frames_by_line {[number]: dap.StackFrame[]}
@@ -22,6 +22,7 @@
 ---@field expression_results string[]
 ---@field updated_evaluations boolean[]
 local M = {
+    exceptions_options = {},
     threads = {},
     frames_by_line = {},
     subtle_frames = false,
