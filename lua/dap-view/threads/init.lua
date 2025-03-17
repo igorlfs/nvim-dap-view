@@ -8,7 +8,7 @@ M.get_threads = function()
     local session = assert(dap.session(), "has active session")
 
     coroutine.wrap(function()
-        local err, result = session:request("threads", {})
+        local err, result = session:request("threads")
 
         state.threads_err = nil
 
