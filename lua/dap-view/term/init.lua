@@ -57,7 +57,7 @@ end
 ---Create the term buf and setup nvim-dap's `terminal_win_cmd` to use it
 M.setup_term_win_cmd = function()
     if not state.term_bufnr then
-        state.term_bufnr = api.nvim_create_buf(true, false)
+        state.term_bufnr = api.nvim_create_buf(false, false)
 
         assert(state.term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
 
