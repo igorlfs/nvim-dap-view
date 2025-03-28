@@ -107,7 +107,7 @@ The plugin provides 5 "views" that share the same window (so there's clutter)
 
 ![REPL view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
-You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). By the default, the console has its own window, but it can be configured to be shown with the other views.
+You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). By the default, the console has its own window, but it can be configured to be shown with the other views, details on the [defaul config](#configuration) section.
 
 The console's default size (height) is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](#hide-terminal) it (if it's not being used at all) or hide it only during session initialization.
 
@@ -124,6 +124,7 @@ The console's default size (height) is resized to match your `nvim-dap-view` con
 return {
     winbar = {
         show = true,
+        -- You can add a "console" section to merge the terminal with the other views
         sections = { "watches", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
