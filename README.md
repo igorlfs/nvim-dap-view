@@ -28,7 +28,7 @@
 <!--toc:end-->
 
 > [!WARNING]  
-> **Currently requires a neovim nightly (0.11+)**
+> **Requires neovim 0.11**
 
 ## Installation
 
