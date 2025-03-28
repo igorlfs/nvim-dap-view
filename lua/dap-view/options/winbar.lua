@@ -15,6 +15,15 @@ local winbar_info = {
             end
         end,
     },
+    scopes = {
+        desc = "Scopes [S]",
+        keymap = "S",
+        action = function()
+            if vim.tbl_contains(setup.config.winbar.sections, "scopes") then
+                require("dap-view.views").switch_to_view(require("dap-view.scopes.view").show)
+            end
+        end,
+    },
     exceptions = {
         desc = "Exceptions [E]",
         keymap = "E",

@@ -13,6 +13,8 @@ M.set_keymaps = function()
             require("dap-view.threads.actions").jump_or_noop()
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
+        elseif state.current_section == "scopes" then
+            require("dap.ui").trigger_actions({ mode = "first" })
         end
     end, { buffer = state.bufnr })
 
