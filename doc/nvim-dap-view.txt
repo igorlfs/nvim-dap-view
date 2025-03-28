@@ -42,7 +42,7 @@ Table of Contents                            *nvim-dap-view-table-of-contents*
     - |nvim-dap-view-acknowledgements|
 
 
-  [!WARNING] **Currently requires a neovim nightly (0.11+)**
+  [!WARNING] **Requires neovim 0.11**
 
 INSTALLATION                        *nvim-dap-view-nvim-dap-view-installation*
 
