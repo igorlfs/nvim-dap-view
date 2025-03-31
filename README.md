@@ -257,6 +257,10 @@ the `winnr` and `bufnr` of the `nvim-dap-view` terminal via `dap-view.state` and
 use `vim.fn.jobstart` to start your debug adapter in the `nvim-dap-view` terminal!
 An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ade9cad0da934e10308dbbfc76b9540/lua/config/dap/go.lua#L19-L48)
 
+#### Expanding variables
+
+ `:DapViewWatch` expands the `<cexpr>` under the cursor (see `:h <cexpr>`). By default, this setting works really well for C-like languages, but it can be cumbersome for other languages. To handle that, you can tweak the value for the `iskeyword` option (see `:h iskeyword`).
+
 ### Highlight Groups
 
 `nvim-dap-view` defines 10 highlight groups:
