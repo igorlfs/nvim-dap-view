@@ -42,6 +42,7 @@ M.show = function()
 
                 api.nvim_buf_set_extmark(state.bufnr, globals.NAMESPACE, i - 1, 0, {
                     virt_lines = virt_lines,
+                    virt_lines_overflow = "scroll",
                 })
             end
         end
