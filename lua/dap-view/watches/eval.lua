@@ -5,7 +5,7 @@ local M = {}
 M.eval_expr = function(expr, callback)
     local session = assert(require("dap").session(), "has active session")
 
-    coroutine.wrap(function()
+    local co = coroutine.create(function()
         local frame_id = session.current_frame and session.current_frame.id
 
         local err, result =
@@ -39,7 +39,13 @@ M.eval_expr = function(expr, callback)
         else
             callback(expr_result)
         end
-    end)()
+    end)
+
+    -- Delay evaluation to handle misbehaving adapters
+    -- See https://github.com/igorlfs/nvim-dap-view/issues/31
+    vim.defer_fn(function()
+        coroutine.resume(co)
+    end, 10)
 end
 
 return M
