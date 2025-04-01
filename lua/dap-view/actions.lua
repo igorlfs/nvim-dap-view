@@ -84,4 +84,18 @@ M.add_expr = function()
     end
 end
 
+---@param view SectionType
+M.jump_to_view = function(view)
+    if not vim.tbl_contains(setup.config.winbar.sections, view) then
+        vim.notify("Can't jump to unconfigured view: " .. view)
+        return
+    end
+    if state.bufnr and state.winnr and api.nvim_win_is_valid(state.winnr) then
+        api.nvim_set_current_win(state.winnr)
+        winbar.show_content(view)
+    else
+        vim.notify("Can't jump to view: couldn't find the window")
+    end
+end
+
 return M

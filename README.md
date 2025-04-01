@@ -169,15 +169,18 @@ to the watch list. The threads view has 2 mappings:
 When you finish your session, you can use `:DapViewClose` to close the
 `nvim-dap-view` window.
 
-In total, there are 4 commands:
+In total, there are 5 commands:
 
 - `DapViewOpen`
 - `DapViewClose`
 - `DapViewToggle`
 - `DapViewWatch`
+- `DapViewJump [view]`
+
+You can `:DapViewJump [view]` to jump directly to a view, from any window. For instance, to jump to the REPL, you can use `:DapViewJump repl` to jump to REPL.
 
 Additionally, you can use `DapViewClose!` and `DapViewToggle!` to also hide the
-terminal window, if you prefer a tidy view.
+terminal window, if you'd rather have a tidy view.
 
 If you prefer using lua functions, I got you covered! The following provide the
 same functionality as above:
@@ -189,6 +192,7 @@ require("dap-view").close(true) -- Same as `DapViewClose!`
 require("dap-view").toggle()
 require("dap-view").toggle(true) -- Same as `DapViewToggle!`
 require("dap-view").add_expr()
+require("dap-view").jump("[view]") -- Can be used to jump to a specific view, from any window
 ```
 
 `nvim-dap-view` doesn't define any keybindings (outside its own buffer, of

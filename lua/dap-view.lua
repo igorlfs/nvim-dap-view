@@ -29,4 +29,9 @@ M.add_expr = function()
     actions.add_expr()
 end
 
+---@param view SectionType
+M.jump_to_view = function(view)
+    actions.jump_to_view(view)
+end
+
 return M
