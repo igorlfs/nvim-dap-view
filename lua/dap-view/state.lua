@@ -21,6 +21,7 @@
 ---@field watched_expressions string[]
 ---@field expression_results string[]
 ---@field updated_evaluations boolean[]
+---@field cursor_pos [integer, integer]
 local M = {
     exceptions_options = {},
     threads = {},
@@ -29,6 +30,7 @@ local M = {
     watched_expressions = {},
     expression_results = {},
     updated_evaluations = {},
+    cursor_pos = { 1, 0 },
 }
 
 return M
