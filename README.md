@@ -29,7 +29,7 @@
 <!--toc:end-->
 
 > [!WARNING]  
-> **Requires neovim 0.11**
+> **Requires neovim 0.11+**
 
 ## Installation
 
@@ -69,6 +69,9 @@ return {
     },
 }
 ```
+
+> [!NOTE]  
+> `nvim-dap-view` heavily relies on the winbar option. If you're using a plugin that overrides it, consider disabling the plugin for `nvim-dap-view` buffers (e.g., [lualine](https://github.com/igorlfs/nvim-dap-view/issues/36))
 
 ## Features
 
