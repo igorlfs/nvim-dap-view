@@ -6,6 +6,7 @@ local autocmd = require("dap-view.options.autocmd")
 local term = require("dap-view.term.init")
 local state = require("dap-view.state")
 local globals = require("dap-view.globals")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -29,10 +30,10 @@ M.close = function(hide_terminal)
         api.nvim_win_close(state.winnr, true)
         state.winnr = nil
     end
-    if state.bufnr then
+    if util.is_buf_valid(state.bufnr) then
         api.nvim_buf_delete(state.bufnr, { force = true })
-        state.bufnr = nil
     end
+    state.bufnr = nil
     if hide_terminal then
         term.hide_term_buf_win()
     end
@@ -90,7 +91,7 @@ M.jump_to_view = function(view)
         vim.notify("Can't jump to unconfigured view: " .. view)
         return
     end
-    if state.bufnr and state.winnr and api.nvim_win_is_valid(state.winnr) then
+    if util.is_buf_valid(state.bufnr) and state.winnr and api.nvim_win_is_valid(state.winnr) then
         api.nvim_set_current_win(state.winnr)
         winbar.show_content(view)
     else

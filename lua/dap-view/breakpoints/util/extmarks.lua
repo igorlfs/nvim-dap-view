@@ -1,5 +1,6 @@
 local globals = require("dap-view.globals")
 local state = require("dap-view.state")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -27,7 +28,7 @@ M.copy_extmarks = function(src_bufnr, src_row, target_row, col_offset)
             opts.end_col = opts.end_col + col_offset
         end
 
-        if opts then
+        if opts and util.is_buf_valid(state.bufnr) then
             api.nvim_buf_set_extmark(
                 state.bufnr,
                 opts.ns_id or globals.NAMESPACE,

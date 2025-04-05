@@ -4,6 +4,7 @@ local winbar = require("dap-view.options.winbar")
 local views = require("dap-view.views")
 local state = require("dap-view.state")
 local hl = require("dap-view.util.hl")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -12,7 +13,7 @@ local api = vim.api
 M.show = function()
     winbar.update_winbar("threads")
 
-    if state.bufnr then
+    if util.is_buf_valid(state.bufnr) then
         -- Clear previous content
         api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
 
