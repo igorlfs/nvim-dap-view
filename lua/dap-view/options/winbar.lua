@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -61,7 +62,7 @@ local winbar_info = {
         keymap = "C",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "console") then
-                if not state.term_bufnr then
+                if not util.is_buf_valid(state.term_bufnr) then
                     require("dap-view.term.init").setup_term_win_cmd()
                 end
 
@@ -80,7 +81,7 @@ local winbar_info = {
 
 ---@param bufnr? integer
 M.set_winbar_action_keymaps = function(bufnr)
-    if bufnr or state.bufnr then
+    if bufnr or util.is_buf_valid(state.bufnr) then
         for _, value in pairs(winbar_info) do
             vim.keymap.set("n", value.keymap, function()
                 value.action()

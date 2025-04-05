@@ -3,6 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local autocmd = require("dap-view.options.autocmd")
 local setup = require("dap-view.setup")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -16,9 +17,10 @@ M.hide_term_buf_win = function()
 end
 
 M.force_delete_term_buf = function()
-    if state.term_bufnr then
+    if util.is_buf_valid(state.term_bufnr) then
         api.nvim_buf_delete(state.term_bufnr, { force = true })
     end
+    state.term_bufnr = nil
 end
 
 ---Open the term buf in a new window if
@@ -31,7 +33,7 @@ M.open_term_buf_win = function()
     local term_config = setup.config.windows.terminal
     local should_term_be_hidden = vim.tbl_contains(term_config.hide, state.last_active_adapter)
 
-    if dap.session() and state.term_bufnr and not should_term_be_hidden then
+    if dap.session() and util.is_buf_valid(state.term_bufnr) and not should_term_be_hidden then
         if not state.term_winnr or state.term_winnr and not api.nvim_win_is_valid(state.term_winnr) then
             local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
 
@@ -56,7 +58,7 @@ end
 
 ---Create the term buf and setup nvim-dap's `terminal_win_cmd` to use it
 M.setup_term_win_cmd = function()
-    if not state.term_bufnr then
+    if not util.is_buf_valid(state.term_bufnr) then
         state.term_bufnr = api.nvim_create_buf(false, false)
 
         assert(state.term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")

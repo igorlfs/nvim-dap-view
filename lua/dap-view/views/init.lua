@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local hl = require("dap-view.util.hl")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -11,7 +12,9 @@ M.cleanup_view = function(cond, message)
     if cond then
         vim.wo[state.winnr].cursorline = false
 
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, false, { message })
+        if util.is_buf_valid(state.bufnr) then
+            api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
+        end
 
         hl.hl_range("MissingData", { 0, 0 }, { 0, #message })
     else
@@ -23,7 +26,7 @@ end
 
 ---@param callback fun(): nil
 M.switch_to_view = function(callback)
-    if not state.bufnr or not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+    if not util.is_buf_valid(state.bufnr) or not state.winnr or not api.nvim_win_is_valid(state.winnr) then
         return
     end
 

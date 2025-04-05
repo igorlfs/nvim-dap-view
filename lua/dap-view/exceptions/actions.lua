@@ -1,6 +1,7 @@
 local exceptions = require("dap-view.exceptions")
 local state = require("dap-view.state")
 local hl = require("dap-view.util.hl")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -16,8 +17,9 @@ M.toggle_exception_filter = function()
     local icon = current_option.enabled and "" or ""
 
     local content = "  " .. icon .. "  " .. current_option.exception_filter.label
-
-    api.nvim_buf_set_lines(state.bufnr, cursor_line - 1, cursor_line, false, { content })
+    if util.is_buf_valid(state.bufnr) then
+      api.nvim_buf_set_lines(state.bufnr, cursor_line - 1, cursor_line, false, { content })
+    end
 
     local hl_type = current_option.enabled and "Enabled" or "Disabled"
     hl.hl_range("ExceptionFilter" .. hl_type, { cursor_line - 1, 0 }, { cursor_line - 1, 4 })
