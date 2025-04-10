@@ -23,7 +23,6 @@
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
     - [Roadmap](#roadmap)
-    - [Non-goals](#non-goals)
     - [Known Issues](#known-issues)
     - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
@@ -330,31 +329,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 Missing something? Create an issue with a [feature
 request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+)!
-
-## Non-goals
-
-Implement every feature from [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui). More specifically,
-
-- **There will be no "scopes" view** (i.e., list all variables in scope). The rationale is that `nvim-dap` already provides a very nice UI for that, using widgets (see `:h dap-widgets`). The TLDR is that you can use
-
-```lua
-local widgets = require("dap.ui.widgets")
-widgets.centered_float(widgets.scopes, { border = "rounded" })
-```
-
-to create a nice, centered floating window, where you can navigate and explore variables. A major advantage from this approach is that you're not limited to a small window at the bottom of your screen (which can be troublesome in noisy environments or languages).
-
-![nvim-dap's Scopes widget](https://github.com/user-attachments/assets/f320392d-e0c8-4b70-8521-db97e115ef5e)
-
-- Likewise, **there will be no "hover" view**, since that's also perfectly handled by `nvim-dap`'s widgets. You can use
-
-```lua
-require("dap.ui.widgets").hover(nil, { border = "rounded" })
-```
-
-to create a nice floating window to display the variable under the cursor.
-
-![nvim-dap's Hover widget](https://github.com/user-attachments/assets/bdb29360-65dd-426f-b59b-fa0b61377e9c)
 
 ## Known Issues
 
