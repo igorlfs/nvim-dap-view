@@ -75,7 +75,7 @@ return {
 
 ## Features
 
-The plugin provides 5 "views" that share the same window (so there's clutter)
+The plugin provides 6 "views" that share the same window (so there's clutter)
 
 - Watches view
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
@@ -111,7 +111,13 @@ The plugin provides 5 "views" that share the same window (so there's clutter)
 
 ![REPL view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
-You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). By the default, the console has its own window, but it can be configured to be shown with the other views, details on the [defaul config](#configuration) section.
+- Scopes view
+    - Use the scopes widget provided by nvim-dap
+        - Expand variables with `<CR>`
+
+![scopes view](https://github.com/user-attachments/assets/2628ae8e-9224-4b2f-94c7-88e7800c232b)
+
+You can also interact with the console, which is also provided by `nvim-dap`. By the default, the console has its own window, but it can be configured to be shown with the other views. See details on the [defaul config](#configuration) section.
 
 The console's default size (height) is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](#hide-terminal) it (if it's not being used at all) or hide it only during session initialization.
 
@@ -129,7 +135,7 @@ return {
     winbar = {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views
-        sections = { "watches", "exceptions", "breakpoints", "threads", "repl" },
+        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
     },
@@ -155,9 +161,9 @@ Start a regular debugging session. When desired, you can use `:DapViewOpen` to
 start the plugin. You can switch to a view (section) using the letter outlined
 in the `'winbar'` (e.g., `B` for the breakpoints view).
 
-Both the breakpoints view and the exceptions view have only 1 mapping: `<CR>`.
-It jumps to a breakpoint and toggles an exception filter, respectively. The
-watches view comes with 3 mappings:
+The breakpoints view, the exceptions view and the scopes view only have 1
+mapping: `<CR>`. It jumps to a breakpoint, toggles an exception filter, and
+expands a variable, respectively. The watches view comes with 3 mappings:
 
 - `i` to insert a new expression
 - `e` to edit an expression
@@ -181,7 +187,7 @@ In total, there are 5 commands:
 - `DapViewWatch`
 - `DapViewJump [view]`
 
-You can `:DapViewJump [view]` to jump directly to a view, from any window. For instance, to jump to the REPL, you can use `:DapViewJump repl` to jump to REPL.
+You can `:DapViewJump [view]` to jump directly to a view, from any window. For instance, to jump to the REPL, you can use `:DapViewJump repl`.
 
 Additionally, you can use `DapViewClose!` and `DapViewToggle!` to also hide the
 terminal window, if you'd rather have a tidy view.
@@ -294,7 +300,7 @@ They are linked to (somewhat) reasonable defaults, but they may look odd with yo
 
 | Window                           | Filetype      |
 | -------------------------------- | ------------- |
-| watches, exceptions, breakpoints | dap-view      |
+| watches, exceptions, ...         | dap-view      |
 | terminal                         | dap-view-term |
 
 These filetypes can be used to override buffer and window options set by `nvim-dap-view`
