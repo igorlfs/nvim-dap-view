@@ -14,7 +14,7 @@ local M = {}
 ---@field height integer
 ---@field terminal TerminalConfig
 
----@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"'
+---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"' | '"scopes"'
 
 ---@class Config
 ---@field winbar WinbarConfig
@@ -22,7 +22,7 @@ local M = {}
 M.config = {
     winbar = {
         show = true,
-        sections = { "watches", "exceptions", "breakpoints", "threads", "repl" },
+        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         default_section = "watches",
     },
     windows = {

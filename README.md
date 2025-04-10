@@ -23,7 +23,6 @@
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
     - [Roadmap](#roadmap)
-    - [Non-goals](#non-goals)
     - [Known Issues](#known-issues)
     - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
@@ -75,7 +74,7 @@ return {
 
 ## Features
 
-The plugin provides 5 "views" that share the same window (so there's clutter)
+The plugin provides 6 "views" that share the same window (so there's clutter)
 
 - Watches view
     - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
@@ -111,7 +110,13 @@ The plugin provides 5 "views" that share the same window (so there's clutter)
 
 ![REPL view](https://github.com/user-attachments/assets/43caeb02-ff9e-47ea-a4c1-ab5dd30d8a3c)
 
-You can also interact with the console provided by `nvim-dap` (though, arguably, that's not a feature from `nvim-dap-view`). By the default, the console has its own window, but it can be configured to be shown with the other views, details on the [defaul config](#configuration) section.
+- Scopes view
+    - Use the scopes widget provided by nvim-dap
+        - Expand variables with `<CR>`
+
+![scopes view](https://github.com/user-attachments/assets/2628ae8e-9224-4b2f-94c7-88e7800c232b)
+
+You can also interact with the console, which is also provided by `nvim-dap`. By the default, the console has its own window, but it can be configured to be shown with the other views. See details on the [defaul config](#configuration) section.
 
 The console's default size (height) is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](#hide-terminal) it (if it's not being used at all) or hide it only during session initialization.
 
@@ -129,7 +134,7 @@ return {
     winbar = {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views
-        sections = { "watches", "exceptions", "breakpoints", "threads", "repl" },
+        sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
     },
@@ -155,9 +160,9 @@ Start a regular debugging session. When desired, you can use `:DapViewOpen` to
 start the plugin. You can switch to a view (section) using the letter outlined
 in the `'winbar'` (e.g., `B` for the breakpoints view).
 
-Both the breakpoints view and the exceptions view have only 1 mapping: `<CR>`.
-It jumps to a breakpoint and toggles an exception filter, respectively. The
-watches view comes with 3 mappings:
+The breakpoints view, the exceptions view and the scopes view only have 1
+mapping: `<CR>`. It jumps to a breakpoint, toggles an exception filter, and
+expands a variable, respectively. The watches view comes with 3 mappings:
 
 - `i` to insert a new expression
 - `e` to edit an expression
@@ -181,7 +186,7 @@ In total, there are 5 commands:
 - `DapViewWatch`
 - `DapViewJump [view]`
 
-You can `:DapViewJump [view]` to jump directly to a view, from any window. For instance, to jump to the REPL, you can use `:DapViewJump repl` to jump to REPL.
+You can `:DapViewJump [view]` to jump directly to a view, from any window. For instance, to jump to the REPL, you can use `:DapViewJump repl`.
 
 Additionally, you can use `DapViewClose!` and `DapViewToggle!` to also hide the
 terminal window, if you'd rather have a tidy view.
@@ -294,7 +299,7 @@ They are linked to (somewhat) reasonable defaults, but they may look odd with yo
 
 | Window                           | Filetype      |
 | -------------------------------- | ------------- |
-| watches, exceptions, breakpoints | dap-view      |
+| watches, exceptions, ...         | dap-view      |
 | terminal                         | dap-view-term |
 
 These filetypes can be used to override buffer and window options set by `nvim-dap-view`
@@ -324,31 +329,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 Missing something? Create an issue with a [feature
 request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+)!
-
-## Non-goals
-
-Implement every feature from [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui). More specifically,
-
-- **There will be no "scopes" view** (i.e., list all variables in scope). The rationale is that `nvim-dap` already provides a very nice UI for that, using widgets (see `:h dap-widgets`). The TLDR is that you can use
-
-```lua
-local widgets = require("dap.ui.widgets")
-widgets.centered_float(widgets.scopes, { border = "rounded" })
-```
-
-to create a nice, centered floating window, where you can navigate and explore variables. A major advantage from this approach is that you're not limited to a small window at the bottom of your screen (which can be troublesome in noisy environments or languages).
-
-![nvim-dap's Scopes widget](https://github.com/user-attachments/assets/f320392d-e0c8-4b70-8521-db97e115ef5e)
-
-- Likewise, **there will be no "hover" view**, since that's also perfectly handled by `nvim-dap`'s widgets. You can use
-
-```lua
-require("dap.ui.widgets").hover(nil, { border = "rounded" })
-```
-
-to create a nice floating window to display the variable under the cursor.
-
-![nvim-dap's Hover widget](https://github.com/user-attachments/assets/bdb29360-65dd-426f-b59b-fa0b61377e9c)
 
 ## Known Issues
 
