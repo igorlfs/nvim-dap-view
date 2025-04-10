@@ -1,9 +1,9 @@
 local dap = require("dap")
-local cursor = require("dap-view.util.cursor")
 
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local watches = require("dap-view.watches.view")
+local scopes = require("dap-view.scopes.view")
 local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
@@ -11,8 +11,6 @@ local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
 
 local SUBSCRIPTION_ID = "dap-view"
-
-local api = vim.api
 
 dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     local adapter = session.config.type
@@ -60,19 +58,15 @@ dap.listeners.after.evaluate[SUBSCRIPTION_ID] = function()
     end
 end
 
+dap.listeners.after.scopes[SUBSCRIPTION_ID] = function()
+    if state.current_section == "scopes" then
+        scopes.refresh()
+    end
+end
+
 dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
     if state.current_section == "watches" then
         watches.show()
-    end
-    if state.winnr and api.nvim_win_is_valid(state.winnr) then
-        vim.defer_fn(function()
-            local line_count = api.nvim_buf_line_count(state.bufnr)
-            state.cursor_pos[1] = math.min(state.cursor_pos[1], line_count)
-            api.nvim_win_set_cursor(state.winnr, state.cursor_pos)
-            api.nvim_win_call(state.winnr, function()
-                vim.cmd.normal("zz")
-            end)
-        end, 10)
     end
 end
 
@@ -80,18 +74,6 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function()
     if state.current_section == "threads" then
         threads.show()
     end
-end
-
-dap.listeners.before.variables[SUBSCRIPTION_ID] = function()
-    cursor.restore_cursor_position()
-end
-
-dap.listeners.before.event_continued[SUBSCRIPTION_ID] = function()
-    cursor.restore_cursor_position()
-end
-
-dap.listeners.before.event_stopped[SUBSCRIPTION_ID] = function()
-    cursor.restore_cursor_position()
 end
 
 dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function(_, body)

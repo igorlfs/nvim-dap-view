@@ -11,13 +11,11 @@ local M = {}
 local scopes_widget
 
 local new_widget = function()
-    local buf_function = function()
-        return state.bufnr
-    end
-    buf_function = widgets.with_refresh(buf_function, "variables")
     return widgets
         .builder(widgets.scopes)
-        .new_buf(buf_function)
+        .new_buf(function()
+            return state.bufnr
+        end)
         .new_win(function()
             return state.winnr
         end)
@@ -36,6 +34,16 @@ M.show = function()
     end
 
     scopes_widget.open()
+end
+
+M.refresh = function()
+    if scopes_widget == nil then
+        scopes_widget = new_widget()
+
+        scopes_widget.open()
+    else
+        scopes_widget.refresh()
+    end
 end
 
 return M
