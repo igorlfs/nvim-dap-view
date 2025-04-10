@@ -59,7 +59,8 @@ dap.listeners.after.evaluate[SUBSCRIPTION_ID] = function()
 end
 
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function()
-    if state.current_section == "scopes" then
+    -- nvim-dap needs a buffer to operate
+    if state.current_section == "scopes" and state.bufnr then
         scopes.refresh()
     end
 end
