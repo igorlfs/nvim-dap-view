@@ -2,35 +2,8 @@ local M = {}
 
 local api = vim.api
 
-local get_prev_win = function()
-    local windows = api.nvim_tabpage_list_wins(0)
-
-    return vim.iter(windows):find(function(w)
-        local bufnr = api.nvim_win_get_buf(w)
-        return vim.bo[bufnr].buftype == ""
-    end)
-end
-
 ---@type table<string, fun(bufnr?: integer, winnr?: integer, line?: integer): integer?>
 M.switchbuf_winfn = {}
-
-M.switchbuf_winfn.split = function()
-    local prev_win = get_prev_win()
-
-    return api.nvim_open_win(0, true, {
-        split = "below",
-        win = prev_win or 0,
-    })
-end
-
-M.switchbuf_winfn.vsplit = function()
-    local prev_win = get_prev_win()
-
-    return api.nvim_open_win(0, true, {
-        split = "right",
-        win = prev_win or 0,
-    })
-end
 
 M.switchbuf_winfn.newtab = function()
     -- Can't create a new tab with lua API

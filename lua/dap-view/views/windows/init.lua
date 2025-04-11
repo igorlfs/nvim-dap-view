@@ -15,11 +15,6 @@ M.get_win_respecting_switchbuf = function(switchbufopt, bufnr)
         switchbuf_winfn.useopen = switchbuf_winfn.usetab
     end
 
-    if switchbufopt:find("newtab") then
-        switchbuf_winfn.vsplit = switchbuf_winfn.newtab
-        switchbuf_winfn.split = switchbuf_winfn.newtab
-    end
-
     local opts = vim.split(switchbufopt, ",", { plain = true })
     for _, opt in pairs(opts) do
         local winfn = switchbuf.switchbuf_winfn[opt]
