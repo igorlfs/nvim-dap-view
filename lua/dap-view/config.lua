@@ -19,6 +19,7 @@ local M = {}
 ---@class Config
 ---@field winbar WinbarConfig
 ---@field windows WindowsConfig
+---@field switchbuf string
 M.config = {
     winbar = {
         show = true,
@@ -33,6 +34,7 @@ M.config = {
             start_hidden = false,
         },
     },
+    switchbuf = "usetab,newtab",
 }
 
 return M

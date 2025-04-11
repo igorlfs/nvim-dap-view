@@ -36,14 +36,16 @@ M.jump_to_location = function(pattern, column)
 
     local bufnr = vim.uri_to_bufnr(vim.uri_from_fname(abs_path))
 
-    local switchbufopt = require("dap").defaults.fallback.switchbuf or vim.go.switchbuf
+    local config = setup.config
+
+    local switchbufopt = config.switchbuf
     local win = window.get_win_respecting_switchbuf(switchbufopt, bufnr)
 
     if not win then
         win = api.nvim_open_win(0, true, {
             split = "above",
             win = -1,
-            height = vim.o.lines - setup.config.windows.height,
+            height = vim.o.lines - config.windows.height,
         })
     end
 
