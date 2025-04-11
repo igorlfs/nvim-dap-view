@@ -4,6 +4,7 @@ local M = {}
 ---@field sections SectionType[]
 ---@field default_section SectionType
 ---@field show boolean
+---@field headers table<SectionType, string> Header label for each section.
 
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
@@ -24,6 +25,15 @@ M.config = {
         show = true,
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         default_section = "watches",
+        headers = {
+            breakpoints = "Breakpoints [B]",
+            scopes = "Scopes [S]",
+            exceptions = "Exceptions [E]",
+            watches = "Watches [W]",
+            threads = "Threads [T]",
+            repl = "REPL [R]",
+            console = "Console [C]",
+        },
     },
     windows = {
         height = 12,
