@@ -98,23 +98,36 @@ M.set_winbar_action_keymaps = function(bufnr)
     end
 end
 
+---@param idx integer
+M.on_click = function(idx)
+    local key = setup.config.winbar.sections[idx]
+    local section = winbar_info[key]
+    section.action()
+end
+
 ---@param selected_section SectionType
 local set_winbar_opt = function(selected_section)
     if state.winnr and api.nvim_win_is_valid(state.winnr) then
         local winbar = setup.config.winbar.sections
         local winbar_title = {}
 
-        for _, key in ipairs(winbar) do
+        for idx, key in ipairs(winbar) do
             local info = winbar_info[key]
 
             if info ~= nil then
-                local desc = info.desc .. " %*"
+                local desc = "%"
+                    .. idx
+                    .. "@v:lua.require'dap-view.options.winbar'.on_click@ "
+                    .. info.desc
+                    .. " %T"
 
                 if selected_section == key then
-                    desc = "%#TabLineSel# " .. desc
+                    desc = "%#TabLineSel#" .. desc
                 else
-                    desc = "%#TabLine# " .. desc
+                    desc = "%#TabLine#" .. desc
                 end
+
+                desc = desc .. "%*"
 
                 table.insert(winbar_title, desc)
             end
