@@ -42,7 +42,7 @@ M.show = function()
                 :filter(
                     ---@param f dap.StackFrame
                     function(f)
-                        return f.source and f.source.path and vim.uv.fs_stat(f.source.path) or false
+                        return (f.source and f.source.path and vim.uv.fs_stat(f.source.path) ~= nil) or false
                     end
                 )
                 :totable()

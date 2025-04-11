@@ -1,4 +1,5 @@
 local setup = require("dap-view.setup")
+local window = require("dap-view.views.windows")
 
 local M = {}
 
@@ -33,36 +34,28 @@ M.jump_to_location = function(pattern, column)
         return
     end
 
-    local windows = api.nvim_tabpage_list_wins(0)
+    local bufnr = vim.uri_to_bufnr(vim.uri_from_fname(abs_path))
 
-    -- TODO this simply finds the first suitable window
-    -- A better approach could try to match the paths to avoid jumping around
-    -- Or perhaps there's a way to respect the 'switchbuf' option
-    local prev_or_new_window = vim.iter(windows)
-        :filter(function(w)
-            local bufnr = api.nvim_win_get_buf(w)
-            return vim.bo[bufnr].buftype == ""
-        end)
-        :find(function(w)
-            return w
-        end)
+    local config = setup.config
 
-    if not prev_or_new_window then
-        prev_or_new_window = api.nvim_open_win(0, true, {
+    local switchbufopt = config.switchbuf
+    local win = window.get_win_respecting_switchbuf(switchbufopt, bufnr)
+
+    if not win then
+        win = api.nvim_open_win(0, true, {
             split = "above",
             win = -1,
-            height = vim.o.lines - setup.config.windows.height,
+            height = vim.o.lines - config.windows.height,
         })
     end
 
-    api.nvim_win_call(prev_or_new_window, function()
-        local bufnr = vim.uri_to_bufnr(vim.uri_from_fname(abs_path))
+    api.nvim_win_call(win, function()
         api.nvim_set_current_buf(bufnr)
     end)
 
-    api.nvim_win_set_cursor(prev_or_new_window, { line_num, column or 0 })
+    api.nvim_win_set_cursor(win, { line_num, column or 0 })
 
-    api.nvim_set_current_win(prev_or_new_window)
+    api.nvim_set_current_win(win)
 end
 
 return M
