@@ -49,22 +49,6 @@ M.switchbuf_winfn.usetab = function(bufnr, winnr)
     return nil
 end
 
-M.switchbuf_winfn.tabusevisible = function(bufnr, winnr, line)
-    local cur_tab = api.nvim_win_get_tabpage(winnr)
-
-    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(cur_tab)) do
-        if api.nvim_win_get_buf(win) == bufnr then
-            local first = vim.fn.line("w0", win)
-            local last = vim.fn.line("w$", win)
-            if first <= line and line <= last then
-                return win
-            end
-        end
-    end
-
-    return nil
-end
-
 M.switchbuf_winfn.uselast = function(_, winnr)
     local cur_buf = api.nvim_get_current_buf()
 
