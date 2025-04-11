@@ -6,6 +6,7 @@ function M.validate(config)
         show = { config.show, "boolean" },
         sections = { config.sections, "table" },
         default_section = { config.default_section, "string" },
+        headers = { config.headers, "table" },
     }, config)
 
     local sections = config.sections
