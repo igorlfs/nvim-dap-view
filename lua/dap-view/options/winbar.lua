@@ -7,7 +7,6 @@ local api = vim.api
 
 local winbar_info = {
     breakpoints = {
-        desc = "Breakpoints [B]",
         keymap = "B",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "breakpoints") then
@@ -16,7 +15,6 @@ local winbar_info = {
         end,
     },
     scopes = {
-        desc = "Scopes [S]",
         keymap = "S",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "scopes") then
@@ -25,7 +23,6 @@ local winbar_info = {
         end,
     },
     exceptions = {
-        desc = "Exceptions [E]",
         keymap = "E",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "exceptions") then
@@ -34,7 +31,6 @@ local winbar_info = {
         end,
     },
     watches = {
-        desc = "Watches [W]",
         keymap = "W",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "watches") then
@@ -43,7 +39,6 @@ local winbar_info = {
         end,
     },
     threads = {
-        desc = "Threads [T]",
         keymap = "T",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "threads") then
@@ -52,7 +47,6 @@ local winbar_info = {
         end,
     },
     repl = {
-        desc = "REPL [R]",
         keymap = "R",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "repl") then
@@ -66,7 +60,6 @@ local winbar_info = {
         end,
     },
     console = {
-        desc = "Console [C]", -- T was taken
         keymap = "C",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "console") then
@@ -115,11 +108,8 @@ local set_winbar_opt = function(selected_section)
             local info = winbar_info[key]
 
             if info ~= nil then
-                local desc = "%"
-                    .. idx
-                    .. "@v:lua.require'dap-view.options.winbar'.on_click@ "
-                    .. info.desc
-                    .. " %T"
+                local desc = setup.config.winbar.headers[key]
+                desc = "%" .. idx .. "@v:lua.require'dap-view.options.winbar'.on_click@ " .. desc .. " %T"
 
                 if selected_section == key then
                     desc = "%#TabLineSel#" .. desc

@@ -137,6 +137,15 @@ return {
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
+        headers = {
+            breakpoints = "Breakpoints [B]",
+            scopes = "Scopes [S]",
+            exceptions = "Exceptions [E]",
+            watches = "Watches [W]",
+            threads = "Threads [T]",
+            repl = "REPL [R]",
+            console = "Console [C]",
+        },
     },
     windows = {
         height = 12,
