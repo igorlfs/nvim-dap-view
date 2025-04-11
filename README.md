@@ -291,7 +291,7 @@ NvimDapViewThread
 NvimDapViewThreadStopped
 ```
 
-They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`.
+They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
 
 ### Filetypes and autocommands
 
