@@ -52,11 +52,7 @@ end
 M.switchbuf_winfn.uselast = function(_, winnr)
     local cur_buf = api.nvim_get_current_buf()
 
-    local ok, is_source_buf = pcall(vim.api.nvim_buf_get_var, cur_buf, "dap_source_buf")
-
-    is_source_buf = ok and is_source_buf
-
-    if vim.bo[cur_buf].buftype == "" or is_source_buf then
+    if vim.bo[cur_buf].buftype == "" then
         return winnr
     else
         local win = vim.fn.win_getid(vim.fn.winnr("#"))
