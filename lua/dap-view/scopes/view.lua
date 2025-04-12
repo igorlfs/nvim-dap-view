@@ -23,7 +23,7 @@ local new_widget = function()
 end
 
 M.show = function()
-    winbar.update_winbar("scopes")
+    winbar.update_section("scopes")
 
     if views.cleanup_view(not dap.session(), "No active session") then
         return

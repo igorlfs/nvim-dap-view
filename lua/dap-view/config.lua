@@ -5,6 +5,7 @@ local M = {}
 ---@field default_section SectionType
 ---@field show boolean
 ---@field headers WinbarHeaders Header label for each section.
+---@field controls ControlsConfig
 
 ---@class WinbarHeaders
 ---@field breakpoints string
@@ -14,6 +15,28 @@ local M = {}
 ---@field threads string
 ---@field repl string
 ---@field console string
+
+---@class ControlsConfig
+---@field enabled boolean
+---@field position 'left' | 'right'
+---@field buttons Button[] Buttons to show in the controls section.
+---@field custom_buttons table<CustomButton, ControlButton> Custom buttons to show in the controls section.
+---@field icons ControlsIcons Icons for each button.
+
+---@class ControlsIcons
+---@field pause string
+---@field play string
+---@field step_into string
+---@field step_over string
+---@field step_out string
+---@field step_back string
+---@field run_last string
+---@field terminate string
+---@field disconnect string
+
+---@class ControlButton
+---@field render fun(): string Render the button (highlight and icon).
+---@field action fun(clicks: integer, button: string, modifiers: string): nil Click handler. See `:help statusline`.
 
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
@@ -26,6 +49,10 @@ local M = {}
 ---@field terminal TerminalConfig
 
 ---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"' | '"scopes"'
+
+---@alias CustomButton string
+---@alias DefaultButton '"play"' | '"step_into"' | '"step_over"' | '"step_out"' | '"step_back"' | '"run_last"' | '"terminate"' | '"disconnect"'
+---@alias Button CustomButton | DefaultButton
 
 ---@class Config
 ---@field winbar WinbarConfig
@@ -44,6 +71,32 @@ M.config = {
             threads = "Threads [T]",
             repl = "REPL [R]",
             console = "Console [C]",
+        },
+        controls = {
+            enabled = false,
+            position = "right",
+            buttons = {
+                "play",
+                "step_into",
+                "step_over",
+                "step_out",
+                "step_back",
+                "run_last",
+                "terminate",
+                "disconnect",
+            },
+            custom_buttons = {},
+            icons = {
+                pause = "",
+                play = "",
+                step_into = "",
+                step_over = "",
+                step_out = "",
+                step_back = "",
+                run_last = "",
+                terminate = "",
+                disconnect = "",
+            },
         },
     },
     windows = {

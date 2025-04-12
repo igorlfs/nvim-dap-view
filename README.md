@@ -22,6 +22,7 @@
             - [Expanding Variables](#expanding-variables)
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
+        - [Custom buttons](#custom-buttons)
     - [Roadmap](#roadmap)
     - [Known Issues](#known-issues)
     - [Acknowledgements](#acknowledgements)
@@ -122,6 +123,12 @@ The console's default size (height) is resized to match your `nvim-dap-view` con
 
 ![console](https://github.com/user-attachments/assets/0980962c-e3da-4f16-af4c-786ef7fa4b18)
 
+You can also enable the control bar which exposes some clickable buttons by settings `winbar.controls.enable`.
+The control bar is fully customizable, checkout the options on default configuration section.
+
+>[!NOTE]
+> Icons are using `Codicons` glyphs so it requires a Nerd Font
+
 ## Documentation
 
 ### Configuration
@@ -145,6 +152,32 @@ return {
             threads = "Threads [T]",
             repl = "REPL [R]",
             console = "Console [C]",
+        },
+        controls = {
+            enabled = false,
+            position = "right",
+            buttons = {
+                "play",
+                "step_into",
+                "step_over",
+                "step_out",
+                "step_back",
+                "run_last",
+                "terminate",
+                "disconnect",
+            },
+            icons = {
+                pause = "",
+                play = "",
+                step_into = "",
+                step_over = "",
+                step_out = "",
+                step_back = "",
+                run_last = "",
+                terminate = "",
+                disconnect = "",
+            },
+            custom_buttons = {},
         },
     },
     windows = {
@@ -289,22 +322,38 @@ return {
 
 ### Highlight Groups
 
-`nvim-dap-view` defines 10 highlight groups:
+`nvim-dap-view` defines 22 highlight groups linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
 
-```
-NvimDapViewMissingData
-NvimDapViewWatchText
-NvimDapViewWatchTextChanged
-NvimDapViewExceptionFilterEnabled
-NvimDapViewExceptionFilterDisabled
-NvimDapViewFileName
-NvimDapViewLineNumber
-NvimDapViewSeparator
-NvimDapViewThread
-NvimDapViewThreadStopped
-```
+<details>
+    <summary>Highlight groups</summary>
 
-They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
+| Highlight Group                      | Default link                |
+|--------------------------------------|-----------------------------|
+| `NvimDapViewMissingData`             | `DapBreakpoint`             |
+| `NvimDapViewWatchText`               | `Comment`                   |
+| `NvimDapViewWatchTextChanged`        | `DiagnosticVirtualTextWarn` |
+| `NvimDapViewExceptionFilterEnabled`  | `DiagnosticOk`              |
+| `NvimDapViewExceptionFilterDisabled` | `DiagnosticError`           |
+| `NvimDapViewFileName`                | `qfFileName`                |
+| `NvimDapViewLineNumber`              | `qfLineNr`                  |
+| `NvimDapViewSeparator`               | `Comment`                   |
+| `NvimDapViewThread`                  | `@namespace`                |
+| `NvimDapViewThreadStopped`           | `@conditional`              |
+| `NvimDapViewTab`                     | `TabLine`                   |
+| `NvimDapViewTabSelected`             | `TabLineSel`                |
+| `NvimDapViewControlNC`               | `Comment`                   |
+| `NvimDapViewControlPlay`             | `@keyword`                  |
+| `NvimDapViewControlPause`            | `@boolean`                  |
+| `NvimDapViewControlStepInto`         | `@function`                 |
+| `NvimDapViewControlStepOut`          | `@function`                 |
+| `NvimDapViewControlStepOver`         | `@function`                 |
+| `NvimDapViewControlStepBack`         | `@function`                 |
+| `NvimDapViewControlRunLast`          | `@keyword`                  |
+| `NvimDapViewControlTerminate`        | `DapBreakpoint`             |
+| `NvimDapViewControlDisconnect`       | `DapBreakpoint`             |
+
+<details>
+
 
 ### Filetypes and Autocommands
 
@@ -331,6 +380,65 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         vim.keymap.set("n", "q", "<C-w>q", { buffer = evt.buf })
     end,
 })
+```
+
+</details>
+
+### Custom buttons
+
+`nvim-dap-view` provides some default buttons for the control bar, but you can also add your own. To do that, in the `controls` table you can use the `custom_buttons` table to declare your new button and then add it at the position you want in the `buttons` list. 
+
+A custom button has 2 methods:
+
+- `render` returning a string used to display the button (typically an emoji or a NerdFont glyph wrapped in an highlight group)
+- `action` a function that will be executed when the button is clicked. The function receives 3 arguments:
+    - `clicks` the number of clicks
+    - `button` the button clicked (`l`, `r`, `m`)
+    - `modifiers` a string with the modifiers pressed (`c` for `control`, `s` for `shift`, `a` for `alt` and `m` for `meta`)
+
+See the `@ N` section in `:help statusline` for the complete specifications of a click handler.
+
+<details>
+    <summary>Example custom buttons</summary>
+
+An example adding 2 buttons:
+- `fun`: the most basic button possible, just prints "🎊" when clicked
+- `term_restart`: an hybrid button that acts as a stop/restart button. If the stop button is triggered by anything else than a single left click (middle click, right click, double click or click with a modifier), it will disconnect the session instead.
+
+```lua
+winbar = {
+  controls = {
+    enabled = true,
+    buttons = {"play", "step_into", "step_over", "step_out", "term_restart", "fun" },
+    custom_buttons = {
+      fun = {
+        render = function() return "🎉" end,
+        action = function() vim.print("🎊") end,
+      },
+      -- Stop/Restart button
+      -- Double click, middle click or click with a modifier disconnect instead of stop
+      term_restart = {
+        render = function()
+          local session = require("dap").session()
+          local group = session and "ControlTerminate" or "ControlRunLast"
+          local icon = session and "" or ""
+          return "%#NvimDapView" .. group .. "#" .. icon .. "%*"
+        end,
+        action = function(clicks, button, modifiers)
+          local dap = require("dap")
+          local alt = clicks > 1 or button ~= "l" or modifiers:gsub(" ", "") ~= ""
+          if not dap.session() then
+            dap.run_last()
+          elseif alt then
+            dap.disconnect()
+          else
+            dap.terminate()
+          end
+        end,
+      },
+    },
+  },
+}
 ```
 
 </details>

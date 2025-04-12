@@ -9,6 +9,7 @@ function M.validate(config)
         sections = { config.sections, "table" },
         default_section = { config.default_section, "string" },
         headers = { config.headers, "table" },
+        controls = { config.controls, "table" },
     }, config)
 
     validate("winbar.headers", {
@@ -20,6 +21,27 @@ function M.validate(config)
         repl = { config.headers.repl, "string" },
         console = { config.headers.console, "string" },
     }, config.headers)
+
+    validate("winbar.controls", {
+        enabled = { config.controls.enabled, "boolean" },
+        position = { config.controls.position, "string" },
+        buttons = { config.controls.buttons, "table" },
+        icons = { config.controls.icons, "table" },
+        custom_buttons = { config.controls.custom_buttons, "table" },
+    }, config.controls)
+
+    local icons = config.controls.icons
+    validate("winbar.controls.icons", {
+        pause = { icons.pause, "string" },
+        play = { icons.play, "string" },
+        step_into = { icons.step_into, "string" },
+        step_over = { icons.step_over, "string" },
+        step_out = { icons.step_out, "string" },
+        step_back = { icons.step_back, "string" },
+        disconnect = { icons.disconnect, "string" },
+        terminate = { icons.terminate, "string" },
+        run_last = { icons.run_last, "string" },
+    }, icons)
 
     local sections = config.sections
     local default = config.default_section

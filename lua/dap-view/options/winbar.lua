@@ -1,5 +1,8 @@
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
+local controls = require("dap-view.options.controls")
+local statusline = require("dap-view.util.statusline")
+local module = ...
 
 local M = {}
 
@@ -55,7 +58,7 @@ local winbar_info = {
                 local repl_buf, _ = require("dap").repl.open(nil, cmd)
                 -- The REPL is a new buffer, so we need to set the winbar keymaps again
                 M.set_winbar_action_keymaps(repl_buf)
-                M.update_winbar("repl")
+                M.update_section("repl")
             end
         end,
     },
@@ -74,7 +77,7 @@ local winbar_info = {
                 require("dap-view.term.options").set_options(state.winnr, state.term_bufnr)
 
                 M.set_winbar_action_keymaps(state.term_bufnr)
-                M.update_winbar("console")
+                M.update_section("console")
             end
         end,
     },
@@ -98,29 +101,35 @@ M.on_click = function(idx)
     section.action()
 end
 
----@param selected_section SectionType
-local set_winbar_opt = function(selected_section)
+local set_winbar_opt = function()
     if state.winnr and api.nvim_win_is_valid(state.winnr) then
         local winbar = setup.config.winbar.sections
         local winbar_title = {}
+        local controls_config = setup.config.winbar.controls
+
+        if controls_config.enabled and controls_config.position == "left" then
+            table.insert(winbar_title, controls.render() .. "%=")
+        end
 
         for idx, key in ipairs(winbar) do
             local info = winbar_info[key]
 
             if info ~= nil then
-                local desc = setup.config.winbar.headers[key]
-                desc = "%" .. idx .. "@v:lua.require'dap-view.options.winbar'.on_click@ " .. desc .. " %T"
+                local desc = " " .. setup.config.winbar.headers[key] .. " "
+                desc = statusline.clickable(desc, module, "on_click", idx)
 
-                if selected_section == key then
-                    desc = "%#TabLineSel#" .. desc
+                if state.current_section == key then
+                    desc = statusline.hl(desc, "TabSelected")
                 else
-                    desc = "%#TabLine#" .. desc
+                    desc = statusline.hl(desc, "Tab")
                 end
-
-                desc = desc .. "%*"
 
                 table.insert(winbar_title, desc)
             end
+        end
+
+        if controls_config.enabled and controls_config.position == "right" then
+            table.insert(winbar_title, "%=" .. controls.render())
         end
 
         local value = table.concat(winbar_title, "")
@@ -135,10 +144,16 @@ M.show_content = function(selected_section)
 end
 
 ---@param section_name SectionType
-M.update_winbar = function(section_name)
+M.update_section = function(section_name)
     if setup.config.winbar.show then
         state.current_section = section_name
-        set_winbar_opt(state.current_section)
+        set_winbar_opt()
+    end
+end
+
+M.redraw_controls = function()
+    if setup.config.winbar.show and setup.config.winbar.controls.enabled then
+        set_winbar_opt()
     end
 end
 
