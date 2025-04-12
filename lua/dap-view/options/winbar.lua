@@ -1,5 +1,8 @@
+local highlight = require("dap-view.highlight")
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
+local controls = require("dap-view.options.controls")
+local module = ...
 
 local M = {}
 
@@ -104,23 +107,29 @@ local set_winbar_opt = function(selected_section)
         local winbar = setup.config.winbar.sections
         local winbar_title = {}
 
+        if controls.enabled_left() then
+            table.insert(winbar_title, controls.render() .. "%=")
+        end
+
         for idx, key in ipairs(winbar) do
             local info = winbar_info[key]
 
             if info ~= nil then
-                local desc = setup.config.winbar.headers[key]
-                desc = "%" .. idx .. "@v:lua.require'dap-view.options.winbar'.on_click@ " .. desc .. " %T"
+                local desc = " " .. setup.config.winbar.headers[key] .. " "
+                desc = highlight.clickable(desc, module, "on_click", idx)
 
                 if selected_section == key then
-                    desc = "%#TabLineSel#" .. desc
+                    desc = highlight.hl(desc, "TabSelected")
                 else
-                    desc = "%#TabLine#" .. desc
+                    desc = highlight.hl(desc, "Tab")
                 end
-
-                desc = desc .. "%*"
 
                 table.insert(winbar_title, desc)
             end
+        end
+
+        if controls.enabled_right() then
+            table.insert(winbar_title, "%=" .. controls.render())
         end
 
         local value = table.concat(winbar_title, "")
@@ -134,10 +143,10 @@ M.show_content = function(selected_section)
     winbar_info[selected_section].action()
 end
 
----@param section_name SectionType
+---@param section_name? SectionType
 M.update_winbar = function(section_name)
     if setup.config.winbar.show then
-        state.current_section = section_name
+        state.current_section = section_name or state.current_section
         set_winbar_opt(state.current_section)
     end
 end

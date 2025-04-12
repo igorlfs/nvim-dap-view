@@ -5,6 +5,7 @@ local M = {}
 ---@field default_section SectionType
 ---@field show boolean
 ---@field headers WinbarHeaders Header label for each section.
+---@field controls ControlsConfig
 
 ---@class WinbarHeaders
 ---@field breakpoints string
@@ -14,6 +15,23 @@ local M = {}
 ---@field threads string
 ---@field repl string
 ---@field console string
+
+---@class ControlsConfig
+---@field enabled boolean
+---@field position 'left' | 'right'
+---@field buttons ControlType[] Buttons to show in the controls section.
+---@field icons ControlsIcons Icons for each button.
+
+---@class ControlsIcons
+---@field pause string
+---@field play string
+---@field step_into string
+---@field step_over string
+---@field step_out string
+---@field step_back string
+---@field run_last string
+---@field terminate string
+---@field disconnect string
 
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
@@ -26,6 +44,8 @@ local M = {}
 ---@field terminal TerminalConfig
 
 ---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"' | '"scopes"'
+
+---@alias ControlType '"play"' | '"step_into"' | '"step_over"' | '"step_out"' | '"step_back"' | '"run_last"' | '"terminate"' | '"disconnect"'
 
 ---@class Config
 ---@field winbar WinbarConfig
@@ -44,6 +64,31 @@ M.config = {
             threads = "Threads [T]",
             repl = "REPL [R]",
             console = "Console [C]",
+        },
+        controls = {
+            enabled = false,
+            position = "right",
+            buttons = {
+                "play",
+                "step_into",
+                "step_over",
+                "step_out",
+                "step_back",
+                "run_last",
+                "terminate",
+                "disconnect",
+            },
+            icons = {
+                pause = "",
+                play = "",
+                step_into = "",
+                step_over = "",
+                step_out = "",
+                step_back = "",
+                run_last = "",
+                terminate = "",
+                disconnect = "",
+            },
         },
     },
     windows = {

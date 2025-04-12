@@ -9,8 +9,15 @@ local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
 local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
+local winbar = require("dap-view.options.winbar")
 
 local SUBSCRIPTION_ID = "dap-view"
+
+local refresh_winbar = function()
+    if setup.config.winbar.controls.enabled then
+        winbar.update_winbar()
+    end
+end
 
 dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     local adapter = session.config.type
@@ -89,6 +96,8 @@ dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function(_, body)
             state.expression_results[i] = result
         end)
     end
+
+    refresh_winbar()
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
@@ -121,4 +130,20 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
     for k in ipairs(state.expression_results) do
         state.expression_results[k] = nil
     end
+
+    refresh_winbar()
+end
+
+--- Refresh winbar on dap session state change events not having a dedicated event handler
+local events = {
+    "continue",
+    "disconnect",
+    "event_exited",
+    "restart",
+    "terminate",
+    "threads",
+}
+
+for _, event in ipairs(events) do
+    dap.listeners.after[event][SUBSCRIPTION_ID] = refresh_winbar
 end
