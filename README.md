@@ -116,7 +116,7 @@ The plugin provides 6 "views" that share the same window (so there's clutter)
 
 ![scopes view](https://github.com/user-attachments/assets/2628ae8e-9224-4b2f-94c7-88e7800c232b)
 
-You can also interact with the console, which is also provided by `nvim-dap`. By the default, the console has its own window, but it can be configured to be shown with the other views. See details on the [defaul config](#configuration) section.
+You can also interact with the console, which is also provided by `nvim-dap`. By the default, the console has its own window, but it can be configured to be shown with the other views. See details on the [default config](#configuration) section.
 
 The console's default size (height) is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](#hide-terminal) it (if it's not being used at all) or hide it only during session initialization.
 
