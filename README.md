@@ -18,7 +18,7 @@
         - [Recommended Setup](#recommended-setup)
             - [Automatic Toggle](#automatic-toggle)
             - [Hide Terminal](#hide-terminal)
-            - [Terminal Position and Integration](#terminal-position-and-integration)
+            - [Jumping](#jumping)
             - [Expanding Variables](#expanding-variables)
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and autocommands](#filetypes-and-autocommands)
@@ -149,6 +149,8 @@ return {
             start_hidden = false,
         },
     },
+    -- Controls how to jump when selecting a breakpoint or navigating the stack
+    switchbuf = "usetab,newtab",
 }
 ```
 
@@ -241,7 +243,7 @@ Some debug adapters don't use the integrated terminal (console). To avoid having
 
 ```lua
 -- Goes into your opts table (if using lazy.nvim), otherwise goes into the setup function
--- No need to include the "return" statement (or the outer curly braces)
+-- No need to include the "return" statement
 return {
     windows = {
         terminal = {
@@ -254,21 +256,23 @@ return {
 }
 ```
 
-#### Terminal Position and Integration
+#### Jumping
 
-When setting `windows.terminal.position` to `right` the views window may be used
-to display the current breakpoint because `nvim-dap` defaults to the global
-`switchbuf` setting.  A common solution is to set `switchbuf` to "useopen":
+When setting `windows.terminal.position` to `right`, `nvim-dap-view`'s main window may be used to display the current frame (after execution stops), because `nvim-dap` defaults to the global `switchbuf` setting. To address this, update your `switchbuf` configuration. For instance:
 
 ```lua
-require("dap").defaults.fallback.switchbuf = "useopen"
+require("dap").defaults.fallback.switchbuf = "useopen" -- See :h dap-defaults to learn more
 ```
 
-If you are using an adapter that does not natively support the `nvim-dap` integrated
-terminal, but you want to use the `nvim-dap-view` terminal anyway, you can get
-the `winnr` and `bufnr` of the `nvim-dap-view` terminal via `dap-view.state` and
-use `vim.fn.jobstart` to start your debug adapter in the `nvim-dap-view` terminal!
-An example can be found [here](https://github.com/catgoose/nvim/blob/ffd88fd66ade9cad0da934e10308dbbfc76b9540/lua/config/dap/go.lua#L19-L48)
+When jumping via `nvim-dap-view` (to a breakpoint or to a frame in the stack), `nvim-dap-view` uses its own `switchbuf`, which supports a subset of the default neovim options ("newtab", "useopen", "usetab" and "uselast"). You can customize it with:
+
+```lua
+-- Goes into your opts table (if using lazy.nvim), otherwise goes into the setup function
+-- No need to include the "return" statement
+return {
+    switchbuf = "useopen",
+}
+```
 
 #### Expanding Variables
 
