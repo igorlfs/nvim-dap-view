@@ -6,8 +6,8 @@ local M = {}
 --- @param spec table<string, {[1]:any, [2]:function|string, [3]:string|true|nil}>
 local _validate = function(spec)
     for key, key_spec in pairs(spec) do
-        local message = type(key_spec[3]) == "string" and key_spec[3] or nil
-        local optional = type(key_spec[3]) == "boolean" and key_spec[3] or nil
+        local message = type(key_spec[3]) == "string" and key_spec[3] or nil --[[@as string?]]
+        local optional = type(key_spec[3]) == "boolean" and key_spec[3] or nil --[[@as boolean?]]
         vim.validate(key, key_spec[1], key_spec[2], optional, message)
     end
 end
