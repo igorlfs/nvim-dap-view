@@ -39,6 +39,8 @@ M.open_term_buf_win = function()
                 split = is_win_valid and term_config.position or "below",
                 win = is_win_valid and state.winnr or -1,
                 height = setup.config.windows.height,
+                width = term_config.width < 1 and math.floor(vim.o.columns * term_config.width)
+                    or term_config.width,
             })
 
             require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
