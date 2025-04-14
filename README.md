@@ -70,7 +70,7 @@ return {
 ```
 
 > [!NOTE]  
-> `nvim-dap-view` heavily relies on the winbar option. If you're using a plugin that overrides it, consider disabling the plugin for `nvim-dap-view` buffers (e.g., [lualine](https://github.com/igorlfs/nvim-dap-view/issues/36))
+> `nvim-dap-view` heavily relies on the winbar option. If you're using a winbar plugin, consider disable it for `dap-view`, `dap-repl`, `dap-view-term` filetype (e.g., [lualine](https://github.com/igorlfs/nvim-dap-view/issues/36))
 
 ## Features
 
