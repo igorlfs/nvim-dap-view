@@ -82,13 +82,13 @@ dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function(_, body)
 
     require("dap-view.threads").get_threads()
 
-    for i, expr in ipairs(state.watched_expressions) do
-        eval.eval_expr(expr, function(result)
-            local has_changed = state.expression_results[i] ~= result
-            state.updated_evaluations[i] = state.expression_results[i] and has_changed
-            state.expression_results[i] = result
-        end)
-    end
+    -- for i, expr in ipairs(state.watched_expressions) do
+    --     eval.eval_expr(expr, function(result)
+    --         local has_changed = state.expression_results[i] ~= result
+    --         state.updated_evaluations[i] = state.expression_results[i] and has_changed
+    --         state.expression_results[i] = result
+    --     end)
+    -- end
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)

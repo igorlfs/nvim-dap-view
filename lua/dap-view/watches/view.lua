@@ -1,8 +1,7 @@
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
-local globals = require("dap-view.globals")
 local views = require("dap-view.views")
-local util_string = require("dap-view.util.string")
+local hl = require("dap-view.util.hl")
 
 local M = {}
 
@@ -19,32 +18,19 @@ M.show = function()
             return
         end
 
-        api.nvim_buf_set_lines(
-            state.bufnr,
-            0,
-            #state.watched_expressions + 1,
-            false,
-            state.watched_expressions
-        )
+        local line = 0
+        for i, expr in pairs(state.expression_results) do
+            local watch = state.watched_expressions[i]
+            local content = watch .. " = " .. expr.result or tostring(expr)
 
-        for i = 1, #state.watched_expressions do
-            local hl_group = state.updated_evaluations[i] and "NvimDapViewWatchTextChanged"
-                or "NvimDapViewWatchText"
-            local expr_result = state.expression_results[i]
+            api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { content })
+            local hl_start = #watch + 3
 
-            if expr_result then
-                local split_lines = util_string.split_string_to_table(expr_result)
-                local virt_lines = vim.iter(split_lines)
-                    :map(function(r)
-                        return { { r, hl_group } }
-                    end)
-                    :totable()
+            -- TODO perhaps we should try to match nvim-dap's widgets's style
+            hl.hl_range("WatchText", { line, hl_start }, { line, -1 })
 
-                api.nvim_buf_set_extmark(state.bufnr, globals.NAMESPACE, i - 1, 0, {
-                    virt_lines = virt_lines,
-                    virt_lines_overflow = "scroll",
-                })
-            end
+            -- TODO later we can assign a line to a given expression to simplify some operations
+            line = line + 1
         end
     end
 end

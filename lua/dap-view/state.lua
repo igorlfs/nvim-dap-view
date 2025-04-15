@@ -19,7 +19,7 @@
 ---@field frames_by_line {[number]: dap.StackFrame[]}
 ---@field subtle_frames boolean
 ---@field watched_expressions string[]
----@field expression_results string[]
+---@field expression_results (dap.EvaluateResponse | dap.ErrorResponse)[]
 ---@field updated_evaluations boolean[]
 local M = {
     exceptions_options = {},
