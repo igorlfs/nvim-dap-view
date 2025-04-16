@@ -317,7 +317,7 @@ They are linked to (somewhat) reasonable defaults, but they may look odd with yo
 
 They can be used to override buffer and window options set by `nvim-dap-view`.
 
-If the REPL is enabled, the `dap-repl` filetype (which is set by `nvim-dap`) is also used. **If you wish to consitently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocommand.
+If the REPL is enabled, the `dap-repl` filetype (which is set by `nvim-dap`) is also used. **If you wish to consistently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocommand.
 
 <details>
     <summary>Example autocommand</summary>
