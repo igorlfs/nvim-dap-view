@@ -8,8 +8,9 @@ end
 
 local define_base_links = function()
     hl_create("MissingData", "DapBreakpoint")
-    hl_create("WatchText", "Comment")
-    hl_create("WatchTextChanged", "DiagnosticVirtualTextWarn")
+    hl_create("WatchExpr", "Identifier")
+    hl_create("WatchValue", "Comment")
+    hl_create("WatchValueChanged", "DiagnosticVirtualTextWarn")
     hl_create("ExceptionFilterEnabled", "DiagnosticOk")
     hl_create("ExceptionFilterDisabled", "DiagnosticError")
     hl_create("FileName", "qfFileName")

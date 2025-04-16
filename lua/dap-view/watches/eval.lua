@@ -16,6 +16,14 @@ M.eval_expr = function(expr, callback)
         table.insert(state.expression_results, err or result)
 
         local variables_reference = result and result.variablesReference
+        if variables_reference and variables_reference > 0 then
+            local _err, _result = session:request(
+                "variables",
+                { variablesReference = variables_reference, context = "watch", frameId = frame_id }
+            )
+
+            state.variables_by_reference[variables_reference] = _err or _result and _result.variables
+        end
         -- if variables_reference and variables_reference > 0 then
         --
         --     local var_ref_err, var_ref_result = session:request(

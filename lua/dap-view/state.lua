@@ -17,6 +17,7 @@
 ---@field threads ThreadWithErr[]
 ---@field threads_err? string
 ---@field frames_by_line {[number]: dap.StackFrame[]}
+---@field variables_by_reference {[integer]: dap.Variable[]}
 ---@field subtle_frames boolean
 ---@field watched_expressions string[]
 ---@field expression_results (dap.EvaluateResponse | dap.ErrorResponse)[]
@@ -25,6 +26,7 @@ local M = {
     exceptions_options = {},
     threads = {},
     frames_by_line = {},
+    variables_by_reference = {},
     subtle_frames = false,
     watched_expressions = {},
     expression_results = {},
