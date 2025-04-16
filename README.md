@@ -317,7 +317,7 @@ They are linked to (somewhat) reasonable defaults, but they may look odd with yo
 
 They can be used to override buffer and window options set by `nvim-dap-view`.
 
-Since `nvim-dap-view` uses the REPL provided by `nvim-dap`, the `dap-repl` filetype is also used by `nvim-dap-view`. **If you wish to consitently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocommand.
+If the REPL is enabled, the `dap-repl` filetype (which is set by `nvim-dap`) is also used. **If you wish to consitently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocommand.
 
 <details>
     <summary>Example autocommand</summary>
@@ -328,7 +328,7 @@ Map q to quit in `nvim-dap-view` filetypes:
 vim.api.nvim_create_autocmd({ "FileType" }, {
     pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
     callback = function(evt)
-        vim.keymap.set("n", "q", "<C-w>q", { silent = true, buffer = evt.buf })
+        vim.keymap.set("n", "q", "<C-w>q", { buffer = evt.buf })
     end,
 })
 ```
