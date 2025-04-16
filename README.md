@@ -70,7 +70,7 @@ return {
 ```
 
 > [!NOTE]  
-> `nvim-dap-view` heavily relies on the winbar option. If you're using a plugin that overrides it, consider disabling the plugin for `nvim-dap-view` buffers (e.g., [lualine](https://github.com/igorlfs/nvim-dap-view/issues/36))
+> `nvim-dap-view` heavily relies on the winbar option. If you're using a plugin that overrides it, consider disabling the plugin for `nvim-dap-view` [buffers](#filetypes-and-autocommands) (e.g., [lualine](https://github.com/igorlfs/nvim-dap-view/issues/36))
 
 ## Features
 
@@ -306,16 +306,18 @@ NvimDapViewThreadStopped
 
 They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
 
-### Filetypes and autocommands
+### Filetypes and Autocommands
 
-`nvim-dap-view` sets buffer filetypes for the following Views
+`nvim-dap-view` sets the following filetypes:
 
-| Window                           | Filetype      |
-| -------------------------------- | ------------- |
-| watches, exceptions, ...         | dap-view      |
-| terminal                         | dap-view-term |
+| Window                                            | Filetype      |
+| ------------------------------------------------- | ------------- |
+| watches, exceptions, breakpoints, scopes, threads | dap-view      |
+| terminal                                          | dap-view-term |
 
-These filetypes can be used to override buffer and window options set by `nvim-dap-view`
+They can be used to override buffer and window options set by `nvim-dap-view`.
+
+Since `nvim-dap-view` uses the REPL provided by `nvim-dap`, the `dap-repl` filetype is also used by `nvim-dap-view`. **If you wish to consitently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocommand.
 
 <details>
     <summary>Example autocommand</summary>
