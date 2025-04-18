@@ -20,6 +20,7 @@ local M = {}
 ---@field enabled boolean
 ---@field position 'left' | 'right'
 ---@field buttons ControlType[] Buttons to show in the controls section.
+---@field custom_buttons table<CustomControlType, ControlButton> Custom buttons to show in the controls section.
 ---@field icons ControlsIcons Icons for each button.
 
 ---@class ControlsIcons
@@ -33,6 +34,10 @@ local M = {}
 ---@field terminate string
 ---@field disconnect string
 
+---@class ControlButton
+---@field render fun(): string Render the button (highlight and icon).
+---@field action fun(clicks: integer, button: string, modifiers: string): nil Click handler. See `:help statusline`.
+
 ---@class TerminalConfig
 ---@field hide string[] Hide the terminal for listed adapters.
 ---@field position 'right' | 'left' | 'above' | 'below'
@@ -45,7 +50,8 @@ local M = {}
 
 ---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"' | '"scopes"'
 
----@alias ControlType '"play"' | '"step_into"' | '"step_over"' | '"step_out"' | '"step_back"' | '"run_last"' | '"terminate"' | '"disconnect"'
+---@alias CustomControlType string
+---@alias ControlType '"play"' | '"step_into"' | '"step_over"' | '"step_out"' | '"step_back"' | '"run_last"' | '"terminate"' | '"disconnect"' | CustomControlType
 
 ---@class Config
 ---@field winbar WinbarConfig
@@ -78,6 +84,7 @@ M.config = {
                 "terminate",
                 "disconnect",
             },
+            custom_buttons = {},
             icons = {
                 pause = "",
                 play = "",

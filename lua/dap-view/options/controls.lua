@@ -5,6 +5,7 @@ local module = ...
 
 local M = {}
 
+---@type table<ControlType, ControlButton>
 local buttons = {
     play = {
         render = function()
@@ -97,28 +98,35 @@ local buttons = {
 }
 
 ---@param idx integer
-M.on_click = function(idx)
-    local key = setup.config.winbar.controls.buttons[idx]
-    local control = buttons[key]
-    control.action()
+---@param clicks integer
+---@param button '"l"' | '"r"' | '"m"'
+---@param modifiers string
+M.on_click = function(idx, clicks, button, modifiers)
+    local config = setup.config.winbar.controls
+    local key = config.buttons[idx]
+    local control = config.custom_buttons[key] or buttons[key]
+    control.action(clicks, button, modifiers)
 end
 
+---@return string
 M.render = function()
     local config = setup.config.winbar.controls
     local bar = ""
     for idx, key in ipairs(config.buttons) do
-        local control = buttons[key]
+        local control = config.custom_buttons[key] or buttons[key]
         local icon = " " .. control.render() .. " "
         bar = bar .. highlight.clickable(icon, module, "on_click", idx)
     end
     return bar
 end
 
+---@return boolean
 M.enabled_left = function()
     local config = setup.config.winbar.controls
     return config.enabled and config.position == "left"
 end
 
+---@return boolean
 M.enabled_right = function()
     local config = setup.config.winbar.controls
     return config.enabled and config.position == "right"

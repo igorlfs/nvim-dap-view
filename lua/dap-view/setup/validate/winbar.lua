@@ -27,6 +27,7 @@ function M.validate(config)
         position = { config.controls.position, "string" },
         buttons = { config.controls.buttons, "table" },
         icons = { config.controls.icons, "table" },
+        custom_buttons = { config.controls.custom_buttons, "table" },
     }, config.controls)
 
     validate("winbar.controls.icons", {
