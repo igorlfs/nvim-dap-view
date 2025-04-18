@@ -122,6 +122,12 @@ The console's default size (height) is resized to match your `nvim-dap-view` con
 
 ![console](https://github.com/user-attachments/assets/0980962c-e3da-4f16-af4c-786ef7fa4b18)
 
+You can also enable the control bar which exposes some clickable buttons by settings `winbar.controls.enable`.
+The control bar is fully customizable, checkout the options on default configuration section.
+
+>[!NOTE]
+> Icons are using `Codicons` glyphs so it requires a Nerd Font
+
 ## Documentation
 
 ### Configuration
@@ -145,6 +151,31 @@ return {
             threads = "Threads [T]",
             repl = "REPL [R]",
             console = "Console [C]",
+        },
+        controls = {
+            enabled = false,
+            position = "right",
+            buttons = {
+                "play",
+                "step_into",
+                "step_over",
+                "step_out",
+                "step_back",
+                "run_last",
+                "terminate",
+                "disconnect",
+            },
+            icons = {
+                pause = "",
+                play = "",
+                step_into = "",
+                step_over = "",
+                step_out = "",
+                step_back = "",
+                run_last = "",
+                terminate = "",
+                disconnect = "",
+            },
         },
     },
     windows = {
@@ -289,22 +320,38 @@ return {
 
 ### Highlight Groups
 
-`nvim-dap-view` defines 10 highlight groups:
+`nvim-dap-view` defines 22 highlight groups linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
 
-```
-NvimDapViewMissingData
-NvimDapViewWatchText
-NvimDapViewWatchTextChanged
-NvimDapViewExceptionFilterEnabled
-NvimDapViewExceptionFilterDisabled
-NvimDapViewFileName
-NvimDapViewLineNumber
-NvimDapViewSeparator
-NvimDapViewThread
-NvimDapViewThreadStopped
-```
+<details>
+    <summary>Highlight groups</summary>
 
-They are linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
+| Highlight Group                      | Default link                |
+|--------------------------------------|-----------------------------|
+| `NvimDapViewMissingData`             | `DapBreakpoint`             |
+| `NvimDapViewWatchText`               | `Comment`                   |
+| `NvimDapViewWatchTextChanged`        | `DiagnosticVirtualTextWarn` |
+| `NvimDapViewExceptionFilterEnabled`  | `DiagnosticOk`              |
+| `NvimDapViewExceptionFilterDisabled` | `DiagnosticError`           |
+| `NvimDapViewFileName`                | `qfFileName`                |
+| `NvimDapViewLineNumber`              | `qfLineNr`                  |
+| `NvimDapViewSeparator`               | `Comment`                   |
+| `NvimDapViewThread`                  | `@namespace`                |
+| `NvimDapViewThreadStopped`           | `@conditional`              |
+| `NvimDapViewTab`                     | `TabLine`                   |
+| `NvimDapViewTabSelected`             | `TabLineSel`                |
+| `NvimDapViewControlNC`               | `Comment`                   |
+| `NvimDapViewControlPlay`             | `@keyword`                  |
+| `NvimDapViewControlPause`            | `@boolean`                  |
+| `NvimDapViewControlStepInto`         | `@function`                 |
+| `NvimDapViewControlStepOut`          | `@function`                 |
+| `NvimDapViewControlStepOver`         | `@function`                 |
+| `NvimDapViewControlStepBack`         | `@function`                 |
+| `NvimDapViewControlRunLast`          | `@keyword`                  |
+| `NvimDapViewControlTerminate`        | `DapBreakpoint`             |
+| `NvimDapViewControlDisconnect`       | `DapBreakpoint`             |
+
+<details>
+
 
 ### Filetypes and Autocommands
 
