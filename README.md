@@ -212,7 +212,7 @@ require("dap-view").close(true) -- Same as `DapViewClose!`
 require("dap-view").toggle()
 require("dap-view").toggle(true) -- Same as `DapViewToggle!`
 require("dap-view").add_expr()
-require("dap-view").jump("[view]") -- Can be used to jump to a specific view, from any window
+require("dap-view").jump_to_view("[view]") -- Can be used to jump to a specific view, from any window
 ```
 
 `nvim-dap-view` doesn't define any keybindings (outside its own buffer, of
