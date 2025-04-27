@@ -16,7 +16,9 @@ M.show = function()
         -- Clear previous content
         api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
 
-        if views.cleanup_view(not dap.session(), "No active session") then
+        local session = dap.session()
+        -- Redundant check to appease the type checker
+        if views.cleanup_view(session == nil, "No active session") or session == nil then
             return
         end
 
@@ -35,7 +37,7 @@ M.show = function()
         local line = 0
         for _, thread in pairs(state.threads) do
             api.nvim_buf_set_lines(state.bufnr, line, -1, false, { thread.name })
-            local is_stopped_thread = state.stopped_thread == thread.id
+            local is_stopped_thread = session.stopped_thread_id == thread.id
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
 
             local valid_frames = vim.iter(thread.frames or {})

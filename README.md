@@ -21,8 +21,8 @@
             - [Jumping](#jumping)
             - [Expanding Variables](#expanding-variables)
         - [Highlight Groups](#highlight-groups)
-        - [Filetypes and autocommands](#filetypes-and-autocommands)
-        - [Custom buttons](#custom-buttons)
+        - [Filetypes and Autocommands](#filetypes-and-autocommands)
+        - [Custom Buttons](#custom-buttons)
     - [Roadmap](#roadmap)
     - [Known Issues](#known-issues)
     - [Acknowledgements](#acknowledgements)
@@ -78,11 +78,12 @@ return {
 The plugin provides 6 "views" that share the same window (so there's clutter)
 
 - Watches view
-    - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
+    - Shows a list of user defined expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
-        - Including adding the variable under the cursor
+        - Add variable under the cursor using a command
+    - Copy the value of an expression
 
-![watches view](https://github.com/user-attachments/assets/c6838700-95ed-4b39-9ab5-e0ed0e753995)
+![watches view](https://github.com/user-attachments/assets/381a5c9c-7eea-4cdc-8358-a2afe9f247b2)
 
 - Exceptions view
     - Control when the debugger should stop, outside of breakpoints (e.g.,
@@ -125,6 +126,8 @@ The console's default size (height) is resized to match your `nvim-dap-view` con
 
 You can also enable the control bar which exposes some clickable buttons by settings `winbar.controls.enable`.
 The control bar is fully customizable, checkout the options on default configuration section.
+
+![controls](https://github.com/user-attachments/assets/3d8d7102-7183-4acf-9759-6a7c7b354e9a)
 
 >[!NOTE]
 > Icons are using `Codicons` glyphs so it requires a Nerd Font
@@ -206,10 +209,11 @@ in the `'winbar'` (e.g., `B` for the breakpoints view).
 
 The breakpoints view, the exceptions view and the scopes view only have 1
 mapping: `<CR>`. It jumps to a breakpoint, toggles an exception filter, and
-expands a variable, respectively. The watches view comes with 3 mappings:
+expands a variable, respectively. The watches view comes with 4 mappings:
 
 - `i` to insert a new expression
 - `e` to edit an expression
+- `c` to copy an expression (can't copy inner variables for now)
 - `d` to delete an expression
 
 Though, the preferred way of adding a new expression is using the
@@ -322,7 +326,7 @@ return {
 
 ### Highlight Groups
 
-`nvim-dap-view` defines 22 highlight groups linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
+`nvim-dap-view` defines 28 highlight groups linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
 
 <details>
     <summary>Highlight groups</summary>
@@ -330,30 +334,35 @@ return {
 | Highlight Group                      | Default link                |
 |--------------------------------------|-----------------------------|
 | `NvimDapViewMissingData`             | `DapBreakpoint`             |
-| `NvimDapViewWatchText`               | `Comment`                   |
-| `NvimDapViewWatchTextChanged`        | `DiagnosticVirtualTextWarn` |
 | `NvimDapViewExceptionFilterEnabled`  | `DiagnosticOk`              |
 | `NvimDapViewExceptionFilterDisabled` | `DiagnosticError`           |
 | `NvimDapViewFileName`                | `qfFileName`                |
 | `NvimDapViewLineNumber`              | `qfLineNr`                  |
 | `NvimDapViewSeparator`               | `Comment`                   |
-| `NvimDapViewThread`                  | `@namespace`                |
-| `NvimDapViewThreadStopped`           | `@conditional`              |
+| `NvimDapViewThread`                  | `Tag`                       |
+| `NvimDapViewThreadStopped`           | `Conditional`               |
 | `NvimDapViewTab`                     | `TabLine`                   |
 | `NvimDapViewTabSelected`             | `TabLineSel`                |
 | `NvimDapViewControlNC`               | `Comment`                   |
-| `NvimDapViewControlPlay`             | `@keyword`                  |
-| `NvimDapViewControlPause`            | `@boolean`                  |
-| `NvimDapViewControlStepInto`         | `@function`                 |
-| `NvimDapViewControlStepOut`          | `@function`                 |
-| `NvimDapViewControlStepOver`         | `@function`                 |
-| `NvimDapViewControlStepBack`         | `@function`                 |
-| `NvimDapViewControlRunLast`          | `@keyword`                  |
+| `NvimDapViewControlPlay`             | `Keyword`                   |
+| `NvimDapViewControlPause`            | `Boolean`                   |
+| `NvimDapViewControlStepInto`         | `Function`                  |
+| `NvimDapViewControlStepOut`          | `Function`                  |
+| `NvimDapViewControlStepOver`         | `Function`                  |
+| `NvimDapViewControlStepBack`         | `Function`                  |
+| `NvimDapViewControlRunLast`          | `Keyword`                   |
 | `NvimDapViewControlTerminate`        | `DapBreakpoint`             |
 | `NvimDapViewControlDisconnect`       | `DapBreakpoint`             |
+| `NvimDapViewWatchExpr`               | `Identifier`                |
+| `NvimDapViewWatchError`              | `DiagnosticError`           |
+| `NvimDapViewWatchUpdated`            | `DiagnosticVirtualTextWarn` |
+| `NvimDapViewBoolean`                 | `Boolean`                   |
+| `NvimDapViewString`                  | `String`                    |
+| `NvimDapViewNumber`                  | `Number`                    |
+| `NvimDapViewFloat`                   | `Float`                     |
+| `NvimDapViewFunction`                | `Function`                  |
 
 <details>
-
 
 ### Filetypes and Autocommands
 
@@ -384,9 +393,9 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 
 </details>
 
-### Custom buttons
+### Custom Buttons
 
-`nvim-dap-view` provides some default buttons for the control bar, but you can also add your own. To do that, in the `controls` table you can use the `custom_buttons` table to declare your new button and then add it at the position you want in the `buttons` list. 
+`nvim-dap-view` provides some default buttons for the control bar, but you can also add your own. To do that, in the `controls` table you can use the `custom_buttons` table to declare your new button and then add it at the position you want in the `buttons` list.
 
 A custom button has 2 methods:
 
@@ -402,42 +411,50 @@ See the `@ N` section in `:help statusline` for the complete specifications of a
     <summary>Example custom buttons</summary>
 
 An example adding 2 buttons:
+
 - `fun`: the most basic button possible, just prints "🎊" when clicked
 - `term_restart`: an hybrid button that acts as a stop/restart button. If the stop button is triggered by anything else than a single left click (middle click, right click, double click or click with a modifier), it will disconnect the session instead.
 
 ```lua
-winbar = {
-  controls = {
-    enabled = true,
-    buttons = {"play", "step_into", "step_over", "step_out", "term_restart", "fun" },
-    custom_buttons = {
-      fun = {
-        render = function() return "🎉" end,
-        action = function() vim.print("🎊") end,
-      },
-      -- Stop/Restart button
-      -- Double click, middle click or click with a modifier disconnect instead of stop
-      term_restart = {
-        render = function()
-          local session = require("dap").session()
-          local group = session and "ControlTerminate" or "ControlRunLast"
-          local icon = session and "" or ""
-          return "%#NvimDapView" .. group .. "#" .. icon .. "%*"
-        end,
-        action = function(clicks, button, modifiers)
-          local dap = require("dap")
-          local alt = clicks > 1 or button ~= "l" or modifiers:gsub(" ", "") ~= ""
-          if not dap.session() then
-            dap.run_last()
-          elseif alt then
-            dap.disconnect()
-          else
-            dap.terminate()
-          end
-        end,
-      },
+-- No need to include the "return" statement
+return {
+    winbar = {
+        controls = {
+            enabled = true,
+            buttons = { "play", "step_into", "step_over", "step_out", "term_restart", "fun" },
+            custom_buttons = {
+                fun = {
+                    render = function()
+                        return "🎉"
+                    end,
+                    action = function()
+                        vim.print("🎊")
+                    end,
+                },
+                -- Stop/Restart button
+                -- Double click, middle click or click with a modifier disconnect instead of stop
+                term_restart = {
+                    render = function()
+                        local session = require("dap").session()
+                        local group = session and "ControlTerminate" or "ControlRunLast"
+                        local icon = session and "" or ""
+                        return "%#NvimDapView" .. group .. "#" .. icon .. "%*"
+                    end,
+                    action = function(clicks, button, modifiers)
+                        local dap = require("dap")
+                        local alt = clicks > 1 or button ~= "l" or modifiers:gsub(" ", "") ~= ""
+                        if not dap.session() then
+                            dap.run_last()
+                        elseif alt then
+                            dap.disconnect()
+                        else
+                            dap.terminate()
+                        end
+                    end,
+                },
+            },
+        },
     },
-  },
 }
 ```
 

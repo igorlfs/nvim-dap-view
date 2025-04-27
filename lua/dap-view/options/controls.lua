@@ -1,6 +1,7 @@
+local dap = require("dap")
+
 local statusline = require("dap-view.util.statusline")
 local setup = require("dap-view.setup")
-local dap = require("dap")
 local module = ...
 
 local M = {}
