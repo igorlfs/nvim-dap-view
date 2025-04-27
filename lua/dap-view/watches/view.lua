@@ -37,12 +37,12 @@ local show_variables = function(line, response)
                 local value = #variable.value > 0 and variable.value
                     or variable.variablesReference > 0 and "..."
                     or ""
-                local content = "\t" .. variable.name .. " = " .. value
+                local content = variable.name .. " = " .. value
 
                 -- Can't have linebreaks with nvim_buf_set_lines
                 local trimmed_content = content:gsub("%s+", " ")
 
-                api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { trimmed_content })
+                api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { "\t" .. trimmed_content })
 
                 hl.hl_range("WatchExpr", { line, 1 }, { line, 1 + #variable.name })
 
