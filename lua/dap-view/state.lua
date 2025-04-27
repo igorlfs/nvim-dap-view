@@ -10,25 +10,24 @@
 ---@field winnr? integer
 ---@field term_bufnr? integer
 ---@field term_winnr? integer
----@field stopped_thread? integer
 ---@field last_active_adapter? string
 ---@field current_section? SectionType
 ---@field exceptions_options ExceptionsOption[]
 ---@field threads ThreadWithErr[]
 ---@field threads_err? string
 ---@field frames_by_line {[number]: dap.StackFrame[]}
+---@field expressions_by_line {[integer]: string}
+---@field variables_by_reference table<integer, {variable: dap.Variable, updated: boolean}[] | string>
 ---@field subtle_frames boolean
----@field watched_expressions string[]
----@field expression_results string[]
----@field updated_evaluations boolean[]
+---@field watched_expressions table<string,{response?: (dap.EvaluateResponse | string), updated?: boolean}>
 local M = {
     exceptions_options = {},
     threads = {},
     frames_by_line = {},
+    expressions_by_line = {},
+    variables_by_reference = {},
     subtle_frames = false,
     watched_expressions = {},
-    expression_results = {},
-    updated_evaluations = {},
 }
 
 return M

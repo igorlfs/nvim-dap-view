@@ -78,11 +78,12 @@ return {
 The plugin provides 6 "views" that share the same window (so there's clutter)
 
 - Watches view
-    - Shows a list of (user defined) expressions, that are evaluated by the debug adapter
+    - Shows a list of user defined expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
-        - Including adding the variable under the cursor
+        - Add variable under the cursor using a command
+    - Copy the value of an expression
 
-![watches view](https://github.com/user-attachments/assets/c6838700-95ed-4b39-9ab5-e0ed0e753995)
+![watches view](https://github.com/user-attachments/assets/381a5c9c-7eea-4cdc-8358-a2afe9f247b2)
 
 - Exceptions view
     - Control when the debugger should stop, outside of breakpoints (e.g.,
@@ -206,10 +207,11 @@ in the `'winbar'` (e.g., `B` for the breakpoints view).
 
 The breakpoints view, the exceptions view and the scopes view only have 1
 mapping: `<CR>`. It jumps to a breakpoint, toggles an exception filter, and
-expands a variable, respectively. The watches view comes with 3 mappings:
+expands a variable, respectively. The watches view comes with 4 mappings:
 
 - `i` to insert a new expression
 - `e` to edit an expression
+- `c` to copy an expression (can't copy inner variables for now)
 - `d` to delete an expression
 
 Though, the preferred way of adding a new expression is using the

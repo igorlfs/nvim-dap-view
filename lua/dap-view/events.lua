@@ -78,17 +78,11 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function()
     end
 end
 
-dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function(_, body)
-    state.stopped_thread = body.threadId
-
+dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
     require("dap-view.threads").get_threads()
 
-    for i, expr in ipairs(state.watched_expressions) do
-        eval.eval_expr(expr, function(result)
-            local has_changed = state.expression_results[i] ~= result
-            state.updated_evaluations[i] = state.expression_results[i] and has_changed
-            state.expression_results[i] = result
-        end)
+    for expr, _ in pairs(state.watched_expressions) do
+        eval.eval_expr(expr)
     end
 
     winbar.redraw_controls()
@@ -118,11 +112,6 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
     -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
-    end
-
-    -- Clear evaluations so new sessions don't get highlighted as changed
-    for k in ipairs(state.expression_results) do
-        state.expression_results[k] = nil
     end
 
     winbar.redraw_controls()

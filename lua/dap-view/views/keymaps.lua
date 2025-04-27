@@ -30,9 +30,9 @@ M.set_keymaps = function()
 
     vim.keymap.set("n", "d", function()
         if state.current_section == "watches" then
-            local line = vim.api.nvim_win_get_cursor(state.winnr)[1]
+            local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
-            watches_actions.remove_watch_expr(line)
+            watches_actions.remove_watch_expr(cursor_line)
 
             watches_view.show()
         end
@@ -40,18 +40,26 @@ M.set_keymaps = function()
 
     vim.keymap.set("n", "e", function()
         if state.current_section == "watches" then
-            local line = vim.api.nvim_win_get_cursor(state.winnr)[1]
+            local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
             vim.ui.input(
-                { prompt = "Expression: ", default = state.watched_expressions[line] },
+                { prompt = "Expression: ", default = state.expressions_by_line[cursor_line] },
                 function(input)
                     if input then
-                        watches_actions.edit_watch_expr(input, line)
+                        watches_actions.edit_watch_expr(input, cursor_line)
                     end
                 end
             )
         end
     end, { buffer = state.bufnr })
+
+    vim.keymap.set("n", "c", function()
+        if state.current_section == "watches" then
+            local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
+
+            watches_actions.copy_watch_expr(cursor_line)
+        end
+    end, { buffer = state.bufnr, nowait = true })
 
     vim.keymap.set("n", "t", function()
         if state.current_section == "threads" then
@@ -59,7 +67,7 @@ M.set_keymaps = function()
 
             threads_view.show()
         end
-    end, { buffer = state.bufnr })
+    end, { buffer = state.bufnr, nowait = true })
 end
 
 return M

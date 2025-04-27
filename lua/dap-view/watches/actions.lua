@@ -7,7 +7,7 @@ local M = {}
 ---@param expr string
 local is_expr_valid = function(expr)
     -- Avoid duplicate expressions
-    return #expr > 0 and not vim.tbl_contains(state.watched_expressions, expr)
+    return #expr > 0 and state.watched_expressions[expr] == nil
 end
 
 ---@param expr string
@@ -17,19 +17,40 @@ M.add_watch_expr = function(expr)
         return false
     end
 
-    eval.eval_expr(expr, function(result)
-        table.insert(state.expression_results, result)
-    end)
-
-    table.insert(state.watched_expressions, expr)
+    eval.eval_expr(expr)
 
     return true
 end
 
 ---@param line number
 M.remove_watch_expr = function(line)
-    table.remove(state.watched_expressions, line)
-    table.remove(state.expression_results, line)
+    local expr = state.expressions_by_line[line]
+    if expr then
+        local eval_result = state.watched_expressions[expr].response
+
+        state.watched_expressions[expr] = nil
+        state.expressions_by_line[line] = nil
+
+        -- If the result is a string, it's the error
+        if type(eval_result) ~= "string" then
+            local ref = eval_result and eval_result.variablesReference
+            if ref then
+                state.variables_by_reference[ref] = nil
+            end
+        end
+    else
+        vim.notify("No expression under the under cursor")
+    end
+end
+
+---@param line number
+M.copy_watch_expr = function(line)
+    local expr = state.expressions_by_line[line]
+    if expr then
+        eval.copy_expr(expr)
+    else
+        vim.notify("No expression under the under cursor")
+    end
 end
 
 ---@param expr string
@@ -39,11 +60,10 @@ M.edit_watch_expr = function(expr, line)
         return
     end
 
-    state.watched_expressions[line] = expr
+    -- The easiest way to edit is to delete and insert again
+    M.remove_watch_expr(line)
 
-    eval.eval_expr(expr, function(result)
-        state.expression_results[line] = result
-    end)
+    eval.eval_expr(expr)
 end
 
 return M
