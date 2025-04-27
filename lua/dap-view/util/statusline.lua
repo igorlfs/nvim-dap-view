@@ -1,5 +1,6 @@
-local M = {}
 local global = require("dap-view.globals")
+
+local M = {}
 
 ---@param text string
 ---@param group string
