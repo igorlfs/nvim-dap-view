@@ -127,6 +127,8 @@ The console's default size (height) is resized to match your `nvim-dap-view` con
 You can also enable the control bar which exposes some clickable buttons by settings `winbar.controls.enable`.
 The control bar is fully customizable, checkout the options on default configuration section.
 
+![controls](https://github.com/user-attachments/assets/3d8d7102-7183-4acf-9759-6a7c7b354e9a)
+
 >[!NOTE]
 > Icons are using `Codicons` glyphs so it requires a Nerd Font
 
