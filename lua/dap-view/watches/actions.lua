@@ -49,7 +49,16 @@ M.copy_watch_expr = function(line)
     if expr then
         eval.copy_expr(expr)
     else
-        vim.notify("No expression under the under cursor")
+        local var = state.variables_by_line[line]
+        if var then
+            if var.evaluateName then
+                eval.copy_expr(var.evaluateName)
+            else
+                vim.notify("Missing `evaluateName`, can't copy variable")
+            end
+        else
+            vim.notify("No expression or variable under the under cursor")
+        end
     end
 end
 

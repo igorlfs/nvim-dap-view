@@ -81,7 +81,7 @@ The plugin provides 6 "views" that share the same window (so there's clutter)
     - Shows a list of user defined expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
         - Add variable under the cursor using a command
-    - Copy the value of an expression
+    - Copy the value of an expression or variable
 
 ![watches view](https://github.com/user-attachments/assets/381a5c9c-7eea-4cdc-8358-a2afe9f247b2)
 
@@ -213,7 +213,7 @@ expands a variable, respectively. The watches view comes with 4 mappings:
 
 - `i` to insert a new expression
 - `e` to edit an expression
-- `c` to copy an expression (can't copy inner variables for now)
+- `c` to copy an expression or variable
 - `d` to delete an expression
 
 Though, the preferred way of adding a new expression is using the
@@ -462,10 +462,7 @@ return {
 
 ## Roadmap
 
-- Watches
-    - Actions
-        - [ ] Expanding variables
-        - [ ] Yank expression's value
+- Watches: rewrite. See <https://github.com/igorlfs/nvim-dap-view/issues/33>
 
 Missing something? Create an issue with a [feature
 request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+)!

@@ -53,6 +53,8 @@ local show_variables = function(line, response)
                 end
 
                 line = line + 1
+
+                state.variables_by_line[line] = variable
             end
         end
     end

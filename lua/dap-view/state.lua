@@ -18,6 +18,7 @@
 ---@field frames_by_line {[number]: dap.StackFrame[]}
 ---@field expressions_by_line {[integer]: string}
 ---@field variables_by_reference table<integer, {variable: dap.Variable, updated: boolean}[] | string>
+---@field variables_by_line {[integer]: dap.Variable}
 ---@field subtle_frames boolean
 ---@field watched_expressions table<string,{response?: (dap.EvaluateResponse | string), updated?: boolean}>
 local M = {
@@ -26,6 +27,7 @@ local M = {
     frames_by_line = {},
     expressions_by_line = {},
     variables_by_reference = {},
+    variables_by_line = {},
     subtle_frames = false,
     watched_expressions = {},
 }
