@@ -1,10 +1,10 @@
 local M = {}
-local prefix = require("dap-view.globals").HL_PREFIX
+local global = require("dap-view.globals")
 
 ---@param text string
 ---@param group string
 M.hl = function(text, group)
-    return "%#" .. prefix .. group .. "#" .. text .. "%*"
+    return "%#" .. global.HL_PREFIX .. group .. "#" .. text .. "%*"
 end
 
 ---@param text string
