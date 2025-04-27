@@ -10,7 +10,7 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    winbar.update_winbar("exceptions")
+    winbar.update_section("exceptions")
 
     if state.bufnr then
         -- Clear previous content

@@ -11,7 +11,7 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    winbar.update_winbar("breakpoints")
+    winbar.update_section("breakpoints")
 
     if state.bufnr then
         -- Clear previous content
