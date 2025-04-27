@@ -362,7 +362,7 @@ return {
 | `NvimDapViewFloat`                   | `Float`                     |
 | `NvimDapViewFunction`                | `Function`                  |
 
-<details>
+</details>
 
 ### Filetypes and Autocommands
 
