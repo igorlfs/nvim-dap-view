@@ -352,7 +352,7 @@ return {
 | `NvimDapViewControlTerminate`        | `DapBreakpoint`             |
 | `NvimDapViewControlDisconnect`       | `DapBreakpoint`             |
 
-<details>
+</details>
 
 
 ### Filetypes and Autocommands
