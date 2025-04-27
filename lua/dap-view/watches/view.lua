@@ -75,6 +75,10 @@ M.show = function()
         for k, _ in pairs(state.expressions_by_line) do
             state.expressions_by_line[k] = nil
         end
+        -- Also clear variables for the same reason
+        for k, _ in pairs(state.variables_by_line) do
+            state.variables_by_line[k] = nil
+        end
 
         local line = 0
         for expr, eval in pairs(state.watched_expressions) do
