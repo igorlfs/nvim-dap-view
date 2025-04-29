@@ -21,10 +21,11 @@ local types_to_hl_group = {
 }
 
 ---@param line integer
----@param response string|dap.EvaluateResponse
+---@param response string|dap.EvaluateResponse|dap.SetExpressionResponse
 ---@return integer
 local show_variables = function(line, response)
     if type(response) ~= "string" then
+        --[[@type string| {variable: VarResp, updated: boolean, parent: number}[] ]]
         local variables = state.variables_by_reference[response.variablesReference]
         if type(variables) == "string" then
             local var_content = "\t" .. variables
@@ -54,7 +55,7 @@ local show_variables = function(line, response)
 
                 line = line + 1
 
-                state.variables_by_line[line] = variable
+                state.variables_by_line[line] = { response = variable, parent = var.parent }
             end
         end
     end
@@ -86,7 +87,7 @@ M.show = function()
 
             assert(response ~= nil, "Response exists")
 
-            local result = type(response) == "string" and response or response.result
+            local result = type(response) == "string" and response or response.result or response.value
 
             local content = expr .. " = " .. result
 
@@ -107,7 +108,7 @@ M.show = function()
 
             line = line + 1
 
-            state.expressions_by_line[line] = expr
+            state.expressions_by_line[line] = { name = expr, result = response }
 
             line = show_variables(line, response)
         end

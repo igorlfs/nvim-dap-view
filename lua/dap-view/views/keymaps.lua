@@ -42,14 +42,14 @@ M.set_keymaps = function()
         if state.current_section == "watches" then
             local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
-            vim.ui.input(
-                { prompt = "Expression: ", default = state.expressions_by_line[cursor_line] },
-                function(input)
+            local expression = state.expressions_by_line[cursor_line]
+            if expression then
+                vim.ui.input({ prompt = "Expression: ", default = expression.name }, function(input)
                     if input then
                         watches_actions.edit_watch_expr(input, cursor_line)
                     end
-                end
-            )
+                end)
+            end
         end
     end, { buffer = state.bufnr })
 
@@ -60,6 +60,32 @@ M.set_keymaps = function()
             watches_actions.copy_watch_expr(cursor_line)
         end
     end, { buffer = state.bufnr, nowait = true })
+
+    vim.keymap.set("n", "s", function()
+        if state.current_section == "watches" then
+            local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
+
+            local get_default = function()
+                local expr = state.expressions_by_line[cursor_line]
+                if expr and type(expr) ~= "string" then
+                    return expr.response and expr.response.result or expr.response and expr.response.value
+                end
+
+                local var = state.variables_by_line[cursor_line]
+                if var then
+                    return var.response.value
+                end
+
+                return ""
+            end
+
+            vim.ui.input({ prompt = "New value: ", default = get_default() }, function(input)
+                if input then
+                    watches_actions.set_watch_expr(input, cursor_line)
+                end
+            end)
+        end
+    end, { buffer = state.bufnr })
 
     vim.keymap.set("n", "t", function()
         if state.current_section == "threads" then

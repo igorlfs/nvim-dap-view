@@ -88,6 +88,12 @@ dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
     winbar.redraw_controls()
 end
 
+dap.listeners.after.setExpression[SUBSCRIPTION_ID] = function()
+    if state.current_section == "watches" then
+        watches.show()
+    end
+end
+
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
     state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters or {})
         :map(function(filter)
