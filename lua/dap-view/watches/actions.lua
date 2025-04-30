@@ -81,13 +81,13 @@ M.set_watch_expr = function(value, line)
 
             if hasExpression and hasVariable then
                 if var.response.evaluateName then
-                    set.set_var_expr(var.response.evaluateName, value)
+                    set.set_expr(var.response.evaluateName, value)
                 else
                     -- TODO Implement setVariable
                 end
             elseif hasExpression then
                 if var.response.evaluateName then
-                    set.set_var_expr(var.response.evaluateName, value)
+                    set.set_expr(var.response.evaluateName, value)
                 else
                     vim.notify(
                         "Can't set value for " .. var.response.name .. " because it lacks an `evaluateName`"
