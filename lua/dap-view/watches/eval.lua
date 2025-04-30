@@ -3,9 +3,8 @@ local state = require("dap-view.state")
 local M = {}
 
 ---@param variables_reference number
----@param expr string
 ---@param frame_id? number
-local eval_variables = function(variables_reference, expr, frame_id)
+local eval_variables = function(variables_reference, frame_id)
     local session = assert(require("dap").session(), "has active session")
 
     local err, result = session:request(
@@ -24,7 +23,7 @@ local eval_variables = function(variables_reference, expr, frame_id)
     if type(variables) ~= "string" and type(response) ~= "string" then
         for k, var in pairs(response or {}) do
             local updated = type(original) == "table" and original[k].variable.value ~= var.value or false
-            table.insert(variables, { variable = var, updated = updated, parent = expr })
+            table.insert(variables, { variable = var, updated = updated })
         end
     end
 
@@ -52,7 +51,7 @@ M.eval_expr = function(expr)
 
         local variables_reference = result and result.variablesReference
         if variables_reference and variables_reference > 0 then
-            eval_variables(variables_reference, expr, frame_id)
+            eval_variables(variables_reference, frame_id)
         end
     end)()
 end
@@ -69,7 +68,7 @@ M.copy_expr = function(expr)
                 session:request("evaluate", { expression = expr, context = "clipboard", frameId = frame_id })
 
             if err == nil and result then
-                -- TODO uses system clipboard, could be a parameter instead
+                -- TODO uses system clipboard, could be a parameter instead (fzf handles this nicely)
                 vim.fn.setreg("+", result.result)
             end
         end)()

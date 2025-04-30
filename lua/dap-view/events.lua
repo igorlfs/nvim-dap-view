@@ -89,6 +89,11 @@ dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
 end
 
 dap.listeners.after.setExpression[SUBSCRIPTION_ID] = function()
+    -- Reevaluate expessions which may depend on the changed value
+    for expr, _ in pairs(state.watched_expressions) do
+        eval.eval_expr(expr)
+    end
+
     if state.current_section == "watches" then
         watches.show()
     end

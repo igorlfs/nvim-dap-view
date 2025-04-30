@@ -81,24 +81,13 @@ M.set_watch_expr = function(value, line)
 
             if hasExpression and hasVariable then
                 if var.response.evaluateName then
-                    set.set_var_expr(var.response.evaluateName, value, var.parent)
-                    -- local parent = var.parent
-                    -- if parent then
-                    --     set.set_var_expr(var.evaluateName, value, parent.variablesReference)
-                    -- else
-                    --     vim.notify("duck")
-                    -- end
+                    set.set_var_expr(var.response.evaluateName, value)
                 else
                     -- TODO Implement setVariable
                 end
             elseif hasExpression then
                 if var.response.evaluateName then
-                    -- local parent = var.parent
-                    -- if parent then
-                    --     set.set_var_expr(var.evaluateName, value, parent.variablesReference)
-                    -- else
-                    --     vim.notify("Can't set value for " .. var.name .. " because it lacks a parent")
-                    -- end
+                    set.set_var_expr(var.response.evaluateName, value)
                 else
                     vim.notify(
                         "Can't set value for " .. var.response.name .. " because it lacks an `evaluateName`"

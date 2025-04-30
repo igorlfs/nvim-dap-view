@@ -21,8 +21,8 @@
 ---@field threads_err? string
 ---@field frames_by_line {[number]: dap.StackFrame[]}
 ---@field expressions_by_line {[integer]: {name: string, response: WatchResp}}
----@field variables_by_reference table<integer, {variable: VarResp, updated: boolean, parent: string}[] | string>
----@field variables_by_line table<integer, {response: VarResp, parent: string}>
+---@field variables_by_reference table<integer, {variable: VarResp, updated: boolean}[] | string>
+---@field variables_by_line table<integer, {response: VarResp}>
 ---@field watched_expressions table<string,{response?: WatchResp, updated?: boolean}>
 local M = {
     exceptions_options = {},

@@ -55,7 +55,7 @@ local show_variables = function(line, response)
 
                 line = line + 1
 
-                state.variables_by_line[line] = { response = variable, parent = var.parent }
+                state.variables_by_line[line] = { response = variable }
             end
         end
     end
