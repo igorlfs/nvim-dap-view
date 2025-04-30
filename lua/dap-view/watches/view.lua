@@ -24,9 +24,9 @@ local types_to_hl_group = {
 ---@param response string|dap.EvaluateResponse|dap.SetExpressionResponse
 ---@return integer
 local show_variables = function(line, response)
-    if type(response) ~= "string" then
-        --[[@type string| {variable: VarResp, updated: boolean, parent: number}[] ]]
-        local variables = state.variables_by_reference[response.variablesReference]
+    if type(response) ~= "string" and response.variablesReference ~= nil then
+        local variables_reference = response.variablesReference
+        local variables = variables_reference and state.variables_by_reference[variables_reference]
         if type(variables) == "string" then
             local var_content = "\t" .. variables
             api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { var_content })
