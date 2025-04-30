@@ -108,7 +108,7 @@ M.show = function()
 
             line = line + 1
 
-            state.expressions_by_line[line] = { name = expr, result = response }
+            state.expressions_by_line[line] = { name = expr, response = response }
 
             line = show_variables(line, response)
         end
