@@ -68,7 +68,7 @@ M.set_keymaps = function()
             local get_default = function()
                 local expr = state.expressions_by_line[cursor_line]
                 if expr and type(expr.response) ~= "string" then
-                    return expr.response.result or expr.response.value
+                    return expr.response.result
                 end
 
                 local var = state.variables_by_line[cursor_line]

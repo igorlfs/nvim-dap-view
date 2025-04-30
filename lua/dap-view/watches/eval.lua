@@ -40,8 +40,7 @@ M.eval_expr = function(expr)
         local err, result =
             session:request("evaluate", { expression = expr, context = "watch", frameId = frame_id })
 
-        local stored_expr = state.watched_expressions[expr]
-        local original = stored_expr and (stored_expr.response.result or stored_expr.response.value)
+        local original = state.watched_expressions[expr] and state.watched_expressions[expr].response.result
         local response = err and tostring(err) or result
         local updated = original and response and original ~= response.result
         state.watched_expressions[expr] = { response = response, updated = updated }
@@ -65,7 +64,7 @@ M.copy_expr = function(expr)
                 session:request("evaluate", { expression = expr, context = "clipboard", frameId = frame_id })
 
             if err == nil and result then
-                -- TODO uses system clipboard, could be a parameter instead (fzf handles this nicely)
+                -- TODO uses system clipboard, could be a parameter instead
                 vim.fn.setreg("+", result.result)
             end
         end)()

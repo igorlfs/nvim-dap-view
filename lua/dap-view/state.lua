@@ -5,9 +5,6 @@
 ---@class ThreadWithErr: dap.Thread
 ---@field err? string
 
----@alias WatchResp dap.EvaluateResponse | dap.SetExpressionResponse | string
----@alias VarResp dap.Variable | dap.SetExpressionResponse
-
 ---@class State
 ---@field bufnr? integer
 ---@field winnr? integer
@@ -20,10 +17,10 @@
 ---@field threads ThreadWithErr[]
 ---@field threads_err? string
 ---@field frames_by_line {[number]: dap.StackFrame[]}
----@field expressions_by_line {[integer]: {name: string, response: WatchResp}}
----@field variables_by_reference table<integer, {variable: VarResp, updated: boolean}[] | string>
----@field variables_by_line table<integer, {response: VarResp}>
----@field watched_expressions table<string,{response?: WatchResp, updated?: boolean}>
+---@field expressions_by_line {[integer]: {name: string, response: dap.EvaluateResponse | string}}
+---@field variables_by_reference table<integer, {variable: dap.Variable, updated: boolean}[] | string>
+---@field variables_by_line table<integer, {response: dap.Variable}>
+---@field watched_expressions table<string,{response?: dap.EvaluateResponse | string, updated?: boolean}>
 local M = {
     exceptions_options = {},
     threads = {},
