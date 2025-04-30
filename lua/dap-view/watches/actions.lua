@@ -7,8 +7,7 @@ local M = {}
 
 ---@param expr string
 local is_expr_valid = function(expr)
-    -- Avoid duplicate expressions
-    return #expr > 0 and state.watched_expressions[expr] == nil
+    return #expr > 0
 end
 
 ---@param expr string
