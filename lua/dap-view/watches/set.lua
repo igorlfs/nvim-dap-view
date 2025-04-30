@@ -16,7 +16,7 @@ M.set_expr = function(expr, value)
                 session:request("setExpression", { expression = expr, value = value, frameId = frame_id })
 
             if err ~= nil then
-                vim.notify("Failed to set expression " .. expr .. " to value " .. value)
+                return vim.notify("Failed to set expression " .. expr .. " to value " .. value)
             end
 
             local stored_expr = state.watched_expressions[expr]
@@ -25,7 +25,10 @@ M.set_expr = function(expr, value)
                 original = stored_expr.response.result or stored_expr.response.value
             end
             local response = err and tostring(err) or result
-            local updated = original and response and original ~= response.value
+            local updated = original
+                and response
+                and type(response) ~= "string"
+                and original ~= response.value
 
             state.watched_expressions[expr] = { response = response, updated = updated }
         end)()
