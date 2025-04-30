@@ -41,7 +41,7 @@ M.eval_expr = function(expr)
             session:request("evaluate", { expression = expr, context = "watch", frameId = frame_id })
 
         local stored_expr = state.watched_expressions[expr]
-        local original = (stored_expr and stored_expr.response.result or stored_expr.response.value) or nil
+        local original = stored_expr and (stored_expr.response.result or stored_expr.response.value)
         local response = err and tostring(err) or result
         local updated = original and response and original ~= response.result
         state.watched_expressions[expr] = { response = response, updated = updated }

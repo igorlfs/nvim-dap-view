@@ -66,8 +66,8 @@ M.set_watch_expr = function(value, line)
 
     local expr = state.expressions_by_line[line]
     if expr then
-        --Top level expressions are response for the `evaluate` reuqest, they have no `evaluateName`
-        --Therefore, we can always use `setExpression` if the adapter supports it
+        -- Top level expressions are responses for the `evaluate` request, they have no `evaluateName`
+        -- Therefore, we can always use `setExpression` if the adapter supports it
         set.set_expr(expr.name, value)
     else
         local var = state.variables_by_line[line]
