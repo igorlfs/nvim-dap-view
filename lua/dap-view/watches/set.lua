@@ -13,7 +13,7 @@ M.set_expr = function(expr, value)
                 session:request("setExpression", { expression = expr, value = value, frameId = frame_id })
 
             if err then
-                return vim.notify("Failed to set expression " .. expr .. " to value " .. value)
+                vim.notify("Failed to set expression " .. expr .. " to value " .. value)
             end
         end)()
     else

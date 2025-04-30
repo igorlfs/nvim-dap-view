@@ -24,7 +24,7 @@ local types_to_hl_group = {
 ---@param response string|dap.EvaluateResponse|dap.SetExpressionResponse
 ---@return integer
 local show_variables = function(line, response)
-    if type(response) ~= "string" and response.variablesReference ~= nil then
+    if type(response) ~= "string" then
         local variables_reference = response.variablesReference
         local variables = variables_reference and state.variables_by_reference[variables_reference]
         if type(variables) == "string" then
