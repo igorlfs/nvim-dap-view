@@ -6,14 +6,9 @@ local set = require("dap-view.watches.set")
 local M = {}
 
 ---@param expr string
-local is_expr_valid = function(expr)
-    return #expr > 0
-end
-
----@param expr string
 ---@return boolean
 M.add_watch_expr = function(expr)
-    if not is_expr_valid(expr) or not guard.expect_session() then
+    if #expr == 0 or not guard.expect_session() then
         return false
     end
 
@@ -123,7 +118,7 @@ end
 ---@param expr string
 ---@param line number
 M.edit_watch_expr = function(expr, line)
-    if not is_expr_valid(expr) or not guard.expect_session() then
+    if #expr == 0 or not guard.expect_session() then
         return
     end
 
