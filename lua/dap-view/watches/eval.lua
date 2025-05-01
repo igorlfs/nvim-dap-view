@@ -1,3 +1,4 @@
+local watches = require("dap-view.watches.view")
 local state = require("dap-view.state")
 
 local M = {}
@@ -22,7 +23,7 @@ local eval_variables = function(variables_reference, frame_id)
     -- Lua's type checking is a lackluster
     if type(variables) ~= "string" and type(response) ~= "string" then
         for k, var in pairs(response or {}) do
-            local updated = type(original) == "table" and original[k].variable.value ~= var.value or false
+            local updated = type(original) == "table" and original[k].variable.value ~= var.value
             table.insert(variables, { variable = var, updated = updated })
         end
     end
@@ -70,6 +71,17 @@ M.copy_expr = function(expr)
         end)()
     else
         vim.notify("Adapter doesn't support clipboard evaluation")
+    end
+end
+
+M.reeval = function()
+    -- Reevaluate expressions which may depend on the changed value
+    for expr, _ in pairs(state.watched_expressions) do
+        M.eval_expr(expr)
+    end
+
+    if state.current_section == "watches" then
+        watches.show()
     end
 end
 
