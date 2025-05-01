@@ -21,4 +21,26 @@ M.set_expr = function(expr, value)
     end
 end
 
+---@param name string
+---@param value string
+---@param variables_reference number
+M.set_var = function(name, value, variables_reference)
+    local session = assert(require("dap").session(), "has active session")
+
+    if session.capabilities.supportsSetVariable then
+        coroutine.wrap(function()
+            local err, _ = session:request(
+                "setVariable",
+                { name = name, value = value, variablesReference = variables_reference }
+            )
+
+            if err then
+                vim.notify("Failed to set variable " .. name .. " to value " .. value)
+            end
+        end)()
+    else
+        vim.notify("Adapter doesn't support `setVariable` request")
+    end
+end
+
 return M

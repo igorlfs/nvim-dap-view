@@ -73,8 +73,10 @@ M.set_watch_expr = function(value, line)
         local var = state.variables_by_line[line]
 
         if var then
-            -- If a debug adapter implements both `setExpression` and `setVariable`,
-            -- a client uses `setExpression` if the variable has an evaluateName property.
+            -- From the protocol:
+            --
+            -- "If a debug adapter implements both `setExpression` and `setVariable`,
+            -- a client uses `setExpression` if the variable has an evaluateName property."
             local session = assert(require("dap").session(), "has active session")
             local hasExpression = session.capabilities.supportsSetExpression
             local hasVariable = session.capabilities.supportsSetVariable
@@ -83,7 +85,7 @@ M.set_watch_expr = function(value, line)
                 if var.response.evaluateName then
                     set.set_expr(var.response.evaluateName, value)
                 else
-                    -- TODO Implement setVariable
+                    set.set_var(var.response.name, value, var.reference)
                 end
             elseif hasExpression then
                 if var.response.evaluateName then
@@ -94,12 +96,12 @@ M.set_watch_expr = function(value, line)
                     )
                 end
             elseif hasVariable then
-                -- TODO Implement setVariable
+                set.set_var(var.response.name, value, var.reference)
             else
                 vim.notify("Adapter lacks support for both `setExpression` and `setVariable` requests")
             end
         else
-            vim.notify("No expression under the under cursor")
+            vim.notify("No expression or variable under the under cursor")
         end
     end
 end

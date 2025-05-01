@@ -54,7 +54,8 @@ local show_variables = function(line, response)
 
                 line = line + 1
 
-                state.variables_by_line[line] = { response = variable }
+                state.variables_by_line[line] =
+                    { response = variable, reference = response.variablesReference }
             end
         end
     end

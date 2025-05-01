@@ -19,7 +19,7 @@
 ---@field frames_by_line {[number]: dap.StackFrame[]}
 ---@field expressions_by_line {[integer]: {name: string, response: dap.EvaluateResponse | string}}
 ---@field variables_by_reference table<integer, {variable: dap.Variable, updated: boolean}[] | string>
----@field variables_by_line table<integer, {response: dap.Variable}>
+---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
 ---@field watched_expressions table<string,{response?: dap.EvaluateResponse | string, updated?: boolean}>
 local M = {
     exceptions_options = {},
