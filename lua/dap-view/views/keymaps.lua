@@ -22,7 +22,7 @@ M.set_keymaps = function()
         if state.current_section == "scopes" then
             require("dap.ui").trigger_actions()
         end
-    end)
+    end, { buffer = state.bufnr })
 
     vim.keymap.set("n", "i", function()
         if state.current_section == "watches" then
