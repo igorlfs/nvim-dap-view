@@ -18,6 +18,12 @@ M.set_keymaps = function()
         end
     end, { buffer = state.bufnr })
 
+    vim.keymap.set("n", "o", function()
+        if state.current_section == "scopes" then
+            require("dap.ui").trigger_actions()
+        end
+    end)
+
     vim.keymap.set("n", "i", function()
         if state.current_section == "watches" then
             vim.ui.input({ prompt = "Expression: " }, function(input)

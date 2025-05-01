@@ -75,7 +75,7 @@ M.copy_expr = function(expr)
 end
 
 M.reeval = function()
-    -- Reevaluate expessions which may depend on the changed value
+    -- Reevaluate expressions which may depend on the changed value
     for expr, _ in pairs(state.watched_expressions) do
         M.eval_expr(expr)
     end
