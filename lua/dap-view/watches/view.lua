@@ -20,44 +20,66 @@ local types_to_hl_group = {
     ["function"] = "Function",
 }
 
----@param line integer
----@param response string|dap.EvaluateResponse
+---@param children VariablePack[]
+---@param reference number
+---@param line number
+---@param depth number
 ---@return integer
-local show_variables = function(line, response)
-    if type(response) ~= "string" then
-        local variables = state.variables_by_reference[response.variablesReference]
-        if type(variables) == "string" then
-            local var_content = "\t" .. variables
-            api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { var_content })
+local function show_variables(children, reference, line, depth)
+    for _, var in pairs(children or {}) do
+        local variable = var.variable
+        local value = #variable.value > 0 and variable.value
+            or variable.variablesReference > 0 and "..."
+            or ""
+        local content = variable.name .. " = " .. value
 
-            line = line + 1
-        else
-            for _, var in ipairs(variables or {}) do
-                local variable = var.variable
-                local value = #variable.value > 0 and variable.value
-                    or variable.variablesReference > 0 and "..."
-                    or ""
-                local content = variable.name .. " = " .. value
+        -- Can't have linebreaks with nvim_buf_set_lines
+        local trimmed_content = content:gsub("%s+", " ")
 
-                -- Can't have linebreaks with nvim_buf_set_lines
-                local trimmed_content = content:gsub("%s+", " ")
+        local indent = string.rep("\t", depth)
+        api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { indent .. trimmed_content })
 
-                api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { "\t" .. trimmed_content })
+        hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
 
-                hl.hl_range("WatchExpr", { line, 1 }, { line, 1 + #variable.name })
+        local hl_group = var.updated and "WatchUpdated" or types_to_hl_group[variable.type:lower()]
+        if hl_group then
+            local _hl_start = #variable.name + 3 + depth
+            hl.hl_range(hl_group, { line, _hl_start }, { line, -1 })
+        end
 
-                local hl_group = var.updated and "WatchUpdated" or types_to_hl_group[variable.type:lower()]
-                if hl_group then
-                    local _hl_start = #variable.name + 4
-                    hl.hl_range(hl_group, { line, _hl_start }, { line, -1 })
-                end
+        line = line + 1
+
+        state.variables_by_line[line] = { response = variable, reference = reference }
+
+        if var.expanded and var.children then
+            if type(var.children) == "string" then
+                local err_content = string.rep("\t", depth + 1) .. var.children
+                api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { err_content })
+
+                hl.hl_range("WatchError", { line, 0 }, { line, #err_content })
 
                 line = line + 1
-
-                state.variables_by_line[line] =
-                    { response = variable, reference = response.variablesReference }
+            else
+                ---@cast var VariablePackNested
+                line = show_variables(var.children, var.reference, line, depth + 1)
             end
         end
+    end
+    return line
+end
+
+---@param line integer
+---@param variables string|ExpressionPack
+---@return integer
+local show_variables_or_err = function(line, variables)
+    local children = variables.children
+    if type(children) == "string" then
+        local var_content = "\t" .. variables
+        api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { var_content })
+
+        line = line + 1
+    elseif children ~= nil and variables.expanded then
+        line = show_variables(children, variables.response.variablesReference, line, 1)
     end
     return line
 end
@@ -66,9 +88,7 @@ M.show = function()
     winbar.update_section("watches")
 
     if state.bufnr then
-        -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
-
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
         views.cleanup_view(#state.watched_expressions == 0, "No expressions")
 
         -- Since variables aren't ordered, lines may change unexpectedly
@@ -82,35 +102,40 @@ M.show = function()
         end
 
         local line = 0
-        for expr, eval in pairs(state.watched_expressions) do
-            local response = eval.response
+        for expr_name, expr in pairs(state.watched_expressions) do
+            local response = expr.response
 
             assert(response ~= nil, "Response exists")
 
             local result = type(response) == "string" and response or response.result
 
-            local content = expr .. " = " .. result
+            local content = expr_name .. " = " .. result
 
             -- Can't have linebreaks with nvim_buf_set_lines
             local trimmed_content = content:gsub("%s+", " ")
 
             api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { trimmed_content })
 
-            hl.hl_range("WatchExpr", { line, 0 }, { line, #expr })
+            hl.hl_range("WatchExpr", { line, 0 }, { line, #expr_name })
 
             local hl_group = type(response) == "string" and "WatchError"
-                or eval.updated and "WatchUpdated"
+                or expr.updated and "WatchUpdated"
                 or response and types_to_hl_group[response.type:lower()]
             if hl_group then
-                local hl_start = #expr + 3
+                local hl_start = #expr_name + 3
                 hl.hl_range(hl_group, { line, hl_start }, { line, -1 })
             end
 
             line = line + 1
 
-            state.expressions_by_line[line] = { name = expr, response = response }
+            state.expressions_by_line[line] = { name = expr_name, response = response }
 
-            line = show_variables(line, response)
+            line = show_variables_or_err(line, expr)
+        end
+        api.nvim_win_set_cursor(state.winnr, { math.max(math.min(cursor_line, line), 1), 1 })
+
+        if line > 0 then
+            api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
         end
     end
 end

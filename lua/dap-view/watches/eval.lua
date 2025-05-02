@@ -3,52 +3,53 @@ local state = require("dap-view.state")
 
 local M = {}
 
----@param variables_reference number
----@param frame_id? number
-local eval_variables = function(variables_reference, frame_id)
-    local session = assert(require("dap").session(), "has active session")
-
-    local err, result = session:request(
-        "variables",
-        { variablesReference = variables_reference, context = "watch", frameId = frame_id }
-    )
-
-    local response = err and tostring(err) or result and result.variables
-
-    --[[@type {variable?: dap.Variable, updated?: boolean}[] | string]]
-    local variables = type(response) == "string" and response or {}
-
-    local original = state.variables_by_reference[variables_reference]
-
-    -- Lua's type checking is a lackluster
-    if type(variables) ~= "string" and type(response) ~= "string" then
-        for k, var in pairs(response or {}) do
-            local updated = type(original) == "table" and original[k].variable.value ~= var.value
-            table.insert(variables, { variable = var, updated = updated })
-        end
-    end
-
-    state.variables_by_reference[variables_reference] = variables
-end
-
----@param expr string
-M.eval_expr = function(expr)
+---@param expr_name string
+M.eval_expr = function(expr_name)
     local session = assert(require("dap").session(), "has active session")
 
     coroutine.wrap(function()
         local frame_id = session.current_frame and session.current_frame.id
 
         local err, result =
-            session:request("evaluate", { expression = expr, context = "watch", frameId = frame_id })
+            session:request("evaluate", { expression = expr_name, context = "watch", frameId = frame_id })
 
-        local original = state.watched_expressions[expr] and state.watched_expressions[expr].response.result
+        local previous_expr = state.watched_expressions[expr_name]
+        local previous_result = previous_expr and previous_expr.response and previous_expr.response.result
+        if previous_expr and result then
+            previous_expr.updated = previous_result ~= result.result
+        end
+
         local response = err and tostring(err) or result
-        local updated = original and response and original ~= response.result
-        state.watched_expressions[expr] = { response = response, updated = updated }
 
-        local variables_reference = result and result.variablesReference
-        if variables_reference and variables_reference > 0 then
-            eval_variables(variables_reference, frame_id)
+        if err and previous_expr then
+            -- Should destroy children recursively to not leak
+            previous_expr.children = nil
+        end
+
+        ---@type ExpressionPack
+        local new_expr
+        if previous_expr then
+            previous_expr.response = response
+            new_expr = previous_expr
+        else
+            new_expr = { response = response, updated = false, expanded = true, children = nil }
+        end
+
+        local variables_reference
+        if new_expr and type(new_expr.response) == "table" then
+            variables_reference = new_expr.response.variablesReference
+        end
+
+        local is_expanded = previous_expr and previous_expr.expanded or not previous_expr
+
+        if is_expanded and variables_reference and variables_reference > 0 then
+            M.expand_var(variables_reference, new_expr.children, function(children)
+                new_expr.children = children
+
+                state.watched_expressions[expr_name] = new_expr
+            end)
+        else
+            state.watched_expressions[expr_name] = new_expr
         end
     end)()
 end
@@ -74,8 +75,83 @@ M.copy_expr = function(expr)
     end
 end
 
+---@param variables_reference number
+---@param original (VariablePack[] | string)?
+---@param callback fun(result: VariablePack[] | string): nil
+function M.expand_var(variables_reference, original, callback)
+    local session = assert(require("dap").session(), "has active session")
+
+    local frame_id = session.current_frame and session.current_frame.id
+
+    session:request(
+        "variables",
+        { variablesReference = variables_reference, context = "watch", frameId = frame_id },
+        -- HACK Using a callback was the only way I could make this work
+        function(err, result)
+            local response = nil
+            if err then
+                response = tostring(err)
+            end
+            if result then
+                response = result.variables
+            end
+
+            ---@type VariablePack[] | string
+            local variables = type(response) == "string" and response or {}
+
+            if type(variables) ~= "string" and type(response) ~= "string" then
+                for k, var in pairs(response or {}) do
+                    ---@type VariablePack?
+                    local previous
+
+                    if type(original) ~= "string" then
+                        ---@type VariablePack?
+                        previous = vim.iter(original or {}):find(
+                            ---@param v VariablePack
+                            function(v)
+                                return var.evaluateName == v.variable.evaluateName
+                            end
+                        )
+                        if err and previous then
+                            -- Should destroy children recursively to not leak
+                            previous.children = nil
+                            previous.expanded = false
+                            previous.updated = false
+                        end
+                    end
+
+                    if previous and not err then
+                        previous.updated = previous.variable.value ~= var.value
+
+                        previous.variable = var
+                    end
+
+                    local default_var = { variable = var, updated = false, expanded = false, children = nil }
+
+                    local new_var = previous or default_var
+
+                    if previous and previous.expanded and previous.variable.variablesReference > 0 then
+                        M.expand_var(
+                            previous.variable.variablesReference,
+                            new_var.children,
+                            function(children)
+                                new_var.children = children
+
+                                variables[k] = new_var
+                            end
+                        )
+                    else
+                        variables[k] = new_var
+                    end
+                end
+            end
+
+            callback(variables)
+        end
+    )
+end
+
 M.reeval = function()
-    -- Reevaluate expressions which may depend on the changed value
     for expr, _ in pairs(state.watched_expressions) do
         M.eval_expr(expr)
     end

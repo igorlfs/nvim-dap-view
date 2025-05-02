@@ -5,6 +5,23 @@
 ---@class ThreadWithErr: dap.Thread
 ---@field err? string
 
+---@class ExpressionPack
+---@field response? dap.EvaluateResponse | string
+---@field children? VariablePack[] | string
+---@field expanded boolean
+---@field updated boolean
+
+---@class VariablePack
+---@field variable dap.Variable
+---@field updated boolean
+---@field reference number
+---@field expanded boolean
+---@field children string|VariablePack[]
+
+-- Necessary for some type assertions
+---@class VariablePackNested : VariablePack
+---@field children VariablePack[]
+
 ---@class State
 ---@field bufnr? integer
 ---@field winnr? integer
@@ -16,17 +33,15 @@
 ---@field exceptions_options ExceptionsOption[]
 ---@field threads ThreadWithErr[]
 ---@field threads_err? string
----@field frames_by_line {[number]: dap.StackFrame[]}
----@field expressions_by_line {[integer]: {name: string, response: dap.EvaluateResponse | string}}
----@field variables_by_reference table<integer, {variable: dap.Variable, updated: boolean}[] | string>
+---@field frames_by_line table<integer, dap.StackFrame[]>
+---@field expressions_by_line table<integer, {name: string, expression: ExpressionPack}>
 ---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
----@field watched_expressions table<string,{response?: dap.EvaluateResponse | string, updated?: boolean}>
+---@field watched_expressions table<string, ExpressionPack>
 local M = {
     exceptions_options = {},
     threads = {},
     frames_by_line = {},
     expressions_by_line = {},
-    variables_by_reference = {},
     variables_by_line = {},
     subtle_frames = false,
     watched_expressions = {},
