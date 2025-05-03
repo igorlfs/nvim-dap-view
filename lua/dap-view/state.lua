@@ -8,10 +8,11 @@
 ---@class State
 ---@field bufnr? integer
 ---@field winnr? integer
----@field term_bufnr? integer
+---@field term_bufnrs? {[number]: number}
 ---@field term_winnr? integer
 ---@field last_active_adapter? string
 ---@field subtle_frames boolean
+---@field term_setup_called boolean
 ---@field current_section? SectionType
 ---@field exceptions_options ExceptionsOption[]
 ---@field threads ThreadWithErr[]
@@ -22,6 +23,7 @@
 ---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
 ---@field watched_expressions table<string,{response?: dap.EvaluateResponse | string, updated?: boolean}>
 local M = {
+    term_bufnrs = {},
     exceptions_options = {},
     threads = {},
     frames_by_line = {},
@@ -29,6 +31,7 @@ local M = {
     variables_by_reference = {},
     variables_by_line = {},
     subtle_frames = false,
+    term_setup_called = false,
     watched_expressions = {},
 }
 

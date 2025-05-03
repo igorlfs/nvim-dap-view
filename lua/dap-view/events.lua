@@ -34,12 +34,22 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     -- However, do not try to delete the buffer on the first session,
     -- as it conflicts with bootstrapping the terminal window.
     -- See: https://github.com/igorlfs/nvim-dap-view/issues/18
-    if state.last_active_adapter and state.last_active_adapter ~= adapter then
-        term.force_delete_term_buf()
-    end
-    state.last_active_adapter = adapter
 
-    term.setup_term_win_cmd()
+    -- if state.last_active_adapter and state.last_active_adapter ~= adapter then
+    --     term.force_delete_term_buf()
+    -- end
+    -- state.last_active_adapter = adapter
+    --
+    -- local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
+    -- if not setup.config.windows.terminal.start_hidden and separate_term_win then
+    --     term.open_term_buf_win()
+    -- end
+
+    if not state.term_setup_called then
+        term.setup()
+        state.term_setup_called = true
+    end
+
 
     local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
     if not setup.config.windows.terminal.start_hidden and separate_term_win then
