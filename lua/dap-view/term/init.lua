@@ -26,7 +26,7 @@ end
 
 ---Hide the term win, does not affect the term buffer
 M.hide_term_buf_win = function()
-    if state.term_winnr and api.nvim_win_is_valid(state.term_winnr) then
+    if M.term_win_is_valid() then
         api.nvim_win_hide(state.term_winnr)
     end
 end
