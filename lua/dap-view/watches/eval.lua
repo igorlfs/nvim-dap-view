@@ -4,7 +4,8 @@ local state = require("dap-view.state")
 local M = {}
 
 ---@param expr_name string
-M.eval_expr = function(expr_name)
+---@param callback? fun(): nil
+M.eval_expr = function(expr_name, callback)
     local session = assert(require("dap").session(), "has active session")
 
     coroutine.wrap(function()
@@ -46,9 +47,17 @@ M.eval_expr = function(expr_name)
                 new_expr.children = children
 
                 state.watched_expressions[expr_name] = new_expr
+
+                if callback then
+                    callback()
+                end
             end)
         else
             state.watched_expressions[expr_name] = new_expr
+
+            if callback then
+                callback()
+            end
         end
     end)()
 end

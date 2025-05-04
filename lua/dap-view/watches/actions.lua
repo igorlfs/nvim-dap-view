@@ -3,6 +3,7 @@ local guard = require("dap-view.guard")
 local eval = require("dap-view.watches.eval")
 local set = require("dap-view.watches.set")
 local traversal = require("dap-view.tree.traversal")
+local watches_view = require("dap-view.watches.view")
 
 local M = {}
 
@@ -13,7 +14,9 @@ M.add_watch_expr = function(expr)
         return false
     end
 
-    eval.eval_expr(expr)
+    eval.eval_expr(expr, function()
+        watches_view.show()
+    end)
 
     return true
 end
@@ -106,7 +109,9 @@ M.edit_watch_expr = function(expr, line)
     -- The easiest way to edit is to delete and insert again
     M.remove_watch_expr(line)
 
-    eval.eval_expr(expr)
+    eval.eval_expr(expr, function()
+        watches_view.show()
+    end)
 end
 
 ---@param line number
@@ -123,7 +128,9 @@ M.expand_or_collapse = function(line)
         if e then
             e.expanded = not e.expanded
 
-            eval.eval_expr(expr.name)
+            eval.eval_expr(expr.name, function()
+                watches_view.show()
+            end)
         end
     else
         if var then

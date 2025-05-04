@@ -53,12 +53,6 @@ dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
     end
 end
 
-dap.listeners.after.evaluate[SUBSCRIPTION_ID] = function()
-    if state.current_section == "watches" then
-        watches.show()
-    end
-end
-
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function()
     -- nvim-dap needs a buffer to operate
     if state.current_section == "scopes" and state.bufnr then
