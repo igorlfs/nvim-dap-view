@@ -64,6 +64,11 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function()
     if state.current_section == "scopes" and state.bufnr then
         scopes.refresh()
     end
+
+    -- Avoid race conditions by not using `event_stopped`
+    for expr, _ in pairs(state.watched_expressions) do
+        eval.eval_expr(expr)
+    end
 end
 
 dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
@@ -80,10 +85,6 @@ end
 
 dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
     require("dap-view.threads").get_threads()
-
-    for expr, _ in pairs(state.watched_expressions) do
-        eval.eval_expr(expr)
-    end
 
     winbar.redraw_controls()
 end

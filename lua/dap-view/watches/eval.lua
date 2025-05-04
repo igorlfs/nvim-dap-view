@@ -22,7 +22,6 @@ M.eval_expr = function(expr_name)
         local response = err and tostring(err) or result
 
         if err and previous_expr then
-            -- Should destroy children recursively to not leak
             previous_expr.children = nil
         end
 
@@ -118,7 +117,6 @@ function M.expand_var(variables_reference, original, callback)
                             end
                         )
                         if err and previous then
-                            -- Should destroy children recursively to not leak
                             previous.children = nil
                             previous.expanded = false
                             previous.updated = false

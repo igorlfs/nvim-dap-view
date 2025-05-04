@@ -23,8 +23,6 @@ M.remove_watch_expr = function(line)
     local expr = state.expressions_by_line[line]
     if expr then
         state.watched_expressions[expr.name] = nil
-        -- Recurisvely cleanup
-        state.expressions_by_line[line] = nil
     else
         vim.notify("No expression under the under cursor")
     end
