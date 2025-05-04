@@ -132,11 +132,19 @@ M.show = function()
 
             line = show_variables_or_err(line, expr)
         end
-        api.nvim_win_set_cursor(state.winnr, { math.max(math.min(cursor_line, line), 1), 1 })
 
+        -- Workaround to reduce jankiness when redrawing
         if line > 0 then
-            api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+            local content = {}
+            if cursor_line > line then
+                for i = 1, cursor_line - line do
+                    content[i] = ""
+                end
+            end
+            api.nvim_buf_set_lines(state.bufnr, line, -1, true, content)
         end
+
+        api.nvim_win_set_cursor(state.winnr, { cursor_line, 1 })
     end
 end
 
