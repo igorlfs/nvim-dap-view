@@ -45,12 +45,6 @@ dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
     --     term.open_term_buf_win()
     -- end
 
-    if not state.term_setup_called then
-        term.setup()
-        state.term_setup_called = true
-    end
-
-
     local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
     if not setup.config.windows.terminal.start_hidden and separate_term_win then
         term.open_term_buf_win()
