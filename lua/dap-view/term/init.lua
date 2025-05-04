@@ -23,6 +23,7 @@ M.new_term_buf = function(session)
     return bufnr
 end
 
+
 ---Hide the term win, does not affect the term buffer
 M.hide_term_buf_win = function()
     if state.term_winnr and api.nvim_win_is_valid(state.term_winnr) then
@@ -40,6 +41,32 @@ M.force_delete_term_buf = function()
     -- if state.term_bufnr then
     --     api.nvim_buf_delete(state.term_bufnr, { force = true })
     -- end
+end
+
+---@param config dap.Configuration
+M.on_terminal_win_cmd = function(config)
+    vim.notify("terminal_win_cmd")
+    vim.notify(vim.inspect(config))
+    local session = dap.session()
+    assert(session, "no session, but asking for a terminal?")
+
+    vim.notify(vim.inspect(session.id))
+    local bufnr = M.get_term_buf(session)
+    assert(bufnr, "no bufnr associated with session")
+
+    local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
+    if not setup.config.windows.terminal.start_hidden and separate_term_win then
+        M.open_term_buf_win()
+    end
+
+    return bufnr
+
+    -- local term_bufnr = api.nvim_create_buf(true, false)
+    -- -- assert(state.term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
+    -- -- autocmd.quit_buf_autocmd(state.term_bufnr, quit_term_buf)
+    --
+    -- vim.notify("(dap) terminal_win_cmd: " .. term_bufnr)
+    -- return term_bufnr
 end
 
 ---Open the term buf in a new window if

@@ -11,23 +11,7 @@ M.prepare = function()
 end
 
 M.set_terminal_win_cmd = function()
-    dap.defaults.fallback.terminal_win_cmd = function(config)
-        vim.notify("terminal_win_cmd")
-        local session = dap.session()
-        assert(session, "no session, but asking for a terminal?")
-
-        vim.notify(vim.inspect(session.id))
-        local bufnr = term.get_term_buf(session)
-        assert(bufnr, "no bufnr associated with session")
-        return bufnr
-
-        -- local term_bufnr = api.nvim_create_buf(true, false)
-        -- -- assert(state.term_bufnr ~= 0, "Failed to create nvim-dap-view buffer")
-        -- -- autocmd.quit_buf_autocmd(state.term_bufnr, quit_term_buf)
-        --
-        -- vim.notify("(dap) terminal_win_cmd: " .. term_bufnr)
-        -- return term_bufnr
-    end
+    dap.defaults.fallback.terminal_win_cmd = term.on_terminal_win_cmd
 end
 
 M.disable_dap_termbuf_pooling = function()
