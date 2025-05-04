@@ -98,4 +98,17 @@ M.jump_to_view = function(view)
     end
 end
 
+---@param view SectionType
+M.show_view = function(view)
+    if not vim.tbl_contains(setup.config.winbar.sections, view) then
+        vim.notify("Can't show unconfigured view: " .. view)
+        return
+    end
+    if state.current_section == view then
+        M.jump_to_view(view)
+    else
+        winbar.show_content(view)
+    end
+end
+
 return M

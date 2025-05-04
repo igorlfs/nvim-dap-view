@@ -34,4 +34,9 @@ M.jump_to_view = function(view)
     actions.jump_to_view(view)
 end
 
+---@param view SectionType
+M.show_view = function(view)
+    actions.show_view(view)
+end
+
 return M
