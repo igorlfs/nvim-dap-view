@@ -109,7 +109,12 @@ function M.expand_var(variables_reference, original, callback)
                         previous = vim.iter(original or {}):find(
                             ---@param v VariablePack
                             function(v)
-                                return var.evaluateName == v.variable.evaluateName
+                                if v.variable.evaluateName then
+                                    return v.variable.evaluateName == var.evaluateName
+                                end
+                                if v.variable.variablesReference > 0 then
+                                    return v.variable.variablesReference == var.variablesReference
+                                end
                             end
                         )
                         if err and previous then
