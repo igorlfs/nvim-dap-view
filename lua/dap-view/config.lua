@@ -39,14 +39,14 @@ local M = {}
 ---@field action fun(clicks: integer, button: string, modifiers: string): nil Click handler. See `:help statusline`.
 
 ---@class TerminalConfig
----@field hide string[] Hide the terminal for listed adapters.
----@field position 'right' | 'left' | 'above' | 'below'
----@field width number
----@field start_hidden boolean
+---@field hide string[]? Hide the terminal for listed adapters.
+---@field position? 'right' | 'left' | 'above' | 'below'
+---@field width number?
+---@field start_hidden boolean?
 
 ---@class WindowsConfig
----@field height integer
----@field terminal TerminalConfig
+---@field height integer?
+---@field terminal TerminalConfig?
 
 ---@alias SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"' | '"scopes"'
 
@@ -55,9 +55,9 @@ local M = {}
 ---@alias Button CustomButton | DefaultButton
 
 ---@class Config
----@field winbar WinbarConfig
----@field windows WindowsConfig
----@field switchbuf string
+---@field winbar WinbarConfig?
+---@field windows WindowsConfig?
+---@field switchbuf string?
 M.config = {
     winbar = {
         show = true,
