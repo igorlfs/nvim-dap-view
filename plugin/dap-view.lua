@@ -17,7 +17,7 @@ command("DapViewJump", function(opts)
 end, {
     nargs = 1,
     complete = function(arg_lead, _, _)
-        local sections = require('dap-view.config').config.winbar.sections
+        local sections = require("dap-view.config").config.winbar.sections
         return vim.iter(sections):filter(function(section)
             return section:find(arg_lead or "") == 1
         end):totable()
