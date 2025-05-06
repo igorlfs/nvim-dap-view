@@ -25,8 +25,9 @@ M.toggle = function(hide_terminal)
     actions.toggle(hide_terminal)
 end
 
-M.add_expr = function()
-    actions.add_expr()
+---@param expr? string
+M.add_expr = function(expr)
+    actions.add_expr(expr)
 end
 
 ---@param view SectionType

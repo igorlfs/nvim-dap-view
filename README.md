@@ -257,6 +257,7 @@ require("dap-view").close(true) -- Same as `DapViewClose!`
 require("dap-view").toggle()
 require("dap-view").toggle(true) -- Same as `DapViewToggle!`
 require("dap-view").add_expr()
+require("dap-view").add_expr("x + 5") -- Or add a specific expression to watch list
 -- Can be used to jump to a specific view, from any window
 require("dap-view").jump_to_view("[view]")
 -- Can be used to show to a specific view
