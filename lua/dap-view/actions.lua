@@ -106,8 +106,10 @@ M.show_view = function(view)
     end
     if state.current_section == view then
         M.jump_to_view(view)
-    else
+    elseif state.bufnr and state.winnr and api.nvim_win_is_valid(state.winnr) then
         winbar.show_content(view)
+    else
+        vim.notify("Can't show view: couldn't find the window")
     end
 end
 

@@ -53,6 +53,9 @@ local winbar_info = {
         keymap = "R",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "repl") then
+                if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+                    return
+                end
                 -- Jump to dap-view's window to make the experience seamless
                 local cmd = "lua vim.api.nvim_set_current_win(" .. state.winnr .. ")"
                 local repl_buf, _ = require("dap").repl.open(nil, cmd)
@@ -66,6 +69,10 @@ local winbar_info = {
         keymap = "C",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "console") then
+                if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+                    return
+                end
+
                 if not state.term_bufnr then
                     require("dap-view.term.init").setup_term_win_cmd()
                 end
