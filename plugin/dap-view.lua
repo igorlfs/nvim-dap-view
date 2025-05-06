@@ -14,7 +14,15 @@ command("DapViewWatch", function()
 end, {})
 command("DapViewJump", function(opts)
     require("dap-view").jump_to_view(opts.fargs[1])
-end, { nargs = 1 })
+end, {
+    nargs = 1,
+    complete = function(argLead, _, _)
+        local sections = require('dap-view.config').config.winbar.sections
+        return vim.iter(sections):filter(function(section)
+            return section:find(argLead or "") == 1
+        end):totable()
+    end
+})
 command("DapViewShow", function(opts)
     require("dap-view").show_view(opts.fargs[1])
 end, { nargs = 1 })
