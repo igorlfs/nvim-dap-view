@@ -4,7 +4,7 @@ local M = {}
 
 M.set_options = function()
     local win = vim.wo[state.winnr][0]
-    win.scrolloff = 0
+    win.scrolloff = 99
     win.wrap = false
     win.number = false
     win.relativenumber = false

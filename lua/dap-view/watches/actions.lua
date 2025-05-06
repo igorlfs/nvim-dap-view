@@ -2,6 +2,8 @@ local state = require("dap-view.state")
 local guard = require("dap-view.guard")
 local eval = require("dap-view.watches.eval")
 local set = require("dap-view.watches.set")
+local traversal = require("dap-view.tree.traversal")
+local watches_view = require("dap-view.watches.view")
 
 local M = {}
 
@@ -12,7 +14,9 @@ M.add_watch_expr = function(expr)
         return false
     end
 
-    eval.eval_expr(expr)
+    eval.eval_expr(expr, function()
+        watches_view.show()
+    end)
 
     return true
 end
@@ -21,18 +25,7 @@ end
 M.remove_watch_expr = function(line)
     local expr = state.expressions_by_line[line]
     if expr then
-        local eval_result = state.watched_expressions[expr.name].response
-
         state.watched_expressions[expr.name] = nil
-        state.expressions_by_line[line] = nil
-
-        -- If the result is a string, it's the error
-        if type(eval_result) ~= "string" then
-            local ref = eval_result and eval_result.variablesReference
-            if ref then
-                state.variables_by_reference[ref] = nil
-            end
-        end
     else
         vim.notify("No expression under the under cursor")
     end
@@ -116,7 +109,47 @@ M.edit_watch_expr = function(expr, line)
     -- The easiest way to edit is to delete and insert again
     M.remove_watch_expr(line)
 
-    eval.eval_expr(expr)
+    eval.eval_expr(expr, function()
+        watches_view.show()
+    end)
+end
+
+---@param line number
+M.expand_or_collapse = function(line)
+    if not guard.expect_session() then
+        return
+    end
+
+    local var = state.variables_by_line[line]
+
+    local expr = state.expressions_by_line[line]
+    if expr then
+        local e = state.watched_expressions[expr.name]
+        if e then
+            e.expanded = not e.expanded
+
+            eval.eval_expr(expr.name, function()
+                watches_view.show()
+            end)
+        end
+    else
+        if var then
+            local reference = var.response.variablesReference
+            if reference > 0 then
+                local v = traversal.find_node(reference)
+                if v then
+                    v.expanded = not v.expanded
+                    eval.expand_var(reference, v.children, function(result)
+                        v.children = result
+                    end)
+                end
+            else
+                vim.notify("Nothing to expand")
+            end
+        else
+            vim.notify("No expression or variable under the under cursor")
+        end
+    end
 end
 
 return M

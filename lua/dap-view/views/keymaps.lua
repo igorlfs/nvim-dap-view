@@ -15,6 +15,9 @@ M.set_keymaps = function()
             require("dap-view.exceptions.actions").toggle_exception_filter()
         elseif state.current_section == "scopes" then
             require("dap.ui").trigger_actions({ mode = "first" })
+        elseif state.current_section == "watches" then
+            local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
+            watches_actions.expand_or_collapse(cursor_line)
         end
     end, { buffer = state.bufnr })
 
@@ -73,8 +76,8 @@ M.set_keymaps = function()
 
             local get_default = function()
                 local expr = state.expressions_by_line[cursor_line]
-                if expr and type(expr.response) ~= "string" then
-                    return expr.response.result
+                if expr and expr.expression and type(expr.expression.response) ~= "string" then
+                    return expr.expression.response.result
                 end
 
                 local var = state.variables_by_line[cursor_line]

@@ -81,6 +81,7 @@ The plugin provides 6 "views" that share the same window (so there's clutter)
     - Shows a list of user defined expressions, that are evaluated by the debug adapter
     - Add, edit and delete expressions from the watch list
         - Add variable under the cursor using a command
+    - Expand and collapse expressions and variables
     - Set the value of an expression or variable (if supported by debug adapter)
     - Copy the value of an expression or variable
 
@@ -208,14 +209,13 @@ Start a regular debugging session. When desired, you can use `:DapViewOpen` to
 start the plugin. You can switch to a view (section) using the letter outlined
 in the `'winbar'` (e.g., `B` for the breakpoints view).
 
-The breakpoints view, the exceptions view and the scopes view only have 1
-mapping: `<CR>`. It jumps to a breakpoint, toggles an exception filter, and
-expands a variable, respectively. The watches view comes with 5 mappings:
+The breakpoints view and the exceptions view only have 1 mapping: `<CR>`. It jumps to a breakpoint and toggles an exception filter, respectively. The watches view comes with 6 mappings:
 
+- `<CR>` to expand or collapse a variable
 - `i` to insert a new expression
 - `e` to edit an expression
 - `c` to copy an expression or variable
-- `s` to change the value of an expression or variable
+- `s` to set (change) the value of an expression or variable
 - `d` to delete an expression
 
 Though, the preferred way of adding a new expression is using the
@@ -224,6 +224,11 @@ to the watch list. The threads view has 2 mappings:
 
 - `<CR>` jumps to a location in the call stack
 - `t` toggles subtle frames
+
+Similarly, the scopes view comes with 2 mappings:
+
+- `<CR>` to expand or collapse a variable
+- `o` to open a menu with further actions
 
 When you finish your session, you can use `:DapViewClose` to close the
 `nvim-dap-view` window.
