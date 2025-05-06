@@ -1,16 +1,5 @@
 local command = vim.api.nvim_create_user_command
 
----@param arg_lead string
----@return string[]
-local function complete_sections(arg_lead)
-    local sections = require("dap-view.config").config.winbar.sections
-    return vim.iter(sections)
-        :filter(function(section)
-            return section:find(arg_lead or "") == 1
-        end)
-        :totable()
-end
-
 command("DapViewOpen", function()
     require("dap-view").open()
 end, {})
@@ -25,7 +14,19 @@ command("DapViewWatch", function()
 end, {})
 command("DapViewJump", function(opts)
     require("dap-view").jump_to_view(opts.fargs[1])
-end, { nargs = 1, complete = complete_sections })
+end, {
+    nargs = 1,
+    ---@param arg_lead string
+    complete = function(arg_lead)
+        return require("dap-view.complete").complete_sections(arg_lead)
+    end,
+})
 command("DapViewShow", function(opts)
     require("dap-view").show_view(opts.fargs[1])
-end, { nargs = 1, complete = complete_sections })
+end, {
+    nargs = 1,
+    ---@param arg_lead string
+    complete = function(arg_lead)
+        return require("dap-view.complete").complete_sections(arg_lead)
+    end,
+})
