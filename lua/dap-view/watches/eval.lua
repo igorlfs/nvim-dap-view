@@ -15,16 +15,17 @@ M.eval_expr = function(expr_name, callback)
             session:request("evaluate", { expression = expr_name, context = "watch", frameId = frame_id })
 
         local previous_expr = state.watched_expressions[expr_name]
+
         local previous_result = previous_expr and previous_expr.response and previous_expr.response.result
         if previous_expr and result then
             previous_expr.updated = previous_result ~= result.result
         end
 
-        local response = err and tostring(err) or result
-
         if err and previous_expr then
             previous_expr.children = nil
         end
+
+        local response = err and tostring(err) or result
 
         ---@type ExpressionPack
         local new_expr

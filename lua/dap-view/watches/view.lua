@@ -78,6 +78,8 @@ local show_variables_or_err = function(line, variables)
         local var_content = "\t" .. variables
         api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { var_content })
 
+        hl.hl_range("WatchError", { line, 0 }, { line, #var_content })
+
         line = line + 1
     elseif children ~= nil and variables.expanded then
         line = show_variables(children, variables.response.variablesReference, line, 1)
@@ -88,8 +90,13 @@ end
 M.show = function()
     winbar.update_section("watches")
 
+    if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+        return
+    end
+
     if state.bufnr then
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
+
         views.cleanup_view(#state.watched_expressions == 0, "No expressions")
 
         -- Since variables aren't ordered, lines may change unexpectedly

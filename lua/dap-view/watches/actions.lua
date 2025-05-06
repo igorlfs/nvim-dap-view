@@ -120,9 +120,8 @@ M.expand_or_collapse = function(line)
         return
     end
 
-    local var = state.variables_by_line[line]
-
     local expr = state.expressions_by_line[line]
+
     if expr then
         local e = state.watched_expressions[expr.name]
         if e then
@@ -133,6 +132,8 @@ M.expand_or_collapse = function(line)
             end)
         end
     else
+        local var = state.variables_by_line[line]
+
         if var then
             local reference = var.response.variablesReference
             if reference > 0 then
