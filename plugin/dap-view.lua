@@ -1,5 +1,8 @@
 local command = vim.api.nvim_create_user_command
-local function complete_sections(arg_lead, _, _)
+
+--- @param arg_lead string
+--- @return string[]
+local function complete_sections(arg_lead)
     local sections = require("dap-view.config").config.winbar.sections
     return vim.iter(sections):filter(function(section)
         return section:find(arg_lead or "") == 1
