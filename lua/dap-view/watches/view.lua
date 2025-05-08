@@ -150,9 +150,9 @@ M.show = function()
                 end
             end
             api.nvim_buf_set_lines(state.bufnr, line, -1, true, content)
-        end
 
-        api.nvim_win_set_cursor(state.winnr, { cursor_line, 1 })
+            api.nvim_win_set_cursor(state.winnr, { cursor_line, 1 })
+        end
     end
 end
 
