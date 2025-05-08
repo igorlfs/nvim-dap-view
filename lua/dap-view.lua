@@ -1,6 +1,7 @@
 require("dap-view.highlight")
 -- Connect hooks to listen to DAP events
 require("dap-view.events")
+require("dap-view.prepare").prepare()
 
 local actions = require("dap-view.actions")
 
