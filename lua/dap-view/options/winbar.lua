@@ -145,12 +145,12 @@ local set_winbar_opt = function()
     end
 end
 
----@param selected_section SectionType
+---@param selected_section dapview.SectionType
 M.show_content = function(selected_section)
     winbar_info[selected_section].action()
 end
 
----@param section_name SectionType
+---@param section_name dapview.SectionType
 M.update_section = function(section_name)
     if setup.config.winbar.show then
         state.current_section = section_name

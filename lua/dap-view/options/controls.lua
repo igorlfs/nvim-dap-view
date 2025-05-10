@@ -6,7 +6,7 @@ local module = ...
 
 local M = {}
 
----@type table<DefaultButton, ControlButton>
+---@type table<dapview.DefaultButton, dapview.ControlButton>
 local buttons = {
     play = {
         render = function()

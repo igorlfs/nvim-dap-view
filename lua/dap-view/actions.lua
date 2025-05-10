@@ -84,7 +84,7 @@ M.add_expr = function()
     end
 end
 
----@param view SectionType
+---@param view dapview.SectionType
 M.jump_to_view = function(view)
     if not vim.tbl_contains(setup.config.winbar.sections, view) then
         vim.notify("Can't jump to unconfigured view: " .. view)
@@ -98,7 +98,7 @@ M.jump_to_view = function(view)
     end
 end
 
----@param view SectionType
+---@param view dapview.SectionType
 M.show_view = function(view)
     if not vim.tbl_contains(setup.config.winbar.sections, view) then
         vim.notify("Can't show unconfigured view: " .. view)

@@ -20,7 +20,7 @@ local types_to_hl_group = {
     ["function"] = "Function",
 }
 
----@param children VariablePack[]
+---@param children dapview.VariablePack[]
 ---@param reference number
 ---@param line number
 ---@param depth number
@@ -61,7 +61,7 @@ local function show_variables(children, reference, line, depth)
 
                 line = line + 1
             else
-                ---@cast var VariablePackNested
+                ---@cast var dapview.VariablePackStrict
                 line = show_variables(var.children, var.reference, line, depth + 1)
             end
         end
@@ -70,7 +70,7 @@ local function show_variables(children, reference, line, depth)
 end
 
 ---@param line integer
----@param variables string|ExpressionPack
+---@param variables string|dapview.ExpressionPack
 ---@return integer
 local show_variables_or_err = function(line, variables)
     local children = variables.children

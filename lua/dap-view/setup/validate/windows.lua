@@ -2,7 +2,7 @@ local M = {}
 
 local validate = require("dap-view.setup.validate.util").validate
 
----@param config WindowsConfig
+---@param config dapview.WindowsConfig
 function M.validate(config)
     validate("windows", {
         height = { config.height, "number" },

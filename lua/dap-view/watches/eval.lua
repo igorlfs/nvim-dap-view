@@ -27,7 +27,7 @@ M.eval_expr = function(expr_name, callback)
 
         local response = err and tostring(err) or result
 
-        ---@type ExpressionPack
+        ---@type dapview.ExpressionPack
         local new_expr
         if previous_expr then
             previous_expr.response = response
@@ -85,8 +85,8 @@ M.copy_expr = function(expr)
 end
 
 ---@param variables_reference number
----@param original (VariablePack[] | string)?
----@param callback fun(result: VariablePack[] | string): nil
+---@param original (dapview.VariablePack[] | string)?
+---@param callback fun(result: dapview.VariablePack[] | string): nil
 function M.expand_var(variables_reference, original, callback)
     local session = assert(require("dap").session(), "has active session")
 
@@ -105,18 +105,18 @@ function M.expand_var(variables_reference, original, callback)
                 response = result.variables
             end
 
-            ---@type VariablePack[] | string
+            ---@type dapview.VariablePack[] | string
             local variables = type(response) == "string" and response or {}
 
             if type(variables) ~= "string" and type(response) ~= "string" then
                 for k, var in pairs(response or {}) do
-                    ---@type VariablePack?
+                    ---@type dapview.VariablePack?
                     local previous
 
                     if type(original) ~= "string" then
-                        ---@type VariablePack?
+                        ---@type dapview.VariablePack?
                         previous = vim.iter(original or {}):find(
-                            ---@param v VariablePack
+                            ---@param v dapview.VariablePack
                             function(v)
                                 if v.variable.evaluateName then
                                     return v.variable.evaluateName == var.evaluateName
