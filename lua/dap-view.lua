@@ -6,7 +6,7 @@ local actions = require("dap-view.actions")
 
 local M = {}
 
----@param config Config?
+---@param config dapview.Config?
 M.setup = function(config)
     require("dap-view.setup").setup(config)
 end
@@ -29,12 +29,12 @@ M.add_expr = function()
     actions.add_expr()
 end
 
----@param view SectionType
+---@param view dapview.SectionType
 M.jump_to_view = function(view)
     actions.jump_to_view(view)
 end
 
----@param view SectionType
+---@param view dapview.SectionType
 M.show_view = function(view)
     actions.show_view(view)
 end

@@ -1,6 +1,6 @@
 local M = {}
 
----@param config WinbarConfig
+---@param config dapview.WinbarConfig
 function M.validate(config)
     local validate = require("dap-view.setup.validate.util").validate
 

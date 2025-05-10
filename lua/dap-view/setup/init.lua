@@ -2,7 +2,7 @@ local M = {}
 
 M.config = require("dap-view.config").config
 
----@param config Config?
+---@param config dapview.Config?
 M.setup = function(config)
     M.config = vim.tbl_deep_extend("force", M.config, config or {})
 
