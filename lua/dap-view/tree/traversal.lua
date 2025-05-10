@@ -2,16 +2,16 @@ local state = require("dap-view.state")
 
 local M = {}
 
----@param children VariablePack[]
+---@param children dapview.VariablePack[]
 ---@param reference number
----@return VariablePack?
+---@return dapview.VariablePack?
 local function dfs(children, reference)
     for _, v in pairs(children) do
         if v.variable.variablesReference == reference then
             return v
         end
         if v.children and type(v.children) ~= "string" then
-            ---@cast v VariablePackNested
+            ---@cast v dapview.VariablePackStrict
             local ref = dfs(v.children, reference)
             if ref then
                 return ref
@@ -21,7 +21,7 @@ local function dfs(children, reference)
 end
 
 ---@param reference number
----@return VariablePack?
+---@return dapview.VariablePack?
 M.find_node = function(reference)
     for _, v in pairs(state.watched_expressions) do
         local children = v.children

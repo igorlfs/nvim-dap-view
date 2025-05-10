@@ -1,6 +1,6 @@
 local M = {}
 
----@param config Config
+---@param config dapview.ConfigStrict
 function M.validate(config)
     require("dap-view.setup.validate.util").validate("config", {
         windows = { config.windows, "table" },
