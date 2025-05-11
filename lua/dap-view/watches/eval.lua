@@ -77,6 +77,8 @@ M.copy_expr = function(expr)
             if err == nil and result then
                 -- TODO uses system clipboard, could be a parameter instead
                 vim.fn.setreg("+", result.result)
+
+                vim.notify("Variable " .. expr .. " copied to clipboard")
             end
         end)()
     else
