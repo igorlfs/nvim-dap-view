@@ -55,10 +55,16 @@ local M = {}
 ---@field headers dapview.WinbarHeaders Header label for each section.
 ---@field controls dapview.ControlsConfig
 
----@class dapview.ConfigStrict
+---@class dapview.HelpConfig
+---@field border? string|string[] Override `winborder`
+
+---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
 ---@field windows dapview.WindowsConfig
----@field switchbuf string
+---@field help dapview.HelpConfig
+---@field switchbuf string Control how to jump when selecting a breakpoint or a call in the stack
+
+---@type dapview.ConfigStrict
 M.config = {
     winbar = {
         show = true,
@@ -109,6 +115,9 @@ M.config = {
             width = 0.5,
             start_hidden = false,
         },
+    },
+    help = {
+        border = nil,
     },
     switchbuf = "usetab,newtab",
 }

@@ -1,3 +1,5 @@
+local setup = require("dap-view.setup")
+
 local M = {}
 
 local api = vim.api
@@ -15,6 +17,7 @@ local create_win = function(height)
         col = math.floor(vim.go.columns / 2 - width / 2 - 1),
         width = width,
         height = height,
+        border = setup.config.help.border,
         style = "minimal",
         title = "Keymaps",
         title_pos = "center",

@@ -14,7 +14,9 @@
 ---@field headers? dapview.WinbarHeadersPartial Header label for each section.
 ---@field controls? dapview.ControlsConfigPartial
 
----@class dapview.Config : dapview.ConfigStrict
+---@class dapview.HelpConfigPartial : dapview.HelpConfig, {}
+
+---@class dapview.Config : dapview.ConfigStrict, {}
 ---@field winbar? dapview.WindowsConfigPartial
 ---@field windows? dapview.WindowsConfigPartial
----@field switchbuf? string Control how to jump when selecting a breakpoint or a call in the stack
+---@field help? dapview.HelpConfigPartial
