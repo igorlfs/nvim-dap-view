@@ -2,6 +2,7 @@ local state = require("dap-view.state")
 local threads_view = require("dap-view.threads.view")
 local watches_view = require("dap-view.watches.view")
 local watches_actions = require("dap-view.watches.actions")
+local docs = require("dap-view.views.keymaps.docs")
 local keymap = require("dap-view.views.keymaps.util").keymap
 
 local M = {}
@@ -103,6 +104,10 @@ M.set_keymaps = function()
 
             threads_view.show()
         end
+    end)
+
+    keymap("g?", function()
+        docs.show_help()
     end)
 end
 
