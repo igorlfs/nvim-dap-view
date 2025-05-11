@@ -54,12 +54,15 @@ M.open = function()
 
     local is_term_win_valid = term_winnr and api.nvim_win_is_valid(term_winnr)
 
-    local term_position = require("dap-view.util").inverted_directions[setup.config.windows.terminal.position]
+    local windows_config = setup.config.windows
+
+    local term_position = require("dap-view.util").inverted_directions[windows_config.terminal.position]
 
     local winnr = api.nvim_open_win(bufnr, false, {
         split = is_term_win_valid and term_position or "below",
         win = is_term_win_valid and term_winnr or -1,
-        height = setup.config.windows.height,
+        height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
+            or windows_config.height,
     })
 
     assert(winnr ~= 0, "Failed to create nvim-dap-view window")

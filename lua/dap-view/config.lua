@@ -13,7 +13,7 @@ local M = {}
 ---@field start_hidden boolean Don't show the terminal window when starting a new session
 
 ---@class dapview.WindowsConfig
----@field height integer
+---@field height integer If > 1 number of lines, else percentage the windows should use
 ---@field terminal dapview.TerminalConfig
 
 ---@class dapview.WinbarHeaders

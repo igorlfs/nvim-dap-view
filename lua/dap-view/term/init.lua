@@ -28,7 +28,8 @@ end
 ---IV. There's no term win or it is invalid
 ---@return integer?
 M.open_term_buf_win = function()
-    local term_config = setup.config.windows.terminal
+    local windows_config = setup.config.windows
+    local term_config = windows_config.terminal
     local should_term_be_hidden = vim.tbl_contains(term_config.hide, state.last_active_adapter)
 
     if dap.session() and state.term_bufnr and not should_term_be_hidden then
@@ -38,8 +39,9 @@ M.open_term_buf_win = function()
             state.term_winnr = api.nvim_open_win(state.term_bufnr, false, {
                 split = is_win_valid and term_config.position or "below",
                 win = is_win_valid and state.winnr or -1,
-                height = setup.config.windows.height,
-                width = term_config.width < 1 and math.floor(vim.o.columns * term_config.width)
+                height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
+                    or windows_config.height,
+                width = term_config.width < 1 and math.floor(vim.go.columns * term_config.width)
                     or term_config.width,
             })
 

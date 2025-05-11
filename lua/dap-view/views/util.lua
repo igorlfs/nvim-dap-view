@@ -45,7 +45,8 @@ M.jump_to_location = function(pattern, column)
         win = api.nvim_open_win(0, true, {
             split = "above",
             win = -1,
-            height = vim.o.lines - config.windows.height,
+            height = config.windows.height < 1 and math.floor(vim.go.lines * (1 - config.windows.height))
+                or vim.go.lines - config.windows.height,
         })
     end
 
