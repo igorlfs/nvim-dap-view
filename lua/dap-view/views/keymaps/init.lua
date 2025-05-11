@@ -2,11 +2,12 @@ local state = require("dap-view.state")
 local threads_view = require("dap-view.threads.view")
 local watches_view = require("dap-view.watches.view")
 local watches_actions = require("dap-view.watches.actions")
+local keymap = require("dap-view.views.keymaps.util").keymap
 
 local M = {}
 
 M.set_keymaps = function()
-    vim.keymap.set("n", "<CR>", function()
+    keymap("<CR>", function()
         if state.current_section == "breakpoints" then
             require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|")
         elseif state.current_section == "threads" then
@@ -19,15 +20,15 @@ M.set_keymaps = function()
             local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
             watches_actions.expand_or_collapse(cursor_line)
         end
-    end, { buffer = state.bufnr })
+    end)
 
-    vim.keymap.set("n", "o", function()
+    keymap("o", function()
         if state.current_section == "scopes" then
             require("dap.ui").trigger_actions()
         end
-    end, { buffer = state.bufnr })
+    end)
 
-    vim.keymap.set("n", "i", function()
+    keymap("i", function()
         if state.current_section == "watches" then
             vim.ui.input({ prompt = "Expression: " }, function(input)
                 if input then
@@ -35,9 +36,9 @@ M.set_keymaps = function()
                 end
             end)
         end
-    end, { buffer = state.bufnr })
+    end)
 
-    vim.keymap.set("n", "d", function()
+    keymap("d", function()
         if state.current_section == "watches" then
             local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
@@ -45,9 +46,9 @@ M.set_keymaps = function()
 
             watches_view.show()
         end
-    end, { buffer = state.bufnr, nowait = true })
+    end)
 
-    vim.keymap.set("n", "e", function()
+    keymap("e", function()
         if state.current_section == "watches" then
             local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
@@ -60,17 +61,17 @@ M.set_keymaps = function()
                 end)
             end
         end
-    end, { buffer = state.bufnr })
+    end)
 
-    vim.keymap.set("n", "c", function()
+    keymap("c", function()
         if state.current_section == "watches" then
             local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
             watches_actions.copy_watch_expr(cursor_line)
         end
-    end, { buffer = state.bufnr, nowait = true })
+    end)
 
-    vim.keymap.set("n", "s", function()
+    keymap("s", function()
         if state.current_section == "watches" then
             local cursor_line = vim.api.nvim_win_get_cursor(state.winnr)[1]
 
@@ -94,15 +95,15 @@ M.set_keymaps = function()
                 end
             end)
         end
-    end, { buffer = state.bufnr })
+    end)
 
-    vim.keymap.set("n", "t", function()
+    keymap("t", function()
         if state.current_section == "threads" then
             state.subtle_frames = not state.subtle_frames
 
             threads_view.show()
         end
-    end, { buffer = state.bufnr, nowait = true })
+    end)
 end
 
 return M
