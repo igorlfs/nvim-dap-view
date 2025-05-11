@@ -37,7 +37,7 @@ M.open_term_buf_win = function()
             local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
 
             state.term_winnr = api.nvim_open_win(state.term_bufnr, false, {
-                split = is_win_valid and term_config.position or "below",
+                split = is_win_valid and term_config.position or windows_config.position,
                 win = is_win_valid and state.winnr or -1,
                 height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
                     or windows_config.height,

@@ -14,6 +14,7 @@ local M = {}
 
 ---@class dapview.WindowsConfig
 ---@field height integer If > 1 number of lines, else percentage the windows should use
+---@field position 'right' | 'left' | 'above' | 'below'
 ---@field terminal dapview.TerminalConfig
 
 ---@class dapview.WinbarHeaders
@@ -101,6 +102,7 @@ M.config = {
     },
     windows = {
         height = 12,
+        position = "below",
         terminal = {
             position = "left",
             hide = {},

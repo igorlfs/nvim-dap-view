@@ -6,6 +6,7 @@ local validate = require("dap-view.setup.validate.util").validate
 function M.validate(config)
     validate("windows", {
         height = { config.height, "number" },
+        position = { config.position, "string" },
         terminal = { config.terminal, "table" },
     }, config)
 

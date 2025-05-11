@@ -59,7 +59,7 @@ M.open = function()
     local term_position = require("dap-view.util").inverted_directions[windows_config.terminal.position]
 
     local winnr = api.nvim_open_win(bufnr, false, {
-        split = is_term_win_valid and term_position or "below",
+        split = is_term_win_valid and term_position or windows_config.position,
         win = is_term_win_valid and term_winnr or -1,
         height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
             or windows_config.height,

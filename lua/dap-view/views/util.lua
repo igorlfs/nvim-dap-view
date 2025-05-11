@@ -1,5 +1,6 @@
 local setup = require("dap-view.setup")
 local window = require("dap-view.views.windows")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -43,7 +44,7 @@ M.jump_to_location = function(pattern, column)
 
     if not win then
         win = api.nvim_open_win(0, true, {
-            split = "above",
+            split = util.inverted_directions[config.windows.position],
             win = -1,
             height = config.windows.height < 1 and math.floor(vim.go.lines * (1 - config.windows.height))
                 or vim.go.lines - config.windows.height,
