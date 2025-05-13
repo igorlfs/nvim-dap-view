@@ -46,6 +46,10 @@ M.set_keymaps = function()
             watches_actions.remove_watch_expr(cursor_line)
 
             watches_view.show()
+        elseif state.current_section == "breakpoints" then
+            require("dap-view.breakpoints.actions").remove_breakpoint()
+
+            require("dap-view.breakpoints.view").show()
         end
     end)
 

@@ -36,6 +36,7 @@ M.show_help = function()
         "   `t`  Toggle subtle frames",
         "## Breakpoints",
         "`<CR>`  Jump to a breakpoint",
+        "   `d`  Delete a breakpoint",
         "## Watches",
         "`<CR>`  Expand or collapse a variable",
         "   `i`  Insert an expression",

@@ -8,8 +8,8 @@ local api = vim.api
 local log = vim.log.levels
 
 ---@param pattern string
----@param column? number
-M.jump_to_location = function(pattern, column)
+---@return number?, number?
+M.get_bufnr = function(pattern)
     local line = vim.fn.getline(".")
 
     if not line or line == "" then
@@ -36,6 +36,18 @@ M.jump_to_location = function(pattern, column)
     end
 
     local bufnr = vim.uri_to_bufnr(vim.uri_from_fname(abs_path))
+
+    return bufnr, line_num
+end
+
+---@param pattern string
+---@param column? number
+M.jump_to_location = function(pattern, column)
+    local bufnr, line_num = M.get_bufnr(pattern)
+
+    if bufnr == nil then
+        return
+    end
 
     local config = setup.config
 
