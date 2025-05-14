@@ -15,6 +15,7 @@ local M = {}
 ---@class dapview.WindowsConfig
 ---@field height integer If > 1 number of lines, else percentage the windows should use
 ---@field position 'right' | 'left' | 'above' | 'below'
+---@field anchor? fun(): integer? Function that returns a window number for the main nvim-dap-view window to follow
 ---@field terminal dapview.TerminalConfig
 
 ---@class dapview.WinbarHeaders
