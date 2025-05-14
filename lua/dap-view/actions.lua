@@ -57,10 +57,12 @@ M.open = function()
     local windows_config = setup.config.windows
 
     local term_position = require("dap-view.util").inverted_directions[windows_config.terminal.position]
+    local anchor_win = windows_config.anchor and windows_config.anchor()
+    local is_anchor_win_valid = anchor_win and api.nvim_win_is_valid(anchor_win)
 
     local winnr = api.nvim_open_win(bufnr, false, {
-        split = is_term_win_valid and term_position or windows_config.position,
-        win = is_term_win_valid and term_winnr or -1,
+        split = (is_anchor_win_valid or is_term_win_valid) and term_position or windows_config.position,
+        win = is_anchor_win_valid and anchor_win or is_term_win_valid and term_winnr or -1,
         height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
             or windows_config.height,
     })

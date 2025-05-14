@@ -8,6 +8,7 @@ function M.validate(config)
         height = { config.height, "number" },
         position = { config.position, "string" },
         terminal = { config.terminal, "table" },
+        anchor = { config.anchor, { "function", "nil" } },
     }, config)
 
     validate("windows.terminal", {
