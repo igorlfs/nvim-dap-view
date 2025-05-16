@@ -18,12 +18,12 @@
         - [Recommended Setup](#recommended-setup)
             - [Automatic Toggle](#automatic-toggle)
             - [Hide Terminal](#hide-terminal)
+                - [Anchoring](#anchoring)
             - [Jumping](#jumping)
             - [Expanding Variables](#expanding-variables)
         - [Highlight Groups](#highlight-groups)
         - [Filetypes and Autocommands](#filetypes-and-autocommands)
         - [Custom Buttons](#custom-buttons)
-    - [Roadmap](#roadmap)
     - [Known Issues](#known-issues)
     - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
@@ -316,6 +316,29 @@ return {
 }
 ```
 
+##### Anchoring
+
+In some scenarios, it's useful to use another window as if it was `nvim-dap-view`'s terminal. One such scenario is when using the `delve` adapter for Go (more specifically, coupled with an `attach` request): the window with the terminal that launched `dlv` can act as if it was the `nvim-dap-view`'s terminal window. By doing that, `nvim-dap-view`'s main window will "follow" `delve`'s window (i.e., `nvim-dap-view`'s main window will open by the side of `delve`'s window). To achieve that, in addition to hidding the terminal for `delve` (see above), you have to create your own `anchor` function that returns a buffer number (or `nil`). If `nil` is returned, there's a fallback to the default behavior. Here's a simple function you can use:
+
+```lua
+return {
+    windows = {
+        anchor = function()
+            -- Anchor to the first terminal window found in the current tab
+            -- Tweak according to your needs
+            local windows = vim.api.nvim_tabpage_list_wins(0)
+
+            for _, win in ipairs(windows) do
+                local bufnr = vim.api.nvim_win_get_buf(win)
+                if vim.bo[bufnr].buftype == "terminal" then
+                    return win
+                end
+            end
+        end,
+    },
+}
+```
+
 #### Jumping
 
 When setting `windows.terminal.position` to `right`, `nvim-dap-view`'s main window may be used to display the current frame (after execution stops), because `nvim-dap` defaults to the global `switchbuf` setting. To address this, update your `switchbuf` configuration. For instance:
@@ -473,13 +496,6 @@ return {
 ```
 
 </details>
-
-## Roadmap
-
-- Watches: rewrite. See <https://github.com/igorlfs/nvim-dap-view/issues/33>
-
-Missing something? Create an issue with a [feature
-request](https://github.com/igorlfs/nvim-dap-view/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml&title=feature%3A+)!
 
 ## Known Issues
 
