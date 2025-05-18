@@ -9,9 +9,21 @@ end, { bang = true })
 command("DapViewToggle", function(opts)
     require("dap-view").toggle(opts.bang)
 end, { bang = true })
-command("DapViewWatch", function()
-    require("dap-view").add_expr()
-end, {})
+command("DapViewWatch", function(opts)
+    if opts.range then
+        local start = vim.fn.getpos("'<")
+        local finish = vim.fn.getpos("'>")
+        local expr = require('dap-view.util.exprs').get_selection(start, finish)
+        require("dap-view").add_expr(expr)
+    elseif #opts.fargs == 0 then
+        require("dap-view").add_expr()
+    else
+        require("dap-view").add_expr(table.concat(opts.fargs, ' '))
+    end
+end, {
+    nargs = '*',
+    range = true,
+})
 command("DapViewJump", function(opts)
     require("dap-view").jump_to_view(opts.fargs[1])
 end, {
