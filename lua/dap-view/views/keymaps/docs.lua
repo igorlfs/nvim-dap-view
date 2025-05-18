@@ -56,8 +56,10 @@ M.show_help = function()
 
     api.nvim_buf_set_lines(help_buf, 0, -1, true, content)
 
+    vim.treesitter.language.register("markdown", "dap-view-help")
+
+    vim.bo[help_buf].filetype = "dap-view-help"
     vim.bo[help_buf].modifiable = false
-    vim.bo[help_buf].filetype = "markdown"
 
     vim.wo[help_win].conceallevel = 2
     vim.wo[help_win].concealcursor = "nvc"
