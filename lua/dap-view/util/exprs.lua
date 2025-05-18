@@ -1,6 +1,12 @@
 local M = {}
 
-M.get_selection = function(start, finish)
+local api = vim.api
+
+---@return string
+M.get_trimmed_selection = function()
+    local start = vim.fn.getpos("'<")
+    local finish = vim.fn.getpos("'>")
+
     local start_line, start_col = start[2], start[3]
     local finish_line, finish_col = finish[2], finish[3]
 
@@ -12,22 +18,41 @@ M.get_selection = function(start, finish)
     if #lines == 0 then
         return ""
     end
-    if type(lines) == "string" then
-        return lines
+
+    -- It's easier to manipulate a single line as if it were a string
+    if #lines == 1 then
+        lines = lines[1]
     end
-    lines[#lines] = string.sub(lines[#lines], 1, finish_col)
+
+    if type(lines) == "string" then
+        return string.sub(lines, start_col, finish_col)
+    end
+
     lines[1] = string.sub(lines[1], start_col)
-    return table.concat(lines, '')
+    lines[#lines] = string.sub(lines[#lines], 1, finish_col)
+
+    -- Remove leading (and trailing) whitespace to simplify final expression
+    local stripped_lines = vim.iter(lines)
+        :map(function(line)
+            return string.match(line, "^%s*(.-)%s*$")
+        end)
+        :totable()
+
+    return table.concat(stripped_lines, "")
 end
 
+---@return string
 M.get_current_expr = function()
     local mode = vim.fn.mode()
-    if mode == 'v' or mode == 'V' then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', false, true, true), 'nx', false)
-        local start = vim.fn.getpos("'<")
-        local finish = vim.fn.getpos("'>")
-        return M.get_selection(start, finish)
+
+    if mode == "v" or mode == "V" then
+        -- Return to normal mode
+        local keys = api.nvim_replace_termcodes("<Esc>", true, true, true)
+        api.nvim_feedkeys(keys, "x", false)
+
+        return M.get_trimmed_selection()
     end
+
     return vim.fn.expand("<cexpr>")
 end
 
