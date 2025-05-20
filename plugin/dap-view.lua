@@ -9,9 +9,18 @@ end, { bang = true })
 command("DapViewToggle", function(opts)
     require("dap-view").toggle(opts.bang)
 end, { bang = true })
-command("DapViewWatch", function()
-    require("dap-view").add_expr()
-end, {})
+command("DapViewWatch", function(opts)
+    local expr = nil
+    if opts.range > 0 then
+        expr = require("dap-view.util.exprs").get_trimmed_selection()
+    elseif #opts.fargs > 0 then
+        expr = table.concat(opts.fargs, " ")
+    end
+    require("dap-view").add_expr(expr)
+end, {
+    nargs = "*",
+    range = true,
+})
 command("DapViewJump", function(opts)
     require("dap-view").jump_to_view(opts.fargs[1])
 end, {

@@ -84,8 +84,10 @@ M.open = function()
     autocmd.quit_buf_autocmd(state.bufnr, M.close)
 end
 
-M.add_expr = function()
-    if require("dap-view.watches.actions").add_watch_expr(vim.fn.expand("<cexpr>")) then
+---@param expr? string
+M.add_expr = function(expr)
+    local final_expr = expr or require("dap-view.util.exprs").get_current_expr()
+    if require("dap-view.watches.actions").add_watch_expr(final_expr) then
         require("dap-view.views").switch_to_view(require("dap-view.watches.view").show)
     end
 end
