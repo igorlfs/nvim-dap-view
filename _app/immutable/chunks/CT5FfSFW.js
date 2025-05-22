@@ -1,0 +1,1 @@
+import"./Dfv75pGZ.js";import"./CTtJk3h0.js";import{l as e,s as o}from"./DpwxDG4K.js";import{M as p}from"./p-YPa1g6.js";function m(s,t){const r=e(t,["children","$$slots","$$events","$$legacy"]);p(s,o(()=>r))}export{m as default};
