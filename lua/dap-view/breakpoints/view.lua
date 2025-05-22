@@ -14,9 +14,6 @@ M.show = function()
     winbar.update_section("breakpoints")
 
     if state.bufnr then
-        -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
-
         local breakpoints = vendor.get()
 
         local line = 0
@@ -24,6 +21,8 @@ M.show = function()
         if views.cleanup_view(vim.tbl_isempty(breakpoints), "No breakpoints") then
             return
         end
+
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         for buf, buf_entries in pairs(breakpoints) do
             local filename = api.nvim_buf_get_name(buf)
@@ -48,8 +47,12 @@ M.show = function()
             end
         end
 
-        -- Remove the last line, as it's empty (for some reason)
-        api.nvim_buf_set_lines(state.bufnr, -2, -1, false, {})
+        if line > 0 then
+            api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, line), 1 })
+        end
+
+        -- Clear previous content
+        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
     end
 end
 

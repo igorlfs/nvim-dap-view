@@ -13,8 +13,7 @@ M.show = function()
     winbar.update_section("exceptions")
 
     if state.bufnr then
-        -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         if views.cleanup_view(not dap.session(), "No active session") then
             return
@@ -39,6 +38,11 @@ M.show = function()
             local hl_type = opt.enabled and "Enabled" or "Disabled"
             hl.hl_range("ExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
         end
+
+        api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, #content), 1 })
+
+        -- Clear previous content
+        api.nvim_buf_set_lines(state.bufnr, #content, -1, true, {})
     end
 end
 
