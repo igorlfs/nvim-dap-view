@@ -40,9 +40,6 @@ M.show = function()
         end
 
         api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, #content), 1 })
-
-        -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, #content, -1, true, {})
     end
 end
 
