@@ -1,9 +1,9 @@
 local M = {}
 
----@alias dapview.SectionType '"breakpoints"' | '"exceptions"' | '"watches"' | '"repl"' | '"threads"' | '"console"' | '"scopes"'
+---@alias dapview.SectionType "breakpoints" | "exceptions" | "watches" | "repl" | "threads" | "console" | "scopes"
 
 ---@alias dapview.CustomButton string
----@alias dapview.DefaultButton '"play"' | '"step_into"' | '"step_over"' | '"step_out"' | '"step_back"' | '"run_last"' | '"terminate"' | '"disconnect"'
+---@alias dapview.DefaultButton "play" | "step_into" | "step_over" | "step_out" | "step_back" | "run_last" | "terminate" | "disconnect"
 ---@alias dapview.Button dapview.CustomButton | dapview.DefaultButton
 
 ---@class dapview.TerminalConfig
