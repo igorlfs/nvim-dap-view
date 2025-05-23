@@ -7,7 +7,7 @@
 
 ---@class dapview.ControlsIconsPartial : dapview.ControlsIcons, {}
 
----@class dapview.ControlsConfigPartial : dapview.ControlButton, {}
+---@class dapview.ControlsConfigPartial : dapview.ControlsConfig, {}
 ---@field icons? dapview.ControlsIconsPartial Icons for each button
 
 ---@class dapview.WinbarConfigPartial : dapview.WinbarConfig, {}
