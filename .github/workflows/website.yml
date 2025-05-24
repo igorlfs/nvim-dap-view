@@ -1,0 +1,30 @@
+---
+on:
+    push:
+      branches:
+        - main
+    workflow_dispatch:
+
+name: Publish Website
+
+jobs:
+  publish:
+    name: Publish Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Build site
+        run: npm run build
+      - name: Deploy with gh-pages
+        run: 
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npx gh-pages -d build --dotfiles --nojekyll -u "github-actions-bot <support+actions@github.com>"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
