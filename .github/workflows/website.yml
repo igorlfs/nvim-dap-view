@@ -24,7 +24,7 @@ jobs:
         run: npm run build
         working-directory: ./docs
       - name: Deploy with gh-pages
-        run: 
+        run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           npx gh-pages -d build --dotfiles --nojekyll -u "github-actions-bot <support+actions@github.com>"
         working-directory: ./docs

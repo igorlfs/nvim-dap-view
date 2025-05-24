@@ -1,7 +1,6 @@
 import type { Post, PostMetadata } from '$lib/types';
 import { error } from '@sveltejs/kit';
 import type { Load } from '@sveltejs/kit';
-import { allPosts } from '../posts.svelte';
 
 export const load: Load = async ({ params, fetch }) => {
     try {
@@ -9,8 +8,6 @@ export const load: Load = async ({ params, fetch }) => {
 
         const response = await fetch('api/posts');
         const posts: PostMetadata[] = await response.json();
-
-        allPosts.update(() => posts)
 
         return { posts, post };
     } catch {
