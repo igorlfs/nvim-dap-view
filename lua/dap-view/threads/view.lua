@@ -77,7 +77,7 @@ M.show = function()
                 )
                 line = line + 1
 
-                api.nvim_buf_set_lines(state.bufnr, line, line + #content, true, content)
+                api.nvim_buf_set_lines(state.bufnr, line, line + #content, false, content)
 
                 for i, c in pairs(content) do
                     local pipe1 = string.find(c, "|")
