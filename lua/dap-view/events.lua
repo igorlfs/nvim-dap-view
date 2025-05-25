@@ -60,6 +60,7 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function()
     end
 
     -- Avoid race conditions by not using `event_stopped`
+    require("dap-view.threads").get_threads()
     for expr, _ in pairs(state.watched_expressions) do
         eval.eval_expr(expr)
     end
@@ -75,12 +76,6 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function()
     if state.current_section == "threads" then
         threads.show()
     end
-end
-
-dap.listeners.after.event_stopped[SUBSCRIPTION_ID] = function()
-    require("dap-view.threads").get_threads()
-
-    winbar.redraw_controls()
 end
 
 dap.listeners.after.setExpression[SUBSCRIPTION_ID] = function()
@@ -125,6 +120,7 @@ local events = {
     "continue",
     "disconnect",
     "event_exited",
+    "event_stopped",
     "restart",
     "threads",
 }
