@@ -13,17 +13,13 @@ M.show = function()
     winbar.update_section("threads")
 
     if state.bufnr then
-        -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, true, {})
-
         local session = dap.session()
         -- Redundant check to appease the type checker
         if views.cleanup_view(session == nil, "No active session") or session == nil then
             return
         end
 
-        if state.threads_err then
-            api.nvim_buf_set_lines(state.bufnr, 0, -1, false, { "Failed to get threads", state.threads_err })
+        if views.cleanup_view(state.threads_err ~= nil, state.threads_err) then
             return
         end
 
@@ -34,9 +30,13 @@ M.show = function()
         for k, _ in pairs(state.frames_by_line) do
             state.frames_by_line[k] = nil
         end
+
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
+
         local line = 0
         for _, thread in pairs(state.threads) do
-            api.nvim_buf_set_lines(state.bufnr, line, -1, false, { thread.name })
+            api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread.name })
+
             local is_stopped_thread = session.stopped_thread_id == thread.id
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
 
@@ -44,14 +44,16 @@ M.show = function()
                 :filter(
                     ---@param f dap.StackFrame
                     function(f)
-                        return (f.source and f.source.path and vim.uv.fs_stat(f.source.path) ~= nil) or false
+                        return f.source ~= nil
+                            and f.source.path ~= nil
+                            and vim.uv.fs_stat(f.source.path) ~= nil
                     end
                 )
                 :totable()
 
             if vim.tbl_isempty(valid_frames) then
                 if thread.err then
-                    api.nvim_buf_set_lines(state.bufnr, line - 1, line, true, { thread.err })
+                    api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread.err })
                     line = line + 1
                 end
                 line = line + 1
@@ -75,7 +77,7 @@ M.show = function()
                 )
                 line = line + 1
 
-                api.nvim_buf_set_lines(state.bufnr, line, -1, false, content)
+                api.nvim_buf_set_lines(state.bufnr, line, line + #content, true, content)
 
                 for i, c in pairs(content) do
                     local pipe1 = string.find(c, "|")
@@ -86,9 +88,16 @@ M.show = function()
                     state.frames_by_line[line + i] = valid_frames[i]
                 end
 
-                line = line + #thread.frames
+                line = line + #content
             end
         end
+
+        if line > 0 then
+            api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, line), 1 })
+        end
+
+        -- Clear previous content
+        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
     end
 end
 
