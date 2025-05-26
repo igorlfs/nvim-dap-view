@@ -46,6 +46,12 @@ M.open_term_buf_win = function()
             })
 
             require("dap-view.term.options").set_options(state.term_winnr, state.term_bufnr)
+            -- Poorman's autoscroll
+            vim.defer_fn(function()
+                api.nvim_win_call(state.term_winnr, function()
+                    vim.cmd("normal! G")
+                end)
+            end, 10)
         end
     end
 
