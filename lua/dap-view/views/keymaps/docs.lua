@@ -61,11 +61,11 @@ M.show_help = function()
     vim.bo[help_buf].filetype = "dap-view-help"
     vim.bo[help_buf].modifiable = false
 
-    vim.wo[help_win].conceallevel = 2
-    vim.wo[help_win].concealcursor = "nvc"
+    vim.wo[help_win][0].conceallevel = 2
+    vim.wo[help_win][0].concealcursor = "nvc"
 
-    vim.wo[help_win].cursorline = true
-    vim.wo[help_win].cursorlineopt = "line"
+    vim.wo[help_win][0].cursorline = true
+    vim.wo[help_win][0].cursorlineopt = "line"
 
     api.nvim_create_autocmd("WinClosed", {
         buffer = help_buf,
