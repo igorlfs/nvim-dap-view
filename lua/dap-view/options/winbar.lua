@@ -2,6 +2,7 @@ local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
+local util = require("dap-view.util")
 local module = ...
 
 local M = {}
@@ -69,25 +70,31 @@ local winbar_info = {
         keymap = "C",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "console") then
-                if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+                if not util.is_win_valid(state.winnr) then
                     return
                 end
 
-                if not state.term_bufnr then
-                    require("dap-view.term.init").setup_term_win_cmd()
+                local term_bufnr = state.term_bufnrs[state.current_session_id]
+
+                if not term_bufnr then
+                    term_bufnr = require("dap-view.term.init").setup_term_win_cmd()
+                end
+
+                if not util.is_buf_valid(term_bufnr) then
+                    vim.notify("Something went wrong when setting up the terminal buffer")
+                    return
                 end
 
                 -- Set options before changing the buffer
                 -- The change in buffer would unassign the state.winnr
                 -- Since the buffer wouldn't have a filetype
                 -- See https://github.com/igorlfs/nvim-dap-view/issues/69
-                require("dap-view.term.options").set_options(state.winnr, state.term_bufnr)
+                require("dap-view.term.options").set_options(state.winnr, term_bufnr)
 
                 api.nvim_win_call(state.winnr, function()
-                    api.nvim_set_current_buf(state.term_bufnr)
+                    api.nvim_set_current_buf(term_bufnr)
                 end)
 
-                M.set_winbar_action_keymaps(state.term_bufnr)
                 M.update_section("console")
             end
         end,
