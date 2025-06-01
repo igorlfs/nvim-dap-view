@@ -13,7 +13,7 @@ local api = vim.api
 M.show = function()
     winbar.update_section("breakpoints")
 
-    if state.bufnr then
+    if state.bufnr and state.winnr then
         local breakpoints = vendor.get()
 
         local line = 0

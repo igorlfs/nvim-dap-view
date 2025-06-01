@@ -12,8 +12,6 @@ M.jump_or_noop = function()
     local line = vim.fn.getline(".")
 
     if string.find(line, "\t") then
-        util.jump_to_location("^\t(.-)|(%d+)|")
-
         -- Set frame
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
         local frame = state.frames_by_line[cursor_line]
@@ -21,6 +19,10 @@ M.jump_or_noop = function()
             local session = assert(dap.session(), "has active session")
             session:_frame_set(frame)
         end
+
+        -- Jump after switching the frame, since we need the state.winnr for the switch
+        -- (which could be missing after a jump)
+        util.jump_to_location("^\t(.-)|(%d+)|")
     else
         vim.notify("Can't jump to a thread", log.INFO)
     end

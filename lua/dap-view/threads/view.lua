@@ -12,7 +12,7 @@ local api = vim.api
 M.show = function()
     winbar.update_section("threads")
 
-    if state.bufnr then
+    if state.bufnr and state.winnr then
         local session = dap.session()
         -- Redundant check to appease the type checker
         if views.cleanup_view(session == nil, "No active session") or session == nil then

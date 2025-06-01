@@ -1,4 +1,5 @@
 require("dap-view.highlight")
+require("dap-view.autocmds")
 -- Connect hooks to listen to DAP events
 require("dap-view.events")
 

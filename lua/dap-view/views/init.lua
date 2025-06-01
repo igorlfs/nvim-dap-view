@@ -8,13 +8,13 @@ local api = vim.api
 ---@param cond boolean
 ---@param message string
 M.cleanup_view = function(cond, message)
-    if cond then
+    if cond and state.winnr then
         vim.wo[state.winnr][0].cursorline = false
 
         api.nvim_buf_set_lines(state.bufnr, 0, -1, false, { message })
 
         hl.hl_range("MissingData", { 0, 0 }, { 0, #message })
-    else
+    elseif state.winnr then
         vim.wo[state.winnr][0].cursorline = true
     end
 

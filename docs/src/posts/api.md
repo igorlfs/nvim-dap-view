@@ -8,7 +8,7 @@ The API offer the same functionality as the [commands](commands).
 require("dap-view").open()
 ```
 
-Opens both `nvim-dap-view` windows: views + console.
+Opens both `nvim-dap-view` windows[^1]: views + console.
 
 ---
 
@@ -54,3 +54,5 @@ require("dap-view").show_view(view)
 ```
 
 Shows a given view. If the specified view is already the current one, jumps to its window.
+
+[^1]: In the current tab. May close the views window in another tab.

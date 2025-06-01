@@ -12,7 +12,7 @@ local api = vim.api
 M.show = function()
     winbar.update_section("exceptions")
 
-    if state.bufnr then
+    if state.bufnr and state.winnr then
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         if views.cleanup_view(not dap.session(), "No active session") then

@@ -6,7 +6,7 @@ Commands offer the same functionality as the [API](api).
 
 ## `DapViewOpen`
 
-Opens both `nvim-dap-view` windows: views + console.
+Opens both `nvim-dap-view` windows[^1]: views + console.
 
 ## `DapViewClose`
 
@@ -27,3 +27,5 @@ Shows a given view and jumps to its window. For instance, to jump to the REPL, y
 ## `DapViewShow [view]`
 
 Shows a given view. If the specified view is already the current one, jumps to its window.
+
+[^1]: In the current tab. May close the views window in another tab.
