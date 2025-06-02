@@ -27,12 +27,12 @@ M.close = function(hide_terminal)
     end
     if state.winnr and api.nvim_win_is_valid(state.winnr) then
         api.nvim_win_close(state.winnr, true)
-        state.winnr = nil
     end
-    if state.bufnr then
+    state.winnr = nil
+    if state.bufnr and api.nvim_buf_is_valid(state.bufnr) then
         api.nvim_buf_delete(state.bufnr, { force = true })
-        state.bufnr = nil
     end
+    state.bufnr = nil
     if hide_terminal then
         term.hide_term_buf_win()
     end
@@ -80,8 +80,12 @@ M.open = function()
     winbar.set_winbar_action_keymaps()
     winbar.show_content(state.current_section)
 
-    -- Properly handle deleting the buffer
-    autocmd.quit_buf_autocmd(state.bufnr, M.close)
+    -- Clean up states dap-view buffer is wiped out
+    autocmd.quit_buf_autocmd(state.bufnr, function()
+        -- The buffer is already being wiped out, so prevent close() from doing it again.
+        state.bufnr = nil
+        M.close()
+    end)
 end
 
 ---@param expr? string
