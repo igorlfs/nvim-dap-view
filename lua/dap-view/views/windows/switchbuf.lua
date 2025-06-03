@@ -5,10 +5,11 @@ local api = vim.api
 ---@type table<string, fun(bufnr?: integer, winnr?: integer, line?: integer): integer?>
 M.switchbuf_winfn = {}
 
-M.switchbuf_winfn.newtab = function()
+M.switchbuf_winfn.newtab = function(bufnr)
     -- Can't create a new tab with lua API
     -- https://github.com/neovim/neovim/pull/27223
-    vim.cmd.tabnew()
+    -- Even when assigning the buffer, the tab is created with the original buffer
+    vim.cmd.tabnew(api.nvim_buf_get_name(bufnr))
     return api.nvim_get_current_win()
 end
 
