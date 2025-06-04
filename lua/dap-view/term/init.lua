@@ -1,6 +1,7 @@
 local dap = require("dap")
 
 local state = require("dap-view.state")
+local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 
@@ -16,15 +17,15 @@ M.hide_term_buf_win = function()
 end
 
 ---Open the term buf in a new window if
----I. A session is active
----II. There's term term buf
----III. The adapter isn't configured to be hidden
----IV. There's no term win or it is invalid
+---I. A session is active (with a corresponding term buf)
+---II. The adapter isn't configured to be hidden
+---III. There's no term win or it is invalid
+---@param adapter? string
 ---@return integer?
-M.open_term_buf_win = function()
+M.open_term_buf_win = function(adapter)
     local windows_config = setup.config.windows
     local term_config = setup.config.windows.terminal
-    local should_term_be_hidden = vim.tbl_contains(term_config.hide, state.current_adapter)
+    local should_term_be_hidden = vim.tbl_contains(term_config.hide, adapter)
 
     if not state.current_session_id then
         return nil
@@ -32,7 +33,7 @@ M.open_term_buf_win = function()
     local term_bufnr = state.term_bufnrs[state.current_session_id]
 
     if term_bufnr and not should_term_be_hidden then
-        if not state.term_winnr or state.term_winnr and not api.nvim_win_is_valid(state.term_winnr) then
+        if not state.term_winnr or (state.term_winnr and not api.nvim_win_is_valid(state.term_winnr)) then
             local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
 
             state.term_winnr = api.nvim_open_win(term_bufnr, false, {
@@ -44,38 +45,53 @@ M.open_term_buf_win = function()
                     or term_config.width,
             })
 
-            require("dap-view.term.options").set_options(state.term_winnr, term_bufnr)
+            require("dap-view.term.options").set_win_options(state.term_winnr)
         end
     end
 
     return state.term_winnr
 end
 
----Create the term buf and setup nvim-dap's
+---Create a term buf and setup nvim-dap's `terminal_win_cmd` to use it
 M.setup_term_win_cmd = function()
     -- Can't use an unlisted term buffers
     -- See https://github.com/igorlfs/nvim-dap-view/pull/37#issuecomment-2785076872
+    local term_bufnr = api.nvim_create_buf(true, false)
 
-    local session = dap.session()
-    if session then
-        state.current_session_id = session.id
+    assert(term_bufnr ~= 0, "Failed to create dap-view-term buffer")
+
+    -- We have to set the filetype for each term buf to avoid issues when calling switch_term_buf
+    -- See https://github.com/igorlfs/nvim-dap-view/issues/69
+    vim.bo[term_bufnr].filetype = "dap-view-term"
+
+    if vim.tbl_contains(setup.config.winbar.sections, "console") then
+        winbar.set_winbar_action_keymaps(term_bufnr)
     end
 
-    if not state.current_session_id and not state.fallback_term_bufnr then
-        state.fallback_term_bufnr = api.nvim_create_buf(true, false)
-
-        return state.fallback_term_bufnr
-    end
-
-    local term_bufnr = state.term_bufnrs[state.current_session_id]
-
-    if not term_bufnr then
-        term_bufnr = api.nvim_create_buf(true, false)
-
-        state.term_bufnrs[state.current_session_id] = term_bufnr
+    dap.defaults.fallback.terminal_win_cmd = function()
+        return term_bufnr
     end
 
     return term_bufnr
+end
+
+---@param session_id integer
+M.switch_term_buf = function(session_id)
+    local has_console = vim.tbl_contains(setup.config.winbar.sections, "console")
+    local winnr = (has_console and state.winnr) or state.term_winnr
+    local is_console_active = state.current_section == "console"
+
+    if util.is_win_valid(winnr) and (is_console_active or not has_console) then
+        ---@cast winnr integer
+
+        api.nvim_win_call(winnr, function()
+            api.nvim_set_current_buf(state.term_bufnrs[session_id])
+
+            if is_console_active then
+                winbar.update_section("console")
+            end
+        end)
+    end
 end
 
 return M

@@ -64,7 +64,7 @@ api.nvim_create_autocmd("BufEnter", {
                 state.winnr = nil
             end
         end
-        -- For good measure, also handle term_winr
+        -- For good measure, also handle term_winnr
         if state.term_winnr == win and ft ~= "dap-view-term" then
             state.term_winnr = nil
         end
