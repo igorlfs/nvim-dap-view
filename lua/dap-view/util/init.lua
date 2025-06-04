@@ -9,12 +9,12 @@ M.inverted_directions = {
     ["left"] = "right",
 }
 
----@param bufnr integer
+---@param bufnr? integer
 M.is_buf_valid = function(bufnr)
     return bufnr and api.nvim_buf_is_valid(bufnr)
 end
 
----@param winnr integer
+---@param winnr? integer
 M.is_win_valid = function(winnr)
     return winnr and api.nvim_win_is_valid(winnr)
 end
