@@ -77,11 +77,15 @@ local winbar_info = {
                     require("dap-view.term.init").setup_term_win_cmd()
                 end
 
+                -- Set options before changing the buffer
+                -- The change in buffer would unassign the state.winnr
+                -- Since the buffer wouldn't have a filetype
+                -- See https://github.com/igorlfs/nvim-dap-view/issues/69
+                require("dap-view.term.options").set_options(state.winnr, state.term_bufnr)
+
                 api.nvim_win_call(state.winnr, function()
                     api.nvim_set_current_buf(state.term_bufnr)
                 end)
-
-                require("dap-view.term.options").set_options(state.winnr, state.term_bufnr)
 
                 M.set_winbar_action_keymaps(state.term_bufnr)
                 M.update_section("console")
