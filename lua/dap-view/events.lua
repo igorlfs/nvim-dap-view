@@ -17,23 +17,23 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         local config = setup.config
         local term_config = config.windows.terminal
 
-        local adapter = new.config.type
-
         state.current_session_id = new.id
+        state.current_adapter = new.config.type
 
         if not state.term_bufnrs[new.id] then
             state.term_bufnrs[new.id] = term.setup_term_win_cmd()
 
             if not (term_config.start_hidden or vim.tbl_contains(config.winbar.sections, "console")) then
-                term.open_term_buf_win(adapter)
+                term.open_term_buf_win()
             end
         end
 
-        if not vim.tbl_contains(term_config.hide, adapter) then
+        if not vim.tbl_contains(term_config.hide, state.current_adapter) then
             term.switch_term_buf(new.id)
         end
     else
         state.current_session_id = nil
+        state.current_adapter = nil
     end
 end
 
