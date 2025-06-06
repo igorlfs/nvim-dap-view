@@ -20,19 +20,17 @@ end
 ---I. A session is active (with a corresponding term buf)
 ---II. The adapter isn't configured to be hidden
 ---III. There's no term win or it is invalid
----@param adapter? string
 ---@return integer?
-M.open_term_buf_win = function(adapter)
-    local windows_config = setup.config.windows
-    local term_config = setup.config.windows.terminal
-    local should_term_be_hidden = vim.tbl_contains(term_config.hide, adapter)
-
+M.open_term_buf_win = function()
     if not state.current_session_id then
         return nil
     end
     local term_bufnr = state.term_bufnrs[state.current_session_id]
 
-    if term_bufnr and not should_term_be_hidden then
+    local windows_config = setup.config.windows
+    local term_config = setup.config.windows.terminal
+
+    if term_bufnr and not vim.tbl_contains(term_config.hide, state.current_adapter) then
         if not state.term_winnr or (state.term_winnr and not api.nvim_win_is_valid(state.term_winnr)) then
             local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
 
