@@ -22,9 +22,6 @@ end
 
 ---@param hide_terminal? boolean
 M.close = function(hide_terminal)
-    if vim.tbl_contains(setup.config.winbar.sections, "repl") then
-        dap.repl.close()
-    end
     if state.winnr and api.nvim_win_is_valid(state.winnr) then
         api.nvim_win_close(state.winnr, true)
     end
