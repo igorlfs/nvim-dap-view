@@ -1,5 +1,3 @@
-local dap = require("dap")
-
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local autocmd = require("dap-view.options.autocmd")

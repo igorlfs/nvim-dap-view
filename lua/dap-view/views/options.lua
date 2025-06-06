@@ -13,7 +13,6 @@ M.set_options = function()
     win.cursorline = true
     win.statuscolumn = ""
     win.foldcolumn = "0"
-    win.foldmethod = "indent"
 
     local buf = vim.bo[state.bufnr]
     buf.buftype = "nofile"
