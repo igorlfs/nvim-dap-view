@@ -1,6 +1,5 @@
 local dap = require("dap")
 
-local winbar = require("dap-view.options.winbar")
 local views = require("dap-view.views")
 local state = require("dap-view.state")
 local hl = require("dap-view.util.hl")
@@ -10,8 +9,6 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    winbar.update_section("threads")
-
     if state.bufnr and state.winnr then
         local session = dap.session()
         -- Redundant check to appease the type checker
@@ -31,14 +28,16 @@ M.show = function()
             state.frames_by_line[k] = nil
         end
 
-        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
-
         local line = 0
-        for _, thread in pairs(state.threads) do
-            api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread.name })
 
+        for _, thread in pairs(state.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
+            local thread_name = is_stopped_thread and thread.name .. " " or thread.name
+            api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread_name })
+
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
+
+            line = line + 1
 
             local valid_frames = vim.iter(thread.frames or {})
                 :filter(
@@ -54,9 +53,9 @@ M.show = function()
             if vim.tbl_isempty(valid_frames) then
                 if thread.err then
                     api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread.err })
+                    hl.hl_range("ThreadError", { line, 0 }, { line, -1 })
                     line = line + 1
                 end
-                line = line + 1
             else
                 local content = vim.iter(valid_frames):fold(
                     {},
@@ -75,7 +74,6 @@ M.show = function()
                         return acc
                     end
                 )
-                line = line + 1
 
                 api.nvim_buf_set_lines(state.bufnr, line, line + #content, false, content)
 
@@ -90,10 +88,6 @@ M.show = function()
 
                 line = line + #content
             end
-        end
-
-        if line > 0 then
-            api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, line), 1 })
         end
 
         -- Clear previous content

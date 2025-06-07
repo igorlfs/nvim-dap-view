@@ -13,8 +13,10 @@ local define_base_links = function()
     hl_create("FileName", "qfFileName")
     hl_create("LineNumber", "qfLineNr")
     hl_create("Separator", "Comment")
+
     hl_create("Thread", "Tag")
     hl_create("ThreadStopped", "Conditional")
+    hl_create("ThreadError", "DiagnosticError")
 
     hl_create("ExceptionFilterEnabled", "DiagnosticOk")
     hl_create("ExceptionFilterDisabled", "DiagnosticError")

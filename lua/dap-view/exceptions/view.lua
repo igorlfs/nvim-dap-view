@@ -1,6 +1,5 @@
 local dap = require("dap")
 
-local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
 local views = require("dap-view.views")
 local hl = require("dap-view.util.hl")
@@ -10,11 +9,7 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    winbar.update_section("exceptions")
-
     if state.bufnr and state.winnr then
-        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
-
         if views.cleanup_view(not dap.session(), "No active session") then
             return
         end
@@ -38,8 +33,6 @@ M.show = function()
             local hl_type = opt.enabled and "Enabled" or "Disabled"
             hl.hl_range("ExceptionFilter" .. hl_type, { i - 1, 0 }, { i - 1, 4 })
         end
-
-        api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, #content), 1 })
     end
 end
 

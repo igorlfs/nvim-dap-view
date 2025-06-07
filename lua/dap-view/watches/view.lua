@@ -1,5 +1,4 @@
 local state = require("dap-view.state")
-local winbar = require("dap-view.options.winbar")
 local views = require("dap-view.views")
 local hl = require("dap-view.util.hl")
 
@@ -37,7 +36,7 @@ local function show_variables(children, reference, line, depth)
         local trimmed_content = content:gsub("%s+", " ")
 
         local indent = string.rep("\t", depth)
-        api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { indent .. trimmed_content })
+        api.nvim_buf_set_lines(state.bufnr, line, line, true, { indent .. trimmed_content })
 
         hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
 
@@ -55,7 +54,7 @@ local function show_variables(children, reference, line, depth)
         if var.expanded and var.children then
             if type(var.children) == "string" then
                 local err_content = string.rep("\t", depth + 1) .. var.children
-                api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { err_content })
+                api.nvim_buf_set_lines(state.bufnr, line, line, true, { err_content })
 
                 hl.hl_range("WatchError", { line, 0 }, { line, #err_content })
 
@@ -76,7 +75,7 @@ local show_variables_or_err = function(line, variables)
     local children = variables.children
     if type(children) == "string" then
         local var_content = "\t" .. variables
-        api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { var_content })
+        api.nvim_buf_set_lines(state.bufnr, line, line, true, { var_content })
 
         hl.hl_range("WatchError", { line, 0 }, { line, #var_content })
 
@@ -88,8 +87,6 @@ local show_variables_or_err = function(line, variables)
 end
 
 M.show = function()
-    winbar.update_section("watches")
-
     if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
         return
     end
@@ -97,6 +94,9 @@ M.show = function()
     if state.bufnr then
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
+        -- TODO this SHOULD NOT be necessary
+        -- Refactor the `eval` code so I can have a callback with this function
+        -- that triggers only when I'm done evaluating the whole tree
         views.cleanup_view(#state.watched_expressions == 0, "No expressions")
 
         -- Since variables aren't ordered, lines may change unexpectedly
@@ -110,6 +110,7 @@ M.show = function()
         end
 
         local line = 0
+
         for expr_name, expr in pairs(state.watched_expressions) do
             local response = expr.response
 
@@ -122,7 +123,7 @@ M.show = function()
             -- Can't have linebreaks with nvim_buf_set_lines
             local trimmed_content = content:gsub("%s+", " ")
 
-            api.nvim_buf_set_lines(state.bufnr, line, line + 1, false, { trimmed_content })
+            api.nvim_buf_set_lines(state.bufnr, line, line, true, { trimmed_content })
 
             hl.hl_range("WatchExpr", { line, 0 }, { line, #expr_name })
 
@@ -151,7 +152,7 @@ M.show = function()
             end
             api.nvim_buf_set_lines(state.bufnr, line, -1, true, content)
 
-            api.nvim_win_set_cursor(state.winnr, { cursor_line, 1 })
+            state.cur_pos["watches"] = api.nvim_win_set_cursor(state.winnr, { cursor_line, 1 })
         end
     end
 end

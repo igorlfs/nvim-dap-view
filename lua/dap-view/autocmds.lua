@@ -1,4 +1,5 @@
 local state = require("dap-view.state")
+local globals = require("dap-view.globals")
 local winbar = require("dap-view.options.winbar")
 
 local api = vim.api
@@ -67,5 +68,12 @@ api.nvim_create_autocmd("BufEnter", {
         if state.term_winnr == win and ft ~= "dap-view-term" then
             state.term_winnr = nil
         end
+    end,
+})
+
+api.nvim_create_autocmd("CursorMoved", {
+    pattern = globals.MAIN_BUF_NAME,
+    callback = function()
+        state.cur_pos[state.current_section] = api.nvim_win_get_cursor(state.winnr)[1]
     end,
 })

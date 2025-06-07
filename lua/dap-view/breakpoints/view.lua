@@ -1,4 +1,3 @@
-local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
 local vendor = require("dap-view.breakpoints.vendor")
 local extmarks = require("dap-view.breakpoints.util.extmarks")
@@ -11,8 +10,6 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    winbar.update_section("breakpoints")
-
     if state.bufnr and state.winnr then
         local breakpoints = vendor.get()
 
@@ -21,8 +18,6 @@ M.show = function()
         if views.cleanup_view(vim.tbl_isempty(breakpoints), "No breakpoints") then
             return
         end
-
-        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         for buf, buf_entries in pairs(breakpoints) do
             local filename = api.nvim_buf_get_name(buf)
@@ -45,10 +40,6 @@ M.show = function()
 
                 line = line + 1
             end
-        end
-
-        if line > 0 then
-            api.nvim_win_set_cursor(state.winnr, { math.min(cursor_line, line), 1 })
         end
 
         -- Clear previous content

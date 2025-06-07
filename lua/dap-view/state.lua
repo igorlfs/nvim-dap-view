@@ -37,6 +37,7 @@
 ---@field expressions_by_line table<integer, {name: string, expression: dapview.ExpressionPack}>
 ---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
 ---@field watched_expressions table<string, dapview.ExpressionPack>
+---@field cur_pos table<dapview.SectionType,integer?>
 local M = {
     exceptions_options = {},
     threads = {},
@@ -45,6 +46,7 @@ local M = {
     variables_by_line = {},
     subtle_frames = false,
     watched_expressions = {},
+    cur_pos = {},
 }
 
 return M
