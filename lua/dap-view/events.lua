@@ -29,7 +29,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         end
 
         if not vim.tbl_contains(term_config.hide, state.current_adapter) then
-            term.switch_term_buf(new.id)
+            term.switch_term_buf()
         end
     else
         state.current_session_id = nil
