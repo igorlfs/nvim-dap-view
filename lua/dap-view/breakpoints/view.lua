@@ -3,6 +3,7 @@ local vendor = require("dap-view.breakpoints.vendor")
 local extmarks = require("dap-view.breakpoints.util.extmarks")
 local treesitter = require("dap-view.breakpoints.util.treesitter")
 local views = require("dap-view.views")
+local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
 local M = {}
@@ -10,7 +11,8 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    if state.bufnr and state.winnr then
+    -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
+    if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         local breakpoints = vendor.get()
 
         local line = 0
