@@ -55,7 +55,7 @@ local winbar_info = {
         keymap = "R",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "repl") then
-                if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+                if not util.is_win_valid(state.winnr) then
                     return
                 end
                 -- Jump to dap-view's window to make the experience seamless
@@ -108,7 +108,7 @@ M.on_click = function(idx)
 end
 
 local set_winbar_opt = function()
-    if state.winnr and api.nvim_win_is_valid(state.winnr) then
+    if util.is_win_valid(state.winnr) then
         local winbar = setup.config.winbar.sections
         local winbar_title = {}
         local controls_config = setup.config.winbar.controls

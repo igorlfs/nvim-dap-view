@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local views = require("dap-view.views")
+local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
 local M = {}
@@ -87,11 +88,8 @@ local show_variables_or_err = function(line, variables)
 end
 
 M.show = function()
-    if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
-        return
-    end
-
-    if state.bufnr then
+    -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
+    if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         -- TODO this SHOULD NOT be necessary
