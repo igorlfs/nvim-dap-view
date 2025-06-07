@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
+local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
 local M = {}
@@ -26,7 +27,7 @@ end
 
 ---@param view dapview.SectionType
 M.switch_to_view = function(view)
-    if not state.bufnr or not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+    if not util.is_buf_valid(state.bufnr) or not util.is_win_valid(state.winnr) then
         return
     end
 
