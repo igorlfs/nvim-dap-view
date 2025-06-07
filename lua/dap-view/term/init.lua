@@ -73,8 +73,7 @@ M.setup_term_win_cmd = function()
     return term_bufnr
 end
 
----@param session_id integer
-M.switch_term_buf = function(session_id)
+M.switch_term_buf = function()
     local has_console = vim.tbl_contains(setup.config.winbar.sections, "console")
     local winnr = (has_console and state.winnr) or state.term_winnr
     local is_console_active = state.current_section == "console"
@@ -83,7 +82,7 @@ M.switch_term_buf = function(session_id)
         ---@cast winnr integer
 
         api.nvim_win_call(winnr, function()
-            api.nvim_set_current_buf(state.term_bufnrs[session_id])
+            api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
 
             if is_console_active then
                 winbar.update_section("console")
