@@ -2,6 +2,7 @@ local dap = require("dap")
 
 local state = require("dap-view.state")
 local views = require("dap-view.views")
+local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
 local M = {}
@@ -9,7 +10,8 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    if state.bufnr and state.winnr then
+    -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
+    if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         if views.cleanup_view(not dap.session(), "No active session") then
             return
         end

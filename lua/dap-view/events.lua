@@ -3,6 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
+local util = require("dap-view.util")
 local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
@@ -45,7 +46,7 @@ end
 
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     -- nvim-dap needs a buffer to operate
-    if state.current_section == "scopes" and state.bufnr then
+    if state.current_section == "scopes" and util.is_buf_valid(state.bufnr) then
         scopes.refresh()
     end
     if state.current_section == "threads" then
