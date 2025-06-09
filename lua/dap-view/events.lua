@@ -32,6 +32,11 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         if not vim.tbl_contains(term_config.hide, state.current_adapter) then
             term.switch_term_buf()
         end
+
+        -- Ugly hack but it sorta works
+        vim.defer_fn(function()
+            require("dap-view.exceptions").update_exception_breakpoints_filters()
+        end, 1000)
     else
         state.current_session_id = nil
         state.current_adapter = nil
@@ -99,20 +104,16 @@ dap.listeners.after.setVariable[SUBSCRIPTION_ID] = function()
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
-    state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters or {})
-        :map(function(filter)
-            return { enabled = filter.default, exception_filter = filter }
-        end)
-        :totable()
-    -- Remove applied filters from view when initializing a new session
-    -- Since we don't store the applied filters between sessions
-    -- (i.e., we always override with the defaults from the adapter on a new session)
-    -- Therefore, the exceptions view could look outdated
-    --
-    -- Also, we can't just update the filters at this stage (after the initialize request)
-    -- due to how the initialization works: setExceptionBreakpoints happens after initialize
-    -- (with the default configuration)
-    -- See https://microsoft.github.io/debug-adapter-protocol/specification#Events_Initialized
+    local adapter = session.config.type
+    if state.exceptions_options[adapter] == nil then
+        state.exceptions_options[adapter] = vim
+            .iter(session.capabilities.exceptionBreakpointFilters or {})
+            ---@param filter dap.ExceptionBreakpointsFilter
+            :map(function(filter)
+                return { enabled = filter.default, exception_filter = filter }
+            end)
+            :totable()
+    end
     if state.current_section == "exceptions" then
         exceptions.show()
     end
@@ -122,6 +123,9 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
     -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
+    end
+    if state.current_section == "exceptions" then
+        exceptions.show()
     end
 
     winbar.redraw_controls()
