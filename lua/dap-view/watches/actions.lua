@@ -62,6 +62,10 @@ M.set_watch_expr = function(value, line)
         -- Top level expressions are responses for the `evaluate` request, they have no `evaluateName`
         -- Therefore, we can always use `setExpression` if the adapter supports it
         set.set_expr(expr.name, value)
+
+        -- Reset expanded state to avoid leftover lines from the previous expansion
+        local watched_expr = state.watched_expressions[expr.name]
+        watched_expr.expanded = false
     else
         local var = state.variables_by_line[line]
 
@@ -84,15 +88,19 @@ M.set_watch_expr = function(value, line)
                 if var.response.evaluateName then
                     set.set_expr(var.response.evaluateName, value)
                 else
-                    vim.notify(
+                    return vim.notify(
                         "Can't set value for " .. var.response.name .. " because it lacks an `evaluateName`"
                     )
                 end
             elseif hasVariable then
                 set.set_var(var.response.name, value, var.reference)
             else
-                vim.notify("Adapter lacks support for both `setExpression` and `setVariable` requests")
+                return vim.notify("Adapter lacks support for both `setExpression` and `setVariable` requests")
             end
+
+            -- Reset expanded state to avoid leftover lines
+            local var_state = traversal.find_node(var.response.variablesReference)
+            var_state.expanded = false
         else
             vim.notify("No expression or variable under the under cursor")
         end
@@ -137,11 +145,11 @@ M.expand_or_collapse = function(line)
         if var then
             local reference = var.response.variablesReference
             if reference > 0 then
-                local v = traversal.find_node(reference)
-                if v then
-                    v.expanded = not v.expanded
-                    eval.expand_var(reference, v.children, function(result)
-                        v.children = result
+                local var_state = traversal.find_node(reference)
+                if var_state then
+                    var_state.expanded = not var_state.expanded
+                    eval.expand_var(reference, var_state.children, function(result)
+                        var_state.children = result
                     end)
                 end
             else
