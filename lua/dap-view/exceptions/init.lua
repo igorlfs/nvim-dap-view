@@ -5,11 +5,12 @@ local state = require("dap-view.state")
 local M = {}
 
 M.update_exception_breakpoints_filters = function()
-    if vim.tbl_isempty(state.exceptions_options) then
+    local adapter_exception_options = state.exceptions_options[state.current_adapter] or {}
+    if vim.tbl_isempty(adapter_exception_options) then
         return
     end
 
-    local filters = vim.iter(state.exceptions_options)
+    local filters = vim.iter(adapter_exception_options)
         :filter(function(x)
             return x.enabled
         end)
