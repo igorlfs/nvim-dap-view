@@ -34,3 +34,12 @@ All of that in a unified, unintrusive window.
 ## Documentation
 
 Visit the full documentation on the [website](https://igorlfs.github.io/nvim-dap-view/home).
+
+## Contributing
+
+You can contribute in many ways:
+
+- If you have any questions, create a [discussion](https://github.com/igorlfs/nvim-dap-view/discussions/new/choose).
+- If something isn't working, create a [bug report](https://github.com/igorlfs/nvim-dap-view/issues/new?template=bug_report.yml).
+- If you have an idea, file a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml). You can also go ahead and implement it yourself with a [PR](https://github.com/igorlfs/nvim-dap-view/compare).
+- If you have some spare bucks, consider [sponsoring](https://github.com/sponsors/igorlfs).
