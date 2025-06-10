@@ -48,7 +48,10 @@ api.nvim_create_autocmd("TabEnter", {
 api.nvim_create_autocmd("BufEnter", {
     callback = function(args)
         local buf = args.buf
-        local win = vim.fn.bufwinid(buf)
+        if not api.nvim_buf_is_valid(buf) then
+            return
+        end
+        local win = api.nvim_get_current_win()
         local ft = vim.bo[buf].filetype
 
         -- Reset the winnr if the buffer changed
@@ -63,8 +66,11 @@ api.nvim_create_autocmd("BufEnter", {
             if not vim.tbl_contains({ "dap-view", "dap-view-term", "dap-repl" }, ft) then
                 state.winnr = nil
             end
+        elseif not state.winnr and vim.tbl_contains({ "dap-view", "dap-repl" }, ft) then
+            state.winnr = win
         end
-        -- For good measure, also handle term_winr
+
+        -- For good measure, also handle term_winnr
         if state.term_winnr == win and ft ~= "dap-view-term" then
             state.term_winnr = nil
         end
