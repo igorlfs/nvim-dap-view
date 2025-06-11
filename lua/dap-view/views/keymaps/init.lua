@@ -1,6 +1,5 @@
 local state = require("dap-view.state")
 local threads_view = require("dap-view.threads.view")
-local watches_view = require("dap-view.watches.view")
 local watches_actions = require("dap-view.watches.actions")
 local docs = require("dap-view.views.keymaps.docs")
 local keymap = require("dap-view.views.keymaps.util").keymap
@@ -48,7 +47,7 @@ M.set_keymaps = function()
 
             watches_actions.remove_watch_expr(cursor_line)
 
-            watches_view.show()
+            require("dap-view.views").switch_to_view("watches")
         elseif state.current_section == "breakpoints" then
             require("dap-view.breakpoints.actions").remove_breakpoint()
 

@@ -3,7 +3,6 @@ local guard = require("dap-view.guard")
 local eval = require("dap-view.watches.eval")
 local set = require("dap-view.watches.set")
 local traversal = require("dap-view.tree.traversal")
-local watches_view = require("dap-view.watches.view")
 
 local M = {}
 
@@ -15,7 +14,7 @@ M.add_watch_expr = function(expr)
     end
 
     eval.eval_expr(expr, function()
-        watches_view.show()
+        require("dap-view.views").switch_to_view("watches")
     end)
 
     return true
@@ -118,7 +117,7 @@ M.edit_watch_expr = function(expr, line)
     M.remove_watch_expr(line)
 
     eval.eval_expr(expr, function()
-        watches_view.show()
+        require("dap-view.views").switch_to_view("watches")
     end)
 end
 
@@ -136,7 +135,7 @@ M.expand_or_collapse = function(line)
             e.expanded = not e.expanded
 
             eval.eval_expr(expr.name, function()
-                watches_view.show()
+                require("dap-view.views").switch_to_view("watches")
             end)
         end
     else
@@ -150,6 +149,8 @@ M.expand_or_collapse = function(line)
                     var_state.expanded = not var_state.expanded
                     eval.expand_var(reference, var_state.children, function(result)
                         var_state.children = result
+
+                        require("dap-view.views").switch_to_view("watches")
                     end)
                 end
             else

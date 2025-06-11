@@ -2,7 +2,6 @@ local dap = require("dap")
 
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
-local watches = require("dap-view.watches.view")
 local scopes = require("dap-view.scopes.view")
 local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
@@ -68,7 +67,7 @@ end
 
 dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
     if state.current_section == "watches" then
-        watches.show()
+        require("dap-view.views").switch_to_view("watches")
     end
 end
 

@@ -1,4 +1,3 @@
-local watches = require("dap-view.watches.view")
 local state = require("dap-view.state")
 
 local M = {}
@@ -172,7 +171,7 @@ M.reeval = function()
     end
 
     if state.current_section == "watches" then
-        watches.show()
+        require("dap-view.views").switch_to_view("watches")
     end
 end
 

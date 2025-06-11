@@ -91,24 +91,21 @@ M.show = function()
         return
     end
 
+    -- Since variables aren't ordered, lines may change unexpectedly
+    -- To handle that, always clear the storage table
+    for k, _ in pairs(state.expressions_by_line) do
+        state.expressions_by_line[k] = nil
+    end
+    -- Also clear variables for the same reason
+    for k, _ in pairs(state.variables_by_line) do
+        state.variables_by_line[k] = nil
+    end
+
+    if views.cleanup_view(vim.tbl_isempty(state.watched_expressions), "No expressions") then
+        return
+    end
+
     if state.bufnr then
-        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
-
-        -- TODO this SHOULD NOT be necessary
-        -- Refactor the `eval` code so I can have a callback with this function
-        -- that triggers only when I'm done evaluating the whole tree
-        views.cleanup_view(#state.watched_expressions == 0, "No expressions")
-
-        -- Since variables aren't ordered, lines may change unexpectedly
-        -- To handle that, always clear the storage table
-        for k, _ in pairs(state.expressions_by_line) do
-            state.expressions_by_line[k] = nil
-        end
-        -- Also clear variables for the same reason
-        for k, _ in pairs(state.variables_by_line) do
-            state.variables_by_line[k] = nil
-        end
-
         local line = 0
 
         for expr_name, expr in pairs(state.watched_expressions) do
@@ -142,18 +139,7 @@ M.show = function()
             line = show_variables_or_err(line, expr)
         end
 
-        -- Workaround to reduce jankiness when redrawing
-        if line > 0 then
-            local content = {}
-            if cursor_line > line then
-                for i = 1, cursor_line - line do
-                    content[i] = ""
-                end
-            end
-            api.nvim_buf_set_lines(state.bufnr, line, -1, true, content)
-
-            state.cur_pos["watches"] = api.nvim_win_set_cursor(state.winnr, { cursor_line, 1 })
-        end
+        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
     end
 end
 
