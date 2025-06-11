@@ -1,4 +1,5 @@
 local state = require("dap-view.state")
+local views = require("dap-view.views")
 local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
@@ -15,7 +16,7 @@ local winbar_info = {
         keymap = "B",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "breakpoints") then
-                require("dap-view.views").switch_to_view("breakpoints")
+                views.switch_to_view("breakpoints")
             end
         end,
     },
@@ -23,7 +24,7 @@ local winbar_info = {
         keymap = "S",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "scopes") then
-                require("dap-view.views").switch_to_view("scopes")
+                views.switch_to_view("scopes")
             end
         end,
     },
@@ -31,7 +32,7 @@ local winbar_info = {
         keymap = "E",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "exceptions") then
-                require("dap-view.views").switch_to_view("exceptions")
+                views.switch_to_view("exceptions")
             end
         end,
     },
@@ -39,7 +40,7 @@ local winbar_info = {
         keymap = "W",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "watches") then
-                require("dap-view.views").switch_to_view("watches")
+                views.switch_to_view("watches")
             end
         end,
     },
@@ -47,7 +48,7 @@ local winbar_info = {
         keymap = "T",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "threads") then
-                require("dap-view.views").switch_to_view("threads")
+                views.switch_to_view("threads")
             end
         end,
     },
@@ -55,7 +56,7 @@ local winbar_info = {
         keymap = "R",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "repl") then
-                if not util.is_win_valid(state.winnr) then
+                if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
                     return
                 end
                 -- Jump to dap-view's window to make the experience seamless
