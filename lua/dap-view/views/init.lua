@@ -1,5 +1,4 @@
 local state = require("dap-view.state")
-local winbar = require("dap-view.options.winbar")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
@@ -39,7 +38,7 @@ M.switch_to_view = function(view)
         end)
     end
 
-    winbar.update_section(view)
+    require("dap-view.options.winbar").update_section(view)
 
     require("dap-view." .. view .. ".view").show()
 
