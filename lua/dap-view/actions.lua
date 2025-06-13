@@ -1,3 +1,5 @@
+local dap = require("dap")
+
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
@@ -21,6 +23,9 @@ end
 
 ---@param hide_terminal? boolean
 M.close = function(hide_terminal)
+    if state.current_section == "repl" then
+        dap.repl.close({ mode = "toggle" })
+    end
     if util.is_win_valid(state.winnr) then
         api.nvim_win_close(state.winnr, true)
     end
