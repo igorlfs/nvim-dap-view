@@ -1,31 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-	<meta charset="utf-8" />
-	<link rel="icon" href="https://fav.farm/🪲" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
-		<link href="./_app/immutable/assets/0.C5JxBAU1.css" rel="stylesheet">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.DlkYSJ6Y.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/g2JT_Xzm.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/C8evX4fz.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DsyuGDx1.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/CYgJF_JY.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DTX69I94.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.psyo5Piy.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/BzIfbfq3.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/Dqdyvg_F.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DwvD1fpj.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.DmO2F-Ok.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DwiYjcZc.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/Ylr-pqa0.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/6Hac_u6O.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/3.CZ07tNeO.js"><!--[--><meta property="og:type" content="article"/> <meta property="og:title" content="Configuration"/><!--]--><title>Configuration</title>
-</head>
-
-<body data-sveltekit-preload-data="hover" class="bg-base">
-	<div style="display: contents"><!--[--><!--[--><!----><div class="flex flex-col min-h-screen justify-between"><div class="sticky top-0 w-screen"><nav class="bg-crust p-2"><div class="flex justify-between items-center py-2"><div class="flex justify-between xl:px-24 sm:px-16"><a class="text-xl text-accent" href="home">NVIM DAP View</a></div> <div class="flex text-2xl pr-5 gap-5"><a href="https://github.com/igorlfs/nvim-dap-view" target="_blank" aria-label="GitHub Link"><i class="nf nf-fa-github"></i></a> <a href="https://github.com/sponsors/igorlfs" target="_blank" aria-label="Donate Link"><i class="nf nf-fa-heart"></i></a></div></div></nav><!----></div> <div class="flex flex-1"><main><!----><div class="flex"><div class="sticky top-16 flex h-[93.5vh]"><div class="flex xl:basis-1/5 basis-1/3"><div class="flex flex-row justify-start items-start min-w-[20vw]"><div class="bg-crust h-full flex w-[90%] pt-4"><div class="flex flex-col gap-4 pr-4"><div class="flex flex-col gap-4"><!--[--><div class="ml-11 text-xl"><a href="acknowlegdgements">Acknowledgements</a></div><div class="ml-11 text-xl"><a href="api">API</a></div><div class="ml-11 text-xl"><a href="commands">Commands</a></div><div class="ml-11 text-xl"><a href="configuration">Configuration</a></div><div class="ml-11 text-xl"><a href="control-bar">Control Bar</a></div><div class="ml-11 text-xl"><a href="faq">FAQ</a></div><div class="ml-11 text-xl"><a href="filetypes-autocmds">Filetypes &amp; Autocommands</a></div><div class="ml-11 text-xl"><a href="highlight-groups">Highlight Groups</a></div><div class="ml-11 text-xl"><a href="keymaps">Keymaps</a></div><div class="ml-11 text-xl"><a href="known-issues">Known Issues</a></div><!--]--></div> <div class="flex flex-col"><!--[--><div class="flex flex-row gap-2"><button class="ml-5 text-primary hover:text-accent hover:cursor-pointer font-bold text-xl"><i class="nf nf-fa-chevron_right"></i> Recipes</button></div> <!--[!--><!--]--><!--]--></div></div></div></div><!----></div></div> <div class="flex xl:basis-4/5 basis-2/3 w-full"><div class="mt-10 mb-32 flex justify-center"><article class="xl:mx-56 mx-16 size-full"><h1 class="capitalize sm:text-5xl text-3xl font-bold text-primary mb-5">Configuration</h1> <div class="prose lg:prose-xl max-w-none"><!----><h2 id="defaults"><a href="#defaults">Defaults</a></h2> <p>These are the default options from <code>nvim-dap-view</code>. You can use them as reference. You don’t have to copy-paste them!</p> <!----><pre class="shiki catppuccin-mocha" style="background-color:#1e1e2e;color:#cdd6f4" tabindex="0"><code><span class="line"><span style="color:#CBA6F7">return</span><span style="color:#CDD6F4"> &#123;</span></span>
+import{f as t,a as c}from"./Dqdyvg_F.js";import"./Ylr-pqa0.js";import{s as r,f as D}from"./C8evX4fz.js";import{h as y}from"./uRZnL6YQ.js";import{l as i,s as C}from"./DwvD1fpj.js";import{M as F}from"./hH19xRwF.js";const a={title:"Configuration"},{title:b}=a;var A=t('<h2 id="defaults"><a href="#defaults">Defaults</a></h2> <p>These are the default options from <code>nvim-dap-view</code>. You can use them as reference. You don’t have to copy-paste them!</p> <!>',1);function w(n,l){const p=i(l,["children","$$slots","$$events","$$legacy"]);F(n,C(()=>p,()=>a,{children:(o,E)=>{var s=A(),e=r(D(s),4);y(e,()=>`<pre class="shiki catppuccin-mocha" style="background-color:#1e1e2e;color:#cdd6f4" tabindex="0"><code><span class="line"><span style="color:#CBA6F7">return</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">    winbar </span><span style="color:#94E2D5">=</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">        show </span><span style="color:#94E2D5">=</span><span style="color:#F38BA8"> true</span><span style="color:#CDD6F4">,</span></span>
 <span class="line"><span style="color:#6C7086;font-style:italic">        -- You can add a "console" section to merge the terminal with the other views</span></span>
@@ -85,31 +58,4 @@
 <span class="line"><span style="color:#CDD6F4">    &#125;,</span></span>
 <span class="line"><span style="color:#6C7086;font-style:italic">    -- Controls how to jump when selecting a breakpoint or navigating the stack</span></span>
 <span class="line"><span style="color:#CDD6F4">    switchbuf </span><span style="color:#94E2D5">=</span><span style="color:#A6E3A1"> "usetab,newtab"</span><span style="color:#CDD6F4">,</span></span>
-<span class="line"><span style="color:#CDD6F4">&#125;</span></span></code></pre><!----><!----><!----></div></article></div></div></div><!----><!----></main></div></div><!----><!--]--> <!--[!--><!--]--><!--]-->
-			<script type="application/json" data-sveltekit-fetched data-url="/igorlfs.github.io/nvim-dap-view/api/posts">{"status":200,"statusText":"","headers":{},"body":"[{\"title\":\"Acknowledgements\",\"slug\":\"acknowlegdgements\"},{\"title\":\"API\",\"slug\":\"api\"},{\"title\":\"Automatic Toggle\",\"category\":\"Recipes\",\"slug\":\"automatic-toggle\"},{\"title\":\"Basics\",\"hidden\":true,\"slug\":\"basics\"},{\"title\":\"Commands\",\"slug\":\"commands\"},{\"title\":\"Configuration\",\"slug\":\"configuration\"},{\"title\":\"Control Bar\",\"slug\":\"control-bar\"},{\"title\":\"FAQ\",\"slug\":\"faq\"},{\"title\":\"Filetypes & Autocommands\",\"slug\":\"filetypes-autocmds\"},{\"title\":\"Hide Terminal\",\"category\":\"Recipes\",\"slug\":\"hide-terminal\"},{\"title\":\"Highlight Groups\",\"slug\":\"highlight-groups\"},{\"title\":\"NVIM DAP View\",\"slug\":\"home\"},{\"title\":\"Keymaps\",\"slug\":\"keymaps\"},{\"title\":\"Known Issues\",\"slug\":\"known-issues\"}]"}</script>
-			<script>
-				{
-					__sveltekit_yg21p2 = {
-						base: new URL(".", location).pathname.slice(0, -1),
-						assets: "/igorlfs.github.io/nvim-dap-view"
-					};
-
-					const element = document.currentScript.parentElement;
-
-					Promise.all([
-						import("./_app/immutable/entry/start.DlkYSJ6Y.js"),
-						import("./_app/immutable/entry/app.psyo5Piy.js")
-					]).then(([kit, app]) => {
-						kit.start(app, element, {
-							node_ids: [0, 3],
-							data: [null,null],
-							form: null,
-							error: null
-						});
-					});
-				}
-			</script>
-		</div>
-</body>
-
-</html>
+<span class="line"><span style="color:#CDD6F4">&#125;</span></span></code></pre>`),c(o,s)},$$slots:{default:!0}}))}export{w as default,a as metadata};

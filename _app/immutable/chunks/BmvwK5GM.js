@@ -1,31 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-	<meta charset="utf-8" />
-	<link rel="icon" href="https://fav.farm/🪲" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
-		<link href="./_app/immutable/assets/0.C5JxBAU1.css" rel="stylesheet">
-		<link rel="modulepreload" href="./_app/immutable/entry/start.DlkYSJ6Y.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/g2JT_Xzm.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/C8evX4fz.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DsyuGDx1.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/CYgJF_JY.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DTX69I94.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.psyo5Piy.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/BzIfbfq3.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/Dqdyvg_F.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DwvD1fpj.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.DmO2F-Ok.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/DwiYjcZc.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/Ylr-pqa0.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/6Hac_u6O.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/3.CZ07tNeO.js"><!--[--><meta property="og:type" content="article"/> <meta property="og:title" content="Control Bar"/><!--]--><title>Control Bar</title>
-</head>
-
-<body data-sveltekit-preload-data="hover" class="bg-base">
-	<div style="display: contents"><!--[--><!--[--><!----><div class="flex flex-col min-h-screen justify-between"><div class="sticky top-0 w-screen"><nav class="bg-crust p-2"><div class="flex justify-between items-center py-2"><div class="flex justify-between xl:px-24 sm:px-16"><a class="text-xl text-accent" href="home">NVIM DAP View</a></div> <div class="flex text-2xl pr-5 gap-5"><a href="https://github.com/igorlfs/nvim-dap-view" target="_blank" aria-label="GitHub Link"><i class="nf nf-fa-github"></i></a> <a href="https://github.com/sponsors/igorlfs" target="_blank" aria-label="Donate Link"><i class="nf nf-fa-heart"></i></a></div></div></nav><!----></div> <div class="flex flex-1"><main><!----><div class="flex"><div class="sticky top-16 flex h-[93.5vh]"><div class="flex xl:basis-1/5 basis-1/3"><div class="flex flex-row justify-start items-start min-w-[20vw]"><div class="bg-crust h-full flex w-[90%] pt-4"><div class="flex flex-col gap-4 pr-4"><div class="flex flex-col gap-4"><!--[--><div class="ml-11 text-xl"><a href="acknowlegdgements">Acknowledgements</a></div><div class="ml-11 text-xl"><a href="api">API</a></div><div class="ml-11 text-xl"><a href="commands">Commands</a></div><div class="ml-11 text-xl"><a href="configuration">Configuration</a></div><div class="ml-11 text-xl"><a href="control-bar">Control Bar</a></div><div class="ml-11 text-xl"><a href="faq">FAQ</a></div><div class="ml-11 text-xl"><a href="filetypes-autocmds">Filetypes &amp; Autocommands</a></div><div class="ml-11 text-xl"><a href="highlight-groups">Highlight Groups</a></div><div class="ml-11 text-xl"><a href="keymaps">Keymaps</a></div><div class="ml-11 text-xl"><a href="known-issues">Known Issues</a></div><!--]--></div> <div class="flex flex-col"><!--[--><div class="flex flex-row gap-2"><button class="ml-5 text-primary hover:text-accent hover:cursor-pointer font-bold text-xl"><i class="nf nf-fa-chevron_right"></i> Recipes</button></div> <!--[!--><!--]--><!--]--></div></div></div></div><!----></div></div> <div class="flex xl:basis-4/5 basis-2/3 w-full"><div class="mt-10 mb-32 flex justify-center"><article class="xl:mx-56 mx-16 size-full"><h1 class="capitalize sm:text-5xl text-3xl font-bold text-primary mb-5">Control Bar</h1> <div class="prose lg:prose-xl max-w-none"><!----><p>The control bar is disabled by default. It can be enabled by setting <code>winbar.controls.enable</code>.</p> <img src="https://i.ibb.co/Hf6V22Hw/dapview-control-bar.png" alt="control bar"/> <h2 id="options"><a href="#options">Options</a></h2> <p>Default options are listed below. Remeber, you don’t have to copy-paste them!</p> <!----><pre class="shiki catppuccin-mocha" style="background-color:#1e1e2e;color:#cdd6f4" tabindex="0"><code><span class="line"><span style="color:#CBA6F7">return</span><span style="color:#CDD6F4"> &#123;</span></span>
+import{f as y,a as i}from"./Dqdyvg_F.js";import"./Ylr-pqa0.js";import{s as a,f as D}from"./C8evX4fz.js";import{h as l}from"./uRZnL6YQ.js";import{l as F,s as d}from"./DwvD1fpj.js";import{M as C}from"./hH19xRwF.js";const o={title:"Control Bar"},{title:_}=o;var A=y('<p>The control bar is disabled by default. It can be enabled by setting <code>winbar.controls.enable</code>.</p> <img src="https://i.ibb.co/Hf6V22Hw/dapview-control-bar.png" alt="control bar"/> <h2 id="options"><a href="#options">Options</a></h2> <p>Default options are listed below. Remeber, you don’t have to copy-paste them!</p> <!> <h2 id="custom-buttons"><a href="#custom-buttons">Custom Buttons</a></h2> <p><code>nvim-dap-view</code> provides some default buttons for the control bar, but you can also add your own. To do that, you can use the <code>controls.custom_buttons</code> table to declare your new button and then add it at the position you want in the <code>buttons</code> list.</p> <p>A custom button has 2 methods:</p> <ol><li><code>render</code> returning a string used to display the button (typically an emoji or a NerdFont glyph wrapped in an highlight group)</li> <li><code>action</code> a function that will be executed when the button is clicked. The function receives 3 arguments: <ul><li><code>clicks</code> the number of clicks</li> <li><code>button</code> the button clicked (<code>l</code>, <code>r</code>, <code>m</code>)</li> <li><code>modifiers</code> a string with the modifiers pressed (<code>c</code> for <code>control</code>, <code>s</code> for <code>shift</code>, <code>a</code> for <code>alt</code> and <code>m</code> for <code>meta</code>)</li></ul></li></ol> <p>See the <code>@ N</code> section in <code>:help statusline</code> for the complete specifications of a click handler.</p> <h3 id="example"><a href="#example">Example</a></h3> <p>An example adding 2 buttons:</p> <ul><li><code>fun</code>: the most basic button possible, just prints ”🎊” when clicked</li> <li><code>term_restart</code>: an hybrid button that acts as a stop/restart button. If the stop button is triggered by anything else than a single left click (middle click, right click, double click or click with a modifier), it will disconnect the session instead.</li></ul> <!>',1);function g(p,e){const t=F(e,["children","$$slots","$$events","$$legacy"]);C(p,d(()=>t,()=>o,{children:(c,u)=>{var s=A(),n=a(D(s),8);l(n,()=>`<pre class="shiki catppuccin-mocha" style="background-color:#1e1e2e;color:#cdd6f4" tabindex="0"><code><span class="line"><span style="color:#CBA6F7">return</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">    winbar </span><span style="color:#94E2D5">=</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">        controls </span><span style="color:#94E2D5">=</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">            enabled </span><span style="color:#94E2D5">=</span><span style="color:#F38BA8"> false</span><span style="color:#CDD6F4">,</span></span>
@@ -54,7 +27,7 @@
 <span class="line"><span style="color:#CDD6F4">            &#125;,</span></span>
 <span class="line"><span style="color:#CDD6F4">        &#125;,</span></span>
 <span class="line"><span style="color:#CDD6F4">    &#125;,</span></span>
-<span class="line"><span style="color:#CDD6F4">&#125;</span></span></code></pre><!----> <h2 id="custom-buttons"><a href="#custom-buttons">Custom Buttons</a></h2> <p><code>nvim-dap-view</code> provides some default buttons for the control bar, but you can also add your own. To do that, you can use the <code>controls.custom_buttons</code> table to declare your new button and then add it at the position you want in the <code>buttons</code> list.</p> <p>A custom button has 2 methods:</p> <ol><li><code>render</code> returning a string used to display the button (typically an emoji or a NerdFont glyph wrapped in an highlight group)</li> <li><code>action</code> a function that will be executed when the button is clicked. The function receives 3 arguments: <ul><li><code>clicks</code> the number of clicks</li> <li><code>button</code> the button clicked (<code>l</code>, <code>r</code>, <code>m</code>)</li> <li><code>modifiers</code> a string with the modifiers pressed (<code>c</code> for <code>control</code>, <code>s</code> for <code>shift</code>, <code>a</code> for <code>alt</code> and <code>m</code> for <code>meta</code>)</li></ul></li></ol> <p>See the <code>@ N</code> section in <code>:help statusline</code> for the complete specifications of a click handler.</p> <h3 id="example"><a href="#example">Example</a></h3> <p>An example adding 2 buttons:</p> <ul><li><code>fun</code>: the most basic button possible, just prints ”🎊” when clicked</li> <li><code>term_restart</code>: an hybrid button that acts as a stop/restart button. If the stop button is triggered by anything else than a single left click (middle click, right click, double click or click with a modifier), it will disconnect the session instead.</li></ul> <!----><pre class="shiki catppuccin-mocha" style="background-color:#1e1e2e;color:#cdd6f4" tabindex="0"><code><span class="line"><span style="color:#CBA6F7">return</span><span style="color:#CDD6F4"> &#123;</span></span>
+<span class="line"><span style="color:#CDD6F4">&#125;</span></span></code></pre>`);var r=a(n,18);l(r,()=>`<pre class="shiki catppuccin-mocha" style="background-color:#1e1e2e;color:#cdd6f4" tabindex="0"><code><span class="line"><span style="color:#CBA6F7">return</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">    winbar </span><span style="color:#94E2D5">=</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">        controls </span><span style="color:#94E2D5">=</span><span style="color:#CDD6F4"> &#123;</span></span>
 <span class="line"><span style="color:#CDD6F4">            enabled </span><span style="color:#94E2D5">=</span><span style="color:#F38BA8"> true</span><span style="color:#CDD6F4">,</span></span>
@@ -92,31 +65,4 @@
 <span class="line"><span style="color:#CDD6F4">            &#125;,</span></span>
 <span class="line"><span style="color:#CDD6F4">        &#125;,</span></span>
 <span class="line"><span style="color:#CDD6F4">    &#125;,</span></span>
-<span class="line"><span style="color:#CDD6F4">&#125;</span></span></code></pre><!----><!----><!----></div></article></div></div></div><!----><!----></main></div></div><!----><!--]--> <!--[!--><!--]--><!--]-->
-			<script type="application/json" data-sveltekit-fetched data-url="/igorlfs.github.io/nvim-dap-view/api/posts">{"status":200,"statusText":"","headers":{},"body":"[{\"title\":\"Acknowledgements\",\"slug\":\"acknowlegdgements\"},{\"title\":\"API\",\"slug\":\"api\"},{\"title\":\"Automatic Toggle\",\"category\":\"Recipes\",\"slug\":\"automatic-toggle\"},{\"title\":\"Basics\",\"hidden\":true,\"slug\":\"basics\"},{\"title\":\"Commands\",\"slug\":\"commands\"},{\"title\":\"Configuration\",\"slug\":\"configuration\"},{\"title\":\"Control Bar\",\"slug\":\"control-bar\"},{\"title\":\"FAQ\",\"slug\":\"faq\"},{\"title\":\"Filetypes & Autocommands\",\"slug\":\"filetypes-autocmds\"},{\"title\":\"Hide Terminal\",\"category\":\"Recipes\",\"slug\":\"hide-terminal\"},{\"title\":\"Highlight Groups\",\"slug\":\"highlight-groups\"},{\"title\":\"NVIM DAP View\",\"slug\":\"home\"},{\"title\":\"Keymaps\",\"slug\":\"keymaps\"},{\"title\":\"Known Issues\",\"slug\":\"known-issues\"}]"}</script>
-			<script>
-				{
-					__sveltekit_yg21p2 = {
-						base: new URL(".", location).pathname.slice(0, -1),
-						assets: "/igorlfs.github.io/nvim-dap-view"
-					};
-
-					const element = document.currentScript.parentElement;
-
-					Promise.all([
-						import("./_app/immutable/entry/start.DlkYSJ6Y.js"),
-						import("./_app/immutable/entry/app.psyo5Piy.js")
-					]).then(([kit, app]) => {
-						kit.start(app, element, {
-							node_ids: [0, 3],
-							data: [null,null],
-							form: null,
-							error: null
-						});
-					});
-				}
-			</script>
-		</div>
-</body>
-
-</html>
+<span class="line"><span style="color:#CDD6F4">&#125;</span></span></code></pre>`),i(c,s)},$$slots:{default:!0}}))}export{g as default,o as metadata};
