@@ -66,8 +66,13 @@ api.nvim_create_autocmd("BufEnter", {
             if not vim.tbl_contains({ "dap-view", "dap-view-term", "dap-repl" }, ft) then
                 state.winnr = nil
             end
-        elseif not state.winnr and vim.tbl_contains({ "dap-view", "dap-repl" }, ft) then
-            state.winnr = win
+        elseif not state.winnr then
+            if
+                vim.tbl_contains({ "dap-view", "dap-repl" }, ft)
+                or (ft == "dap-view-term" and state.current_section == "console")
+            then
+                state.winnr = win
+            end
         end
 
         -- For good measure, also handle term_winnr
