@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local views = require("dap-view.views")
+local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
 local M = {}
@@ -105,7 +106,8 @@ M.show = function()
         return
     end
 
-    if state.bufnr then
+    -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
+    if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         local line = 0
 
         for expr_name, expr in pairs(state.watched_expressions) do

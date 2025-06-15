@@ -25,12 +25,13 @@
 ---@class dapview.State
 ---@field bufnr? integer
 ---@field winnr? integer
----@field term_bufnr? integer
+---@field term_bufnrs {[number]: number}
 ---@field term_winnr? integer
----@field last_active_adapter? string
+---@field current_adapter? string
 ---@field subtle_frames boolean
 ---@field current_section? dapview.SectionType
----@field exceptions_options dapview.ExceptionsOption[]
+---@field current_session_id? number
+---@field exceptions_options table<string,dapview.ExceptionsOption[]>
 ---@field threads dapview.ThreadWithErr[]
 ---@field threads_err? string
 ---@field frames_by_line table<integer, dap.StackFrame[]>
@@ -39,6 +40,7 @@
 ---@field watched_expressions table<string, dapview.ExpressionPack>
 ---@field cur_pos table<dapview.SectionType,integer?>
 local M = {
+    term_bufnrs = {},
     exceptions_options = {},
     threads = {},
     frames_by_line = {},

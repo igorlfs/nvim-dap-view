@@ -1,7 +1,10 @@
 local state = require("dap-view.state")
+local views = require("dap-view.views")
 local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
+local util = require("dap-view.util")
+local guard = require("dap-view.guard")
 local module = ...
 
 local M = {}
@@ -13,7 +16,7 @@ local winbar_info = {
         keymap = "B",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "breakpoints") then
-                require("dap-view.views").switch_to_view("breakpoints")
+                views.switch_to_view("breakpoints")
             end
         end,
     },
@@ -21,7 +24,7 @@ local winbar_info = {
         keymap = "S",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "scopes") then
-                require("dap-view.views").switch_to_view("scopes")
+                views.switch_to_view("scopes")
             end
         end,
     },
@@ -29,7 +32,7 @@ local winbar_info = {
         keymap = "E",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "exceptions") then
-                require("dap-view.views").switch_to_view("exceptions")
+                views.switch_to_view("exceptions")
             end
         end,
     },
@@ -37,7 +40,7 @@ local winbar_info = {
         keymap = "W",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "watches") then
-                require("dap-view.views").switch_to_view("watches")
+                views.switch_to_view("watches")
             end
         end,
     },
@@ -45,7 +48,7 @@ local winbar_info = {
         keymap = "T",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "threads") then
-                require("dap-view.views").switch_to_view("threads")
+                views.switch_to_view("threads")
             end
         end,
     },
@@ -69,25 +72,18 @@ local winbar_info = {
         keymap = "C",
         action = function()
             if vim.tbl_contains(setup.config.winbar.sections, "console") then
-                if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
+                if not util.is_win_valid(state.winnr) or not guard.expect_session() then
                     return
                 end
 
-                if not state.term_bufnr then
-                    require("dap-view.term.init").setup_term_win_cmd()
-                end
-
-                -- Set options before changing the buffer
-                -- The change in buffer would unassign the state.winnr
-                -- Since the buffer wouldn't have a filetype
-                -- See https://github.com/igorlfs/nvim-dap-view/issues/69
-                require("dap-view.term.options").set_options(state.winnr, state.term_bufnr)
+                assert(state.current_session_id, "has active session")
 
                 api.nvim_win_call(state.winnr, function()
-                    api.nvim_set_current_buf(state.term_bufnr)
+                    api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
                 end)
 
-                M.set_winbar_action_keymaps(state.term_bufnr)
+                require("dap-view.term.options").set_win_options(state.winnr)
+
                 M.update_section("console")
             end
         end,
@@ -113,7 +109,7 @@ M.on_click = function(idx)
 end
 
 local set_winbar_opt = function()
-    if state.winnr and api.nvim_win_is_valid(state.winnr) then
+    if util.is_win_valid(state.winnr) then
         local winbar = setup.config.winbar.sections
         local winbar_title = {}
         local controls_config = setup.config.winbar.controls

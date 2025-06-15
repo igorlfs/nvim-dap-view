@@ -2,6 +2,7 @@ local dap = require("dap")
 
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
+local util = require("dap-view.util")
 local autocmd = require("dap-view.options.autocmd")
 local term = require("dap-view.term.init")
 local state = require("dap-view.state")
@@ -13,7 +14,7 @@ local api = vim.api
 
 ---@param hide_terminal? boolean
 M.toggle = function(hide_terminal)
-    if state.winnr and api.nvim_win_is_valid(state.winnr) then
+    if util.is_win_valid(state.winnr) then
         M.close(hide_terminal)
     else
         M.open()
@@ -25,11 +26,11 @@ M.close = function(hide_terminal)
     if state.current_section == "repl" then
         dap.repl.close({ mode = "toggle" })
     end
-    if state.winnr and api.nvim_win_is_valid(state.winnr) then
+    if util.is_win_valid(state.winnr) then
         api.nvim_win_close(state.winnr, true)
     end
     state.winnr = nil
-    if state.bufnr and api.nvim_buf_is_valid(state.bufnr) then
+    if util.is_buf_valid(state.bufnr) then
         api.nvim_buf_delete(state.bufnr, { force = true })
     end
     state.bufnr = nil
@@ -84,6 +85,13 @@ M.open = function()
     autocmd.quit_buf_autocmd(state.bufnr, function()
         -- The buffer is already being wiped out, so prevent close() from doing it again.
         state.bufnr = nil
+
+        -- Prevent the following scenario: user finishes all sessions and quits via the console
+        -- In the next open, they would start at the console, which is forbidden
+        if state.current_section == "console" then
+            state.current_section = setup.config.winbar.default_section
+        end
+
         M.close()
     end)
 end
@@ -102,7 +110,7 @@ M.jump_to_view = function(view)
         vim.notify("Can't jump to unconfigured view: " .. view)
         return
     end
-    if state.bufnr and state.winnr and api.nvim_win_is_valid(state.winnr) then
+    if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         api.nvim_set_current_win(state.winnr)
         winbar.show_content(view)
     else
@@ -118,7 +126,7 @@ M.show_view = function(view)
     end
     if state.current_section == view then
         M.jump_to_view(view)
-    elseif state.bufnr and state.winnr and api.nvim_win_is_valid(state.winnr) then
+    elseif util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         winbar.show_content(view)
     else
         vim.notify("Can't show view: couldn't find the window")
