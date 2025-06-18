@@ -71,12 +71,6 @@ dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
     end
 end
 
-dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function()
-    if state.current_section == "threads" then
-        threads.show()
-    end
-end
-
 dap.listeners.after.setExpression[SUBSCRIPTION_ID] = function()
     eval.reeval()
 end
