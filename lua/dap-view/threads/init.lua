@@ -25,7 +25,11 @@ end
 
 ---@param session dap.Session
 M.get_stack_frames = function(session)
+    local remaining = 0
+
     for _, thread in pairs(state.threads) do
+        remaining = remaining + 1
+
         coroutine.wrap(function()
             local err, result = session:request("stackTrace", { threadId = thread.id })
 
@@ -36,6 +40,12 @@ M.get_stack_frames = function(session)
                 thread.frames = {}
             elseif result then
                 thread.frames = result.stackFrames
+            end
+
+            remaining = remaining - 1
+
+            if remaining == 0 and state.current_section == "threads" then
+                require("dap-view.views").switch_to_view("threads")
             end
         end)()
     end
