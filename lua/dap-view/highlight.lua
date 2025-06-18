@@ -18,6 +18,8 @@ local define_base_links = function()
     hl_create("ThreadStopped", "Conditional")
     hl_create("ThreadError", "DiagnosticError")
 
+    hl_create("FrameCurrent", "DiagnosticVirtualTextWarn")
+
     hl_create("ExceptionFilterEnabled", "DiagnosticOk")
     hl_create("ExceptionFilterDisabled", "DiagnosticError")
 

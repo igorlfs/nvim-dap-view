@@ -2,7 +2,7 @@
 title: Highlight Groups
 ---
 
-`nvim-dap-view` defines 29 highlight groups linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
+`nvim-dap-view` defines 30 highlight groups linked to (somewhat) reasonable defaults, but they may look odd with your colorscheme. If the links aren't defined, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`). Consider contributing to your colorscheme by sending a PR to add support to `nvim-dap-view`!
 
 | Highlight Group                      | Default Link              |
 | ------------------------------------ | ------------------------- |
@@ -21,6 +21,7 @@ title: Highlight Groups
 | `NvimDapViewExceptionFilterEnabled`  | DiagnosticOk              |
 | `NvimDapViewFileName`                | qfFileName                |
 | `NvimDapViewFloat`                   | Float                     |
+| `NvimDapViewFrameCurrent`            | DiagnosticVirtualTextWarn |
 | `NvimDapViewFunction`                | Function                  |
 | `NvimDapViewLineNumber`              | qfLineNr                  |
 | `NvimDapViewMissingData`             | DapBreakpoint             |
