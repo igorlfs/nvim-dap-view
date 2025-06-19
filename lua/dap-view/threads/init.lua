@@ -46,6 +46,13 @@ M.get_stack_frames = function(session)
 
             if remaining == 0 and state.current_section == "threads" then
                 require("dap-view.views").switch_to_view("threads")
+
+                for k, v in pairs(state.frames_by_line) do
+                    if v.id == session.current_frame.id then
+                        vim.api.nvim_win_set_cursor(state.winnr, { k, 1 })
+                        return
+                    end
+                end
             end
         end)()
     end

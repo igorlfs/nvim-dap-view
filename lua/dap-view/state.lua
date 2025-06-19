@@ -33,7 +33,7 @@
 ---@field exceptions_options dapview.ExceptionsOption[]
 ---@field threads dapview.ThreadWithErr[]
 ---@field threads_err? string
----@field frames_by_line table<integer, dap.StackFrame[]>
+---@field frames_by_line table<integer, dap.StackFrame>
 ---@field expressions_by_line table<integer, {name: string, expression: dapview.ExpressionPack}>
 ---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
 ---@field watched_expressions table<string, dapview.ExpressionPack>
