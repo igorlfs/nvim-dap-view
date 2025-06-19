@@ -93,7 +93,7 @@ The console's default height is resized to match your `nvim-dap-view` configurat
 
 ## Usage
 
-Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get started. For a more advanced setup, see the `Recipes` section in the sidebar. If, on the other hand, you need help getting started with `nvim-dap`, you can read the [guide](basics).
+Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get started. If it's your first time setting up `nvim-dap`, start [here](basics). By default, `nvim-dap-view` **is not launched automatically** (i.e., when initializing a new session), you have to use the commands or the API. To configure this behavior, visit the [automatic toggle](automatic-toggle) guide.
 
 ## Customization
 
