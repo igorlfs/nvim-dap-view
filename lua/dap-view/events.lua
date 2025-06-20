@@ -52,14 +52,21 @@ dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
     end
 end
 
-dap.listeners.after.scopes[SUBSCRIPTION_ID] = function()
+dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     -- nvim-dap needs a buffer to operate
     if state.current_section == "scopes" and state.bufnr then
         scopes.refresh()
     end
+    if state.current_section == "threads" then
+        require("dap-view.views").switch_to_view("threads")
 
-    -- Avoid race conditions by not using `event_stopped`
-    require("dap-view.threads").get_threads()
+        if session.current_frame ~= nil and state.winnr then
+            require("dap-view.threads").track_cursor_position(session.current_frame.id)
+        end
+    end
+
+    -- Do not use `event_stopped`
+    -- It may cause race conditions
     for expr, _ in pairs(state.watched_expressions) do
         eval.eval_expr(expr)
     end
@@ -68,6 +75,26 @@ end
 dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
     if state.current_section == "watches" then
         require("dap-view.views").switch_to_view("watches")
+    end
+end
+
+dap.listeners.after.threads[SUBSCRIPTION_ID] = function(_, err)
+    state.threads_error = nil
+
+    if err then
+        state.threads_error = tostring(err)
+    end
+
+    winbar.redraw_controls()
+end
+
+dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function(_, err, _, payload)
+    local threadId = payload.threadId
+
+    state.stack_trace_errors[threadId] = nil
+
+    if err then
+        state.stack_trace_errors[threadId] = tostring(err)
     end
 end
 
@@ -115,7 +142,6 @@ local events = {
     "event_exited",
     "event_stopped",
     "restart",
-    "threads",
 }
 
 for _, event in ipairs(events) do
