@@ -16,11 +16,11 @@ M.show = function()
             return
         end
 
-        if views.cleanup_view(state.threads_err ~= nil, state.threads_err) then
+        if views.cleanup_view(state.threads_error ~= nil, state.threads_error) then
             return
         end
 
-        if views.cleanup_view(vim.tbl_isempty(state.threads), "Debug adapter returned no threads") then
+        if views.cleanup_view(vim.tbl_isempty(session.threads), "Debug adapter returned no threads") then
             return
         end
 
@@ -30,7 +30,7 @@ M.show = function()
 
         local line = 0
 
-        for _, thread in pairs(state.threads) do
+        for k, thread in pairs(session.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
             local thread_name = is_stopped_thread and thread.name .. " " or thread.name
             api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread_name })
@@ -51,13 +51,14 @@ M.show = function()
                 :totable()
 
             if vim.tbl_isempty(valid_frames) then
-                if thread.err then
-                    api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread.err })
+                local thread_err = state.stack_trace_errors[k]
+                if thread_err then
+                    api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread_err })
                     hl.hl_range("ThreadError", { line, 0 }, { line, -1 })
                     line = line + 1
                 end
             else
-                ---@type {label: string, current: boolean}[]
+                ---@type {label: string, id: number}[]
                 local frames = vim.iter(valid_frames):fold(
                     {},
                     ---@param acc string[]
@@ -71,7 +72,7 @@ M.show = function()
                             local relative_path = path and vim.fn.fnamemodify(path, ":.") or ""
                             local label = "\t" .. relative_path .. "|" .. f.line .. "|" .. f.name
 
-                            table.insert(acc, { label = label, current = f.id == session.current_frame.id })
+                            table.insert(acc, { label = label, id = f.id })
                         end
                         return acc
                     end
@@ -79,7 +80,7 @@ M.show = function()
 
                 local content = vim.iter(frames)
                     :map(
-                        ---@param f {label: string, current: boolean}
+                        ---@param f {label: string, id: number}
                         function(f)
                             return f.label
                         end
@@ -94,11 +95,18 @@ M.show = function()
 
                     hl.highlight_file_name_and_line_number(line + i - 1, pipe1 - 1, pipe2 - pipe1)
 
-                    if f.current then
+                    if session.current_frame and f.id == session.current_frame.id then
                         hl.hl_range("FrameCurrent", { line + i - 1, 0 }, { line + i - 1, -1 })
                     end
 
-                    state.frames_by_line[line + i] = valid_frames[i]
+                    -- We can't index directly here, because we filter the valid_frames on the show_frame condition
+                    -- That means the indexes may not match
+                    state.frames_by_line[line + i] = vim.iter(valid_frames):find(
+                        ---@param f_ dap.StackFrame
+                        function(f_)
+                            return f.id == f_.id
+                        end
+                    )
                 end
 
                 line = line + #content

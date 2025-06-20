@@ -2,9 +2,6 @@
 ---@field exception_filter dap.ExceptionBreakpointsFilter
 ---@field enabled boolean
 
----@class dapview.ThreadWithErr: dap.Thread
----@field err? string
-
 ---@class dapview.VariablePack
 ---@field variable dap.Variable
 ---@field updated boolean
@@ -31,8 +28,8 @@
 ---@field subtle_frames boolean
 ---@field current_section? dapview.SectionType
 ---@field exceptions_options dapview.ExceptionsOption[]
----@field threads dapview.ThreadWithErr[]
----@field threads_err? string
+---@field stack_trace_errors string[]
+---@field threads_error? string
 ---@field frames_by_line table<integer, dap.StackFrame>
 ---@field expressions_by_line table<integer, {name: string, expression: dapview.ExpressionPack}>
 ---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
@@ -40,7 +37,7 @@
 ---@field cur_pos table<dapview.SectionType,integer?>
 local M = {
     exceptions_options = {},
-    threads = {},
+    stack_trace_errors = {},
     frames_by_line = {},
     expressions_by_line = {},
     variables_by_line = {},
