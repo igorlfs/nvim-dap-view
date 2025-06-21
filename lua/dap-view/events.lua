@@ -3,6 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
+local util = require("dap-view.util")
 local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term.init")
@@ -12,37 +13,37 @@ local winbar = require("dap-view.options.winbar")
 
 local SUBSCRIPTION_ID = "dap-view"
 
-dap.listeners.before.initialize[SUBSCRIPTION_ID] = function(session, _)
-    local adapter = session.config.type
-    -- When initializing a new session, there might a leftover terminal buffer
-    -- Usually, this wouldn't be a problem, but it can cause inconsistencies when starting a session that
-    --
-    -- (A) Doesn't use the terminal, after a session that does
-    -- The problem here is that the terminal could be used if it was left open from the earlier session
-    --
-    -- (B) Uses the terminal, after a session that doesn't
-    -- The terminal wouldn't show up, since it's hidden
-    --
-    -- To handle these scenarios, we have to delete the terminal buffer
-    -- However, if we always close the terminal, dap-view will be shifted very quickly (if open),
-    -- causing a flickering effect.
-    --
-    -- To address that, we only delete the terminal buffer if the new session has a different adapter
-    -- (which should cover most scenarios where the flickering would occur)
-    --
-    -- However, do not try to delete the buffer on the first session,
-    -- as it conflicts with bootstrapping the terminal window.
-    -- See: https://github.com/igorlfs/nvim-dap-view/issues/18
-    if state.last_active_adapter and state.last_active_adapter ~= adapter then
-        term.force_delete_term_buf()
-    end
-    state.last_active_adapter = adapter
+dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
+    if new then
+        local config = setup.config
+        local term_config = config.windows.terminal
 
-    term.setup_term_win_cmd()
+        state.current_session_id = new.id
+        state.current_adapter = new.config.type
 
-    local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
-    if not setup.config.windows.terminal.start_hidden and separate_term_win then
-        term.open_term_buf_win()
+        -- Avoid creating useless buffers for child sessions
+        if new.parent == nil then
+            if not state.term_bufnrs[new.id] then
+                state.term_bufnrs[new.id] = term.setup_term_win_cmd()
+
+                if not (term_config.start_hidden or vim.tbl_contains(config.winbar.sections, "console")) then
+                    term.open_term_buf_win()
+                end
+            end
+        else
+            state.term_bufnrs[new.id] = state.term_bufnrs[new.parent.id]
+        end
+
+        if not vim.tbl_contains(term_config.hide, state.current_adapter) then
+            term.switch_term_buf()
+        end
+        -- Ugly hack but it sorta works
+        vim.defer_fn(function()
+            require("dap-view.exceptions").update_exception_breakpoints_filters()
+        end, 1000)
+    else
+        state.current_session_id = nil
+        state.current_adapter = nil
     end
 end
 
@@ -54,13 +55,13 @@ end
 
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     -- nvim-dap needs a buffer to operate
-    if state.current_section == "scopes" and state.bufnr then
+    if state.current_section == "scopes" and util.is_buf_valid(state.bufnr) then
         scopes.refresh()
     end
     if state.current_section == "threads" then
         require("dap-view.views").switch_to_view("threads")
 
-        if session.current_frame ~= nil and state.winnr then
+        if session.current_frame ~= nil and util.is_win_valid(state.winnr) then
             require("dap-view.threads").track_cursor_position(session.current_frame.id)
         end
     end
@@ -106,30 +107,40 @@ dap.listeners.after.setVariable[SUBSCRIPTION_ID] = function()
     eval.reeval()
 end
 
-dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
-    state.exceptions_options = vim.iter(session.capabilities.exceptionBreakpointFilters or {})
-        :map(function(filter)
-            return { enabled = filter.default, exception_filter = filter }
-        end)
-        :totable()
-    -- Remove applied filters from view when initializing a new session
-    -- Since we don't store the applied filters between sessions
-    -- (i.e., we always override with the defaults from the adapter on a new session)
-    -- Therefore, the exceptions view could look outdated
-    --
-    -- Also, we can't just update the filters at this stage (after the initialize request)
-    -- due to how the initialization works: setExceptionBreakpoints happens after initialize
-    -- (with the default configuration)
-    -- See https://microsoft.github.io/debug-adapter-protocol/specification#Events_Initialized
+dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
+    local adapter = session.config.type
+    if state.exceptions_options[adapter] == nil then
+        state.exceptions_options[adapter] = vim
+            .iter(session.capabilities.exceptionBreakpointFilters or {})
+            ---@param filter dap.ExceptionBreakpointsFilter
+            :map(function(filter)
+                return { enabled = filter.default, exception_filter = filter }
+            end)
+            :totable()
+    end
     if state.current_section == "exceptions" then
         exceptions.show()
     end
 end
 
-dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
+dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
+    end
+    if state.current_section == "exceptions" then
+        exceptions.show()
+    end
+
+    -- TODO find a cleaner way to dispose of these buffers
+    local term_bufnr = state.term_bufnrs[session.id]
+    if util.is_buf_valid(term_bufnr) then
+        vim.api.nvim_buf_delete(term_bufnr, { force = true })
+    end
+    for k, v in pairs(state.term_bufnrs) do
+        if v == term_bufnr then
+            state.term_bufnrs[k] = nil
+        end
     end
 
     winbar.redraw_controls()
