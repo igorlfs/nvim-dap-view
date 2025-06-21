@@ -23,9 +23,7 @@
 ---@field bufnr? integer
 ---@field winnr? integer
 ---@field term_bufnrs {[number]: number}
----@field fallback_term_bufnr? integer
 ---@field term_winnr? integer
----@field current_adapter? string
 ---@field subtle_frames boolean
 ---@field current_section? dapview.SectionType
 ---@field current_session_id? number
