@@ -57,7 +57,7 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     if state.current_section == "threads" then
         require("dap-view.views").switch_to_view("threads")
 
-        if session.current_frame ~= nil and state.winnr then
+        if session.current_frame ~= nil and util.is_win_valid(state.winnr) then
             require("dap-view.threads").track_cursor_position(session.current_frame.id)
         end
     end
