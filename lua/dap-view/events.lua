@@ -30,10 +30,12 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
                     term.open_term_buf_win()
                 end
             end
+        else
+            state.term_bufnrs[new.id] = state.term_bufnrs[new.parent.id]
+        end
 
-            if not vim.tbl_contains(term_config.hide, state.current_adapter) then
-                term.switch_term_buf()
-            end
+        if not vim.tbl_contains(term_config.hide, state.current_adapter) then
+            term.switch_term_buf()
         end
         -- Ugly hack but it sorta works
         vim.defer_fn(function()
@@ -135,7 +137,11 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     if util.is_buf_valid(term_bufnr) then
         vim.api.nvim_buf_delete(term_bufnr, { force = true })
     end
-    state.term_bufnrs[session.id] = nil
+    for k, v in pairs(state.term_bufnrs) do
+        if v == term_bufnr then
+            state.term_bufnrs[k] = nil
+        end
+    end
 
     winbar.redraw_controls()
 end
