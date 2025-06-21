@@ -21,18 +21,20 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         state.current_session_id = new.id
         state.current_adapter = new.config.type
 
-        if not state.term_bufnrs[new.id] then
-            state.term_bufnrs[new.id] = term.setup_term_win_cmd()
+        -- Avoid creating useless buffers for child sessions
+        if new.parent == nil then
+            if not state.term_bufnrs[new.id] then
+                state.term_bufnrs[new.id] = term.setup_term_win_cmd()
 
-            if not (term_config.start_hidden or vim.tbl_contains(config.winbar.sections, "console")) then
-                term.open_term_buf_win()
+                if not (term_config.start_hidden or vim.tbl_contains(config.winbar.sections, "console")) then
+                    term.open_term_buf_win()
+                end
+            end
+
+            if not vim.tbl_contains(term_config.hide, state.current_adapter) then
+                term.switch_term_buf()
             end
         end
-
-        if not vim.tbl_contains(term_config.hide, state.current_adapter) then
-            term.switch_term_buf()
-        end
-
         -- Ugly hack but it sorta works
         vim.defer_fn(function()
             require("dap-view.exceptions").update_exception_breakpoints_filters()
@@ -103,7 +105,7 @@ dap.listeners.after.setVariable[SUBSCRIPTION_ID] = function()
     eval.reeval()
 end
 
-dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
+dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
     local adapter = session.config.type
     if state.exceptions_options[adapter] == nil then
         state.exceptions_options[adapter] = vim
@@ -119,7 +121,7 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session, _)
     end
 end
 
-dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
+dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
@@ -127,6 +129,13 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
     if state.current_section == "exceptions" then
         exceptions.show()
     end
+
+    -- TODO find a cleaner way to dispose of these buffers
+    local term_bufnr = state.term_bufnrs[session.id]
+    if util.is_buf_valid(term_bufnr) then
+        vim.api.nvim_buf_delete(term_bufnr, { force = true })
+    end
+    state.term_bufnrs[session.id] = nil
 
     winbar.redraw_controls()
 end
