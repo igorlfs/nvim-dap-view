@@ -19,7 +19,11 @@ M.update_exception_breakpoints_filters = function()
         end)
         :totable()
 
-    dap.set_exception_breakpoints(filters)
+    for _, session in pairs(dap.sessions()) do
+        if session.config.type == state.current_adapter then
+            session:set_exception_breakpoints(filters)
+        end
+    end
 end
 
 return M
