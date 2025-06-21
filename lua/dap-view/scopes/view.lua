@@ -10,6 +10,8 @@ local M = {}
 
 local scopes_widget
 
+local last_scopes_bufnr
+
 local new_widget = function()
     return widgets
         .builder(widgets.scopes)
@@ -29,16 +31,19 @@ M.show = function()
         return
     end
 
-    if scopes_widget == nil then
+    if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
         scopes_widget = new_widget()
+        last_scopes_bufnr = state.bufnr
     end
 
     scopes_widget.open()
 end
 
 M.refresh = function()
-    if scopes_widget == nil then
+    if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
         scopes_widget = new_widget()
+
+        last_scopes_bufnr = state.bufnr
 
         scopes_widget.open()
     else
