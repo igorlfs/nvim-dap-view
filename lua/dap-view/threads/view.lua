@@ -11,11 +11,12 @@ local api = vim.api
 M.show = function()
     if state.bufnr and state.winnr then
         local session = dap.session()
-        -- Redundant check to appease the type checker
-        if views.cleanup_view(session == nil, "No active session") or session == nil then
+
+        if views.cleanup_view(session == nil, "No active session") then
             return
         end
 
+        ---@cast session dap.Session
         if views.cleanup_view(state.threads_error ~= nil, state.threads_error) then
             return
         end
