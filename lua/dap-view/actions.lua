@@ -53,20 +53,23 @@ M.open = function()
     local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")
     local term_winnr = separate_term_win and term.open_term_buf_win()
 
-    local is_term_win_valid = term_winnr and api.nvim_win_is_valid(term_winnr)
+    local is_term_win_valid = util.is_win_valid(term_winnr)
 
     local windows_config = setup.config.windows
+    local term_config = windows_config.terminal
 
-    local term_position = require("dap-view.util").inverted_directions[windows_config.terminal.position]
+    local term_position = require("dap-view.util").inverted_directions[term_config.position]
 
     local anchor_win = windows_config.anchor and windows_config.anchor()
-    local is_anchor_win_valid = anchor_win and api.nvim_win_is_valid(anchor_win)
+    local is_anchor_win_valid = util.is_win_valid(anchor_win)
 
     local winnr = api.nvim_open_win(bufnr, false, {
         split = (is_anchor_win_valid or is_term_win_valid) and term_position or windows_config.position,
         win = is_anchor_win_valid and anchor_win or is_term_win_valid and term_winnr or -1,
         height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
             or windows_config.height,
+        width = term_config.width < 1 and math.floor(vim.go.columns * (1 - term_config.width))
+            or vim.go.columns - term_config.width,
     })
 
     assert(winnr ~= 0, "Failed to create nvim-dap-view window")
