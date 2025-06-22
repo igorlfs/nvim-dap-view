@@ -65,6 +65,8 @@ M.setup_term_win_cmd = function()
         winbar.set_winbar_action_keymaps(term_bufnr)
     end
 
+    require("dap-view.term.scroll").scroll(term_bufnr)
+
     dap.defaults.fallback.terminal_win_cmd = function()
         return term_bufnr
     end
