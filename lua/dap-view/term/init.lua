@@ -30,21 +30,20 @@ M.open_term_buf_win = function()
     local windows_config = setup.config.windows
     local term_config = setup.config.windows.terminal
 
-    if term_bufnr and not vim.tbl_contains(term_config.hide, state.current_adapter) then
-        if not state.term_winnr or (state.term_winnr and not api.nvim_win_is_valid(state.term_winnr)) then
-            local is_win_valid = state.winnr ~= nil and api.nvim_win_is_valid(state.winnr)
+    local hide_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
+    if term_bufnr and not hide_adapter and not util.is_win_valid(state.term_winnr) then
+        local is_win_valid = util.is_win_valid(state.winnr)
 
-            state.term_winnr = api.nvim_open_win(term_bufnr, false, {
-                split = is_win_valid and term_config.position or windows_config.position,
-                win = is_win_valid and state.winnr or -1,
-                height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
-                    or windows_config.height,
-                width = term_config.width < 1 and math.floor(vim.go.columns * term_config.width)
-                    or term_config.width,
-            })
+        state.term_winnr = api.nvim_open_win(term_bufnr, false, {
+            split = is_win_valid and term_config.position or windows_config.position,
+            win = is_win_valid and state.winnr or -1,
+            height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
+                or windows_config.height,
+            width = term_config.width < 1 and math.floor(vim.go.columns * term_config.width)
+                or term_config.width,
+        })
 
-            require("dap-view.term.options").set_win_options(state.term_winnr)
-        end
+        require("dap-view.term.options").set_win_options(state.term_winnr)
     end
 
     return state.term_winnr

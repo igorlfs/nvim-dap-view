@@ -88,10 +88,6 @@ local show_variables_or_err = function(line, variables)
 end
 
 M.show = function()
-    if not state.winnr or not api.nvim_win_is_valid(state.winnr) then
-        return
-    end
-
     -- Since variables aren't ordered, lines may change unexpectedly
     -- To handle that, always clear the storage table
     for k, _ in pairs(state.expressions_by_line) do
