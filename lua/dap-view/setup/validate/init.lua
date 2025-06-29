@@ -7,6 +7,7 @@ function M.validate(config)
         winbar = { config.winbar, "table" },
         help = { config.help, "table" },
         switchbuf = { config.switchbuf, "string" },
+        auto_toggle = { config.auto_toggle, "boolean" },
     }, config)
 
     require("dap-view.setup.validate.winbar").validate(config.winbar)

@@ -5,8 +5,7 @@ title: NVIM DAP View
 > Modern, minimalistic debugging UI for neovim
 
 <video controls width="100%">
-    <!-- TODO: update video -->
-    <source src="https://github.com/user-attachments/assets/01c461f7-b77b-4232-bed5-4630f3e7c039" type="video/webm" />
+    <source src="videos/dv-demo.mp4" type="video/mp4" />
     <track kind="captions">
 </video>
 
@@ -89,11 +88,11 @@ The console's default height is resized to match your `nvim-dap-view` configurat
 
 `nvim-dap-view` also provides a "non view" component: the control bar, which exposes some clickable buttons to control your session. It's disabled by default. See details on how to enable and configure it [here](control-bar).
 
-<img src="https://i.ibb.co/Hf6V22Hw/dapview-control-bar.png" alt="control bar">
+<img src="https://i.ibb.co/wNbqBnyN/image.png" alt="control bar">
 
 ## Usage
 
-Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get started. If it's your first time setting up `nvim-dap`, start [here](basics). By default, `nvim-dap-view` **is not launched automatically** (i.e., when initializing a new session), you have to use the commands or the API. To configure this behavior, visit the [automatic toggle](automatic-toggle) guide.
+Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get started. If it's your first time setting up `nvim-dap`, start [here](basics). By default, `nvim-dap-view` **is not launched automatically** (i.e., when initializing a new session), you have to use the commands or the API. To change this behavior, enable the `auto_toggle` option.
 
 ## Customization
 

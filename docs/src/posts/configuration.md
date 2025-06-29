@@ -8,6 +8,7 @@ These are the default options from `nvim-dap-view`. You can use them as referenc
 
 ```lua
 return {
+    auto_toggle = false,
     winbar = {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views

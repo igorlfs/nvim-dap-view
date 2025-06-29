@@ -4,7 +4,7 @@ title: FAQ
 
 ## Why add `nvim-dap-view` as a dependency for `nvim-dap`?
 
-By default, when launching a new session, `nvim-dap`'s terminal window takes half the screen. As a saner default, `nvim-dap-view` hijacks the terminal window (even if not invoked), making the split take only 12 lines (a setting which is of course, configurable). See [this](https://github.com/rcarriga/nvim-dap-ui/issues/407) related issue (from `nvim-dap-ui`). Of course, this workaround only works if `nvim-dap-view` is loaded when a session starts.
+By default, when launching a new session, `nvim-dap`'s terminal window takes half the screen. As a saner default, `nvim-dap-view` hijacks the terminal window (even if not invoked), making the split take only 12 lines (a setting which is of course, configurable). See [this](https://github.com/rcarriga/nvim-dap-ui/issues/407) related issue (from `nvim-dap-ui`). Of course, for this workaround to work, `nvim-dap-view` has to load before a session starts.
 
 ```lua
 -- Your nvim-dap config
@@ -19,6 +19,10 @@ return {
     },
 }
 ```
+
+## How can I see value of an expression under cursor (hover)?
+
+You can use `nvim-dap` built-in hover widget by calling `require("dap.ui.widgets").hover()`. See `:h dap-widgets` for details.
 
 ## `DapViewWatch` isn't adding the whole variable
 
@@ -36,7 +40,7 @@ return {
 
 You can use a commas to define fallback behavior (e.g., `"useopen,newtab"` creates a new tab if the buffer is not found).
 
-## `nvim-dap` is overriding one of the `nvim-dap-view`'s windows on stop
+## `nvim-dap` is overriding one of the `nvim-dap-view`'s windows when the program stops
 
 When `windows.terminal.position` is `right` the views window may be used to display the current frame, because `nvim-dap` has its own internal `switchbuf` setting (see `:h 'switchbuf'`), which defaults to the global `switchbuf` option.  A common solution is to set `nvim-dap`'s `switchbuf` to another value. For instance:
 

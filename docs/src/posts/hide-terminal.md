@@ -18,7 +18,7 @@ return {
 
 ## Anchoring
 
-In some scenarios, it's useful to use another window as if it was `nvim-dap-view`'s terminal. One such scenario is when using the `delve` adapter for Go (more specifically, coupled with an `attach` request): the window with the terminal that launched `dlv` can act as if it was the `nvim-dap-view`'s terminal window. By doing that, `nvim-dap-view`'s main window will "follow" `delve`'s window (i.e., `nvim-dap-view`'s main window will open by the side of `delve`'s window). Watch this [video](https://github.com/user-attachments/assets/5dce4b3d-fc01-4be6-9a72-b0f969e34b14) for context.
+In some scenarios, it's useful to use another window as if it was `nvim-dap-view`'s terminal. One such scenario is when using the `delve` adapter for Go (more specifically, when using an `attach` request): the window with the terminal that launched `dlv` can act as if it was the `nvim-dap-view`'s terminal window. By doing that, `nvim-dap-view`'s main window will "follow" `delve`'s window. Watch this [video](https://github.com/user-attachments/assets/5dce4b3d-fc01-4be6-9a72-b0f969e34b14) to see what it looks like.
 
 To achieve that, in addition to hidding the terminal for `delve` (see above), you have to create your own `anchor` function that returns a window number (or `nil`). If `nil` is returned, there's a fallback to the default behavior. Here's a simple function you can use:
 

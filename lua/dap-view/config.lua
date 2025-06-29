@@ -64,6 +64,7 @@ local M = {}
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
 ---@field switchbuf string Control how to jump when selecting a breakpoint or a call in the stack
+---@field auto_toggle boolean
 
 ---@type dapview.ConfigStrict
 M.config = {
@@ -121,6 +122,7 @@ M.config = {
         border = nil,
     },
     switchbuf = "usetab,newtab",
+    auto_toggle = false,
 }
 
 return M

@@ -37,6 +37,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         if not vim.tbl_contains(term_config.hide, state.current_adapter) then
             term.switch_term_buf()
         end
+
         -- Ugly hack but it sorta works
         vim.defer_fn(function()
             require("dap-view.exceptions").update_exception_breakpoints_filters()
@@ -147,14 +148,28 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
 end
 
 --- Refresh winbar on dap session state change events not having a dedicated event handler
-local events = {
-    "continue",
-    "disconnect",
-    "event_exited",
-    "event_stopped",
-    "restart",
-}
+local winbar_redraw_events = { "continue", "disconnect", "event_exited", "event_stopped", "restart" }
 
-for _, event in ipairs(events) do
+for _, event in ipairs(winbar_redraw_events) do
     dap.listeners.after[event][SUBSCRIPTION_ID] = winbar.redraw_controls
+end
+
+local auto_open_events = { "attach", "launch" }
+
+for _, event in ipairs(auto_open_events) do
+    dap.listeners.before[event][SUBSCRIPTION_ID] = function()
+        if setup.config.auto_toggle then
+            require("dap-view").open()
+        end
+    end
+end
+
+local auto_close_events = { "event_terminated", "event_exited" }
+
+for _, event in ipairs(auto_close_events) do
+    dap.listeners.before[event][SUBSCRIPTION_ID] = function()
+        if setup.config.auto_toggle then
+            require("dap-view").close()
+        end
+    end
 end

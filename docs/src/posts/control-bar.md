@@ -4,7 +4,7 @@ title: Control Bar
 
 The control bar is disabled by default. It can be enabled by setting `winbar.controls.enable`.
 
-<img src="https://i.ibb.co/Hf6V22Hw/dapview-control-bar.png" alt="control bar">
+<img src="https://i.ibb.co/wNbqBnyN/image.png" alt="control bar">
 
 ## Options
 
