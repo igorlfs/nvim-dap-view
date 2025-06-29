@@ -121,7 +121,7 @@ M.config = {
     help = {
         border = nil,
     },
-    switchbuf = "usetab,newtab",
+    switchbuf = "usetab",
     auto_toggle = false,
 }
 
