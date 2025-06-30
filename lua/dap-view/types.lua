@@ -3,15 +3,17 @@
 ---@class dapview.WindowsConfigPartial: dapview.WindowsConfig, {}
 ---@field terminal? dapview.TerminalConfigPartial
 
----@class dapview.WinbarHeadersPartial : dapview.WinbarHeaders, {}
+---@class dapview.SectionConfigPartial : dapview.SectionConfig, {}
 
----@class dapview.ControlsIconsPartial : dapview.ControlsIcons, {}
+---@class dapview.ButtonConfigPartial : dapview.ButtonConfig, {}
+
+---@class dapview.ControlsIconsConfigPartial : dapview.ControlsIconsConfig, {}
 
 ---@class dapview.ControlsConfigPartial : dapview.ControlsConfig, {}
----@field icons? dapview.ControlsIconsPartial Icons for each button
+---@field icons? dapview.ControlsIconsConfigPartial Icons for each button
 
 ---@class dapview.WinbarConfigPartial : dapview.WinbarConfig, {}
----@field headers? dapview.WinbarHeadersPartial Header label for each section.
+---@field base_sections? table<dapview.Section,dapview.SectionConfig>
 ---@field controls? dapview.ControlsConfigPartial
 
 ---@class dapview.HelpConfigPartial : dapview.HelpConfig, {}

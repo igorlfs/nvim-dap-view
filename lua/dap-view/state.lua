@@ -26,7 +26,7 @@
 ---@field term_winnr? integer
 ---@field current_adapter? string
 ---@field subtle_frames boolean
----@field current_section? dapview.SectionType
+---@field current_section? dapview.Section
 ---@field current_session_id? number
 ---@field exceptions_options table<string,dapview.ExceptionsOption[]>
 ---@field stack_trace_errors string[]
@@ -35,7 +35,7 @@
 ---@field expressions_by_line table<integer, {name: string, expression: dapview.ExpressionPack}>
 ---@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
 ---@field watched_expressions table<string, dapview.ExpressionPack>
----@field cur_pos table<dapview.SectionType,integer?>
+---@field cur_pos table<dapview.DefaultSection,integer?>
 local M = {
     term_bufnrs = {},
     exceptions_options = {},
