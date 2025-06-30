@@ -8,29 +8,74 @@ function M.validate(config)
         show = { config.show, "boolean" },
         sections = { config.sections, "table" },
         default_section = { config.default_section, "string" },
-        headers = { config.headers, "table" },
+        base_sections = { config.base_sections, "table" },
         controls = { config.controls, "table" },
+        custom_sections = { config.custom_sections, "table" },
     }, config)
 
-    validate("winbar.headers", {
-        breakpoints = { config.headers.breakpoints, "string" },
-        scopes = { config.headers.scopes, "string" },
-        exceptions = { config.headers.exceptions, "string" },
-        watches = { config.headers.watches, "string" },
-        threads = { config.headers.threads, "string" },
-        repl = { config.headers.repl, "string" },
-        console = { config.headers.console, "string" },
-    }, config.headers)
+    local base_sections = config.base_sections
+    validate("winbar.sections", {
+        breakpoints = { base_sections.breakpoints, "table" },
+        scopes = { base_sections.scopes, "table" },
+        exceptions = { base_sections.exceptions, "table" },
+        watches = { base_sections.watches, "table" },
+        threads = { base_sections.threads, "table" },
+        repl = { base_sections.repl, "table" },
+        console = { base_sections.console, "table" },
+    }, base_sections)
 
+    validate("winbar.sections.breakpoints", {
+        keymap = { base_sections.breakpoints.keymap, "string" },
+        label = { base_sections.breakpoints.label, "string" },
+        action = { base_sections.breakpoints.action, "function" },
+    }, base_sections.breakpoints)
+
+    validate("winbar.sections.scopes", {
+        keymap = { base_sections.scopes.keymap, "string" },
+        label = { base_sections.scopes.label, "string" },
+        action = { base_sections.scopes.action, "function" },
+    }, base_sections.scopes)
+
+    validate("winbar.sections.exceptions", {
+        keymap = { base_sections.exceptions.keymap, "string" },
+        label = { base_sections.exceptions.label, "string" },
+        action = { base_sections.exceptions.action, "function" },
+    }, base_sections.exceptions)
+
+    validate("winbar.sections.watches", {
+        keymap = { base_sections.watches.keymap, "string" },
+        label = { base_sections.watches.label, "string" },
+        action = { base_sections.watches.action, "function" },
+    }, base_sections.watches)
+
+    validate("winbar.sections.threads", {
+        keymap = { base_sections.threads.keymap, "string" },
+        label = { base_sections.threads.label, "string" },
+        action = { base_sections.threads.action, "function" },
+    }, base_sections.threads)
+
+    validate("winbar.sections.repl", {
+        keymap = { base_sections.repl.keymap, "string" },
+        label = { base_sections.repl.label, "string" },
+        action = { base_sections.repl.action, "function" },
+    }, base_sections.repl)
+
+    validate("winbar.sections.console", {
+        keymap = { base_sections.console.keymap, "string" },
+        label = { base_sections.console.label, "string" },
+        action = { base_sections.console.action, "function" },
+    }, base_sections.console)
+
+    local controls = config.controls
     validate("winbar.controls", {
-        enabled = { config.controls.enabled, "boolean" },
-        position = { config.controls.position, "string" },
-        buttons = { config.controls.buttons, "table" },
-        icons = { config.controls.icons, "table" },
-        custom_buttons = { config.controls.custom_buttons, "table" },
-    }, config.controls)
+        enabled = { controls.enabled, "boolean" },
+        position = { controls.position, "string" },
+        buttons = { controls.buttons, "table" },
+        icons = { controls.icons, "table" },
+        custom_buttons = { controls.custom_buttons, "table" },
+    }, controls)
 
-    local icons = config.controls.icons
+    local icons = controls.icons
     validate("winbar.controls.icons", {
         pause = { icons.pause, "string" },
         play = { icons.play, "string" },

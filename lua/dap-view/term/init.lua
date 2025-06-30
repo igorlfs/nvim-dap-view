@@ -3,11 +3,28 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
+local guard = require("dap-view.guard")
 local util = require("dap-view.util")
 
 local M = {}
 
 local api = vim.api
+
+M.show = function()
+    if not util.is_win_valid(state.winnr) or not guard.expect_session() then
+        return
+    end
+
+    assert(state.current_session_id, "has active session")
+
+    api.nvim_win_call(state.winnr, function()
+        api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+    end)
+
+    require("dap-view.term.options").set_win_options(state.winnr)
+
+    winbar.update_section("console")
+end
 
 ---Hide the term win, does not affect the term buffer
 M.hide_term_buf_win = function()
