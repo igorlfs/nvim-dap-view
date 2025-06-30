@@ -122,10 +122,13 @@ local set_winbar_opt = function()
             local info = winbar_info[key]
 
             if info ~= nil then
-                local desc = " " .. setup.config.winbar.headers[key] .. " "
+                local is_current_section = state.current_section == key
+                local wb = setup.config.winbar
+                local header = is_current_section and wb.headers[key] or wb.headers_inactive[key]
+                local desc = " " .. header .. " "
                 desc = statusline.clickable(desc, module, "on_click", idx)
 
-                if state.current_section == key then
+                if is_current_section then
                     desc = statusline.hl(desc, "TabSelected")
                 else
                     desc = statusline.hl(desc, "Tab")

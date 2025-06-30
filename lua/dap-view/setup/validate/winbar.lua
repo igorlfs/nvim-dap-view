@@ -9,6 +9,7 @@ function M.validate(config)
         sections = { config.sections, "table" },
         default_section = { config.default_section, "string" },
         headers = { config.headers, "table" },
+        headers_inactive = { config.headers_inactive, "table" },
         controls = { config.controls, "table" },
     }, config)
 
@@ -21,6 +22,16 @@ function M.validate(config)
         repl = { config.headers.repl, "string" },
         console = { config.headers.console, "string" },
     }, config.headers)
+
+    validate("winbar.headers_inactive", {
+        breakpoints = { config.headers_inactive.breakpoints, "string" },
+        scopes = { config.headers_inactive.scopes, "string" },
+        exceptions = { config.headers_inactive.exceptions, "string" },
+        watches = { config.headers_inactive.watches, "string" },
+        threads = { config.headers_inactive.threads, "string" },
+        repl = { config.headers_inactive.repl, "string" },
+        console = { config.headers_inactive.console, "string" },
+    }, config.headers_inactive)
 
     validate("winbar.controls", {
         enabled = { config.controls.enabled, "boolean" },

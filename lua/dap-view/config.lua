@@ -54,6 +54,7 @@ local M = {}
 ---@field default_section dapview.SectionType
 ---@field show boolean
 ---@field headers dapview.WinbarHeaders Header label for each section.
+---@field headers_inactive dapview.WinbarHeaders
 ---@field controls dapview.ControlsConfig
 
 ---@class dapview.HelpConfig
@@ -73,13 +74,22 @@ M.config = {
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         default_section = "watches",
         headers = {
-            breakpoints = "Breakpoints [B]",
-            scopes = "Scopes [S]",
-            exceptions = "Exceptions [E]",
-            watches = "Watches [W]",
-            threads = "Threads [T]",
-            repl = "REPL [R]",
-            console = "Console [C]",
+            breakpoints = "Breakpoints",
+            scopes = "Scopes",
+            exceptions = "Exceptions",
+            watches = "Watches",
+            threads = "Threads",
+            repl = "REPL",
+            console = "Console",
+        },
+        headers_inactive = {
+            breakpoints = " [B]",
+            scopes = "󰂥 [S]",
+            exceptions = "󰢃 [E]",
+            watches = "󰛐 [W]",
+            threads = "󱉯 [T]",
+            repl = "󰯃 [R]",
+            console = "󰆍 [C]",
         },
         controls = {
             enabled = false,
