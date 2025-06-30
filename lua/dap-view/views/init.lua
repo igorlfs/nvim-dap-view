@@ -24,7 +24,7 @@ M.cleanup_view = function(condition, message)
     return condition
 end
 
----@param view dapview.SectionType
+---@param view dapview.Section
 M.switch_to_view = function(view)
     if not util.is_buf_valid(state.bufnr) or not util.is_win_valid(state.winnr) then
         return

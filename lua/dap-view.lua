@@ -31,12 +31,12 @@ M.add_expr = function(expr)
     actions.add_expr(expr)
 end
 
----@param view dapview.SectionType
+---@param view dapview.Section
 M.jump_to_view = function(view)
     actions.jump_to_view(view)
 end
 
----@param view dapview.SectionType
+---@param view dapview.Section
 M.show_view = function(view)
     actions.show_view(view)
 end
