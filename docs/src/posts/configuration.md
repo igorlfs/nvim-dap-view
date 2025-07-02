@@ -96,7 +96,7 @@ return {
         },
     },
     windows = {
-        height = 12,
+        height = 0.25,
         position = "below",
         terminal = {
             width = 0.5,
