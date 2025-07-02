@@ -4,7 +4,7 @@ local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 local autocmd = require("dap-view.options.autocmd")
-local term = require("dap-view.term.init")
+local term = require("dap-view.term")
 local state = require("dap-view.state")
 local globals = require("dap-view.globals")
 
@@ -107,7 +107,7 @@ M.add_expr = function(expr)
     end
 end
 
----@param view dapview.SectionType
+---@param view dapview.Section
 M.jump_to_view = function(view)
     if not vim.tbl_contains(setup.config.winbar.sections, view) then
         vim.notify("Can't jump to unconfigured view: " .. view)
@@ -121,7 +121,7 @@ M.jump_to_view = function(view)
     end
 end
 
----@param view dapview.SectionType
+---@param view dapview.Section
 M.show_view = function(view)
     if not vim.tbl_contains(setup.config.winbar.sections, view) then
         vim.notify("Can't show unconfigured view: " .. view)

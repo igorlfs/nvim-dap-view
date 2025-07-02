@@ -34,7 +34,7 @@ If you're using a plugin that overrides the `'winbar'` option, make sure to disa
 
 ## Features
 
-The plugin provides 7 "views" (aka "sections") that (mostly) share the same window (so there's clutter)
+The plugin provides 7 "views" (aka "sections") that (mostly) share the same window (so there's clutter). You can also write [your own](custom-views) views.
 
 ### Watches view
 

@@ -4,7 +4,7 @@ title: FAQ
 
 ## Why add `nvim-dap-view` as a dependency for `nvim-dap`?
 
-By default, when launching a new session, `nvim-dap`'s terminal window takes half the screen. As a saner default, `nvim-dap-view` hijacks the terminal window (even if not invoked), making the split take only 12 lines (a setting which is of course, configurable). See [this](https://github.com/rcarriga/nvim-dap-ui/issues/407) related issue (from `nvim-dap-ui`). Of course, for this workaround to work, `nvim-dap-view` has to load before a session starts.
+By default, when launching a new session, `nvim-dap`'s terminal window takes half the screen. As a saner default, `nvim-dap-view` hijacks the terminal window[^1], making it take only a quarter of the available space. See [this](https://github.com/rcarriga/nvim-dap-ui/issues/407) related issue (from `nvim-dap-ui`). Of course, this workaround requires `nvim-dap-view` to be loaded before any session starts (e.g., before `nvim-dap` starts, hence why it's a dependency and not the other way around).
 
 ```lua
 -- Your nvim-dap config
@@ -49,3 +49,5 @@ When `windows.terminal.position` is `right` the views window may be used to disp
 -- If no window contains the buffer, create a new tab
 require("dap").defaults.fallback.switchbuf = "usevisible,usetab,newtab" -- See :h dap-defaults to learn more
 ```
+
+[^1]: Even if not invoked. That is, even if the setup function isn't called.
