@@ -46,6 +46,7 @@ local M = {}
 
 ---@class dapview.SectionConfig
 ---@field label string
+---@field label_min string
 ---@field keymap string
 ---@field action fun(): nil
 
@@ -77,6 +78,7 @@ M.config = {
             breakpoints = {
                 keymap = "B",
                 label = "Breakpoints [B]",
+                label_min = " [B]",
                 action = function()
                     views.switch_to_view("breakpoints")
                 end,
@@ -84,6 +86,7 @@ M.config = {
             scopes = {
                 keymap = "S",
                 label = "Scopes [S]",
+                label_min = "󰂥 [S]",
                 action = function()
                     views.switch_to_view("scopes")
                 end,
@@ -91,6 +94,7 @@ M.config = {
             exceptions = {
                 keymap = "E",
                 label = "Exceptions [E]",
+                label_min = "󰢃 [E]",
                 action = function()
                     views.switch_to_view("exceptions")
                 end,
@@ -98,6 +102,7 @@ M.config = {
             watches = {
                 keymap = "W",
                 label = "Watches [W]",
+                label_min = "󰛐 [W]",
                 action = function()
                     views.switch_to_view("watches")
                 end,
@@ -105,6 +110,7 @@ M.config = {
             threads = {
                 keymap = "T",
                 label = "Threads [T]",
+                label_min = "󱉯 [T]",
                 action = function()
                     views.switch_to_view("threads")
                 end,
@@ -112,6 +118,7 @@ M.config = {
             repl = {
                 keymap = "R",
                 label = "REPL [R]",
+                label_min = "󰯃 [R]",
                 action = function()
                     require("dap-view.repl").show()
                 end,
@@ -119,6 +126,7 @@ M.config = {
             console = {
                 keymap = "C",
                 label = "Console [C]",
+                label_min = "󰆍 [C]",
                 action = function()
                     require("dap-view.term").show()
                 end,

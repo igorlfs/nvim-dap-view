@@ -27,42 +27,49 @@ function M.validate(config)
     validate("winbar.sections.breakpoints", {
         keymap = { base_sections.breakpoints.keymap, "string" },
         label = { base_sections.breakpoints.label, "string" },
+        label_min = { base_sections.breakpoints.label_min, "string" },
         action = { base_sections.breakpoints.action, "function" },
     }, base_sections.breakpoints)
 
     validate("winbar.sections.scopes", {
         keymap = { base_sections.scopes.keymap, "string" },
         label = { base_sections.scopes.label, "string" },
+        label_min = { base_sections.scopes.label_min, "string" },
         action = { base_sections.scopes.action, "function" },
     }, base_sections.scopes)
 
     validate("winbar.sections.exceptions", {
         keymap = { base_sections.exceptions.keymap, "string" },
         label = { base_sections.exceptions.label, "string" },
+        label_min = { base_sections.exceptions.label_min, "string" },
         action = { base_sections.exceptions.action, "function" },
     }, base_sections.exceptions)
 
     validate("winbar.sections.watches", {
         keymap = { base_sections.watches.keymap, "string" },
         label = { base_sections.watches.label, "string" },
+        label_min = { base_sections.watches.label_min, "string" },
         action = { base_sections.watches.action, "function" },
     }, base_sections.watches)
 
     validate("winbar.sections.threads", {
         keymap = { base_sections.threads.keymap, "string" },
         label = { base_sections.threads.label, "string" },
+        label_min = { base_sections.threads.label_min, "string" },
         action = { base_sections.threads.action, "function" },
     }, base_sections.threads)
 
     validate("winbar.sections.repl", {
         keymap = { base_sections.repl.keymap, "string" },
         label = { base_sections.repl.label, "string" },
+        label_min = { base_sections.repl.label_min, "string" },
         action = { base_sections.repl.action, "function" },
     }, base_sections.repl)
 
     validate("winbar.sections.console", {
         keymap = { base_sections.console.keymap, "string" },
         label = { base_sections.console.label, "string" },
+        label_min = { base_sections.console.label_min, "string" },
         action = { base_sections.console.action, "function" },
     }, base_sections.console)
 
