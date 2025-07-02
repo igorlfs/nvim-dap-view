@@ -8,22 +8,66 @@ These are the default options from `nvim-dap-view`. You can use them as referenc
 
 ```lua
 return {
-    auto_toggle = false,
     winbar = {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above (except for "console")
         default_section = "watches",
-        headers = {
-            breakpoints = "Breakpoints [B]",
-            scopes = "Scopes [S]",
-            exceptions = "Exceptions [E]",
-            watches = "Watches [W]",
-            threads = "Threads [T]",
-            repl = "REPL [R]",
-            console = "Console [C]",
+        -- Configure each section individually
+        base_sections = {
+            breakpoints = {
+                keymap = "B",
+                label = "Breakpoints [B]",
+                action = function()
+                    require("dap-view.views").switch_to_view("breakpoints")
+                end,
+            },
+            scopes = {
+                keymap = "S",
+                label = "Scopes [S]",
+                action = function()
+                    require("dap-view.views").switch_to_view("scopes")
+                end,
+            },
+            exceptions = {
+                keymap = "E",
+                label = "Exceptions [E]",
+                action = function()
+                    require("dap-view.views").switch_to_view("exceptions")
+                end,
+            },
+            watches = {
+                keymap = "W",
+                label = "Watches [W]",
+                action = function()
+                    require("dap-view.views").switch_to_view("watches")
+                end,
+            },
+            threads = {
+                keymap = "T",
+                label = "Threads [T]",
+                action = function()
+                    require("dap-view.views").switch_to_view("threads")
+                end,
+            },
+            repl = {
+                keymap = "R",
+                label = "REPL [R]",
+                action = function()
+                    require("dap-view.repl").show()
+                end,
+            },
+            console = {
+                keymap = "C",
+                label = "Console [C]",
+                action = function()
+                    require("dap-view.term").show()
+                end,
+            },
         },
+        -- Add your own sections
+        custom_sections = {},
         controls = {
             enabled = false,
             position = "right",
@@ -55,8 +99,8 @@ return {
         height = 12,
         position = "below",
         terminal = {
-            position = "left",
             width = 0.5,
+            position = "left",
             -- List of debug adapters for which the terminal should be ALWAYS hidden
             hide = {},
             -- Hide the terminal when starting a new session
@@ -67,6 +111,7 @@ return {
         border = nil,
     },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
-    switchbuf = "usetab,newtab",
+    switchbuf = "usetab",
+    auto_toggle = false,
 }
 ```
