@@ -45,7 +45,11 @@ local set_winbar_opt = function()
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
             if section ~= nil then
-                local desc = " " .. section.label .. " "
+                local is_current_section = state.current_section == v
+                local width = vim.api.nvim_win_get_width(state.winnr)
+                local width_limit = winbar.controls.enabled and 105 or 81
+                local label = not is_current_section and width < width_limit and section.label_min or section.label
+                local desc = " " .. label .. " "
                 desc = statusline.clickable(desc, module, "on_click", k)
 
                 if state.current_section == v then
