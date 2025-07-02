@@ -4,7 +4,7 @@ title: Configuration
 
 ## Defaults
 
-These are the default options from `nvim-dap-view`. You can use them as reference. You don't have to copy-paste them!
+These are the default options from `nvim-dap-view`. You can use them as reference. You don't have to copy-paste them.
 
 ```lua
 return {
