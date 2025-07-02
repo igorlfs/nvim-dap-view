@@ -46,6 +46,7 @@ local M = {}
 
 ---@class dapview.SectionConfig
 ---@field label string
+---@field label_inactive string
 ---@field keymap string
 ---@field action fun(): nil
 
@@ -76,49 +77,56 @@ M.config = {
         base_sections = {
             breakpoints = {
                 keymap = "B",
-                label = "Breakpoints [B]",
+                label = "Breakpoints",
+                label_inactive = "Breakpoints [B]",
                 action = function()
                     views.switch_to_view("breakpoints")
                 end,
             },
             scopes = {
                 keymap = "S",
-                label = "Scopes [S]",
+                label = "Scopes",
+                label_inactive = "Scopes [S]",
                 action = function()
                     views.switch_to_view("scopes")
                 end,
             },
             exceptions = {
                 keymap = "E",
-                label = "Exceptions [E]",
+                label = "Exceptions",
+                label_inactive = "Exceptions [E]",
                 action = function()
                     views.switch_to_view("exceptions")
                 end,
             },
             watches = {
                 keymap = "W",
-                label = "Watches [W]",
+                label = "Watches",
+                label_inactive = "Watches [W]",
                 action = function()
                     views.switch_to_view("watches")
                 end,
             },
             threads = {
                 keymap = "T",
-                label = "Threads [T]",
+                label = "Threads",
+                label_inactive = "Threads [T]",
                 action = function()
                     views.switch_to_view("threads")
                 end,
             },
             repl = {
                 keymap = "R",
-                label = "REPL [R]",
+                label = "REPL",
+                label_inactive = "REPL [R]",
                 action = function()
                     require("dap-view.repl").show()
                 end,
             },
             console = {
                 keymap = "C",
-                label = "Console [C]",
+                label = "Console",
+                label_inactive = "Console [C]",
                 action = function()
                     require("dap-view.term").show()
                 end,

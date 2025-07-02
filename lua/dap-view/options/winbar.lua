@@ -45,10 +45,12 @@ local set_winbar_opt = function()
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
             if section ~= nil then
-                local desc = " " .. section.label .. " "
+                local is_current_section = state.current_section == v
+                local header = is_current_section and section.label or section.label_inactive
+                local desc = " " .. header .. " "
                 desc = statusline.clickable(desc, module, "on_click", k)
 
-                if state.current_section == v then
+                if is_current_section then
                     desc = statusline.hl(desc, "TabSelected")
                 else
                     desc = statusline.hl(desc, "Tab")
