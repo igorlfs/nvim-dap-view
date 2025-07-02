@@ -156,9 +156,9 @@ M.config = {
         height = 12,
         position = "below",
         terminal = {
+            width = 0.5,
             position = "left",
             hide = {},
-            width = 0.5,
             start_hidden = false,
         },
     },
