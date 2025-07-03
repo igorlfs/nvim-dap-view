@@ -46,7 +46,7 @@ local set_winbar_opt = function()
 
             if section ~= nil then
                 local is_current_section = state.current_section == v
-                local header = is_current_section and section.label or section.label_inactive
+                local header = not is_current_section and section.label_inactive or section.label
                 local desc = " " .. header .. " "
                 desc = statusline.clickable(desc, module, "on_click", k)
 
