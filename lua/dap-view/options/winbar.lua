@@ -7,6 +7,8 @@ local module = ...
 
 local M = {}
 
+local api = vim.api
+
 ---@param bufnr? integer
 M.set_winbar_action_keymaps = function(bufnr)
     if bufnr or state.bufnr then
@@ -45,7 +47,24 @@ local set_winbar_opt = function()
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
             if section ~= nil then
-                local desc = " " .. section.label .. " "
+                local is_current_section = state.current_section == v
+                local width = api.nvim_win_get_width(state.winnr)
+                local labels_len = vim.iter({
+                    vim.tbl_values(winbar.base_sections),
+                    vim.tbl_values(winbar.custom_sections),
+                })
+                    :flatten()
+                    :map(function(sec)
+                        return vim.fn.strchars(sec.label) + 2 -- length of label including margin
+                    end)
+                    :fold(0, function(len_total, len_label)
+                        return len_total + len_label
+                    end)
+                local controls_len = (#winbar.controls.buttons + #winbar.controls.custom_buttons) * 3
+                local width_limit = winbar.controls.enabled and labels_len + controls_len or labels_len
+                local label = not is_current_section and width < width_limit and section.short_label
+                    or section.label
+                local desc = " " .. label .. " "
                 desc = statusline.clickable(desc, module, "on_click", k)
 
                 if state.current_section == v then
