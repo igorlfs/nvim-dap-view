@@ -55,7 +55,7 @@ local set_winbar_opt = function()
                 })
                     :flatten()
                     :map(function(sec)
-                        return vim.fn.strchars(sec.label) + 2 -- length of label including margin
+                        return vim.fn.strdisplaywidth(sec.label) + 2 -- length of label including margin
                     end)
                     :fold(0, function(len_total, len_label)
                         return len_total + len_label
