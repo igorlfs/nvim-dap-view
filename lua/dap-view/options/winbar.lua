@@ -60,7 +60,23 @@ local set_winbar_opt = function()
                     :fold(0, function(len_total, len_label)
                         return len_total + len_label
                     end)
-                local controls_len = (#winbar.controls.buttons + #winbar.controls.custom_buttons) * 3
+                local controls_len = vim.iter(winbar.controls.buttons)
+                    :map(function(key)
+                        local base_icon = winbar.controls.icons[key]
+                        local custom_button = winbar.controls.custom_buttons[key]
+                        if base_icon then
+                            return vim.fn.strdisplaywidth(base_icon) + 2
+                        elseif custom_button and type(custom_button.render) == "function" then
+                            local ok, icon = pcall(custom_button.render)
+                            if ok and type(icon) == "string" then
+                                return vim.fn.strdisplaywidth(icon) + 2
+                            end
+                        end
+                        return 0
+                    end)
+                    :fold(0, function(len_total, len_label)
+                        return len_total + len_label
+                    end)
                 local width_limit = winbar.controls.enabled and labels_len + controls_len or labels_len
                 local label = not is_current_section and width < width_limit and section.short_label
                     or section.label
