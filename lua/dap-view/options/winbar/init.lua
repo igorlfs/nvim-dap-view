@@ -39,7 +39,7 @@ local labels_len
 local controls_len
 ---@type string[]?
 local user_sections_labels
----@type (fun():nil)[]?
+---@type string[]?
 local user_buttons_renders
 
 local set_winbar_opt = function()
@@ -60,15 +60,16 @@ local set_winbar_opt = function()
         if user_buttons_renders == nil then
             user_buttons_renders = vim.iter(winbar.controls.buttons)
                 :map(function(b) ---@param b string
-                    return (controls_.custom_buttons[b] or controls_.base_buttons[b]).render
+                    -- Extract highlight groups and other parts of string that do not count for the final length
+                    return (controls_.custom_buttons[b] or controls_.base_buttons[b]).render():match("#([^#]+)%%%*")
                 end)
                 :totable()
         end
 
         ---@cast user_sections_labels string[]
-        ---@cast user_buttons_renders (fun():nil)[]
+        ---@cast user_buttons_renders string[]
         labels_len = labels_len or winbar_util.get_labels_length(user_sections_labels)
-        controls_len = controls_len or winbar_util.get_controls_length(user_buttons_renders)
+        controls_len = controls_len or winbar_util.get_labels_length(user_buttons_renders)
 
         local width_limit = winbar.controls.enabled and labels_len + controls_len or labels_len
 
