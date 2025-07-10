@@ -28,9 +28,7 @@ local types_to_hl_group = {
 local function show_variables(children, reference, line, depth)
     for _, var in pairs(children or {}) do
         local variable = var.variable
-        local value = #variable.value > 0 and variable.value
-            or variable.variablesReference > 0 and "..."
-            or ""
+        local value = #variable.value > 0 and variable.value or variable.variablesReference > 0 and "..." or ""
         local content = variable.name .. " = " .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
@@ -41,8 +39,7 @@ local function show_variables(children, reference, line, depth)
 
         hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
 
-        local hl_group = var.updated and "WatchUpdated"
-            or variable.type and types_to_hl_group[variable.type:lower()]
+        local hl_group = var.updated and "WatchUpdated" or variable.type and types_to_hl_group[variable.type:lower()]
         if hl_group then
             local _hl_start = #variable.name + 3 + depth
             hl.hl_range(hl_group, { line, _hl_start }, { line, -1 })

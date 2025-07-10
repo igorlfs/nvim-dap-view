@@ -46,9 +46,7 @@ M.show = function()
                 :filter(
                     ---@param f dap.StackFrame
                     function(f)
-                        return f.source ~= nil
-                            and f.source.path ~= nil
-                            and vim.uv.fs_stat(f.source.path) ~= nil
+                        return f.source ~= nil and f.source.path ~= nil and vim.uv.fs_stat(f.source.path) ~= nil
                     end
                 )
                 :totable()

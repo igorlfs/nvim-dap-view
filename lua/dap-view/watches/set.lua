@@ -9,8 +9,7 @@ M.set_expr = function(expr, value)
         coroutine.wrap(function()
             local frame_id = session.current_frame and session.current_frame.id
 
-            local err, _ =
-                session:request("setExpression", { expression = expr, value = value, frameId = frame_id })
+            local err, _ = session:request("setExpression", { expression = expr, value = value, frameId = frame_id })
 
             if err then
                 vim.notify("Failed to set expression " .. expr .. " to value " .. value)
@@ -29,10 +28,8 @@ M.set_var = function(name, value, variables_reference)
 
     if session.capabilities.supportsSetVariable then
         coroutine.wrap(function()
-            local err, _ = session:request(
-                "setVariable",
-                { name = name, value = value, variablesReference = variables_reference }
-            )
+            local err, _ =
+                session:request("setVariable", { name = name, value = value, variablesReference = variables_reference })
 
             if err then
                 vim.notify("Failed to set variable " .. name .. " to value " .. value)

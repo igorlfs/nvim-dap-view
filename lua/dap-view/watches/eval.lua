@@ -145,15 +145,11 @@ function M.expand_var(variables_reference, original, callback)
                     local new_var = previous or default_var
 
                     if previous and previous.expanded and previous.variable.variablesReference > 0 then
-                        M.expand_var(
-                            previous.variable.variablesReference,
-                            new_var.children,
-                            function(children)
-                                new_var.children = children
+                        M.expand_var(previous.variable.variablesReference, new_var.children, function(children)
+                            new_var.children = children
 
-                                variables[k] = new_var
-                            end
-                        )
+                            variables[k] = new_var
+                        end)
                     else
                         variables[k] = new_var
                     end

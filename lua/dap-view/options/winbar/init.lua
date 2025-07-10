@@ -3,6 +3,7 @@ local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
 local util = require("dap-view.util")
+local winbar_util = require("dap-view.options.winbar.util")
 local module = ...
 
 local M = {}
@@ -32,62 +33,46 @@ M.on_click = function(idx)
     section.action()
 end
 
+---@type integer?
 local labels_len
+---@type integer?
 local controls_len
+---@type string[]?
+local user_sections_labels
+---@type (fun():nil)[]?
+local user_buttons_renders
 
 local set_winbar_opt = function()
-    ---@param len_total integer
-    ---@param len_label integer
-    ---@return integer
-    local function ret_total_length(len_total, len_label)
-        return len_total + len_label
-    end
-
-    ---@param base table
-    ---@param custom table
-    ---@return integer
-    local function ret_labels_length(base, custom)
-        return vim.iter({ base, custom })
-            :flatten()
-            :map(
-                ---@param sec table
-                ---@return integer
-                function(sec)
-                    return vim.fn.strdisplaywidth(sec.label) + 2 -- length of label including margin
-                end
-            )
-            :fold(0, ret_total_length)
-    end
-
-    ---@param buttons string[]
-    ---@param base_icons table
-    ---@param custom_buttons table
-    ---@return integer
-    local function ret_controls_length(buttons, base_icons, custom_buttons)
-        return vim.iter(buttons)
-            :map(
-                ---@param key string
-                ---@return integer
-                function(key)
-                    if base_icons[key] then
-                        return vim.fn.strdisplaywidth(base_icons[key]) + 2
-                    elseif custom_buttons[key] and type(custom_buttons[key].render) == "function" then
-                        local ok, icon = pcall(custom_buttons[key].render)
-                        if ok and type(icon) == "string" then
-                            return vim.fn.strdisplaywidth(icon) + 2
-                        end
-                    end
-                    return 0
-                end
-            )
-            :fold(0, ret_total_length)
-    end
-
     if util.is_win_valid(state.winnr) then
         local winbar_title = {}
 
         local winbar = setup.config.winbar
         local controls_ = winbar.controls
+
+        if user_sections_labels == nil then
+            user_sections_labels = vim.iter(winbar.sections)
+                :map(function(s) ---@param s string
+                    return (winbar.custom_sections[s] or winbar.base_sections[s]).label
+                end)
+                :totable()
+        end
+
+        if user_buttons_renders == nil then
+            user_buttons_renders = vim.iter(winbar.controls.buttons)
+                :map(function(b) ---@param b string
+                    return (controls_.custom_buttons[b] or controls_.base_buttons[b]).render
+                end)
+                :totable()
+        end
+
+        ---@cast user_sections_labels string[]
+        ---@cast user_buttons_renders (fun():nil)[]
+        labels_len = labels_len or winbar_util.get_labels_length(user_sections_labels)
+        controls_len = controls_len or winbar_util.get_controls_length(user_buttons_renders)
+
+        local width_limit = winbar.controls.enabled and labels_len + controls_len or labels_len
+
+        local winnr_width = api.nvim_win_get_width(state.winnr)
 
         if controls_.enabled and controls_.position == "left" then
             table.insert(winbar_title, controls.render() .. "%=")
@@ -97,21 +82,8 @@ local set_winbar_opt = function()
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
             if section ~= nil then
-                labels_len = labels_len
-                    or ret_labels_length(
-                        vim.tbl_values(winbar.base_sections),
-                        vim.tbl_values(winbar.custom_sections)
-                    )
-                controls_len = controls_len
-                    or ret_controls_length(
-                        winbar.controls.buttons,
-                        winbar.controls.icons,
-                        winbar.controls.custom_buttons
-                    )
-                local width_limit = winbar.controls.enabled and labels_len + controls_len or labels_len
-                local width = api.nvim_win_get_width(state.winnr)
                 local is_current_section = state.current_section == v
-                local label = not is_current_section and width < width_limit and section.short_label
+                local label = not is_current_section and winnr_width < width_limit and section.short_label
                     or section.label
                 local desc = " " .. label .. " "
                 desc = statusline.clickable(desc, module, "on_click", k)

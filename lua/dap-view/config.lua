@@ -1,4 +1,7 @@
+local dap = require("dap")
+
 local views = require("dap-view.views")
+local controls_render = require("dap-view.options.controls.render")
 
 local M = {}
 
@@ -22,27 +25,19 @@ local M = {}
 ---@field anchor? fun(): integer? Function that returns a window number for the main nvim-dap-view window to follow
 ---@field terminal dapview.TerminalConfig
 
----@class dapview.ControlsIconsConfig
----@field pause string
----@field play string
----@field step_into string
----@field step_over string
----@field step_out string
----@field step_back string
----@field run_last string
----@field terminate string
----@field disconnect string
-
 ---@class dapview.ButtonConfig
 ---@field render fun(): string Render the button (highlight and icon)
 ---@field action fun(clicks: integer, button: string, modifiers: string): nil Click handler. See `:help statusline`
+
+---@class dapview.DefaultButtonConfig : dapview.ButtonConfig
+---@field icons string[]
 
 ---@class dapview.ControlsConfig
 ---@field enabled boolean
 ---@field position 'left' | 'right'
 ---@field buttons dapview.Button[] Buttons to show in the controls section
+---@field base_buttons table<dapview.DefaultButton, dapview.DefaultButtonConfig>
 ---@field custom_buttons table<dapview.CustomButton, dapview.ButtonConfig> Custom buttons to show in the controls section
----@field icons dapview.ControlsIconsConfig Icons for each button
 
 ---@class dapview.SectionConfig
 ---@field label string
@@ -146,18 +141,67 @@ M.config = {
                 "terminate",
                 "disconnect",
             },
-            custom_buttons = {},
-            icons = {
-                pause = "",
-                play = "",
-                step_into = "",
-                step_over = "",
-                step_out = "",
-                step_back = "",
-                run_last = "",
-                terminate = "",
-                disconnect = "",
+            base_buttons = {
+                play = {
+                    icons = { "", "" },
+                    render = controls_render.play,
+                    action = function()
+                        local session = dap.session()
+                        local action = session and not session.stopped_thread_id and dap.pause or dap.continue
+                        action()
+                    end,
+                },
+                step_into = {
+                    icons = { "" },
+                    render = controls_render.step_into,
+                    action = function()
+                        dap.step_into()
+                    end,
+                },
+                step_over = {
+                    icons = { "" },
+                    render = controls_render.step_over,
+                    action = function()
+                        dap.step_over()
+                    end,
+                },
+                step_out = {
+                    icons = { "" },
+                    render = controls_render.step_out,
+                    action = function()
+                        dap.step_out()
+                    end,
+                },
+                step_back = {
+                    icons = { "" },
+                    render = controls_render.step_back,
+                    action = function()
+                        dap.step_back()
+                    end,
+                },
+                run_last = {
+                    icons = { "" },
+                    render = controls_render.run_last,
+                    action = function()
+                        dap.run_last()
+                    end,
+                },
+                terminate = {
+                    icons = { "" },
+                    render = controls_render.terminate,
+                    action = function()
+                        dap.terminate()
+                    end,
+                },
+                disconnect = {
+                    icons = { "" },
+                    render = controls_render.disconnect,
+                    action = function()
+                        dap.disconnect()
+                    end,
+                },
             },
+            custom_buttons = {},
         },
     },
     windows = {
