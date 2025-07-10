@@ -8,11 +8,4 @@ M.get_labels_length = function(labels)
     end)
 end
 
----@param renders (fun():string)[]
-M.get_controls_length = function(renders)
-    return vim.iter(renders):fold(0, function(acc, render) ---@param render fun():string
-        return acc + vim.fn.strdisplaywidth(render()) + 2
-    end)
-end
-
 return M
