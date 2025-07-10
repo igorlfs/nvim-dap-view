@@ -78,22 +78,77 @@ function M.validate(config)
         enabled = { controls.enabled, "boolean" },
         position = { controls.position, "string" },
         buttons = { controls.buttons, "table" },
-        icons = { controls.icons, "table" },
         custom_buttons = { controls.custom_buttons, "table" },
+        base_buttons = { controls.base_buttons, "table" },
     }, controls)
 
-    local icons = controls.icons
+    local base = controls.base_buttons
     validate("winbar.controls.icons", {
-        pause = { icons.pause, "string" },
-        play = { icons.play, "string" },
-        step_into = { icons.step_into, "string" },
-        step_over = { icons.step_over, "string" },
-        step_out = { icons.step_out, "string" },
-        step_back = { icons.step_back, "string" },
-        disconnect = { icons.disconnect, "string" },
-        terminate = { icons.terminate, "string" },
-        run_last = { icons.run_last, "string" },
-    }, icons)
+        play = { base.play, "table" },
+        step_into = { base.step_into, "table" },
+        step_over = { base.step_over, "table" },
+        step_out = { base.step_out, "table" },
+        step_back = { base.step_back, "table" },
+        disconnect = { base.disconnect, "table" },
+        terminate = { base.terminate, "table" },
+        run_last = { base.run_last, "table" },
+    }, base)
+
+    local play = base.play
+    validate("winbar.controls.base_buttons.play", {
+        icons = { play.icons, "table" },
+        action = { play.action, "function" },
+        render = { play.render, "function" },
+    }, play)
+
+    local step_into = base.step_into
+    validate("winbar.controls.base_buttons.step_into", {
+        icons = { step_into.icons, "table" },
+        action = { step_into.action, "function" },
+        render = { step_into.render, "function" },
+    }, step_into)
+
+    local step_over = base.step_over
+    validate("winbar.controls.base_buttons.step_over", {
+        icons = { step_over.icons, "table" },
+        action = { step_over.action, "function" },
+        render = { step_over.render, "function" },
+    }, step_over)
+
+    local step_out = base.step_out
+    validate("winbar.controls.base_buttons.step_out", {
+        icons = { step_out.icons, "table" },
+        action = { step_out.action, "function" },
+        render = { step_out.render, "function" },
+    }, step_out)
+
+    local step_back = base.step_back
+    validate("winbar.controls.base_buttons.step_back", {
+        icons = { step_back.icons, "table" },
+        action = { step_back.action, "function" },
+        render = { step_back.render, "function" },
+    }, step_back)
+
+    local disconnect = base.disconnect
+    validate("winbar.controls.base_buttons.disconnect", {
+        icons = { disconnect.icons, "table" },
+        action = { disconnect.action, "function" },
+        render = { disconnect.render, "function" },
+    }, disconnect)
+
+    local terminate = base.terminate
+    validate("winbar.controls.base_buttons.terminate", {
+        icons = { terminate.icons, "table" },
+        action = { terminate.action, "function" },
+        render = { terminate.render, "function" },
+    }, terminate)
+
+    local run_last = base.run_last
+    validate("winbar.controls.base_buttons.run_last", {
+        icons = { run_last.icons, "table" },
+        action = { run_last.action, "function" },
+        render = { run_last.render, "function" },
+    }, run_last)
 
     local sections = config.sections
     local default = config.default_section

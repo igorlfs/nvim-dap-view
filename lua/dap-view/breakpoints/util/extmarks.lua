@@ -28,27 +28,21 @@ M.copy_extmarks = function(src_bufnr, src_row, target_row, col_offset)
         end
 
         if opts then
-            api.nvim_buf_set_extmark(
-                state.bufnr,
-                opts.ns_id or globals.NAMESPACE,
-                target_row,
-                col + col_offset,
-                {
-                    id = namespace,
-                    end_col = opts.end_col,
-                    priority = opts.priority,
-                    hl_group = opts.hl_group,
-                    right_gravity = opts.right_gravity,
-                    hl_eol = opts.hl_eol,
-                    virt_text = opts.virt_text,
-                    virt_text_pos = opts.virt_text_pos,
-                    virt_text_win_col = opts.virt_text_win_col,
-                    hl_mode = opts.hl_mode,
-                    line_hl_group = opts.line_hl_group,
-                    spell = opts.spell,
-                    url = opts.url,
-                }
-            )
+            api.nvim_buf_set_extmark(state.bufnr, opts.ns_id or globals.NAMESPACE, target_row, col + col_offset, {
+                id = namespace,
+                end_col = opts.end_col,
+                priority = opts.priority,
+                hl_group = opts.hl_group,
+                right_gravity = opts.right_gravity,
+                hl_eol = opts.hl_eol,
+                virt_text = opts.virt_text,
+                virt_text_pos = opts.virt_text_pos,
+                virt_text_win_col = opts.virt_text_win_col,
+                hl_mode = opts.hl_mode,
+                line_hl_group = opts.line_hl_group,
+                spell = opts.spell,
+                url = opts.url,
+            })
         end
     end
 end

@@ -17,9 +17,7 @@ M.show = function()
         end
 
         local adapter_exception_options = state.exceptions_options[state.current_adapter] or {}
-        if
-            views.cleanup_view(vim.tbl_isempty(adapter_exception_options), "Not supported by debug adapter")
-        then
+        if views.cleanup_view(vim.tbl_isempty(adapter_exception_options), "Not supported by debug adapter") then
             return
         end
 
