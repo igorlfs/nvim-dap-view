@@ -8,6 +8,8 @@ local state = require("dap-view.state")
 
 local M = {}
 
+local api = vim.api
+
 local scopes_widget
 
 local last_scopes_bufnr
@@ -37,6 +39,10 @@ M.show = function()
     end
 
     scopes_widget.open()
+
+    local lnum_count = api.nvim_buf_line_count(state.bufnr)
+
+    views.cleanup_view(lnum_count == 1, "Debug adapter returned no scopes")
 end
 
 M.refresh = function()
