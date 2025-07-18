@@ -11,7 +11,7 @@ end
 
 ---@param hl_active string
 ---@param session dap.Session|nil
-local stoppped_or_default_hl = function(hl_active, session)
+local stopped_or_default_hl = function(hl_active, session)
     return session and session.stopped_thread_id and hl_active or "ControlNC"
 end
 
@@ -25,25 +25,25 @@ end
 M.step_into = function()
     local session = dap.session()
     local icons = get_icons("step_into")
-    return statusline.hl(icons[1], stoppped_or_default_hl("ControlStepInto", session))
+    return statusline.hl(icons[1], stopped_or_default_hl("ControlStepInto", session))
 end
 
 M.step_over = function()
     local session = dap.session()
     local icons = get_icons("step_over")
-    return statusline.hl(icons[1], stoppped_or_default_hl("ControlStepOver", session))
+    return statusline.hl(icons[1], stopped_or_default_hl("ControlStepOver", session))
 end
 
 M.step_out = function()
     local session = dap.session()
     local icons = get_icons("step_out")
-    return statusline.hl(icons[1], stoppped_or_default_hl("ControlStepOut", session))
+    return statusline.hl(icons[1], stopped_or_default_hl("ControlStepOut", session))
 end
 
 M.step_back = function()
     local session = dap.session()
     local icons = get_icons("step_back")
-    return statusline.hl(icons[1], stoppped_or_default_hl("ControlStepBack", session))
+    return statusline.hl(icons[1], stopped_or_default_hl("ControlStepBack", session))
 end
 
 M.run_last = function()
