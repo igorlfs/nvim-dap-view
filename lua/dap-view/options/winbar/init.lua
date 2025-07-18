@@ -3,7 +3,6 @@ local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
 local util = require("dap-view.util")
-local winbar_util = require("dap-view.options.winbar.util")
 local module = ...
 
 local M = {}
@@ -34,13 +33,7 @@ M.on_click = function(idx)
 end
 
 ---@type integer?
-local labels_len
----@type integer?
-local controls_len
----@type string[]?
-local user_sections_labels
----@type string[]?
-local user_buttons_renders
+local width_limit
 
 local set_winbar_opt = function()
     if util.is_win_valid(state.winnr) then
@@ -49,29 +42,29 @@ local set_winbar_opt = function()
         local winbar = setup.config.winbar
         local controls_ = winbar.controls
 
-        if user_sections_labels == nil then
-            user_sections_labels = vim.iter(winbar.sections)
+        if width_limit == nil then
+            local labels_len = vim.iter(winbar.sections)
                 :map(function(s) ---@param s string
                     return (winbar.custom_sections[s] or winbar.base_sections[s]).label
                 end)
-                :totable()
-        end
-
-        if user_buttons_renders == nil then
-            user_buttons_renders = vim.iter(winbar.controls.buttons)
-                :map(function(b) ---@param b string
-                    -- Extract highlight groups and other parts of string that do not count for the final length
-                    return (controls_.custom_buttons[b] or controls_.base_buttons[b]).render():match("#([^#]+)%%%*")
+                :fold(0, function(acc, label) ---@param label string
+                    -- length including margin
+                    return acc + vim.fn.strdisplaywidth(label) + 2
                 end)
-                :totable()
+            local controls_len = controls_.enabled
+                    and vim.iter(controls_.buttons)
+                        :map(function(b) ---@param b string
+                            local str = (controls_.custom_buttons[b] or controls_.base_buttons[b]).render()
+                            -- Extract highlight groups and other parts of string that do not count for the final length
+                            return str:match("#([^#]+)%%%*") or str
+                        end)
+                        :fold(0, function(acc, label) ---@param label string
+                            -- length including margin
+                            return acc + vim.fn.strdisplaywidth(label) + 2
+                        end)
+                or 0
+            width_limit = labels_len + controls_len
         end
-
-        ---@cast user_sections_labels string[]
-        ---@cast user_buttons_renders string[]
-        labels_len = labels_len or winbar_util.get_labels_length(user_sections_labels)
-        controls_len = controls_len or winbar_util.get_labels_length(user_buttons_renders)
-
-        local width_limit = winbar.controls.enabled and labels_len + controls_len or labels_len
 
         local winnr_width = api.nvim_win_get_width(state.winnr)
 
