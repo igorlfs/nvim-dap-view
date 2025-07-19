@@ -1,3 +1,5 @@
+local dap = require("dap")
+
 local statusline = require("dap-view.util.statusline")
 local setup = require("dap-view.setup")
 local module = ...
@@ -19,9 +21,10 @@ end
 M.render = function()
     local config = setup.config.winbar.controls
     local bar = ""
+    local session = dap.session()
     for idx, key in ipairs(config.buttons) do
         local control = config.custom_buttons[key] or config.base_buttons[key]
-        local icon = " " .. control.render() .. " "
+        local icon = " " .. control.render(session) .. " "
         bar = bar .. statusline.clickable(icon, module, "on_click", idx)
     end
     return bar

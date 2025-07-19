@@ -96,56 +96,48 @@ function M.validate(config)
 
     local play = base.play
     validate("winbar.controls.base_buttons.play", {
-        icons = { play.icons, "table" },
         action = { play.action, "function" },
         render = { play.render, "function" },
     }, play)
 
     local step_into = base.step_into
     validate("winbar.controls.base_buttons.step_into", {
-        icons = { step_into.icons, "table" },
         action = { step_into.action, "function" },
         render = { step_into.render, "function" },
     }, step_into)
 
     local step_over = base.step_over
     validate("winbar.controls.base_buttons.step_over", {
-        icons = { step_over.icons, "table" },
         action = { step_over.action, "function" },
         render = { step_over.render, "function" },
     }, step_over)
 
     local step_out = base.step_out
     validate("winbar.controls.base_buttons.step_out", {
-        icons = { step_out.icons, "table" },
         action = { step_out.action, "function" },
         render = { step_out.render, "function" },
     }, step_out)
 
     local step_back = base.step_back
     validate("winbar.controls.base_buttons.step_back", {
-        icons = { step_back.icons, "table" },
         action = { step_back.action, "function" },
         render = { step_back.render, "function" },
     }, step_back)
 
     local disconnect = base.disconnect
     validate("winbar.controls.base_buttons.disconnect", {
-        icons = { disconnect.icons, "table" },
         action = { disconnect.action, "function" },
         render = { disconnect.render, "function" },
     }, disconnect)
 
     local terminate = base.terminate
     validate("winbar.controls.base_buttons.terminate", {
-        icons = { terminate.icons, "table" },
         action = { terminate.action, "function" },
         render = { terminate.render, "function" },
     }, terminate)
 
     local run_last = base.run_last
     validate("winbar.controls.base_buttons.run_last", {
-        icons = { run_last.icons, "table" },
         action = { run_last.action, "function" },
         render = { run_last.render, "function" },
     }, run_last)
