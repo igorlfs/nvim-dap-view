@@ -4,6 +4,17 @@ local winbar = require("dap-view.options.winbar")
 
 local api = vim.api
 
+api.nvim_create_autocmd({ "WinClosed", "WinNew" }, {
+    callback = function()
+        -- We have to add a small delay because WinClosed is triggered before the layout changes
+        vim.defer_fn(function()
+            if state.winnr ~= nil then
+                winbar.refresh_winbar()
+            end
+        end, 10)
+    end,
+})
+
 api.nvim_create_autocmd("TabEnter", {
     callback = function()
         local winnr = nil
@@ -60,7 +71,7 @@ api.nvim_create_autocmd("BufEnter", {
         --
         -- Therefore, it's possible to switch to a (regular) buffer (any ft) while keeping the status of state.winnr
         --
-        -- While it's unlikely users do that very often, such change occurs when the switchbuf is triggerd as "newtab"
+        -- While it's unlikely users do that very often, such change occurs when the switchbuf is trigged as "newtab"
         -- For some reason, the new tab starts with the "dap-view" ft, which causes the winbar to appear on the regular buffer
         if state.winnr == win then
             if not vim.tbl_contains({ "dap-view", "dap-view-term", "dap-repl" }, ft) then

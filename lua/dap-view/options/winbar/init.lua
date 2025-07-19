@@ -35,7 +35,7 @@ end
 ---@type integer?
 local width_limit
 
-local set_winbar_opt = function()
+M.set_winbar_opt = function()
     if util.is_win_valid(state.winnr) then
         local winbar_title = {}
 
@@ -109,17 +109,19 @@ M.show_content = function(section_name)
     section.action()
 end
 
----@param section_name dapview.Section
-M.update_section = function(section_name)
+---@param new_section? dapview.Section
+M.refresh_winbar = function(new_section)
     if setup.config.winbar.show then
-        state.current_section = section_name
-        set_winbar_opt()
+        if new_section then
+            state.current_section = new_section
+        end
+        M.set_winbar_opt()
     end
 end
 
 M.redraw_controls = function()
     if setup.config.winbar.show and setup.config.winbar.controls.enabled then
-        set_winbar_opt()
+        M.set_winbar_opt()
     end
 end
 

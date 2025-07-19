@@ -38,7 +38,7 @@ M.switch_to_view = function(view)
         end)
     end
 
-    require("dap-view.options.winbar").update_section(view)
+    require("dap-view.options.winbar").refresh_winbar(view)
 
     require("dap-view." .. view .. ".view").show()
 
