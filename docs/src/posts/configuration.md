@@ -90,64 +90,92 @@ return {
             },
             base_buttons = {
                 play = {
-                    icons = { "", "" },
-                    -- Check the source to learn how the render functions work
-                    render = require("dap-view.options.controls.render").play,
-                    -- Pauses if running, else continues
+                    render = function(session)
+                        local pausable = session and not session.stopped_thread_id
+                        return statusline.hl(pausable and "" or "", pausable and "ControlPause" or "ControlPlay")
+                    end,
                     action = function()
-                        local session = require("dap").session()
-                        local action = session and not session.stopped_thread_id and require("dap").pause
-                            or require("dap").continue
+                        local session = dap.session()
+                        local action = session and not session.stopped_thread_id and dap.pause or dap.continue
                         action()
                     end,
                 },
                 step_into = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").step_into,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return require("dap-view.util.statusline").hl(
+                            "",
+                            stopped and "ControlStepInto" or "ControlNC"
+                        )
+                    end,
                     action = function()
-                        require("dap").step_into()
+                        dap.step_into()
                     end,
                 },
                 step_over = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").step_over,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return require("dap-view.util.statusline").hl(
+                            "",
+                            stopped and "ControlStepOver" or "ControlNC"
+                        )
+                    end,
                     action = function()
-                        require("dap").step_over()
+                        dap.step_over()
                     end,
                 },
                 step_out = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").step_out,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return require("dap-view.util.statusline").hl(
+                            "",
+                            stopped and "ControlStepOut" or "ControlNC"
+                        )
+                    end,
                     action = function()
-                        require("dap").step_out()
+                        dap.step_out()
                     end,
                 },
                 step_back = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").step_back,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return require("dap-view.util.statusline").hl(
+                            "",
+                            stopped and "ControlStepBack" or "ControlNC"
+                        )
+                    end,
                     action = function()
-                        require("dap").step_back()
+                        dap.step_back()
                     end,
                 },
                 run_last = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").run_last,
+                    render = function()
+                        return require("dap-view.util.statusline").hl("", "ControlRunLast")
+                    end,
                     action = function()
-                        require("dap").run_last()
+                        dap.run_last()
                     end,
                 },
                 terminate = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").terminate,
+                    render = function(session)
+                        return require("dap-view.util.statusline").hl(
+                            "",
+                            session and "ControlTerminate" or "ControlNC"
+                        )
+                    end,
                     action = function()
-                        require("dap").terminate()
+                        dap.terminate()
                     end,
                 },
                 disconnect = {
-                    icons = { "" },
-                    render = require("dap-view.options.controls.render").disconnect,
+                    render = function(session)
+                        return require("dap-view.util.statusline").hl(
+                            "",
+                            session and "ControlDisconnect" or "ControlNC"
+                        )
+                    end,
                     action = function()
-                        require("dap").disconnect()
+                        dap.disconnect()
                     end,
                 },
             },
