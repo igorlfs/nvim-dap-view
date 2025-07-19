@@ -1,7 +1,7 @@
 local dap = require("dap")
 
 local views = require("dap-view.views")
-local controls_render = require("dap-view.options.controls.render")
+local statusline = require("dap-view.util.statusline")
 
 local M = {}
 
@@ -26,17 +26,14 @@ local M = {}
 ---@field terminal dapview.TerminalConfig
 
 ---@class dapview.ButtonConfig
----@field render fun(): string Render the button (highlight and icon)
+---@field render fun(session?: dap.Session): string Render the button (highlight and icon). Receives the current session as a param.
 ---@field action fun(clicks: integer, button: string, modifiers: string): nil Click handler. See `:help statusline`
-
----@class dapview.DefaultButtonConfig : dapview.ButtonConfig
----@field icons string[]
 
 ---@class dapview.ControlsConfig
 ---@field enabled boolean
 ---@field position 'left' | 'right'
 ---@field buttons dapview.Button[] Buttons to show in the controls section
----@field base_buttons table<dapview.DefaultButton, dapview.DefaultButtonConfig>
+---@field base_buttons table<dapview.DefaultButton, dapview.ButtonConfig>
 ---@field custom_buttons table<dapview.CustomButton, dapview.ButtonConfig> Custom buttons to show in the controls section
 
 ---@class dapview.SectionConfig
@@ -143,8 +140,10 @@ M.config = {
             },
             base_buttons = {
                 play = {
-                    icons = { "", "" },
-                    render = controls_render.play,
+                    render = function(session)
+                        local pausable = session and not session.stopped_thread_id
+                        return statusline.hl(pausable and "" or "", pausable and "ControlPause" or "ControlPlay")
+                    end,
                     action = function()
                         local session = dap.session()
                         local action = session and not session.stopped_thread_id and dap.pause or dap.continue
@@ -152,50 +151,61 @@ M.config = {
                     end,
                 },
                 step_into = {
-                    icons = { "" },
-                    render = controls_render.step_into,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return statusline.hl("", stopped and "ControlStepInto" or "ControlNC")
+                    end,
                     action = function()
                         dap.step_into()
                     end,
                 },
                 step_over = {
-                    icons = { "" },
-                    render = controls_render.step_over,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return statusline.hl("", stopped and "ControlStepOver" or "ControlNC")
+                    end,
                     action = function()
                         dap.step_over()
                     end,
                 },
                 step_out = {
-                    icons = { "" },
-                    render = controls_render.step_out,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return statusline.hl("", stopped and "ControlStepOut" or "ControlNC")
+                    end,
                     action = function()
                         dap.step_out()
                     end,
                 },
                 step_back = {
-                    icons = { "" },
-                    render = controls_render.step_back,
+                    render = function(session)
+                        local stopped = session and session.stopped_thread_id
+                        return statusline.hl("", stopped and "ControlStepBack" or "ControlNC")
+                    end,
                     action = function()
                         dap.step_back()
                     end,
                 },
                 run_last = {
-                    icons = { "" },
-                    render = controls_render.run_last,
+                    render = function()
+                        return statusline.hl("", "ControlRunLast")
+                    end,
                     action = function()
                         dap.run_last()
                     end,
                 },
                 terminate = {
-                    icons = { "" },
-                    render = controls_render.terminate,
+                    render = function(session)
+                        return statusline.hl("", session and "ControlTerminate" or "ControlNC")
+                    end,
                     action = function()
                         dap.terminate()
                     end,
                 },
                 disconnect = {
-                    icons = { "" },
-                    render = controls_render.disconnect,
+                    render = function(session)
+                        return statusline.hl("", session and "ControlDisconnect" or "ControlNC")
+                    end,
                     action = function()
                         dap.disconnect()
                     end,
