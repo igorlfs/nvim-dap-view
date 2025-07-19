@@ -18,7 +18,7 @@ M.show = function()
         -- The REPL is a new buffer, so we need to set the winbar keymaps again
         winbar.set_winbar_action_keymaps(repl_buf)
 
-        winbar.update_section("repl")
+        winbar.refresh_winbar("repl")
     end
 end
 

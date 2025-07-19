@@ -23,7 +23,7 @@ M.show = function()
 
     require("dap-view.term.options").set_win_options(state.winnr)
 
-    winbar.update_section("console")
+    winbar.refresh_winbar("console")
 end
 
 ---Hide the term win, does not affect the term buffer
@@ -102,7 +102,7 @@ M.switch_term_buf = function()
             api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
 
             if is_console_active then
-                winbar.update_section("console")
+                winbar.refresh_winbar("console")
             end
         end)
     end
