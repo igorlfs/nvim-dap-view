@@ -41,4 +41,10 @@ M.show_view = function(view)
     actions.show_view(view)
 end
 
+---@param id string
+---@param section dapview.CustomSectionConfig
+M.register_view = function(id, section)
+    actions.register_view(id, section)
+end
+
 return M
