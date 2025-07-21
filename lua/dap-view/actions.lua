@@ -136,4 +136,10 @@ M.show_view = function(view)
     end
 end
 
+---@param id string
+---@param section dapview.CustomSectionConfig
+M.register_view = function(id, section)
+    setup.config.winbar.custom_sections[id] = section
+end
+
 return M

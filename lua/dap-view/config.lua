@@ -44,7 +44,7 @@ local M = {}
 
 ---@class dapview.CustomSectionConfig : dapview.SectionConfig
 ---@field buffer fun(): integer Creates a new buffer for the section
----@field filetype string Filetype used by the sectoin
+---@field filetype string Filetype used by the section
 
 ---@class dapview.WinbarConfig
 ---@field sections dapview.Section[]
