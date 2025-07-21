@@ -1,4 +1,5 @@
 local state = require("dap-view.state")
+local setup = require("dap-view.setup")
 local globals = require("dap-view.globals")
 local winbar = require("dap-view.options.winbar")
 
@@ -58,6 +59,7 @@ api.nvim_create_autocmd("TabEnter", {
 
 api.nvim_create_autocmd("BufEnter", {
     callback = function(args)
+        -- We need to get rid of this mess ASAP 💀
         local buf = args.buf
         if not api.nvim_buf_is_valid(buf) then
             return
@@ -65,22 +67,34 @@ api.nvim_create_autocmd("BufEnter", {
         local win = api.nvim_get_current_win()
         local ft = vim.bo[buf].filetype
 
+        local winbar_ = setup.config.winbar
+        local is_allowed_custom_ft = vim.iter(winbar_.custom_sections):any(
+            ---@param section string
+            function(section)
+                local custom = winbar_.custom_sections[section]
+                return custom and custom.filetype == ft
+            end
+        )
+
         -- Reset the winnr if the buffer changed
         --
         -- We can't use winfixbuf since the window shares many buffers (REPL, Console)
         --
         -- Therefore, it's possible to switch to a (regular) buffer (any ft) while keeping the status of state.winnr
         --
-        -- While it's unlikely users do that very often, such change occurs when the switchbuf is trigged as "newtab"
+        -- While it's unlikely users do that very often, such change occurs when the switchbuf is triggered as "newtab"
         -- For some reason, the new tab starts with the "dap-view" ft, which causes the winbar to appear on the regular buffer
+        --
+        -- By the way, we also have to take custom filetypes into account, as they belong in the winnr
         if state.winnr == win then
-            if not vim.tbl_contains({ "dap-view", "dap-view-term", "dap-repl" }, ft) then
+            if not vim.tbl_contains({ "dap-view", "dap-view-term", "dap-repl" }, ft) and not is_allowed_custom_ft then
                 state.winnr = nil
             end
         elseif not state.winnr then
             if
                 vim.tbl_contains({ "dap-view", "dap-repl" }, ft)
                 or (ft == "dap-view-term" and state.current_section == "console")
+                or is_allowed_custom_ft
             then
                 state.winnr = win
             end

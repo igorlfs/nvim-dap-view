@@ -8,17 +8,59 @@ local module = ...
 local M = {}
 
 local api = vim.api
+local log = vim.log.levels
+
+---@type table<string,integer>
+local custom_bufnrs = {}
+
+---Creates a buffer for a custom action, assigns keymaps, set it as the selected view and refresh the winbar
+---@param view string
+local custom_action_wrapper = function(view)
+    local section = setup.config.winbar.custom_sections[view]
+
+    local bufnr = nil
+    if custom_bufnrs[view] == nil or not util.is_buf_valid(custom_bufnrs[view]) then
+        bufnr = section.buffer()
+        if util.is_buf_valid(bufnr) then
+            custom_bufnrs[view] = bufnr
+        else
+            vim.notify("Couldn't set the buffer for " .. view .. " view", log.ERROR)
+        end
+    end
+
+    if custom_bufnrs[view] then
+        M.set_action_keymaps(custom_bufnrs[view])
+
+        api.nvim_win_call(state.winnr, function()
+            api.nvim_set_current_buf(custom_bufnrs[view])
+        end)
+    end
+
+    M.refresh_winbar(view)
+end
+
+---@param view dapview.Section|string
+---@param action fun(): nil
+local wrapped_action = function(view, action)
+    if not util.is_win_valid(state.winnr) then
+        return
+    end
+    if setup.config.winbar.custom_sections[view] ~= nil then
+        custom_action_wrapper(view)
+    end
+    action()
+end
 
 ---@param bufnr? integer
-M.set_winbar_action_keymaps = function(bufnr)
+M.set_action_keymaps = function(bufnr)
     if bufnr or state.bufnr then
         local winbar = setup.config.winbar
 
-        for _, value in pairs(winbar.sections) do
-            local section = winbar.custom_sections[value] or winbar.base_sections[value]
+        for _, view in pairs(winbar.sections) do
+            local section = winbar.custom_sections[view] or winbar.base_sections[view]
 
             vim.keymap.set("n", section.keymap, function()
-                section.action()
+                wrapped_action(view, section.action)
             end, { buffer = bufnr or state.bufnr })
         end
     end
@@ -27,13 +69,40 @@ end
 ---@param idx integer
 M.on_click = function(idx)
     local winbar = setup.config.winbar
-    local key = winbar.sections[idx]
-    local section = winbar.custom_sections[key] or winbar.base_sections[key]
-    section.action()
+    local view = winbar.sections[idx]
+    local section = winbar.custom_sections[view] or winbar.base_sections[view]
+    wrapped_action(view, section.action)
 end
 
 ---@type integer?
 local width_limit
+
+local get_width_limit = function()
+    local winbar = setup.config.winbar
+    local controls_ = winbar.controls
+
+    local labels_len = vim.iter(winbar.sections)
+        :map(function(s) ---@param s string
+            return (winbar.custom_sections[s] or winbar.base_sections[s]).label
+        end)
+        :fold(0, function(acc, label) ---@param label string
+            -- length including margin
+            return acc + vim.fn.strdisplaywidth(label) + 2
+        end)
+    local controls_len = controls_.enabled
+            and vim.iter(controls_.buttons)
+                :map(function(b) ---@param b string
+                    local str = (controls_.custom_buttons[b] or controls_.base_buttons[b]).render()
+                    -- Extract highlight groups and other parts of string that do not count for the final length
+                    return str:match("#([^#]+)%%%*") or str
+                end)
+                :fold(0, function(acc, label) ---@param label string
+                    -- length including margin
+                    return acc + vim.fn.strdisplaywidth(label) + 2
+                end)
+        or 0
+    return labels_len + controls_len
+end
 
 M.set_winbar_opt = function()
     if util.is_win_valid(state.winnr) then
@@ -42,29 +111,7 @@ M.set_winbar_opt = function()
         local winbar = setup.config.winbar
         local controls_ = winbar.controls
 
-        if width_limit == nil then
-            local labels_len = vim.iter(winbar.sections)
-                :map(function(s) ---@param s string
-                    return (winbar.custom_sections[s] or winbar.base_sections[s]).label
-                end)
-                :fold(0, function(acc, label) ---@param label string
-                    -- length including margin
-                    return acc + vim.fn.strdisplaywidth(label) + 2
-                end)
-            local controls_len = controls_.enabled
-                    and vim.iter(controls_.buttons)
-                        :map(function(b) ---@param b string
-                            local str = (controls_.custom_buttons[b] or controls_.base_buttons[b]).render()
-                            -- Extract highlight groups and other parts of string that do not count for the final length
-                            return str:match("#([^#]+)%%%*") or str
-                        end)
-                        :fold(0, function(acc, label) ---@param label string
-                            -- length including margin
-                            return acc + vim.fn.strdisplaywidth(label) + 2
-                        end)
-                or 0
-            width_limit = labels_len + controls_len
-        end
+        width_limit = width_limit or get_width_limit()
 
         local winnr_width = api.nvim_win_get_width(state.winnr)
 
@@ -102,18 +149,18 @@ M.set_winbar_opt = function()
     end
 end
 
----@param section_name dapview.Section
-M.show_content = function(section_name)
+---@param view dapview.Section
+M.show_content = function(view)
     local winbar = setup.config.winbar
-    local section = winbar.custom_sections[section_name] or winbar.base_sections[section_name]
-    section.action()
+    local section = winbar.custom_sections[view] or winbar.base_sections[view]
+    wrapped_action(view, section.action)
 end
 
----@param new_section? dapview.Section
-M.refresh_winbar = function(new_section)
+---@param new_view? dapview.Section
+M.refresh_winbar = function(new_view)
     if setup.config.winbar.show then
-        if new_section then
-            state.current_section = new_section
+        if new_view then
+            state.current_section = new_view
         end
         M.set_winbar_opt()
     end

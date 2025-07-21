@@ -78,7 +78,7 @@ M.setup_term_win_cmd = function()
     vim.bo[term_bufnr].filetype = "dap-view-term"
 
     if vim.tbl_contains(setup.config.winbar.sections, "console") then
-        winbar.set_winbar_action_keymaps(term_bufnr)
+        winbar.set_action_keymaps(term_bufnr)
     end
 
     require("dap-view.term.scroll").scroll(term_bufnr)
