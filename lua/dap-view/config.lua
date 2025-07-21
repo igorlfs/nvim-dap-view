@@ -38,16 +38,20 @@ local M = {}
 
 ---@class dapview.SectionConfig
 ---@field label string
----@field short_label string
+---@field short_label string Label to be shown if there's not enough space to display the entire winbar
 ---@field keymap string
 ---@field action fun(): nil
+
+---@class dapview.CustomSectionConfig : dapview.SectionConfig
+---@field buffer fun(): integer Creates a new buffer for the section
+---@field filetype string Filetype used by the sectoin
 
 ---@class dapview.WinbarConfig
 ---@field sections dapview.Section[]
 ---@field default_section dapview.Section
 ---@field show boolean
 ---@field base_sections table<dapview.Section,dapview.SectionConfig>
----@field custom_sections table<dapview.CustomSection, dapview.SectionConfig>
+---@field custom_sections table<dapview.CustomSection, dapview.CustomSectionConfig>
 ---@field controls dapview.ControlsConfig
 
 ---@class dapview.HelpConfig

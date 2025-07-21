@@ -81,7 +81,7 @@ M.open = function()
 
     state.current_section = state.current_section or setup.config.winbar.default_section
 
-    winbar.set_winbar_action_keymaps()
+    winbar.set_action_keymaps()
     winbar.show_content(state.current_section)
 
     -- Clean up states dap-view buffer is wiped out
@@ -107,7 +107,7 @@ M.add_expr = function(expr)
     end
 end
 
----@param view dapview.Section
+---@param view dapview.Section|string
 M.jump_to_view = function(view)
     if not vim.tbl_contains(setup.config.winbar.sections, view) then
         vim.notify("Can't jump to unconfigured view: " .. view)
@@ -121,7 +121,7 @@ M.jump_to_view = function(view)
     end
 end
 
----@param view dapview.Section
+---@param view dapview.Section|string
 M.show_view = function(view)
     if not vim.tbl_contains(setup.config.winbar.sections, view) then
         vim.notify("Can't show unconfigured view: " .. view)
