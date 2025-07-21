@@ -2,7 +2,7 @@
 title: Keymaps
 ---
 
-Each view has its own keymaps, listed below. At any time (from within `nvim-dap-view`'s main window) you can use `g?` to show a window that lists all of them.
+Each view has its own keymaps, listed below. At any time (from within `nvim-dap-view`'s main window) you can use `g?` to show a "help" window that lists all of them. The help window itself has only 1 keymap: it can be closed with `q`.
 
 | Key    | Action                                       |
 | ------ | -------------------------------------------- |
@@ -24,5 +24,7 @@ Each view has its own keymaps, listed below. At any time (from within `nvim-dap-
 |    `s` | Set the value of an expression or variable   |
 | **Exceptions**                                        |
 | `<CR>` | Toggle filter                                |
+| **Help**                                              |
+|    `q` | Close                                        |
 
 `nvim-dap-view` doesn't define any keybindings outside its own buffers.

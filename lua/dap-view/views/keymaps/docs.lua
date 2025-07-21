@@ -46,6 +46,8 @@ M.show_help = function()
         "   `s`  Set the value of an expression or variable",
         "## Exceptions",
         "`<CR>`  Toggle filter",
+        "## Help",
+        "   `q`  Close",
     }
 
     local help_buf, help_win = create_win(#content)
