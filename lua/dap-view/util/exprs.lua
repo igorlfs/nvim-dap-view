@@ -20,14 +20,16 @@ M.get_trimmed_selection = function()
     end
 
     -- It's easier to manipulate a single line as if it were a string
-    if #lines == 1 then
+    if type(lines) == "table" and #lines == 1 then
         lines = lines[1]
     end
 
     if type(lines) == "string" then
-        return string.sub(lines, start_col, finish_col)
+        return vim.trim(string.sub(lines, start_col, finish_col))
     end
 
+    -- EmmyLuaLs is not smart enough to infer that #lines > 1
+    -- It alsoe does not care about assertting that #lines > 1
     lines[1] = string.sub(lines[1], start_col)
     lines[#lines] = string.sub(lines[#lines], 1, finish_col)
 
@@ -36,9 +38,11 @@ M.get_trimmed_selection = function()
         :map(function(line)
             return vim.trim(line)
         end)
-        :totable()
+        :fold("", function(acc, line)
+            return acc .. line
+        end)
 
-    return table.concat(trimmed_lines, "")
+    return trimmed_lines
 end
 
 ---@return string

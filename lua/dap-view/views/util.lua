@@ -8,7 +8,7 @@ local api = vim.api
 local log = vim.log.levels
 
 ---@param pattern string
----@return number?, number?
+---@return [integer, integer]|nil
 M.get_bufnr = function(pattern)
     local line = vim.fn.getline(".")
 
@@ -17,13 +17,13 @@ M.get_bufnr = function(pattern)
         return
     end
 
-    local file, line_num = line:match(pattern)
-    if not file or not line_num then
+    local file, lnum = line:match(pattern)
+    if not file or not lnum then
         vim.notify("Invalid format: " .. line, log.ERROR)
         return
     end
 
-    line_num = tonumber(line_num)
+    local line_num = tonumber(lnum)
     if not line_num then
         vim.notify("Invalid line number: " .. line_num, log.ERROR)
         return
@@ -37,13 +37,13 @@ M.get_bufnr = function(pattern)
 
     local bufnr = vim.uri_to_bufnr(vim.uri_from_fname(abs_path))
 
-    return bufnr, line_num
+    return { bufnr, math.floor(line_num) }
 end
 
 ---@param pattern string
----@param column? number
+---@param column? integer
 M.jump_to_location = function(pattern, column)
-    local bufnr, line_num = M.get_bufnr(pattern)
+    local bufnr, line_num = unpack(M.get_bufnr(pattern))
 
     if bufnr == nil then
         return
@@ -59,7 +59,7 @@ M.jump_to_location = function(pattern, column)
             split = util.inverted_directions[config.windows.position],
             win = -1,
             height = config.windows.height < 1 and math.floor(vim.go.lines * (1 - config.windows.height))
-                or vim.go.lines - config.windows.height,
+                or math.floor(vim.go.lines - config.windows.height),
         })
     end
 

@@ -69,7 +69,7 @@ M.open = function()
         height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
             or windows_config.height,
         width = term_config.width < 1 and math.floor(vim.go.columns * (1 - term_config.width))
-            or vim.go.columns - term_config.width,
+            or math.floor(vim.go.columns - term_config.width),
     })
 
     assert(winnr ~= 0, "Failed to create nvim-dap-view window")
