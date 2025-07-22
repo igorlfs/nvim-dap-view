@@ -1,10 +1,12 @@
+local util = require("dap-view.views.util")
+
 local M = {}
 
 -- From https://github.com/ibhagwan/fzf-lua/blob/9a1f4b6f9e37d6fad6730301af58c29b00d363f8/lua/fzf-lua/actions.lua#L1079-L1101
 M.remove_breakpoint = function()
     local dap_breakpoints = require("dap.breakpoints")
 
-    local bufnr, line_num = require("dap-view.views.util").get_bufnr("^(.-)|(%d+)|")
+    local bufnr, line_num = unpack(util.get_bufnr("^(.-)|(%d+)|"))
 
     dap_breakpoints.remove(bufnr, line_num)
 
