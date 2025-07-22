@@ -4,8 +4,8 @@ local M = {}
 
 local api = vim.api
 
----@param height number
----@return number,number
+---@param height integer
+---@return integer,integer
 local create_win = function(height)
     local help_buf = api.nvim_create_buf(true, false)
 

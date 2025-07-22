@@ -22,8 +22,8 @@ local types_to_hl_group = {
 
 ---@param children dapview.VariablePack[]
 ---@param reference number
----@param line number
----@param depth number
+---@param line integer
+---@param depth integer
 ---@return integer
 local function show_variables(children, reference, line, depth)
     for _, var in pairs(children or {}) do
@@ -78,7 +78,7 @@ local show_variables_or_err = function(line, variables)
         hl.hl_range("WatchError", { line, 0 }, { line, #var_content })
 
         line = line + 1
-    elseif children ~= nil and variables.expanded then
+    elseif children ~= nil and variables.expanded and variables.response then
         line = show_variables(children, variables.response.variablesReference, line, 1)
     end
     return line

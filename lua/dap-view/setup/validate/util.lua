@@ -3,7 +3,7 @@ local M = {}
 -- Code taken from @MariaSolOs in a indent-blankline.nvim PR:
 -- https://github.com/lukas-reineke/indent-blankline.nvim/pull/934/files#diff-09ebcaa8c75cd1e92d25640e377ab261cfecaf8351c9689173fd36c2d0c23d94R16
 
---- @param spec table<string, {[1]:any, [2]:function|string, [3]:string|true|nil}>
+--- @param spec table<string, {[1]:any, [2]:vim.validate.Validator, [3]:string|true|nil}>
 local _validate = function(spec)
     for key, key_spec in pairs(spec) do
         local message = type(key_spec[3]) == "string" and key_spec[3] or nil --[[@as string?]]

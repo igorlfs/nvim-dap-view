@@ -38,6 +38,8 @@ M.show = function()
         last_scopes_bufnr = state.bufnr
     end
 
+    assert(scopes_widget, "Scopes widget exists")
+
     scopes_widget.open()
 
     local lnum_count = api.nvim_buf_line_count(state.bufnr)
@@ -52,8 +54,10 @@ M.refresh = function()
         last_scopes_bufnr = state.bufnr
 
         scopes_widget.open()
-    else
+    elseif scopes_widget then
         scopes_widget.refresh()
+    else
+        vim.notify("Error refreshing scopes widget, open a bug report")
     end
 end
 

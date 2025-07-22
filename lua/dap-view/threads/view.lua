@@ -69,7 +69,7 @@ M.show = function()
                             or state.subtle_frames
                             or f.presentationHint ~= "subtle"
                         if show_frame then
-                            local path = f.source.path
+                            local path = f.source and f.source.path
                             local relative_path = path and vim.fn.fnamemodify(path, ":.") or ""
                             local label = "\t" .. relative_path .. "|" .. f.line .. "|" .. f.name
 
@@ -91,10 +91,19 @@ M.show = function()
                 api.nvim_buf_set_lines(state.bufnr, line, line + #content, false, content)
 
                 for i, f in pairs(frames) do
-                    local pipe1 = string.find(f.label, "|")
-                    local pipe2 = #f.label - string.find(string.reverse(f.label), "|")
+                    local first_pipe_pos = string.find(f.label, "|")
+                    assert(first_pipe_pos, "missing pipe, buffer may have been edited")
 
-                    hl.highlight_file_name_and_line_number(line + i - 1, pipe1 - 1, pipe2 - pipe1)
+                    local last_pipe = string.find(string.reverse(f.label), "|")
+                    assert(last_pipe, "missing pipe, buffer may have been edited")
+
+                    local last_pipe_pos = #f.label - last_pipe
+
+                    hl.highlight_file_name_and_line_number(
+                        line + i - 1,
+                        first_pipe_pos - 1,
+                        last_pipe_pos - first_pipe_pos
+                    )
 
                     if session.current_frame and f.id == session.current_frame.id then
                         hl.hl_range("FrameCurrent", { line + i - 1, 0 }, { line + i - 1, -1 })

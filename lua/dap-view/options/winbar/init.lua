@@ -14,7 +14,7 @@ local log = vim.log.levels
 local custom_bufnrs = {}
 
 ---Creates a buffer for a custom action, assigns keymaps, set it as the selected view and refresh the winbar
----@param view string
+---@param view dapview.CustomSection
 local custom_action_wrapper = function(view)
     local section = setup.config.winbar.custom_sections[view]
 
@@ -39,13 +39,14 @@ local custom_action_wrapper = function(view)
     M.refresh_winbar(view)
 end
 
----@param view dapview.Section|string
+---@param view dapview.Section
 ---@param action fun(): nil
 local wrapped_action = function(view, action)
     if not util.is_win_valid(state.winnr) then
         return
     end
     if setup.config.winbar.custom_sections[view] ~= nil then
+        ---@cast view dapview.CustomSection
         custom_action_wrapper(view)
     end
     action()

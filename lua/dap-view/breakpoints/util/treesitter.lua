@@ -32,10 +32,11 @@ M.copy_highlights = function(src_bufnr, src_row, target_row, col_offset)
         return
     end
 
-    local root = parser:parse(true)[1]:root()
+    local trees = parser:parse(true)
+    local root = trees and trees[1]:root()
     local query = vim.treesitter.query.get(lang, "highlights")
 
-    if not query then
+    if not query or not root then
         return
     end
 
