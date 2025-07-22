@@ -34,7 +34,7 @@ If you're using a plugin that overrides the `'winbar'` option, make sure to disa
 
 ## Features
 
-The plugin provides 7 "views" (aka "sections") that (mostly) share the same window (so there's clutter). You can also write [your own](custom-views) views.
+The plugin provides 7 "views" (aka "sections") that (mostly) share the same window (so there's clutter).
 
 ### Watches view
 
@@ -83,6 +83,16 @@ Use REPL provided by nvim-dap
 You can also interact with the console (terminal), which is also provided by `nvim-dap`. By default, the console has its own window, but it can be configured to be shown with the other views. See details on the [config](configuration) page.
 
 The console's default height is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](hide-terminal) it (if it's not being used at all, which is the case for some debug adapters) or hide it only during session initialization (which is nice when debugging tests, for instance).
+
+### Custom views
+
+You can also write [your own](custom-views) views.
+
+#### Disassembly view
+
+A custom view is used to power the [disassembly view](disassembly), an integration with [nvim-dap-disasm](https://github.com/Jorenar/nvim-dap-disasm).
+
+<img src="https://github.com/user-attachments/assets/97ed9e8c-20a0-4355-bb00-5199c7b3cd59" alt="disassembly view" />
 
 ### Control bar
 
