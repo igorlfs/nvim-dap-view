@@ -3,6 +3,7 @@ local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
 local util = require("dap-view.util")
+local base_buttons = require("dap-view.options.controls.base")
 local module = ...
 
 local M = {}
@@ -98,7 +99,7 @@ local get_width_limit = function()
     local controls_len = controls_.enabled
             and vim.iter(controls_.buttons)
                 :map(function(b) ---@param b string
-                    local str = (controls_.custom_buttons[b] or controls_.base_buttons[b]).render()
+                    local str = (controls_.custom_buttons[b] or base_buttons[b]).render()
                     -- Extract highlight groups and other parts of string that do not count for the final length
                     return str:match("#([^#]+)%%%*") or str
                 end)

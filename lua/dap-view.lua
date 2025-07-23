@@ -36,7 +36,7 @@ M.jump_to_view = function(view)
     actions.jump_to_view(view)
 end
 
----@param view dapview.Section|string
+---@param view dapview.Section
 M.show_view = function(view)
     actions.show_view(view)
 end

@@ -88,96 +88,16 @@ return {
                 "terminate",
                 "disconnect",
             },
-            base_buttons = {
-                play = {
-                    render = function(session)
-                        local pausable = session and not session.stopped_thread_id
-                        return statusline.hl(pausable and "" or "", pausable and "ControlPause" or "ControlPlay")
-                    end,
-                    action = function()
-                        local session = dap.session()
-                        local action = session and not session.stopped_thread_id and dap.pause or dap.continue
-                        action()
-                    end,
-                },
-                step_into = {
-                    render = function(session)
-                        local stopped = session and session.stopped_thread_id
-                        return require("dap-view.util.statusline").hl(
-                            "",
-                            stopped and "ControlStepInto" or "ControlNC"
-                        )
-                    end,
-                    action = function()
-                        dap.step_into()
-                    end,
-                },
-                step_over = {
-                    render = function(session)
-                        local stopped = session and session.stopped_thread_id
-                        return require("dap-view.util.statusline").hl(
-                            "",
-                            stopped and "ControlStepOver" or "ControlNC"
-                        )
-                    end,
-                    action = function()
-                        dap.step_over()
-                    end,
-                },
-                step_out = {
-                    render = function(session)
-                        local stopped = session and session.stopped_thread_id
-                        return require("dap-view.util.statusline").hl(
-                            "",
-                            stopped and "ControlStepOut" or "ControlNC"
-                        )
-                    end,
-                    action = function()
-                        dap.step_out()
-                    end,
-                },
-                step_back = {
-                    render = function(session)
-                        local stopped = session and session.stopped_thread_id
-                        return require("dap-view.util.statusline").hl(
-                            "",
-                            stopped and "ControlStepBack" or "ControlNC"
-                        )
-                    end,
-                    action = function()
-                        dap.step_back()
-                    end,
-                },
-                run_last = {
-                    render = function()
-                        return require("dap-view.util.statusline").hl("", "ControlRunLast")
-                    end,
-                    action = function()
-                        dap.run_last()
-                    end,
-                },
-                terminate = {
-                    render = function(session)
-                        return require("dap-view.util.statusline").hl(
-                            "",
-                            session and "ControlTerminate" or "ControlNC"
-                        )
-                    end,
-                    action = function()
-                        dap.terminate()
-                    end,
-                },
-                disconnect = {
-                    render = function(session)
-                        return require("dap-view.util.statusline").hl(
-                            "",
-                            session and "ControlDisconnect" or "ControlNC"
-                        )
-                    end,
-                    action = function()
-                        dap.disconnect()
-                    end,
-                },
+            icons = {
+                play = "",
+                pause = "",
+                step_into = "",
+                step_over = "",
+                step_out = "",
+                step_back = "",
+                run_last = "",
+                terminate = "",
+                disconnect = "",
             },
             custom_buttons = {},
         },

@@ -2,7 +2,7 @@ local M = {}
 
 local api = vim.api
 
----@type table<string, fun(bufnr: integer, winnr: integer, line: integer): integer?>
+---@type table<string, fun(bufnr: integer, winnr: integer): integer?>
 M.switchbuf_winfn = {}
 
 M.switchbuf_winfn.newtab = function(bufnr)
