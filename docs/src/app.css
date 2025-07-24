@@ -29,6 +29,7 @@
 :root {
     --primary-color: #89b4fa;
     --accent-color: #b4befe;
+    --tertiary-color: #c6a0f6;
     --dark-background-color: #11111b;
     --text-color: #cdd6f4;
 }
@@ -102,6 +103,10 @@ a:link {
     color: var(--accent-color);
     text-decoration: none;
     font-weight: 900;
+}
+
+a:visited {
+    color: var(--tertiary-color);
 }
 
 a:hover {
