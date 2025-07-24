@@ -18,7 +18,7 @@ M.set_keymaps = function()
             require("dap-view.threads.actions").jump_or_noop(cursor_line)
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
-        elseif state.current_section == "scopes" then
+        elseif state.current_section == "scopes" or state.current_section == "sessions" then
             require("dap.ui").trigger_actions({ mode = "first" })
         elseif state.current_section == "watches" then
             watches_actions.expand_or_collapse(cursor_line)
