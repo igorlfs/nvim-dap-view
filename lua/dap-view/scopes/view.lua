@@ -1,10 +1,10 @@
 local dap = require("dap")
-
-local widgets = require("dap.ui.widgets")
+local dap_widgets = require("dap.ui.widgets")
 
 local views = require("dap-view.views")
 local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
+local widgets = require("dap-view.util.widgets")
 
 local M = {}
 
@@ -14,16 +14,8 @@ local scopes_widget
 
 local last_scopes_bufnr
 
-local new_widget = function()
-    return widgets
-        .builder(widgets.scopes)
-        .new_buf(function()
-            return state.bufnr
-        end)
-        .new_win(function()
-            return state.winnr
-        end)
-        .build()
+local build_widget = function()
+    return widgets.new_widget(state.bufnr, state.winnr, dap_widgets.scopes)
 end
 
 M.show = function()
@@ -34,7 +26,7 @@ M.show = function()
     end
 
     if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
-        scopes_widget = new_widget()
+        scopes_widget = build_widget()
         last_scopes_bufnr = state.bufnr
     end
 
@@ -49,7 +41,7 @@ end
 
 M.refresh = function()
     if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
-        scopes_widget = new_widget()
+        scopes_widget = build_widget()
 
         last_scopes_bufnr = state.bufnr
 

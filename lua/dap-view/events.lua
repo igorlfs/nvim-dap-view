@@ -3,6 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
+local sessions = require("dap-view.sessions.view")
 local util = require("dap-view.util")
 local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
@@ -38,6 +39,11 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             term.switch_term_buf()
         end
 
+        -- TODO: upstream this?
+        if util.is_buf_valid(state.bufnr) and state.current_section == "sessions" then
+            sessions.refresh()
+        end
+
         -- Ugly hack but it sorta works
         vim.defer_fn(function()
             require("dap-view.exceptions").update_exception_breakpoints_filters()
@@ -56,8 +62,13 @@ end
 
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     -- nvim-dap needs a buffer to operate
-    if state.current_section == "scopes" and util.is_buf_valid(state.bufnr) then
-        scopes.refresh()
+    if util.is_buf_valid(state.bufnr) then
+        if state.current_section == "scopes" then
+            scopes.refresh()
+        end
+        if state.current_section == "sessions" then
+            sessions.refresh()
+        end
     end
     if state.current_section == "threads" then
         require("dap-view.views").switch_to_view("threads")
@@ -131,6 +142,14 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     end
     if state.current_section == "exceptions" then
         exceptions.show()
+    end
+    if util.is_buf_valid(state.bufnr) then
+        if state.current_section == "scopes" then
+            scopes.refresh()
+        end
+        if state.current_section == "sessions" then
+            sessions.refresh()
+        end
     end
 
     -- TODO find a cleaner way to dispose of these buffers
