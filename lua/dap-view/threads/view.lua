@@ -33,6 +33,16 @@ M.show = function()
 
         local line = 0
 
+        if state.threads_filter ~= "" then
+            local filter = "󰈲 "
+            filter = filter .. state.threads_filter
+            if state.threads_filter_invert then
+                filter = filter .. "  "
+            end
+            api.nvim_buf_set_lines(state.bufnr, line, line, true, { filter })
+            line = line + 1
+        end
+
         for k, thread in pairs(session.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
             local thread_name = is_stopped_thread and thread.name .. " " or thread.name
@@ -79,7 +89,19 @@ M.show = function()
                     end
                 )
 
-                local content = vim.iter(frames)
+                local filtered_frames = vim.iter(frames)
+                    :filter(
+                        ---@param f {label: string, id: number}
+                        function(f)
+                            local match = f.label:match(state.threads_filter)
+                            local invert = state.threads_filter_invert
+                            local inv_match = invert and not match and not state.threads_filter ~= ""
+                            return inv_match or (not invert and match)
+                        end
+                    )
+                    :totable()
+
+                local content = vim.iter(filtered_frames)
                     :map(
                         ---@param f {label: string, id: number}
                         function(f)
@@ -90,7 +112,7 @@ M.show = function()
 
                 api.nvim_buf_set_lines(state.bufnr, line, line + #content, false, content)
 
-                for i, f in pairs(frames) do
+                for i, f in pairs(filtered_frames) do
                     local first_pipe_pos = string.find(f.label, "|")
                     assert(first_pipe_pos, "missing pipe, buffer may have been edited")
 

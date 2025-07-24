@@ -24,6 +24,8 @@
 ---@field winnr? integer
 ---@field term_bufnrs {[number]: number}
 ---@field term_winnr? integer
+---@field threads_filter string
+---@field threads_filter_invert boolean
 ---@field current_adapter? string
 ---@field subtle_frames boolean
 ---@field current_section? dapview.Section
@@ -38,6 +40,8 @@
 ---@field cur_pos table<dapview.DefaultSection,integer?>
 local M = {
     term_bufnrs = {},
+    threads_filter = "",
+    threads_filter_invert = false,
     exceptions_options = {},
     stack_trace_errors = {},
     frames_by_line = {},

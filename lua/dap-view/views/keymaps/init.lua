@@ -70,6 +70,26 @@ M.set_keymaps = function()
         end
     end)
 
+    keymap("f", function()
+        if state.current_section == "threads" then
+            vim.ui.input({ prompt = "Filter: ", default = state.threads_filter }, function(input)
+                if input then
+                    state.threads_filter = input
+
+                    threads_view.show()
+                end
+            end)
+        end
+    end)
+
+    keymap("i", function()
+        if state.current_section == "threads" then
+            state.threads_filter_invert = not state.threads_filter_invert
+
+            threads_view.show()
+        end
+    end)
+
     keymap("c", function()
         if state.current_section == "watches" then
             local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
