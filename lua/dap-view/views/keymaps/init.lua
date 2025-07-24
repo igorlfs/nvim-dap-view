@@ -9,6 +9,15 @@ local M = {}
 local api = vim.api
 
 M.set_keymaps = function()
+    keymap("<C-w><CR>", function()
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
+        if state.current_section == "breakpoints" then
+            require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|", nil, true)
+        elseif state.current_section == "threads" then
+            require("dap-view.threads.actions").jump_or_noop(cursor_line, true)
+        end
+    end)
+
     keymap("<CR>", function()
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 

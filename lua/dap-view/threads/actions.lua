@@ -8,11 +8,12 @@ local M = {}
 local log = vim.log.levels
 
 ---@param lnum number
-M.jump_or_noop = function(lnum)
+---@param force_split? boolean
+M.jump_or_noop = function(lnum, force_split)
     local line = vim.fn.getline(".")
 
     if string.find(line, "\t") then
-        util.jump_to_location("^\t(.-)|(%d+)|")
+        util.jump_to_location("^\t(.-)|(%d+)|", nil, force_split)
 
         local frame = state.frames_by_line[lnum]
         if frame then

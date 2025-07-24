@@ -1,4 +1,5 @@
 local setup = require("dap-view.setup")
+local state = require("dap-view.state")
 local window = require("dap-view.views.windows")
 local util = require("dap-view.util")
 
@@ -42,7 +43,8 @@ end
 
 ---@param pattern string
 ---@param column? integer
-M.jump_to_location = function(pattern, column)
+---@param force_split? boolean
+M.jump_to_location = function(pattern, column, force_split)
     local bufnr, line_num = unpack(M.get_bufnr(pattern))
 
     if bufnr == nil then
@@ -52,7 +54,15 @@ M.jump_to_location = function(pattern, column)
     local config = setup.config
 
     local switchbufopt = config.switchbuf
-    local win = window.get_win_respecting_switchbuf(switchbufopt, bufnr)
+    local win = nil
+    if force_split then
+        win = api.nvim_open_win(0, true, {
+            split = "below",
+            win = state.term_winnr,
+        })
+    else
+        win = window.get_win_respecting_switchbuf(switchbufopt, bufnr)
+    end
 
     if not win then
         win = api.nvim_open_win(0, true, {
