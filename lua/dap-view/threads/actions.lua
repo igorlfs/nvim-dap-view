@@ -20,7 +20,7 @@ M.jump_or_noop = function(lnum)
             session:_frame_set(frame)
         end
     else
-        vim.notify("Can't jump to a thread", log.INFO)
+        vim.notify("Can only jump to a thread", log.INFO)
     end
 end
 

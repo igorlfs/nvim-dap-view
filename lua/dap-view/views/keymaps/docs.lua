@@ -34,6 +34,8 @@ M.show_help = function()
         "## Threads",
         "`<CR>`  Jump to a frame",
         "   `t`  Toggle subtle frames",
+        "   `f`  Filter threads",
+        "   `i`  Invert filter",
         "## Breakpoints",
         "`<CR>`  Jump to a breakpoint",
         "   `d`  Delete a breakpoint",
