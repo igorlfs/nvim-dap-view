@@ -21,6 +21,7 @@ function M.validate(config)
         watches = { base_sections.watches, "table" },
         threads = { base_sections.threads, "table" },
         repl = { base_sections.repl, "table" },
+        sessions = { base_sections.sessions, "table" },
         console = { base_sections.console, "table" },
     }, base_sections)
 
@@ -65,6 +66,13 @@ function M.validate(config)
         short_label = { base_sections.repl.short_label, "string" },
         action = { base_sections.repl.action, "function" },
     }, base_sections.repl)
+
+    validate("winbar.sections.sessions", {
+        keymap = { base_sections.sessions.keymap, "string" },
+        label = { base_sections.sessions.label, "string" },
+        short_label = { base_sections.sessions.short_label, "string" },
+        action = { base_sections.sessions.action, "function" },
+    }, base_sections.sessions)
 
     validate("winbar.sections.console", {
         keymap = { base_sections.console.keymap, "string" },

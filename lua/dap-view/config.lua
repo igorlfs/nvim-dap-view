@@ -3,7 +3,7 @@ local views = require("dap-view.views")
 local M = {}
 
 ---@alias dapview.CustomSection string
----@alias dapview.DefaultSection "breakpoints" | "exceptions" | "watches" | "repl" | "threads" | "console" | "scopes"
+---@alias dapview.DefaultSection "breakpoints" | "exceptions" | "watches" | "repl" | "threads" | "console" | "scopes" | "sessions"
 ---@alias dapview.Section dapview.DefaultSection | dapview.CustomSection
 
 ---@alias dapview.CustomButton string
@@ -127,6 +127,14 @@ M.config = {
                 short_label = "󰯃 [R]",
                 action = function()
                     require("dap-view.repl").show()
+                end,
+            },
+            sessions = {
+                keymap = "K", -- I ran out of mnemonics
+                label = "Sessions [K]",
+                short_label = " [K]",
+                action = function()
+                    views.switch_to_view("sessions")
                 end,
             },
             console = {

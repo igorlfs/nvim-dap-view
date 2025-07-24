@@ -46,6 +46,8 @@ M.show_help = function()
         "   `s`  Set the value of an expression or variable",
         "## Exceptions",
         "`<CR>`  Toggle filter",
+        "## Sessions",
+        "`<CR>`  Switch to another session",
         "## Help",
         "   `q`  Close",
     }
