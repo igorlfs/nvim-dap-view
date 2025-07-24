@@ -18,7 +18,7 @@ M.set_keymaps = function()
             require("dap-view.threads.actions").jump_or_noop(cursor_line)
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
-        elseif state.current_section == "scopes" then
+        elseif state.current_section == "scopes" or state.current_section == "sessions" then
             require("dap.ui").trigger_actions({ mode = "first" })
         elseif state.current_section == "watches" then
             watches_actions.expand_or_collapse(cursor_line)
@@ -67,6 +67,26 @@ M.set_keymaps = function()
                     end
                 end)
             end
+        end
+    end)
+
+    keymap("f", function()
+        if state.current_section == "threads" then
+            vim.ui.input({ prompt = "Filter: ", default = state.threads_filter }, function(input)
+                if input then
+                    state.threads_filter = input
+
+                    threads_view.show()
+                end
+            end)
+        end
+    end)
+
+    keymap("i", function()
+        if state.current_section == "threads" then
+            state.threads_filter_invert = not state.threads_filter_invert
+
+            threads_view.show()
         end
     end)
 
