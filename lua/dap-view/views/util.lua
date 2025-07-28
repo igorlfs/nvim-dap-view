@@ -43,7 +43,7 @@ end
 ---@param pattern string
 ---@param column? integer
 M.jump_to_location = function(pattern, column)
-    local bufnr, line_num = unpack(M.get_bufnr(pattern))
+    local bufnr, line_num = unpack(M.get_bufnr(pattern) or {})
 
     if bufnr == nil then
         return

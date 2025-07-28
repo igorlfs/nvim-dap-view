@@ -6,7 +6,10 @@ local M = {}
 M.remove_breakpoint = function()
     local dap_breakpoints = require("dap.breakpoints")
 
-    local bufnr, line_num = unpack(util.get_bufnr("^(.-)|(%d+)|"))
+    local bufnr, line_num = unpack(util.get_bufnr("^(.-)|(%d+)|") or {})
+    if bufnr == nil then
+      return
+    end
 
     dap_breakpoints.remove(bufnr, line_num)
 
