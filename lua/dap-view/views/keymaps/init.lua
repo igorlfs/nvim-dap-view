@@ -1,5 +1,4 @@
 local state = require("dap-view.state")
-local threads_view = require("dap-view.threads.view")
 local watches_actions = require("dap-view.watches.actions")
 local help = require("dap-view.views.keymaps.help")
 local keymap = require("dap-view.views.keymaps.util").keymap
@@ -31,7 +30,7 @@ M.set_keymaps = function()
         elseif state.current_section == "threads" then
             state.threads_filter_invert = not state.threads_filter_invert
 
-            threads_view.show()
+            require("dap-view.views").switch_to_view("threads")
         end
     end)
 
@@ -80,7 +79,7 @@ M.set_keymaps = function()
                 if input then
                     state.threads_filter = input
 
-                    threads_view.show()
+                    require("dap-view.views").switch_to_view("threads")
                 end
             end)
         end
@@ -124,7 +123,7 @@ M.set_keymaps = function()
         if state.current_section == "threads" then
             state.subtle_frames = not state.subtle_frames
 
-            threads_view.show()
+            require("dap-view.views").switch_to_view("threads")
         end
     end)
 
