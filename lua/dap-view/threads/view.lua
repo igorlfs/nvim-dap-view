@@ -95,8 +95,7 @@ M.show = function()
                         function(f)
                             local match = f.label:match(state.threads_filter)
                             local invert = state.threads_filter_invert
-                            local inv_match = invert and not match and not state.threads_filter ~= ""
-                            return inv_match or (not invert and match)
+                            return state.threads_filter == "" or (invert and not match) or (not invert and match)
                         end
                     )
                     :totable()
