@@ -8,7 +8,7 @@ M.remove_breakpoint = function()
 
     local bufnr, line_num = unpack(util.get_bufnr("^(.-)|(%d+)|") or {})
     if bufnr == nil then
-      return
+        return
     end
 
     dap_breakpoints.remove(bufnr, line_num)
