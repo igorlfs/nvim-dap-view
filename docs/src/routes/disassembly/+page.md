@@ -15,12 +15,16 @@ return {
 }
 ```
 
-**Note**: if using `lazy.nvim`, make sure to add `nvim-dap-view` as a dependency for `nvim-dap-disasm`and **NOT** the other way around. That's necessary for `nvim-dap-disasm` to recognize `nvim-dap-view`'s installation. A sample spec would be:
+:::note
+If using `lazy.nvim`, make sure to add `nvim-dap-view` as a dependency for `nvim-dap-disasm`and **NOT** the other way around. That's necessary for `nvim-dap-disasm` to recognize `nvim-dap-view`'s installation. A sample spec would be:
+:::
 
 ```lua
 return {
-    "Jorenar/nvim-dap-disasm",
-    dependencies = "igorlfs/nvim-dap-view",
-    config = true,
+    {
+        "Jorenar/nvim-dap-disasm",
+        dependencies = "igorlfs/nvim-dap-view",
+        config = true,
+    },
 }
 ```

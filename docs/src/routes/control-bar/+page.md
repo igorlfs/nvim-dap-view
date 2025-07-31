@@ -2,46 +2,13 @@
 title: Control Bar
 ---
 
-The control bar is disabled by default. It can be enabled by setting `winbar.controls.enable`.
+The control bar can be used to control a session with clickable "buttons".
+
+It is disabled by default. It can be enabled by setting `winbar.controls.enable`.
 
 <img src="https://i.ibb.co/wNbqBnyN/image.png" alt="control bar">
 
-## Options
-
-Default options are listed below. Remeber, you don't have to copy-paste them!
-
-```lua
-return {
-    winbar = {
-        controls = {
-            enabled = false,
-            position = "right",
-            buttons = {
-                "play",
-                "step_into",
-                "step_over",
-                "step_out",
-                "step_back",
-                "run_last",
-                "terminate",
-                "disconnect",
-            },
-            custom_buttons = {},
-            icons = {
-                pause = "",
-                play = "",
-                step_into = "",
-                step_over = "",
-                step_out = "",
-                step_back = "",
-                run_last = "",
-                terminate = "",
-                disconnect = "",
-            },
-        },
-    },
-}
-```
+You can find the default configuration on the [config](configuration) page.
 
 ## Custom Buttons
 
@@ -49,8 +16,8 @@ return {
 
 A custom button has 2 methods:
 
-1. `render` returning a string used to display the button (typically an emoji or a NerdFont glyph wrapped in an highlight group)
-2. `action` a function that will be executed when the button is clicked. The function receives 3 arguments:
+1. `render`, returning a string used to display the button (typically an emoji or a NerdFont glyph wrapped in an highlight group)
+2. `action`, a function that will be executed when the button is clicked. The function receives 3 arguments:
     - `clicks` the number of clicks
     - `button` the button clicked (`l`, `r`, `m`)
     - `modifiers` a string with the modifiers pressed (`c` for `control`, `s` for `shift`, `a` for `alt` and `m` for `meta`)
