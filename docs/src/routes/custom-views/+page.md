@@ -3,7 +3,9 @@ title: Custom Views
 category: Recipes
 ---
 
-You can write your own views. If you are a plugin author, this allows you to embed your plugin into `nvim-dap-view`. If you are a regular user and you are missing a view, consider making a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml) instead of writing your own implementation.
+You can write your own views. If you are a plugin author, this allows you to embed your plugin into `nvim-dap-view`.
+
+If you are a regular user and you are missing a view, consider making a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml) instead of writing your own implementation.
 
 Writing a custom view is similar to writing a [custom button](control-bar#custom-buttons). A view consists of an ID and 6 fields:
 
@@ -53,3 +55,7 @@ return {
     },
 }
 ```
+
+### Register View
+
+If you are a plugin author, you can use the `register_view` function to ensure your view is loaded. With this simple trick, users don't have to create the view "manually". An example can be found [here](https://github.com/Jorenar/nvim-dap-disasm/blob/543939e2572c4291f1978737d687977385a9e669/lua/dap-disasm.lua#L347-L355).

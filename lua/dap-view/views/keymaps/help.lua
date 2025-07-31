@@ -34,6 +34,8 @@ M.show_help = function()
         "## Threads",
         "`<CR>`  Jump to a frame",
         "   `t`  Toggle subtle frames",
+        "   `f`  Filter frames (via Lua patterns)",
+        "   `o`  Omit results matching filter (invert search)",
         "## Breakpoints",
         "`<CR>`  Jump to a breakpoint",
         "   `d`  Delete a breakpoint",
@@ -46,6 +48,8 @@ M.show_help = function()
         "   `s`  Set the value of an expression or variable",
         "## Exceptions",
         "`<CR>`  Toggle filter",
+        "## Sessions",
+        "`<CR>`  Switch to another session",
         "## Help",
         "   `q`  Close",
     }

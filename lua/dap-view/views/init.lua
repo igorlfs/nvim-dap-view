@@ -34,7 +34,12 @@ M.switch_to_view = function(view)
 
     -- Switch to main buf if using another one
     -- Users may have custom views so we need to check against base sections instead
-    if not vim.tbl_contains({ "scopes", "watches", "threads", "exceptions", "breakpoints" }, state.current_section) then
+    if
+        not vim.tbl_contains(
+            { "scopes", "watches", "threads", "exceptions", "breakpoints", "sessions" },
+            state.current_section
+        )
+    then
         api.nvim_win_call(state.winnr, function()
             api.nvim_set_current_buf(state.bufnr)
         end)

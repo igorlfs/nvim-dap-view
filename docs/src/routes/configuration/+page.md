@@ -4,7 +4,7 @@ title: Configuration
 
 ## Defaults
 
-These are the default options from `nvim-dap-view`. You can use them as reference. You don't have to copy-paste them.
+These are the default options for `nvim-dap-view`. You can use them as reference. You don't have to copy and paste them.
 
 ```lua
 return {
@@ -62,6 +62,14 @@ return {
                 short_label = "󰯃 [R]",
                 action = function()
                     require("dap-view.repl").show()
+                end,
+            },
+            sessions = {
+                keymap = "K", -- I ran out of mnemonics
+                label = "Sessions [K]",
+                short_label = " [K]",
+                action = function()
+                    views.switch_to_view("sessions")
                 end,
             },
             console = {
