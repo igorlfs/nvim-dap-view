@@ -11,7 +11,9 @@ title: NVIM DAP View
 
 ## Installation
 
+:::info
 **Requires neovim 0.11+**
+:::
 
 A nerd font is a soft requirement.
 
@@ -30,11 +32,13 @@ return {
 
 For a better experience, consider adding `nvim-dap-view` **as a dependency** for `nvim-dap`. [Why?](faq#why-add-nvim-dap-view-as-a-dependency-for-nvim-dap)
 
+:::caution
 If you're using a plugin that overrides the `'winbar'` option, make sure to disable it for `nvim-dap-view` [buffers](filetypes-autocmds).
+:::
 
 ## Features
 
-The plugin provides 7 "views" (aka "sections") that (mostly) share the same window (so there's clutter).
+The plugin provides 8 "views" (aka "sections") that (mostly) share the same window (so there's clutter).
 
 ### Watches view
 
@@ -52,6 +56,7 @@ Shows a list of user defined expressions, that are evaluated by debug adapter
 List all threads and their stack traces
 
 - Jump to a function in the call stack, switching the context to that call
+- Filter frames using Lua patterns
 - Toggle `subtle` (hidden) frames
 
 ### Breakpoints view
@@ -59,6 +64,9 @@ List all threads and their stack traces
 <img src="https://github.com/user-attachments/assets/b8c23809-2f23-4a39-8aef-b880f2b3eef9" alt="breakpoints view" />
 
 List all breakpoints with full syntax highlighting, including treesitter and semantic tokens
+
+- Jump to the location of a brakpoint
+- Delete a breakpoint
 
 ### Exceptions view
 
@@ -71,6 +79,12 @@ Control when the debugger should stop, outside of regular breakpoints (e.g., whe
 <img src="https://github.com/user-attachments/assets/2628ae8e-9224-4b2f-94c7-88e7800c232b" alt="scopes view" />
 
 Use the scopes widget provided by nvim-dap
+
+### Sessions view
+
+<img src="https://i.ibb.co/1fSHs7J1/image.png" alt="sessions view">
+
+Use the sessions widget provided by nvim-dap. Disabled by default.
 
 ### REPL view
 

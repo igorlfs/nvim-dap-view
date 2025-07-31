@@ -34,7 +34,7 @@ M.show_help = function()
         "## Threads",
         "`<CR>`  Jump to a frame",
         "   `t`  Toggle subtle frames",
-        "   `f`  Filter threads (via Lua patterns)",
+        "   `f`  Filter frames (via Lua patterns)",
         "   `o`  Omit results matching filter (invert search)",
         "## Breakpoints",
         "`<CR>`  Jump to a breakpoint",
