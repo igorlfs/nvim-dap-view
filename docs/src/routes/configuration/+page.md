@@ -4,7 +4,11 @@ title: Configuration
 
 ## Defaults
 
-These are the default options for `nvim-dap-view`. You can use them as reference. You don't have to copy and paste them.
+These are the default options for `nvim-dap-view`.
+
+:::note
+You don't have to copy and paste these options. Use them as a reference.
+:::
 
 ```lua
 return {
@@ -130,3 +134,5 @@ return {
     auto_toggle = false,
 }
 ```
+
+If you would like to configure something that is not possible currently, open a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml).
