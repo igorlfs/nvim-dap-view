@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      shiki:
-        specifier: ^3.8.1
-        version: 3.8.1
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.1
@@ -33,6 +29,9 @@ importers:
       '@unocss/preset-web-fonts':
         specifier: ^66.3.3
         version: 66.3.3
+      shiki:
+        specifier: ^3.8.1
+        version: 3.8.1
       svelte:
         specifier: ^5.0.0
         version: 5.36.13
