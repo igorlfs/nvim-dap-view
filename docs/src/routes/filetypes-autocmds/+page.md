@@ -12,7 +12,7 @@ title: Filetypes & Autocmds
 
 They can be used to override buffer and window options set by `nvim-dap-view`.
 
-If the REPL is enabled, the `dap-repl` filetype (which is set by `nvim-dap`) is also used. **If you wish to consistently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocmd.
+If the REPL is enabled, the `dap-repl` filetype (which is set by `nvim-dap`) is also used. **If you wish to consistently override the plugin's behavior, be sure to also include the `dap-repl` filetype** in your autocmd. If you also have a [custom view](custom-views) enabled, ensure its filetype is also added to your autocmd.
 
 ## Example Autocmd
 
@@ -21,8 +21,8 @@ Map `q` to quit in `nvim-dap-view` filetypes:
 ```lua
 vim.api.nvim_create_autocmd({ "FileType" }, {
     pattern = { "dap-view", "dap-view-term", "dap-repl" }, -- dap-repl is set by `nvim-dap`
-    callback = function(evt)
-        vim.keymap.set("n", "q", "<C-w>q", { buffer = evt.buf })
+    callback = function(args)
+        vim.keymap.set("n", "q", "<C-w>q", { buffer = args.buf })
     end,
 })
 ```

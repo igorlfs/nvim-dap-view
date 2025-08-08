@@ -1,0 +1,73 @@
+.DocSearch-Button {
+    background-color: var(--tertiary-background-color);
+}
+
+.DocSearch-Button:hover {
+    background-color: var(--secondary-background-color);
+    color: var(--text-color);
+}
+
+.DocSearch:hover {
+    box-shadow: inset 0px 0px 0px 1px var(--accent-color);
+}
+
+.DocSearch-SearchBar,
+.DocSearch-Form,
+.DocSearch-Dropdown,
+.DocSearch-Footer {
+    background-color: var(--primary-background-color);
+}
+
+.DocSearch-Logo,
+.DocSearch-Prefill {
+    color: var(--primary-color) !important;
+}
+
+.DocSearch-Search-Icon {
+    color: var(--text-color) !important;
+}
+
+.DocSearch-Button-Key,
+.DocSearch-Commands-Key {
+    color: var(--secondary-background-color);
+    background-color: var(--color-subtext);
+    box-shadow: none;
+}
+
+.DocSearch-Input {
+    color: var(--text-color);
+}
+
+.DocSearch-Hit-source {
+    background-color: var(--primary-background-color);
+    color: var(--primary-color);
+}
+
+.DocSearch-Hit-Container {
+    background-color: var(--primary-background-color);
+}
+
+.DocSearch-Hit-Container {
+    background-color: var(--secondary-background-color);
+}
+
+.DocSearch-Hit-title {
+    color: var(--text-color);
+}
+
+.DocSearch-Hits mark {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.DocSearch-Hit {
+    background-color: var(--text-color);
+}
+
+.DocSearch-Hit[aria-selected=true] a {
+    background-color: var(--primary-color);
+}
+
+.DocSearch-Form {
+    box-shadow: inset 0px 0px 0px 1px var(--accent-color);
+}

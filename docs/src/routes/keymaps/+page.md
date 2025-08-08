@@ -12,7 +12,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | `<CR>` | Jump to a frame                              |
 |    `t` | Toggle subtle frames                         |
 |    `f` | Filter frames (via Lua patterns)             |
-|    `o` | Omit results matching filter (invert search) |
+|    `o` | Omit results matching filter (invert filter) |
 | **Scopes**                                            |
 | `<CR>` | Expand or collapse a variable                |
 |    `o` | Trigger actions                              |
@@ -33,4 +33,4 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | **Help**                                              |
 |    `q` | Close                                        |
 
-`nvim-dap-view` doesn't define any keybindings outside its own buffers: you have to create your own bindings to call `open`, `close` or `toggle`.
+`nvim-dap-view` doesn't define any keybindings outside its own buffers: you have to create your own bindings to call `open`, `close` or `toggle` and other API [functions](api) (or [commands](commands)).

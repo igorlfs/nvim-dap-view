@@ -58,4 +58,4 @@ return {
 
 ### Register View
 
-If you are a plugin author, you can use the `register_view` function to ensure your view is loaded. With this simple trick, users don't have to create the view "manually". An example can be found [here](https://github.com/Jorenar/nvim-dap-disasm/blob/543939e2572c4291f1978737d687977385a9e669/lua/dap-disasm.lua#L347-L355).
+If you are a plugin author, you can use the `register_view` function to ensure your view is loaded. By doing that, users don't have to create the custom view "manually". An example can be found [here](https://github.com/Jorenar/nvim-dap-disasm/blob/543939e2572c4291f1978737d687977385a9e669/lua/dap-disasm.lua#L347-L355).
