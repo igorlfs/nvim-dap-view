@@ -35,7 +35,7 @@ M.show_help = function()
         "`<CR>`  Jump to a frame",
         "   `t`  Toggle subtle frames",
         "   `f`  Filter frames (via Lua patterns)",
-        "   `o`  Omit results matching filter (invert search)",
+        "   `o`  Omit results matching filter (invert filter)",
         "## Breakpoints",
         "`<CR>`  Jump to a breakpoint",
         "   `d`  Delete a breakpoint",

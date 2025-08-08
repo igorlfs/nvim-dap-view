@@ -1,25 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import url("https://www.nerdfonts.com/assets/css/webfont.css");
-
-@import 'tailwindcss';
-
-@plugin '@tailwindcss/typography';
-
-@theme {
-    --color-*: initial;
-    --color-primary: #b4befe;
-    --color-accent: #89b4fa;
-    --color-text: #cdd6f4;
-    --color-subtext: #a6adc8;
-    --color-lavender: #b4befe;
-    --color-base: #1e1e2e;
-    --color-mantle: #181825;
-    --color-crust: #11111b;
-    --color-blue: #89b4fa;
-
-    --font-sans: Roboto;
-    --font-mono: ZedMonoNF;
-}
+@import "styles/docsearch.css";
+@import "styles/sveltepress.css";
 
 @font-face {
     font-family: ZedMonoNF;
@@ -30,79 +12,55 @@
     --primary-color: #89b4fa;
     --accent-color: #b4befe;
     --tertiary-color: #c6a0f6;
-    --dark-background-color: #11111b;
     --text-color: #cdd6f4;
+    --color-subtext: #a6adc8;
+    --primary-background-color: #1e1e2e;
+    --secondary-background-color: #181825;
+    --tertiary-background-color: #11111b;
 }
 
-.prose {
-    color: var(--text-color);
+body {
+    font-family: "Roboto", sans;
+    color: var(--text-color) !important;
 }
 
-.prose :is(h1, h2, h3, h4, h5, h6) {
-    margin-top: 12px;
-    margin-bottom: 8px;
+p {
     text-align: justify;
     text-justify: inter-word;
 }
 
-.prose p:not(:is(h2, h3, h4, h5, h6) + p) {
-    margin-top: 20px;
+pre {
+    font-family: 'ZedMonoNF' !important;
+    background: var(--tertiary-background-color) !important;
 }
 
-.prose p {
-    text-align: justify;
-    text-justify: inter-word;
-}
-
-.prose code {
-    background: var(--dark-background-color);
+code {
+    font-family: 'ZedMonoNF' !important;
     color: var(--text-color);
+    background-color: var(--tertiary-background-color) !important;
     border-radius: 6px;
 }
 
-.prose pre {
-    background: var(--dark-background-color) !important;
+pre code {
+    background-color: var(--primary-background-color) !important;
+    font-weight: 900 !important;
 }
 
-.prose strong {
+blockquote {
+    background-color: var(--primary-background-color) !important;
+    color: var(--accent-color) !important;
+    font-weight: 600 !important;
+}
+
+strong {
     color: var(--text-color) !important;
     font-weight: 900;
 }
 
-.prose hr {
-    border-color: var(--dark-background-color);
-}
-
-.prose blockquote {
-    color: var(--accent-color)
-}
-
-.prose li {
-    margin: 0px;
-}
-
-.prose th {
-    color: var(--accent-color);
-}
-
-.prose tr {
-    border: none
-}
-
-.prose ::marker {
-    color: var(--accent-color)
-}
-
-.prose thead {
-    border: none none solid none;
-    border-color: var(--dark-background-color)
-}
-
 a:link {
     font-weight: bold;
-    color: var(--accent-color);
+    color: var(--accent-color) !important;
     text-decoration: none;
-    font-weight: 900;
 }
 
 a:visited {
@@ -111,11 +69,10 @@ a:visited {
 
 a:hover {
     font-weight: bold;
-    color: var(--primary-color);
-    font-weight: 900;
+    color: var(--primary-color) !important;
 }
 
-.prose img {
+img {
     display: block;
     margin-left: auto;
     margin-right: auto;

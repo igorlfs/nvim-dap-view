@@ -1,0 +1,33 @@
+.theme-default--page-layout,
+.header {
+    color: var(--text-color) !important;
+    background-color: var(--primary-background-color);
+}
+
+.active-bar {
+    border-left-color: var(--accent-color) !important;
+}
+
+.svp-code-block-wrapper {
+    background-color: var(--primary-background-color) !important;
+}
+
+.theme-default-sidebar {
+    background-color: var(--tertiary-background-color) !important;
+}
+
+.progress {
+    background-color: var(--primary-color) !important;
+}
+
+
+.title,
+.group-title {
+    color: var(--text-color) !important;
+    font-weight: bold;
+}
+
+
+.switcher:hover {
+    border-color: var(--accent-color) !important;
+}
