@@ -10,7 +10,7 @@ local get_icon = function(icon)
     return setup.config.winbar.controls.icons[icon]
 end
 
----@type table<dapview.DefaultButton, dapview.ButtonConfig>
+---@type dapview.ButtonConfig
 M.play = {
     render = function(session)
         local pausable = session and not session.stopped_thread_id
@@ -26,6 +26,7 @@ M.play = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.step_into = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
@@ -36,6 +37,7 @@ M.step_into = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.step_over = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
@@ -46,6 +48,7 @@ M.step_over = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.step_out = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
@@ -56,6 +59,7 @@ M.step_out = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.step_back = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
@@ -66,6 +70,7 @@ M.step_back = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.run_last = {
     render = function()
         return statusline.hl(get_icon("run_last"), "ControlRunLast")
@@ -75,6 +80,7 @@ M.run_last = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.terminate = {
     render = function(session)
         return statusline.hl(get_icon("terminate"), session and "ControlTerminate" or "ControlNC")
@@ -84,6 +90,7 @@ M.terminate = {
     end,
 }
 
+---@type dapview.ButtonConfig
 M.disconnect = {
     render = function(session)
         return statusline.hl(get_icon("disconnect"), session and "ControlDisconnect" or "ControlNC")
