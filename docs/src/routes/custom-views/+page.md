@@ -43,7 +43,7 @@ return {
 }
 ```
 
-To add a custom view to your config, you just add it to the sections table as if it was a regular view:
+To add a custom view to your config, just add it to the sections table as if it was a regular view:
 
 ```lua
 return {

@@ -8,7 +8,7 @@ It is disabled by default. It can be enabled by setting `winbar.controls.enable`
 
 <img src="https://i.ibb.co/wNbqBnyN/image.png" alt="control bar">
 
-You can find the default configuration on the [here](configuration).
+Visit the [config](configuration) page to learn about its options.
 
 ## Custom Buttons
 

@@ -41,6 +41,14 @@ code {
     border-radius: 6px;
 }
 
+table tr td:nth-child(1) {
+    text-align: right
+}
+
+code:not(pre code) {
+    white-space: nowrap;
+}
+
 pre code {
     background-color: var(--primary-background-color) !important;
     font-weight: 900 !important;
@@ -55,6 +63,14 @@ blockquote {
 strong {
     color: var(--text-color) !important;
     font-weight: 900;
+}
+
+a {
+    color: var(--accent-color) !important;
+}
+
+tr {
+    border-color: var(--tertiary-background-color) !important;
 }
 
 a:link {

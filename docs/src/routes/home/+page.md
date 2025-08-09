@@ -33,7 +33,7 @@ return {
 For a better experience, consider adding `nvim-dap-view` **as a dependency** for `nvim-dap`. [Why?](faq#why-add-nvim-dap-view-as-a-dependency-for-nvim-dap)
 
 :::caution
-If you're using a plugin that overrides the `'winbar'` option, make sure to disable it for `nvim-dap-view` [buffers](filetypes-autocmds).
+If using a plugin that overrides the `'winbar'` option, make sure to disable it for `nvim-dap-view` [buffers](filetypes-autocmds).
 :::
 
 ## Features
