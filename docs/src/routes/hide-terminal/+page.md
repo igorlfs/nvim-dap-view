@@ -9,7 +9,7 @@ return {
     windows = {
         terminal = {
             -- Use the actual names for the adapters you want to hide
-            hide = { "go" }, -- `go` is known to not use the terminal.
+            hide = { "delve" }, -- `delve` is known to not use the terminal.
         },
     },
 }

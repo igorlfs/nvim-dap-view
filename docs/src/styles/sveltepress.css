@@ -4,8 +4,12 @@
     background-color: var(--primary-background-color);
 }
 
+.toc:visited {
+    color: var(--primary-color) !important;
+}
+
 .active-bar {
-    border-left-color: var(--accent-color) !important;
+    border-left-color: var(--primary-color) !important;
 }
 
 .svp-code-block-wrapper {
