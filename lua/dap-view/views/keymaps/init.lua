@@ -1,7 +1,6 @@
 local state = require("dap-view.state")
-local threads_view = require("dap-view.threads.view")
 local watches_actions = require("dap-view.watches.actions")
-local docs = require("dap-view.views.keymaps.docs")
+local help = require("dap-view.views.keymaps.help")
 local keymap = require("dap-view.views.keymaps.util").keymap
 
 local M = {}
@@ -18,7 +17,7 @@ M.set_keymaps = function()
             require("dap-view.threads.actions").jump_or_noop(cursor_line)
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
-        elseif state.current_section == "scopes" then
+        elseif state.current_section == "scopes" or state.current_section == "sessions" then
             require("dap.ui").trigger_actions({ mode = "first" })
         elseif state.current_section == "watches" then
             watches_actions.expand_or_collapse(cursor_line)
@@ -28,6 +27,10 @@ M.set_keymaps = function()
     keymap("o", function()
         if state.current_section == "scopes" then
             require("dap.ui").trigger_actions()
+        elseif state.current_section == "threads" then
+            state.threads_filter_invert = not state.threads_filter_invert
+
+            require("dap-view.views").switch_to_view("threads")
         end
     end)
 
@@ -70,6 +73,18 @@ M.set_keymaps = function()
         end
     end)
 
+    keymap("f", function()
+        if state.current_section == "threads" then
+            vim.ui.input({ prompt = "Filter: ", default = state.threads_filter }, function(input)
+                if input then
+                    state.threads_filter = input
+
+                    require("dap-view.views").switch_to_view("threads")
+                end
+            end)
+        end
+    end)
+
     keymap("c", function()
         if state.current_section == "watches" then
             local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
@@ -108,12 +123,12 @@ M.set_keymaps = function()
         if state.current_section == "threads" then
             state.subtle_frames = not state.subtle_frames
 
-            threads_view.show()
+            require("dap-view.views").switch_to_view("threads")
         end
     end)
 
     keymap("g?", function()
-        docs.show_help()
+        help.show_help()
     end)
 end
 

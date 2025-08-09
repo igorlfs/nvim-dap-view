@@ -89,24 +89,38 @@ local get_width_limit = function()
     local controls_ = winbar.controls
 
     local labels_len = vim.iter(winbar.sections)
-        :map(function(s) ---@param s string
-            return (winbar.custom_sections[s] or winbar.base_sections[s]).label
-        end)
-        :fold(0, function(acc, label) ---@param label string
-            -- length including margin
-            return acc + vim.fn.strdisplaywidth(label) + 2
-        end)
+        :map(
+            ---@param s string
+            function(s)
+                return (winbar.custom_sections[s] or winbar.base_sections[s]).label
+            end
+        )
+        :fold(
+            0,
+            ---@param label string
+            function(acc, label)
+                -- length including margin
+                return acc + vim.fn.strdisplaywidth(label) + 2
+            end
+        )
     local controls_len = controls_.enabled
             and vim.iter(controls_.buttons)
-                :map(function(b) ---@param b string
-                    local str = (controls_.custom_buttons[b] or base_buttons[b]).render()
-                    -- Extract highlight groups and other parts of string that do not count for the final length
-                    return str:match("#([^#]+)%%%*") or str
-                end)
-                :fold(0, function(acc, label) ---@param label string
-                    -- length including margin
-                    return acc + vim.fn.strdisplaywidth(label) + 2
-                end)
+                :map(
+                    ---@param b string
+                    function(b)
+                        local str = (controls_.custom_buttons[b] or base_buttons[b]).render()
+                        -- Extract highlight groups and other parts of string that do not count for the final length
+                        return str:match("#([^#]+)%%%*") or str
+                    end
+                )
+                :fold(
+                    0,
+                    ---@param label string
+                    function(acc, label)
+                        -- length including margin
+                        return acc + vim.fn.strdisplaywidth(label) + 2
+                    end
+                )
         or 0
     return labels_len + controls_len
 end

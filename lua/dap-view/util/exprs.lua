@@ -20,7 +20,7 @@ M.get_trimmed_selection = function()
     end
 
     -- It's easier to manipulate a single line as if it were a string
-    if type(lines) == "table" and #lines == 1 then
+    if type(lines) == "table" and #lines == 1 and type(lines[1] == "string") then
         lines = lines[1]
     end
 
