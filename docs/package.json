@@ -7,6 +7,7 @@
     "license": "MIT",
     "scripts": {
         "dev": "vite dev",
+        "deploy": "gh-pages -d dist --dotfiles --nojekyll",
         "build": "vite build"
     },
     "devDependencies": {
@@ -17,6 +18,7 @@
         "@sveltepress/vite": "^1.2.2",
         "@types/node": "^20.11.20",
         "@unocss/preset-web-fonts": "^66.3.3",
+        "gh-pages": "^6.3.0",
         "shiki": "^3.8.1",
         "svelte": "^5.0.0",
         "typescript": "^5.3.3",
