@@ -6,9 +6,9 @@ Getting started with `nvim-dap` is easier than it sounds! This guide aims to exp
 
 ## What is the Debug Adapter Protocol?
 
-First things first: what is the DAP? Much like the LSP, the DAP is a protocol created to solve a scalability problem: it used to be the case that each text editor had to have a custom integration for each debugger they wanted to support.
+If you already know what is the Language Server Protocol (LSP), the Debug Adapter Protocol is just one step ahead: it's the same concept, but applied to debugging. If you're not sure if you get the hang of the Language Server Protocol, I recommend watching this [video](https://www.youtube.com/watch?v=LaS32vctfOY) by [TJ](https://github.com/tjdevries).
 
-That means handling the communication was a nightmare: each debugger has its own way of defining breakpoints, or evaluating expressions and whatnot. What DAP brings to the table is a **standardization for this communication**, massively simplifying the implementation.
+Much like the LSP, the DAP is a protocol created to solve a scalability problem: before the protocol, each text editor had to have a custom integration for each debugger they wanted to support. That means handling the communication between the editor and the debuggers was essentially a _nightmare_: each debugger has its own way of defining breakpoints, evaluating expressions, navigating the stack and whatnot. What DAP brings to the table is a **standardization for this communication which massively simplifies the implementation**.
 
 To accomplish its goal, the DAP introduces the concept of **debug adapters**: programs that make _debuggers_ comply with the protocol's communication standards. It's important to have this distinction clear: a _debugger_ and a debug adapter are _distinct programs_. All throughout `nvim-dap-view`'s you'll the see the term _adapter_, referring to a _debug adapter_, but there are only a couple or so mentions of _debuggers_, since the protocol is about _adapters_.
 
@@ -16,13 +16,15 @@ To make matters a little more confusing, some debuggers implement the protocol n
 
 ## Basic Configuration
 
+Neovim currently does not support the Debug Adapter Protocol natively (although it bundles a package for debugging[^1]). The _de facto_ implementation is a plugin called [nvim-dap](https://github.com/mfussenegger/nvim-dap).
+
 To get started with the configuration, you first have to install `nvim-dap`, similarly to how you install other plugins. If you're not familiar with the installation of plugins, you can take a peek at [quickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) to get basics of configuring Neovim.
 
 The DAP configuration is essentially two fold: you first _define_ an adapter and then set a _configuration_ to interact with the program you're trying to debug. _Defining_ an adapter tells `nvim-dap` how to interact with the adapter (and therefore has nothing to do with your code). You'll **define the adapter only once**, but you may have multiple _configurations_ for an adapter, depending on your needs.
 
 Most languages have, at most, a single adapter, so there's not a lot of decision here. You can install an adapter with your system's package manager or using [mason.nvim](https://github.com/mason-org/mason.nvim).
 
-To give a concrete example, this guides uses [codelldb](https://github.com/vadimcn/codelldb): a powerful adapter which can be used for C, C++ and Rust[^1]. Under the hood, `codelldb` (the adapter) uses `lldb` (the debugger). To **define** `codelldb` (or any adapter, for that matter) refer to `nvim-dap`'s [wiki](https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation). There, we can find the following [snippet](https://codeberg.org/mfussenegger/nvim-dap/wiki/C-C---Rust-(via--codelldb)#1-11-0-and-later):
+To give a concrete example, this guides uses [codelldb](https://github.com/vadimcn/codelldb): a powerful adapter which can be used for C, C++ and Rust[^2]. Under the hood, `codelldb` (the adapter) uses `lldb` (the debugger). To **define** `codelldb` (or any adapter, for that matter) refer to `nvim-dap`'s [wiki](https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation). There, we can find the following [snippet](https://codeberg.org/mfussenegger/nvim-dap/wiki/C-C---Rust-(via--codelldb)#1-11-0-and-later):
 
 ```lua
 require("dap").adapters.codelldb = {
@@ -34,9 +36,9 @@ require("dap").adapters.codelldb = {
 }
 ```
 
-Fantastic! Now we have to define a way for the adapter to actually connect with the code we're trying to debug. Which also known as the "configuration". The naming here unfortunately sucks, since... You have to _configure_ everything, including that aren't the "configuration". But I digress.
+Fantastic! Now we have to define a way for the adapter to actually connect with the code we're trying to debug. Which is also known as the "configuration". The naming here unfortunately sucks, since... You have to _configure_ everything, including stuff that isn't the "configuration" itself. But I digress.
 
-`nvim-dap` offers it's own way of defining configurations, but my recommendation is to use a `.vscode/launch.json` file, which `nvim-dap` supports natively, out of the box. The main advantage of this approach is that your colleagues will be able to use the configuration as well! What you may consider a disadvantage here is the fact that you'd have copy and paste the same file in multiple locations.
+`nvim-dap` offers it's own way of defining configurations, but my recommendation is using a `.vscode/launch.json` file, which `nvim-dap` supports natively, out of the box. The main advantage of this approach is that your colleagues will be able to use the configuration as well! What you may consider a disadvantage here is the fact that you'd have copy and paste the same file in multiple locations.
 
 The configuration itself can be a bit tricky. There are some base options, but most adapters introduce their own flags. Again, you can use the `nvim-dap`'s [wiki](https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation) as a reference, but you may need to also check your adapter's documentation as well. Here's a basic `.vscode/launch.json` to **launch** a C++ program using `codelldb`:
 
@@ -59,11 +61,12 @@ The configuration itself can be a bit tricky. There are some base options, but m
 }
 ```
 
-Great! The tricky part is over! Now all you have to do is configure `nvim-dap` like any other plugin[^2]: get to know the commands and define some keybindings (take a look at [my config](https://github.com/igorlfs/dotfiles/blob/main/nvim/.config/nvim/lua/plugins/bare/nvim-dap.lua) if you need inspiration). I recommend using the `<FX>` keys to create the bindings. Refer to `:h dap-user-commands` to learn what you can do. A bare bones setup would include at least a mapping to `:DapToggleBreakpoint` and `:DapContinue`.
+Great! The tricky part is over! Now all you have to do is configure `nvim-dap` like any other plugin[^3]: get to know the commands and define some keybindings (take a look at [my config](https://github.com/igorlfs/dotfiles/blob/main/nvim/.config/nvim/lua/plugins/bare/nvim-dap.lua) if you need inspiration). I recommend using the `<FX>` keys to create the bindings. Refer to `:help dap-user-commands` to learn what you can do. A bare bones setup would include at least a mapping to `:DapToggleBreakpoint` and `:DapContinue`.
 
-The last step is to test your setup. Remember to compile your program with debug symbols if necessary. To start a basic session, **add a breakpoint**. It's important to define a breakpoint beforehand, to not have the program finish executing before you're able to add one. You can then `:DapContinue` (or your own mapping) to create the session. If all goes well, the execution will be stopped when hitting the line with the breakpoint.
+The last step is to test your setup. Remember to compile your program with debug symbols if necessary. To start a basic session, **add a breakpoint**. It's important to define a breakpoint beforehand, to not have the program finish executing before you're able to add one. You can then use `:DapContinue` (or your own mapping) to create the session. If all goes well, the execution will be stopped when hitting the line with the breakpoint.
 
 Hooray! Now you can start tweaking `nvim-dap-view`! 🎉
 
-[^1]: And other low level languages. Do notice that there isn't a 1:1 mapping between adapters and neovim's filetypes.
-[^2]: It's worth noting that `nvim-dap` does adhere to the `setup` function "convention".
+[^1]: See `:help package-termdebug`
+[^2]: And other low level languages. Do notice that there isn't a 1:1 mapping between adapters and neovim's filetypes.
+[^3]: It's worth noting that `nvim-dap` does adhere to the `setup` function "convention".
