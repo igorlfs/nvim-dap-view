@@ -45,6 +45,10 @@ table tr td:nth-child(1) {
     text-align: right
 }
 
+table tr th:nth-child(1) {
+    text-align: right
+}
+
 code:not(pre code) {
     white-space: nowrap;
 }

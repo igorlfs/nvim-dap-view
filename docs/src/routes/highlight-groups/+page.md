@@ -6,7 +6,7 @@ title: Highlight Groups
 
 If the colors look odd with your colorscheme, consider submiting a PR to add support to `nvim-dap-view`!
 
-If the links aren't defined at all, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:h nvim_set_hl()`).
+If the links aren't defined at all, no highlighting will be applied. To fix that, you have to manually define the highlight groups (see `:help nvim_set_hl()`).
 
 | Highlight Group                      | Default Link              |
 | ------------------------------------ | ------------------------- |

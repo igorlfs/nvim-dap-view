@@ -11,7 +11,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | **Threads**                                           |
 | `<CR>` | Jump to a frame                              |
 |    `t` | Toggle subtle frames                         |
-|    `f` | Filter frames (via Lua patterns)             |
+|    `f` | Filter frames (via Lua patterns[^1])         |
 |    `o` | Omit results matching filter (invert filter) |
 | **Scopes**                                            |
 | `<CR>` | Expand or collapse a variable                |
@@ -34,3 +34,5 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 |    `q` | Close                                        |
 
 `nvim-dap-view` doesn't define any keybindings outside its own buffers: you have to create your own bindings to call `open`, `close` or `toggle` and other API [functions](api) (or [commands](commands)).
+
+[^1]: Read `:help lua-pattern` to learn more. You can also read the full documentation [here](https://www.lua.org/pil/20.2.html).

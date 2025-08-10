@@ -63,7 +63,7 @@ List all threads and their stack traces
 
 <img src="https://github.com/user-attachments/assets/b8c23809-2f23-4a39-8aef-b880f2b3eef9" alt="breakpoints view" />
 
-List all breakpoints with full syntax highlighting, including treesitter and semantic tokens
+List all breakpoints with full syntax highlighting, including treesitter and semantic tokens (from LSP)
 
 - Jump to the location of a brakpoint
 - Delete a breakpoint
@@ -84,7 +84,7 @@ Use the scopes widget provided by nvim-dap
 
 <img src="https://i.ibb.co/1fSHs7J1/image.png" alt="sessions view">
 
-Use the sessions widget provided by nvim-dap. Disabled by default.
+Use the sessions widget provided by nvim-dap (**disabled by default**)
 
 ### REPL view
 
