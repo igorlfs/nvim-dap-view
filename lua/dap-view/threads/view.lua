@@ -35,11 +35,25 @@ M.show = function()
 
         if state.threads_filter ~= "" then
             local filter = "󰈲 "
+            local filter_icon_len = #filter
+
             filter = filter .. state.threads_filter
+
+            local omit_icon_len = 0
+
             if state.threads_filter_invert then
+                omit_icon_len = #"  "
                 filter = filter .. "  "
             end
+
             api.nvim_buf_set_lines(state.bufnr, line, line, true, { filter })
+
+            hl.hl_range("FrameCurrent", { 0, 0 }, { 0, filter_icon_len })
+
+            if state.threads_filter_invert then
+                hl.hl_range("MissingData", { 0, #filter - omit_icon_len }, { 0, #filter })
+            end
+
             line = line + 1
         end
 
