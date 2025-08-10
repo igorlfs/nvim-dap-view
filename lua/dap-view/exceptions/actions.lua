@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local hl = require("dap-view.util.hl")
+local setup = require("dap-view.setup")
 
 local M = {}
 
@@ -12,7 +13,7 @@ M.toggle_exception_filter = function()
 
     current_option.enabled = not current_option.enabled
 
-    local icon = current_option.enabled and "" or ""
+    local icon = current_option.enabled and setup.config.icons["enabled"] or setup.config.icons["disabled"]
 
     local content = "  " .. icon .. "  " .. current_option.exception_filter.label
 

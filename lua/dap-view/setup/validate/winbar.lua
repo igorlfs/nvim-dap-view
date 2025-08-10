@@ -86,22 +86,8 @@ function M.validate(config)
         enabled = { controls.enabled, "boolean" },
         position = { controls.position, "string" },
         buttons = { controls.buttons, "table" },
-        icons = { controls.icons, "table" },
         custom_buttons = { controls.custom_buttons, "table" },
     }, controls)
-
-    local icons = controls.icons
-    validate("winbar.controls.icons", {
-        pause = { icons.pause, "string" },
-        play = { icons.play, "string" },
-        step_into = { icons.step_into, "string" },
-        step_over = { icons.step_over, "string" },
-        step_out = { icons.step_out, "string" },
-        step_back = { icons.step_back, "string" },
-        disconnect = { icons.disconnect, "string" },
-        terminate = { icons.terminate, "string" },
-        run_last = { icons.run_last, "string" },
-    }, icons)
 
     local sections = config.sections
     local default = config.default_section

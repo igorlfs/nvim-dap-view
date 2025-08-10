@@ -24,16 +24,20 @@ local M = {}
 
 ---@alias dapview.DefaultIcons dapview.DefaultButton | "pause"
 
----@class dapview.ControlsIconsConfig
+---@class dapview.IconsConfig
+---@field disabled string
+---@field disconnect string
+---@field enabled string
+---@field filter string
+---@field negate string
 ---@field pause string
 ---@field play string
----@field step_into string
----@field step_over string
----@field step_out string
----@field step_back string
 ---@field run_last string
+---@field step_back string
+---@field step_into string
+---@field step_out string
+---@field step_over string
 ---@field terminate string
----@field disconnect string
 
 ---@class dapview.ButtonConfig
 ---@field render fun(session?: dap.Session): string Render the button (highlight and icon). Receives the current session as a param.
@@ -44,7 +48,6 @@ local M = {}
 ---@field position 'left' | 'right'
 ---@field buttons dapview.Button[] Buttons to show in the controls section
 ---@field custom_buttons table<dapview.CustomButton, dapview.ButtonConfig> Custom buttons to show in the controls section
----@field icons dapview.ControlsIconsConfig Icons for each button
 
 ---@class dapview.SectionConfig
 ---@field label string
@@ -71,6 +74,7 @@ local M = {}
 ---@field winbar dapview.WinbarConfig
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
+---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean
 
@@ -160,17 +164,6 @@ M.config = {
                 "terminate",
                 "disconnect",
             },
-            icons = {
-                play = "",
-                pause = "",
-                step_into = "",
-                step_over = "",
-                step_out = "",
-                step_back = "",
-                run_last = "",
-                terminate = "",
-                disconnect = "",
-            },
             custom_buttons = {},
         },
     },
@@ -183,6 +176,21 @@ M.config = {
             hide = {},
             start_hidden = false,
         },
+    },
+    icons = {
+        disabled = "",
+        disconnect = "",
+        enabled = "",
+        filter = "󰈲",
+        negate = " ",
+        pause = "",
+        play = "",
+        run_last = "",
+        step_back = "",
+        step_into = "",
+        step_out = "",
+        step_over = "",
+        terminate = "",
     },
     help = {
         border = nil,

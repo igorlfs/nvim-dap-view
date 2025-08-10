@@ -4,6 +4,7 @@ local state = require("dap-view.state")
 local views = require("dap-view.views")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
+local setup = require("dap-view.setup")
 
 local M = {}
 
@@ -23,7 +24,7 @@ M.show = function()
 
         local content = vim.iter(adapter_exception_options)
             :map(function(opt)
-                local icon = opt.enabled and "" or ""
+                local icon = opt.enabled and setup.config.icons["enabled"] or setup.config.icons["disabled"]
                 return "  " .. icon .. "  " .. opt.exception_filter.label
             end)
             :totable()
