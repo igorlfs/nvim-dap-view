@@ -37,7 +37,7 @@ Calls `require("dap-view").open()` if there's no views window. Else, behaves lik
 require("dap-view").add_expr(expr)
 ```
 
-In normal mode, adds the expression under the cursor to the watch list (see [caveats](faq#dapviewwatch-isnt-adding-the-whole-variable)). In visual mode, adds the selection to the watch list. If `expr` is specified, adds the expression directly, overriding previous conditions.
+In normal mode, adds the expression under the cursor to the watch list (see [caveats](faq#Why-is-DapViewWatch-not-adding-the-whole-variable-)). In visual mode, adds the selection to the watch list. If `expr` is specified, adds the expression directly, overriding previous conditions.
 
 ## Jump To View
 
