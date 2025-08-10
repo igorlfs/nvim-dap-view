@@ -15,7 +15,7 @@ title: NVIM DAP View
 **Requires neovim 0.11+**
 :::
 
-A nerd font is a soft requirement.
+A nerd font is a "soft requirement"[^1].
 
 ### Via lazy.nvim
 
@@ -121,3 +121,5 @@ Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get
 ## Customization
 
 `nvim-dap-view` is fully customizable! Visit the [config](configuration) page to learn what you can do.
+
+[^1]: nerd font icons can be disabled in the [cofiguration](configuration)

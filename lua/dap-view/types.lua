@@ -5,10 +5,9 @@
 
 ---@class dapview.SectionConfigPartial : dapview.SectionConfig, {}
 
----@class dapview.ControlsIconsConfigPartial : dapview.ControlsIconsConfig, {}
+---@class dapview.IconsConfigPartial : dapview.IconsConfig, {}
 
 ---@class dapview.ControlsConfigPartial : dapview.ControlsConfig, {}
----@field icons? dapview.ControlsIconsConfigPartial Icons for each button
 
 ---@class dapview.WinbarConfigPartial : dapview.WinbarConfig, {}
 ---@field base_sections? table<dapview.Section,dapview.SectionConfigPartial>
@@ -20,3 +19,4 @@
 ---@field winbar? dapview.WinbarConfigPartial
 ---@field windows? dapview.WindowsConfigPartial
 ---@field help? dapview.HelpConfigPartial
+---@field icons? dapview.IconsConfigPartial

@@ -5,17 +5,12 @@ local setup = require("dap-view.setup")
 
 local M = {}
 
----@param icon dapview.DefaultIcons
-local get_icon = function(icon)
-    return setup.config.winbar.controls.icons[icon]
-end
-
 ---@type dapview.ButtonConfig
 M.play = {
     render = function(session)
         local pausable = session and not session.stopped_thread_id
         return statusline.hl(
-            pausable and get_icon("pause") or get_icon("play"),
+            pausable and setup.config.icons["pause"] or setup.config.icons["play"],
             pausable and "ControlPause" or "ControlPlay"
         )
     end,
@@ -30,7 +25,7 @@ M.play = {
 M.step_into = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
-        return statusline.hl(get_icon("step_into"), stopped and "ControlStepInto" or "ControlNC")
+        return statusline.hl(setup.config.icons["step_into"], stopped and "ControlStepInto" or "ControlNC")
     end,
     action = function()
         dap.step_into()
@@ -41,7 +36,7 @@ M.step_into = {
 M.step_over = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
-        return statusline.hl(get_icon("step_over"), stopped and "ControlStepOver" or "ControlNC")
+        return statusline.hl(setup.config.icons["step_over"], stopped and "ControlStepOver" or "ControlNC")
     end,
     action = function()
         dap.step_over()
@@ -52,7 +47,7 @@ M.step_over = {
 M.step_out = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
-        return statusline.hl(get_icon("step_out"), stopped and "ControlStepOut" or "ControlNC")
+        return statusline.hl(setup.config.icons["step_out"], stopped and "ControlStepOut" or "ControlNC")
     end,
     action = function()
         dap.step_out()
@@ -63,7 +58,7 @@ M.step_out = {
 M.step_back = {
     render = function(session)
         local stopped = session and session.stopped_thread_id
-        return statusline.hl(get_icon("step_back"), stopped and "ControlStepBack" or "ControlNC")
+        return statusline.hl(setup.config.icons["step_back"], stopped and "ControlStepBack" or "ControlNC")
     end,
     action = function()
         dap.step_back()
@@ -73,7 +68,7 @@ M.step_back = {
 ---@type dapview.ButtonConfig
 M.run_last = {
     render = function()
-        return statusline.hl(get_icon("run_last"), "ControlRunLast")
+        return statusline.hl(setup.config.icons["run_last"], "ControlRunLast")
     end,
     action = function()
         dap.run_last()
@@ -83,7 +78,7 @@ M.run_last = {
 ---@type dapview.ButtonConfig
 M.terminate = {
     render = function(session)
-        return statusline.hl(get_icon("terminate"), session and "ControlTerminate" or "ControlNC")
+        return statusline.hl(setup.config.icons["terminate"], session and "ControlTerminate" or "ControlNC")
     end,
     action = function()
         dap.terminate()
@@ -93,7 +88,7 @@ M.terminate = {
 ---@type dapview.ButtonConfig
 M.disconnect = {
     render = function(session)
-        return statusline.hl(get_icon("disconnect"), session and "ControlDisconnect" or "ControlNC")
+        return statusline.hl(setup.config.icons["disconnect"], session and "ControlDisconnect" or "ControlNC")
     end,
     action = function()
         dap.disconnect()

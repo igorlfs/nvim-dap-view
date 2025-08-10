@@ -4,6 +4,7 @@ local views = require("dap-view.views")
 local util = require("dap-view.util")
 local state = require("dap-view.state")
 local hl = require("dap-view.util.hl")
+local setup = require("dap-view.setup")
 
 local M = {}
 
@@ -34,7 +35,7 @@ M.show = function()
         local line = 0
 
         if state.threads_filter ~= "" then
-            local filter = "󰈲 "
+            local filter = setup.config.icons["filter"] .. " "
             local filter_icon_len = #filter
 
             filter = filter .. state.threads_filter
@@ -42,8 +43,9 @@ M.show = function()
             local omit_icon_len = 0
 
             if state.threads_filter_invert then
-                omit_icon_len = #"  "
-                filter = filter .. "  "
+                local omit_icon = " " .. setup.config.icons["negate"]
+                omit_icon_len = #omit_icon
+                filter = filter .. omit_icon
             end
 
             api.nvim_buf_set_lines(state.bufnr, line, line, true, { filter })
@@ -59,7 +61,7 @@ M.show = function()
 
         for k, thread in pairs(session.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
-            local thread_name = is_stopped_thread and thread.name .. " " or thread.name
+            local thread_name = is_stopped_thread and thread.name .. " " .. setup.config.icons["pause"] or thread.name
             api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread_name })
 
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
