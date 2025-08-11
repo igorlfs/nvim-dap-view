@@ -27,7 +27,11 @@ M.close = function(hide_terminal)
         dap.repl.close({ mode = "toggle" })
     end
     if util.is_win_valid(state.winnr) then
-        api.nvim_win_close(state.winnr, true)
+        -- Avoid "E444: Cannot close last window"
+        local _, ok = pcall(api.nvim_win_close, state.winnr, true)
+        if not ok then
+            vim.cmd("b#")
+        end
     end
     state.winnr = nil
     if util.is_buf_valid(state.bufnr) then
