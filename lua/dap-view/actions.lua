@@ -28,10 +28,7 @@ M.close = function(hide_terminal)
     end
     if util.is_win_valid(state.winnr) then
         -- Avoid "E444: Cannot close last window"
-        local _, ok = pcall(api.nvim_win_close, state.winnr, true)
-        if not ok then
-            vim.cmd("b#")
-        end
+        pcall(api.nvim_win_close, state.winnr, true)
     end
     state.winnr = nil
     if util.is_buf_valid(state.bufnr) then
