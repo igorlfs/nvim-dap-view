@@ -18,7 +18,9 @@ M.show = function()
     assert(state.current_session_id, "has active session")
 
     api.nvim_win_call(state.winnr, function()
+        vim.wo[state.winnr][0].winfixbuf = false
         api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+        vim.wo[state.winnr][0].winfixbuf = true
     end)
 
     require("dap-view.term.options").set_win_options(state.winnr)
@@ -99,7 +101,9 @@ M.switch_term_buf = function()
         ---@cast winnr integer
 
         api.nvim_win_call(winnr, function()
+            vim.wo[winnr][0].winfixbuf = false
             api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+            vim.wo[winnr][0].winfixbuf = true
 
             if is_console_active then
                 winbar.refresh_winbar("console")

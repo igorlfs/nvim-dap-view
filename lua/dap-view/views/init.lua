@@ -41,7 +41,9 @@ M.switch_to_view = function(view)
         )
     then
         api.nvim_win_call(state.winnr, function()
+            vim.wo[state.winnr][0].winfixbuf = false
             api.nvim_set_current_buf(state.bufnr)
+            vim.wo[state.winnr][0].winfixbuf = true
         end)
     end
 

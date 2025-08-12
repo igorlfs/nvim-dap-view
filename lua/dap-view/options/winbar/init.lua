@@ -33,7 +33,9 @@ local custom_action_wrapper = function(view)
         M.set_action_keymaps(custom_bufnrs[view])
 
         api.nvim_win_call(state.winnr, function()
+            vim.wo[state.winnr][0].winfixbuf = false
             api.nvim_set_current_buf(custom_bufnrs[view])
+            vim.wo[state.winnr][0].winfixbuf = true
         end)
     end
 

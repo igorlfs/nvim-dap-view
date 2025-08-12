@@ -10,6 +10,7 @@ M.set_win_options = function(winnr)
     win.winfixheight = true
     win.statuscolumn = ""
     win.foldcolumn = "0"
+    win.winfixbuf = true
 end
 
 return M

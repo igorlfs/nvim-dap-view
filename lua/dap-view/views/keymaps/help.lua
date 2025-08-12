@@ -73,6 +73,8 @@ M.show_help = function()
     vim.wo[help_win][0].cursorline = true
     vim.wo[help_win][0].cursorlineopt = "line"
 
+    vim.wo[help_win][0].winfixbuf = true
+
     api.nvim_create_autocmd("WinClosed", {
         buffer = help_buf,
         callback = function()
