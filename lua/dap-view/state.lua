@@ -24,6 +24,7 @@
 ---@field winnr? integer
 ---@field term_bufnrs {[number]: number}
 ---@field term_winnr? integer
+---@field last_term_winnr? integer
 ---@field threads_filter string
 ---@field threads_filter_invert boolean
 ---@field current_adapter? string

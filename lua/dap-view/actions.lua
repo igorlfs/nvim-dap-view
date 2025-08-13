@@ -17,7 +17,7 @@ M.toggle = function(hide_terminal)
     if util.is_win_valid(state.winnr) then
         M.close(hide_terminal)
     else
-        M.open()
+        M.open(hide_terminal)
     end
 end
 
@@ -40,8 +40,13 @@ M.close = function(hide_terminal)
     end
 end
 
-M.open = function()
-    M.close()
+M.open = function(hide_terminal)
+    -- Close leftover terminal (if left open in another tab)
+    if state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
+        api.nvim_win_close(state.last_term_winnr, true)
+    end
+
+    M.close(hide_terminal)
 
     local bufnr = api.nvim_create_buf(false, false)
 

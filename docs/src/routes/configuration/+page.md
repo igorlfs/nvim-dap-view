@@ -136,6 +136,8 @@ return {
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     switchbuf = "usetab",
     auto_toggle = false,
+    -- Reopen dapview when switching tabs
+    follow_tab = false,
 }
 ```
 

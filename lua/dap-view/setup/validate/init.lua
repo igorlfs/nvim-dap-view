@@ -9,6 +9,7 @@ function M.validate(config)
         switchbuf = { config.switchbuf, "string" },
         icons = { config.icons, "table" },
         auto_toggle = { config.auto_toggle, "boolean" },
+        follow_tab = { config.follow_tab, "boolean" },
     }, config)
 
     require("dap-view.setup.validate.winbar").validate(config.winbar)

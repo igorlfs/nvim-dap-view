@@ -2,6 +2,17 @@
 title: FAQ
 ---
 
+## Why is `nvim-dap-view` GONE when switching tabs?
+
+`nvim-dap-view`'s defaults aim to be unintrusive: it won't be invoked if not called explicitly. Which means that, by default, it won't _reopen_ when switching tabs. If you would rather have `nvim-dap-view`'s windows "follow" the current tab, you can toggle the option `follow_tab`:
+
+```lua
+-- Your nvim-dap-view config
+return {
+    follow_tab = true,
+}
+```
+
 ## Why add `nvim-dap-view` as a dependency for `nvim-dap`?
 
 By default, when launching a new session, `nvim-dap` creates a terminal window that takes half the screen. As a saner default, `nvim-dap-view` hijacks the terminal window, making it take only a quarter of the available space. See [this](https://github.com/rcarriga/nvim-dap-ui/issues/407) related issue (from `nvim-dap-ui`). Of course, this workaround requires `nvim-dap-view` to be loaded before any session starts (e.g., before `nvim-dap` starts), hence why it's a dependency and not the other way around.

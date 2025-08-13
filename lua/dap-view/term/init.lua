@@ -53,13 +53,20 @@ M.open_term_buf_win = function()
     if term_bufnr and not hide_adapter and not util.is_win_valid(state.term_winnr) then
         local is_win_valid = util.is_win_valid(state.winnr)
 
-        state.term_winnr = api.nvim_open_win(term_bufnr, false, {
+        local term_winnr = api.nvim_open_win(term_bufnr, false, {
             split = is_win_valid and term_config.position or windows_config.position,
             win = is_win_valid and state.winnr or -1,
             height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
                 or windows_config.height,
             width = term_config.width < 1 and math.floor(vim.go.columns * term_config.width) or term_config.width,
         })
+
+        -- Track the state of the last term win, so it can be closed later if becomes a leftover window
+        if state.term_winnr and term_winnr ~= state.term_winnr then
+            state.last_term_winnr = state.term_winnr
+        end
+
+        state.term_winnr = term_winnr
 
         require("dap-view.term.options").set_win_options(state.term_winnr)
     end

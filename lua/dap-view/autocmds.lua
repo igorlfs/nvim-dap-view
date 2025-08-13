@@ -1,3 +1,4 @@
+local util = require("dap-view.util")
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 local globals = require("dap-view.globals")
@@ -18,6 +19,10 @@ api.nvim_create_autocmd({ "WinClosed", "WinNew" }, {
 
 api.nvim_create_autocmd("TabEnter", {
     callback = function()
+        if util.is_win_valid(state.winnr) and setup.config.follow_tab then
+            require("dap-view.actions").open(state.term_winnr ~= nil)
+        end
+
         local winnr = nil
         local term_winnr = nil
 
@@ -49,6 +54,10 @@ api.nvim_create_autocmd("TabEnter", {
         end
 
         state.winnr = winnr
+        -- Track the state of the last term win, so it can be closed later if becomes a leftover window
+        if state.term_winnr and term_winnr ~= state.term_winnr then
+            state.last_term_winnr = state.term_winnr
+        end
         state.term_winnr = term_winnr
 
         if winnr ~= nil then

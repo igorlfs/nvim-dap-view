@@ -68,7 +68,7 @@ local M = {}
 ---@field controls dapview.ControlsConfig
 
 ---@class dapview.HelpConfig
----@field border? string|string[] Override `winborder`
+---@field border? string|string[] Override `winborder` in the help window
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
@@ -77,6 +77,7 @@ local M = {}
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean
+---@field follow_tab boolean Reopen dapview when switching tabs
 
 ---@type dapview.ConfigStrict
 M.config = {
@@ -197,6 +198,7 @@ M.config = {
     },
     switchbuf = "usetab",
     auto_toggle = false,
+    follow_tab = false,
 }
 
 return M
