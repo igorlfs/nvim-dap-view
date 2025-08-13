@@ -94,7 +94,9 @@ M.set_keymaps = function()
     end)
 
     keymap("s", function()
-        if state.current_section == "watches" then
+        if state.current_section == "scopes" then
+            require("dap.ui").trigger_actions({ filter = "Set expression" })
+        elseif state.current_section == "watches" then
             local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
             local get_default = function()
