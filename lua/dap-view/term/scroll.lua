@@ -30,7 +30,10 @@ M.scroll = function(bufnr)
             if autoscroll and vim.fn.mode() == "n" then
                 api.nvim_win_call(state.term_winnr, function()
                     if api.nvim_get_current_buf() == bufnr then
-                        api.nvim_win_set_cursor(state.term_winnr, { api.nvim_buf_line_count(bufnr), 1 })
+                        -- vim.schedule ensures the cursor movement happens in the main event loop.
+                        vim.schedule(function()
+                            api.nvim_win_set_cursor(state.term_winnr, { api.nvim_buf_line_count(bufnr), 0 })
+                        end)
                     end
                 end)
             end
