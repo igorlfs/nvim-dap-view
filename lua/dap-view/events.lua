@@ -44,14 +44,20 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             sessions.refresh()
         end
 
-        -- Ugly hack but it sorta works
-        vim.defer_fn(function()
-            require("dap-view.exceptions").update_exception_breakpoints_filters()
-        end, 1000)
+        -- Sync exception breakpoints
+        -- Does not cover session initialization
+        -- At this stage, the session is not fully initialized yet
+        require("dap-view.exceptions").update_exception_breakpoints_filters()
     else
         state.current_session_id = nil
         state.current_adapter = nil
     end
+end
+
+dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
+    -- Sync exception breakpoints for the newly initialized session
+    -- The downside is that not all adapters support `configurationDone` :/
+    require("dap-view.exceptions").update_exception_breakpoints_filters()
 end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()

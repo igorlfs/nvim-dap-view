@@ -8,12 +8,11 @@ local api = vim.api
 
 api.nvim_create_autocmd({ "WinClosed", "WinNew" }, {
     callback = function()
-        -- We have to add a small delay because WinClosed is triggered before the layout changes
-        vim.defer_fn(function()
+        vim.schedule(function()
             if state.winnr ~= nil then
                 winbar.refresh_winbar()
             end
-        end, 10)
+        end)
     end,
 })
 

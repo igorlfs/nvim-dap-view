@@ -20,7 +20,11 @@ M.update_exception_breakpoints_filters = function()
         :totable()
 
     for _, session in pairs(dap.sessions()) do
-        if session.config.type == state.current_adapter then
+        -- When switching to a new session, its initialization may not have finished yet
+        -- Which makes the request to `setExceptionBreakpoints` fail
+        -- (since `capabilities` will not be populated yet)
+        -- To prevent that, only set the exception breakpoints for fully initialized sessions
+        if session.config.type == state.current_adapter and session.initialized then
             session:set_exception_breakpoints(filters)
         end
     end
