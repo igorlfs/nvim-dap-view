@@ -175,7 +175,7 @@ M.config = {
             width = 0.5,
             position = "left",
             hide = {},
-            start_hidden = false,
+            start_hidden = true,
         },
     },
     icons = {

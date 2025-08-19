@@ -30,8 +30,6 @@ return {
 }
 ```
 
-For a better experience, consider adding `nvim-dap-view` **as a dependency** for `nvim-dap`. [Why?](faq#Why-add-nvim-dap-view-as-a-dependency-for-nvim-dap-)
-
 :::caution
 If using a plugin that overrides the `'winbar'` option, make sure to disable it for `nvim-dap-view` [buffers](filetypes-autocmds).
 :::
@@ -94,9 +92,7 @@ Use REPL provided by nvim-dap
 
 ### Console view
 
-You can also interact with the console (terminal), which is also provided by `nvim-dap`. By default, the console has its own window, but it can be configured to be shown with the other views. See details on the [config](configuration) page.
-
-The console's default height is resized to match your `nvim-dap-view` configuration. You can also either completely [hide](hide-terminal) it (if it's not being used at all, which is the case for some debug adapters) or hide it only during session initialization (which is nice when debugging tests, for instance).
+You can also interact with the console (terminal), which is also provided by `nvim-dap`. By default, the console has its own window, but it can be configured to be shown with the other views. See details on the [config](configuration) page. It's also possible to completely [hide](hide-terminal) the terminal (if it's not being used at all, which is the case for some debug adapters).
 
 ### Custom views
 

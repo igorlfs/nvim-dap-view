@@ -13,24 +13,6 @@ return {
 }
 ```
 
-## Why add `nvim-dap-view` as a dependency for `nvim-dap`?
-
-By default, when launching a new session, `nvim-dap` creates a terminal window that takes half the screen. As a saner default, `nvim-dap-view` hijacks the terminal window, making it take only a quarter of the available space. See [this](https://github.com/rcarriga/nvim-dap-ui/issues/407) related issue (from `nvim-dap-ui`). Of course, this workaround requires `nvim-dap-view` to be loaded before any session starts (e.g., before `nvim-dap` starts), hence why it's a dependency and not the other way around.
-
-```lua
--- Your nvim-dap config
-return {
-    {
-        "mfussenegger/nvim-dap",
-        dependencies = {
-            { "igorlfs/nvim-dap-view", opts = {} },
-            ...,
-        },
-        ...,
-    },
-}
-```
-
 ## How can I see the value of an expression under cursor (hover)?
 
 You can use `nvim-dap`'s built-in hover widget by calling `require("dap.ui.widgets").hover()`. See `:help dap-widgets` for details.

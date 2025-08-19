@@ -112,7 +112,7 @@ return {
             -- List of debug adapters for which the terminal should be ALWAYS hidden
             hide = {},
             -- Hide the terminal when starting a new session
-            start_hidden = false,
+            start_hidden = true,
         },
     },
     icons = {
