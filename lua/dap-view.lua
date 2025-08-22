@@ -47,4 +47,9 @@ M.register_view = function(id, section)
     actions.register_view(id, section)
 end
 
+---@param opts dapview.NavigateOpts
+M.navigate = function(opts)
+    actions.navigate(opts)
+end
+
 return M

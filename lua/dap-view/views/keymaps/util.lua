@@ -4,12 +4,11 @@ local M = {}
 
 ---@param lhs string
 ---@param rhs string|function
----@param opts? table
+---@param buf? integer
 ---@param mode? string|string[]
-function M.keymap(lhs, rhs, opts, mode)
-    opts = opts == nil and { buffer = state.bufnr, nowait = true } or opts
+function M.keymap(lhs, rhs, buf, mode)
     mode = mode or "n"
-    vim.keymap.set(mode, lhs, rhs, opts)
+    vim.keymap.set(mode, lhs, rhs, { buffer = buf or state.bufnr, nowait = true })
 end
 
 return M

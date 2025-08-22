@@ -39,3 +39,9 @@ end, {
         return require("dap-view.complete").complete_sections(arg_lead)
     end,
 })
+command("DapViewNavigate", function(opts)
+    require("dap-view").navigate({ wrap = opts.bang, count = tonumber(opts.fargs[1]) or 1 })
+end, {
+    nargs = 1,
+    bang = true,
+})

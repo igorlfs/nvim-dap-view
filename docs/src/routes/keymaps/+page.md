@@ -2,7 +2,9 @@
 title: Keymaps
 ---
 
-Each view has its own keymaps, listed below. At any time (from within `nvim-dap-view`'s main window) you can use `g?` to show a "help" window that lists all of them.
+Besides the keymaps to change the views, each view has its own keymaps, listed below. At any time (from within `nvim-dap-view`'s main window) you can use `g?` to show a "help" window that lists all of them.
+
+There are also some default keybindings for navigating to other views.
 
 The help window itself has only 1 mapping: it can be closed with `q`.
 
@@ -31,6 +33,11 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | `<CR>` | Toggle filter                                |
 | **Sessions**                                          |
 | `<CR>` | Switch to a session                          |
+| **Navigation**                                        |
+|   `]v` | Go to next view                              |
+|   `[v` | Go to previous view                          |
+|   `[V` | Go to first view                             |
+|   `]V` | Go to last view                              |
 | **Help**                                              |
 |    `q` | Close                                        |
 

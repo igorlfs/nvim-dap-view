@@ -7,6 +7,7 @@ local autocmd = require("dap-view.options.autocmd")
 local term = require("dap-view.term")
 local state = require("dap-view.state")
 local globals = require("dap-view.globals")
+local tables = require("dap-view.util.tables")
 
 local M = {}
 
@@ -146,6 +147,37 @@ end
 ---@param section dapview.CustomSectionConfig
 M.register_view = function(id, section)
     setup.config.winbar.custom_sections[id] = section
+end
+
+---@class dapview.NavigateOpts
+---@field wrap boolean
+---@field count number
+
+---@param opts dapview.NavigateOpts
+M.navigate = function(opts)
+    if not util.is_buf_valid(state.bufnr) or not util.is_win_valid(state.winnr) then
+        vim.notify("Can't navigate within views: couldn't find the window")
+        return
+    end
+
+    local sections = setup.config.winbar.sections
+    local idx = tables.index_of(sections, state.current_section)
+
+    if idx == nil then
+        vim.notify("Can't navigate within views: couldn't find the current view")
+        return
+    end
+
+    local new_idx = idx + opts.count
+    if opts.wrap then
+        new_idx = ((new_idx - 1) % #sections) + 1
+    else
+        new_idx = math.min(#sections, math.max(1, new_idx))
+    end
+
+    local new_view = sections[new_idx]
+
+    winbar.show_content(new_view)
 end
 
 return M

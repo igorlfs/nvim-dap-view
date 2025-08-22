@@ -57,4 +57,13 @@ require("dap-view").show_view(view)
 
 Shows a given view. If the specified view is already the current one, jumps to its window.
 
+## Navigate
+
+```lua
+---@param opts {count: number, wrap: boolean}
+require("dap-view").navigate(opts)
+```
+
+Switches from the current view to another one by taking the current view's index (in the winbar) and adding a count. Has some default [keymaps](keymaps).
+
 [^1]: In the current tab. May close the views window in another tab.
