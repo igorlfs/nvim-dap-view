@@ -73,7 +73,7 @@ return {
                 label = "Sessions [K]",
                 short_label = " [K]",
                 action = function()
-                    views.switch_to_view("sessions")
+                    require("dap-view.views").switch_to_view("sessions")
                 end,
             },
             console = {
