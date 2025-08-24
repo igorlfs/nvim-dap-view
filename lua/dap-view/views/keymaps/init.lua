@@ -21,7 +21,7 @@ M.set_keymaps = function(buf)
         require("dap-view").navigate({ count = -vim._maxint, wrap = false })
     end, buf)
 
-    if buf then
+    if not buf then
         require("dap-view.views.keymaps.views").views_keysmps()
     end
 
