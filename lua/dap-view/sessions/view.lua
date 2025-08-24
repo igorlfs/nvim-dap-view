@@ -12,8 +12,15 @@ local sessions_widget
 
 local last_sessions_bufnr
 
-local build_widget = function()
-    return widgets.new_widget(state.bufnr, state.winnr, dap_widgets.sessions)
+local launch_and_refresh_widget = function()
+    if last_sessions_bufnr == nil or last_sessions_bufnr ~= state.bufnr then
+        sessions_widget = widgets.new_widget(state.bufnr, state.winnr, dap_widgets.sessions)
+        last_sessions_bufnr = state.bufnr
+
+        sessions_widget.open()
+    end
+
+    sessions_widget.refresh()
 end
 
 M.show = function()
@@ -23,28 +30,9 @@ M.show = function()
         return
     end
 
-    if last_sessions_bufnr == nil or last_sessions_bufnr ~= state.bufnr then
-        sessions_widget = build_widget()
-        last_sessions_bufnr = state.bufnr
-    end
-
-    assert(sessions_widget, "Session widget exists")
-
-    sessions_widget.open()
+    launch_and_refresh_widget()
 end
 
-M.refresh = function()
-    if last_sessions_bufnr == nil or last_sessions_bufnr ~= state.bufnr then
-        sessions_widget = build_widget()
-
-        last_sessions_bufnr = state.bufnr
-
-        sessions_widget.open()
-    elseif sessions_widget then
-        sessions_widget.refresh()
-    else
-        vim.notify("Error refreshing sessions widget, open a bug report")
-    end
-end
+M.refresh = launch_and_refresh_widget
 
 return M

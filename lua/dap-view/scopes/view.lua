@@ -14,8 +14,16 @@ local scopes_widget
 
 local last_scopes_bufnr
 
-local build_widget = function()
-    return widgets.new_widget(state.bufnr, state.winnr, dap_widgets.scopes)
+local launch_and_refresh_widget = function()
+    if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
+        scopes_widget = widgets.new_widget(state.bufnr, state.winnr, dap_widgets.scopes)
+        last_scopes_bufnr = state.bufnr
+
+        scopes_widget.open()
+    end
+
+    -- Always refresh, otherwise outdated information may be shown
+    scopes_widget.refresh()
 end
 
 M.show = function()
@@ -25,32 +33,13 @@ M.show = function()
         return
     end
 
-    if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
-        scopes_widget = build_widget()
-        last_scopes_bufnr = state.bufnr
-    end
-
-    assert(scopes_widget, "Scopes widget exists")
-
-    scopes_widget.open()
+    launch_and_refresh_widget()
 
     local lnum_count = api.nvim_buf_line_count(state.bufnr)
 
     views.cleanup_view(lnum_count == 1, "Debug adapter returned no scopes")
 end
 
-M.refresh = function()
-    if last_scopes_bufnr == nil or last_scopes_bufnr ~= state.bufnr then
-        scopes_widget = build_widget()
-
-        last_scopes_bufnr = state.bufnr
-
-        scopes_widget.open()
-    elseif scopes_widget then
-        scopes_widget.refresh()
-    else
-        vim.notify("Error refreshing scopes widget, open a bug report")
-    end
-end
+M.refresh = launch_and_refresh_widget
 
 return M
