@@ -45,3 +45,5 @@ end, {
     nargs = 1,
     bang = true,
 })
+
+require("dap-view").setup()

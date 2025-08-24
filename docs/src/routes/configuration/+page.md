@@ -2,6 +2,10 @@
 title: Configuration
 ---
 
+## Setup
+
+The default configuration below is applied when the plugin is _loaded_ (**no `setup` call required**). You can tweak the options by calling `require"dap-view".setup(opts)` or using your plugin manager's features (e.g., `lazy.nvim`'s `opts`). Your options are **deep merged** with the defaults, so you only have to override what you actually want to change.
+
 ## Defaults
 
 These are the default options for `nvim-dap-view`.
