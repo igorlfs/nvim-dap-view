@@ -22,20 +22,8 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         state.current_session_id = new.id
         state.current_adapter = new.config.type
 
-        -- Avoid creating useless buffers for child sessions
-        if new.parent == nil then
-            if not state.term_bufnrs[new.id] then
-                state.term_bufnrs[new.id] = term.setup_term_win_cmd()
-
-                if not (term_config.start_hidden or vim.tbl_contains(config.winbar.sections, "console")) then
-                    term.open_term_buf_win()
-                end
-            end
-        else
-            state.term_bufnrs[new.id] = state.term_bufnrs[new.parent.id]
-        end
-
-        if not vim.tbl_contains(term_config.hide, state.current_adapter) then
+        -- Handle switching the buf if session is already initialized
+        if new.term_buf and not vim.tbl_contains(term_config.hide, state.current_adapter) then
             term.switch_term_buf()
         end
 
@@ -58,6 +46,25 @@ dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
     -- Sync exception breakpoints for the newly initialized session
     -- The downside is that not all adapters support `configurationDone` :/
     require("dap-view.exceptions").update_exception_breakpoints_filters()
+
+    local config = setup.config
+    local term_config = config.windows.terminal
+
+    local has_console = vim.tbl_contains(config.winbar.sections, "console")
+    local hidden_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
+    local open_term = not term_config.start_hidden and not has_console and not hidden_adapter
+
+    -- We can't setup inside `on_session` hook because at that stage the session does not have a `term_buf`
+    term.setup_term_buf()
+
+    -- `term_buf` must be setup before calling open
+    if open_term then
+        term.open_term_buf_win()
+    end
+
+    if not hidden_adapter then
+        term.switch_term_buf()
+    end
 end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
@@ -142,7 +149,7 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
     end
 end
 
-dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
+dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
     -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
@@ -156,17 +163,6 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
         end
         if state.current_section == "sessions" then
             sessions.refresh()
-        end
-    end
-
-    -- TODO find a cleaner way to dispose of these buffers
-    local term_bufnr = state.term_bufnrs[session.id]
-    if util.is_buf_valid(term_bufnr) then
-        vim.api.nvim_buf_delete(term_bufnr, { force = true })
-    end
-    for k, v in pairs(state.term_bufnrs) do
-        if v == term_bufnr then
-            state.term_bufnrs[k] = nil
         end
     end
 

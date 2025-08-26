@@ -34,7 +34,7 @@ All of that in a unified, unintrusive window.
 
 ## Getting Started
 
-Start a regular debugging session. When desired, you can use `:DapViewOpen` to start the plugin. You can switch to another section using the letter outlined in the `'winbar'` (e.g., `B` for "Breakpoints"). Explore what you can do each section by using `g?` to inspect the keymaps.
+Start a regular debugging session. When desired, you can use `:DapViewOpen` to start the plugin. You can switch to another section using the letter outlined in the `'winbar'` (e.g., `B` for "Breakpoints"). Explore what you can do in each section by using `g?` to inspect the keymaps.
 
 Once you're done debugging, you can close the plugin with `:DapViewClose` and then terminate your session as usual.
 
