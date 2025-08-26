@@ -15,11 +15,14 @@ M.show = function()
         return
     end
 
-    assert(state.current_session_id, "has active session")
+    local session = dap.session()
+
+    assert(session ~= nil, "has active session")
+    assert(session.term_buf, "session has term")
 
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false
-        api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+        api.nvim_set_current_buf(session.term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
 
@@ -41,10 +44,18 @@ end
 ---III. There's no term win or it is invalid
 ---@return integer?
 M.open_term_buf_win = function()
-    if not state.current_session_id then
+    local session = require("dap").session()
+
+    if session == nil then
         return nil
     end
-    local term_bufnr = state.term_bufnrs[state.current_session_id]
+
+    local term_bufnr = session.term_buf
+
+    if term_bufnr == nil then
+        vim.notify_once("No terminal for the current session")
+        return nil
+    end
 
     local windows_config = setup.config.windows
     local term_config = setup.config.windows.terminal
@@ -74,13 +85,17 @@ M.open_term_buf_win = function()
     return state.term_winnr
 end
 
----Create a term buf and setup nvim-dap's `terminal_win_cmd` to use it
-M.setup_term_win_cmd = function()
-    -- Can't use an unlisted term buffers
-    -- See https://github.com/igorlfs/nvim-dap-view/pull/37#issuecomment-2785076872
-    local term_bufnr = api.nvim_create_buf(true, false)
+M.setup_term_buf = function()
+    local session = dap.session()
 
-    assert(term_bufnr ~= 0, "Failed to create dap-view-term buffer")
+    assert(session ~= nil, "has active session")
+
+    local term_bufnr = session.term_buf
+
+    if term_bufnr == nil then
+        vim.notify("No terminal for the current session")
+        return
+    end
 
     -- We have to set the filetype for each term buf to avoid issues when calling switch_term_buf
     -- See https://github.com/igorlfs/nvim-dap-view/issues/69
@@ -91,12 +106,6 @@ M.setup_term_win_cmd = function()
     end
 
     require("dap-view.term.scroll").scroll(term_bufnr)
-
-    dap.defaults.fallback.terminal_win_cmd = function()
-        return term_bufnr
-    end
-
-    return term_bufnr
 end
 
 M.switch_term_buf = function()
@@ -104,12 +113,21 @@ M.switch_term_buf = function()
     local winnr = (has_console and state.winnr) or state.term_winnr
     local is_console_active = state.current_section == "console"
 
+    local session = dap.session()
+
+    assert(session ~= nil, "has active session")
+
+    if session.term_buf == nil then
+        vim.notify_once("No terminal for the current session")
+        return
+    end
+
     if util.is_win_valid(winnr) and (is_console_active or not has_console) then
         ---@cast winnr integer
 
         api.nvim_win_call(winnr, function()
             vim.wo[winnr][0].winfixbuf = false
-            api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+            api.nvim_set_current_buf(session.term_buf)
             vim.wo[winnr][0].winfixbuf = true
 
             if is_console_active then

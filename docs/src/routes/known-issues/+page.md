@@ -9,7 +9,3 @@ title: Known Issues
 - Can't "toggle" a breakpoint ([#74](https://github.com/igorlfs/nvim-dap-view/issues/74))
 
 These limitations stem from `nvim-dap`'s breakpoints API (or more so, from the lack of a proper one). A new API is [planned](https://github.com/mfussenegger/nvim-dap/issues/1388).
-
-## The terminal buffer is cleared right after a session finishes ([#83](https://github.com/igorlfs/nvim-dap-view/issues/83))
-
-Due to a limitation in the way multisession support is currently implemented, it's necessary to eagerly close buffers. Read [this](https://github.com/mfussenegger/nvim-dap/discussions/1523) discussion for details.

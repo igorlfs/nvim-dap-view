@@ -1,3 +1,6 @@
+-- Let nvim-dap handle terminal buffers internally without interfering in the layout
+require("dap").defaults.fallback.terminal_win_cmd = nil
+
 local command = vim.api.nvim_create_user_command
 
 command("DapViewOpen", function()

@@ -22,7 +22,6 @@
 ---@class dapview.State
 ---@field bufnr? integer
 ---@field winnr? integer
----@field term_bufnrs {[number]: number}
 ---@field term_winnr? integer
 ---@field last_term_winnr? integer
 ---@field threads_filter string
@@ -40,7 +39,6 @@
 ---@field watched_expressions table<string, dapview.ExpressionPack>
 ---@field cur_pos table<dapview.DefaultSection,integer?>
 local M = {
-    term_bufnrs = {},
     threads_filter = "",
     threads_filter_invert = false,
     exceptions_options = {},
