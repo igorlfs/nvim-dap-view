@@ -18,7 +18,11 @@ M.show = function()
     local session = dap.session()
 
     assert(session ~= nil, "has active session")
-    assert(session.term_buf, "session has term")
+
+    if session.term_buf == nil then
+        vim.notify("No terminal for the current session")
+        return
+    end
 
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false
@@ -53,7 +57,6 @@ M.open_term_buf_win = function()
     local term_bufnr = session.term_buf
 
     if term_bufnr == nil then
-        vim.notify_once("No terminal for the current session")
         return nil
     end
 
@@ -93,7 +96,6 @@ M.setup_term_buf = function()
     local term_bufnr = session.term_buf
 
     if term_bufnr == nil then
-        vim.notify("No terminal for the current session")
         return
     end
 
@@ -118,7 +120,6 @@ M.switch_term_buf = function()
     assert(session ~= nil, "has active session")
 
     if session.term_buf == nil then
-        vim.notify_once("No terminal for the current session")
         return
     end
 
