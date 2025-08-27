@@ -3,7 +3,7 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
-local guard = require("dap-view.guard")
+local views = require("dap-view.views")
 local util = require("dap-view.util")
 
 local M = {}
@@ -11,11 +11,19 @@ local M = {}
 local api = vim.api
 
 M.show = function()
-    if not util.is_win_valid(state.winnr) or not guard.expect_session() then
+    if not util.is_win_valid(state.winnr) then
         return
     end
 
+    -- These should always be called, even if there's no session
+    winbar.refresh_winbar("console")
+    require("dap-view.term.options").set_win_options(state.winnr)
+
     local session = dap.session()
+
+    if views.cleanup_view(session == nil, "No active session") then
+        return
+    end
 
     assert(session ~= nil, "has active session")
 
@@ -29,10 +37,6 @@ M.show = function()
         api.nvim_set_current_buf(session.term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
-
-    require("dap-view.term.options").set_win_options(state.winnr)
-
-    winbar.refresh_winbar("console")
 end
 
 ---Hide the term win, does not affect the term buffer
