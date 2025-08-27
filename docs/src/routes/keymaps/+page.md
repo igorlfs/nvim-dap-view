@@ -33,6 +33,9 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | `<CR>` | Toggle filter                                |
 | **Sessions**                                          |
 | `<CR>` | Switch to a session                          |
+| **Terminal**                                          |
+|   `]s` | Go to next session                           |
+|   `[s` | Go to previous session                       |
 | **Navigation**                                        |
 |   `]v` | Go to next view                              |
 |   `[v` | Go to previous view                          |

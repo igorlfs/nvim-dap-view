@@ -107,6 +107,7 @@ M.setup_term_buf = function()
         winbar.set_action_keymaps(term_bufnr)
     end
 
+    require("dap-view.term.keymaps").set_keymaps(term_bufnr)
     require("dap-view.term.scroll").scroll(term_bufnr)
 end
 
