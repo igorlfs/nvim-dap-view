@@ -96,12 +96,6 @@ M.open = function(hide_terminal)
         -- The buffer is already being wiped out, so prevent close() from doing it again.
         state.bufnr = nil
 
-        -- Prevent the following scenario: user finishes all sessions and quits via the console
-        -- In the next open, they would start at the console, which is forbidden
-        if state.current_section == "console" then
-            state.current_section = setup.config.winbar.default_section
-        end
-
         M.close()
     end)
 end

@@ -100,9 +100,6 @@ function M.validate(config)
         local pretty_sections = vim.inspect(sections)
         error("Default section (" .. default .. ") not listed as one of the sections " .. pretty_sections)
     end
-    if default == "console" then
-        error("Can't use 'console' as the default section")
-    end
 end
 
 return M
