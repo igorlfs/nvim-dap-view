@@ -67,7 +67,8 @@ dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
         term.open_term_buf_win()
     end
 
-    if not hidden_adapter then
+    -- Enabling "console" has priority over hiding an adapter
+    if has_console or not hidden_adapter then
         term.switch_term_buf()
     end
 end
