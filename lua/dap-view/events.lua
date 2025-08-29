@@ -142,7 +142,9 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
     end
 end
 
-dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
+local cleanup_events = { "disconnect", "terminated" }
+
+local function cleanup(session)
     -- Refresh threads view on exit to avoid showing outdated trace
     if state.current_section == "threads" then
         threads.show()
@@ -173,8 +175,12 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     winbar.redraw_controls()
 end
 
+for _, event in ipairs(cleanup_events) do
+    dap.listeners.after[event][SUBSCRIPTION_ID] = cleanup
+end
+
 --- Refresh winbar on dap session state change events not having a dedicated event handler
-local winbar_redraw_events = { "continue", "disconnect", "event_exited", "event_stopped", "restart" }
+local winbar_redraw_events = { "continue", "event_exited", "event_stopped", "restart" }
 
 for _, event in ipairs(winbar_redraw_events) do
     dap.listeners.after[event][SUBSCRIPTION_ID] = winbar.redraw_controls
