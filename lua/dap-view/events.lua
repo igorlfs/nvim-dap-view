@@ -27,9 +27,14 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             term.switch_term_buf()
         end
 
-        -- TODO: upstream this?
-        if util.is_buf_valid(state.bufnr) and state.current_section == "sessions" then
-            sessions.refresh()
+        if util.is_buf_valid(state.bufnr) then
+            -- TODO: upstream this?
+            if state.current_section == "sessions" then
+                sessions.refresh()
+            end
+            if state.current_section == "console" then
+                require("dap-view.term").show()
+            end
         end
 
         -- Sync exception breakpoints
