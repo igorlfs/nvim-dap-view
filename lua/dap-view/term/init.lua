@@ -27,8 +27,7 @@ M.show = function()
 
     assert(session ~= nil, "has active session")
 
-    if session.term_buf == nil then
-        vim.notify("No terminal for the current session")
+    if views.cleanup_view(session.term_buf == nil, "No terminal for the current session") then
         return
     end
 
