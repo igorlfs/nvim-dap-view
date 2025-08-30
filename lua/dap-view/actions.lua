@@ -8,6 +8,7 @@ local term = require("dap-view.term")
 local state = require("dap-view.state")
 local globals = require("dap-view.globals")
 local tables = require("dap-view.util.tables")
+local traversal = require("dap-view.tree.traversal")
 
 local M = {}
 
@@ -164,7 +165,8 @@ M.navigate = function(opts)
         return
     end
 
-    local array = is_session and dap.sessions() or setup.config.winbar.sections
+    -- We actually need to flatten the session, because sessions can be nested
+    local array = is_session and traversal.flatten_sessions(dap.sessions()) or setup.config.winbar.sections
     local idx, sorted_keys = unpack(tables.index_of(array, is_session and session or state.current_section) or {})
 
     if idx == nil then
