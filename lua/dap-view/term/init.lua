@@ -1,4 +1,5 @@
 local dap = require("dap")
+local adapter = require("dap-view.util.adapter")
 
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
@@ -9,6 +10,21 @@ local util = require("dap-view.util")
 local M = {}
 
 local api = vim.api
+
+---Workaround to fetch the term_buf for sessions created via `startDebugging` from js-debug-adapter
+---Only the top-level session owns the buf, children need to traverse parents to get it
+---The children sessions are the ones who actually control the interaction with the terminal
+---Therefore, the term_buf should be associated with them
+---@param session dap.Session
+local fetch_term_buf = function(session)
+    local parent = session
+    while parent ~= nil do
+        if parent.term_buf then
+            return parent.term_buf
+        end
+        parent = session.parent
+    end
+end
 
 M.show = function()
     if not util.is_win_valid(state.winnr) then
@@ -27,13 +43,18 @@ M.show = function()
 
     assert(session ~= nil, "has active session")
 
-    if views.cleanup_view(session.term_buf == nil, "No terminal for the current session") then
+    local term_buf = fetch_term_buf(session)
+    -- Do not allow switching to the root session from js-debug-adapter
+    -- If that were shown, it could be misleading, since the top-level session does not have any control over the terminal
+    -- i.e., the user would see a terminal but they wouldn't be able to step or control the flow from the parent session
+    local should_hide = adapter.is_js_adapter(session.config.type) and session.parent == nil
+    if views.cleanup_view(term_buf == nil or should_hide, "No terminal for the current session") then
         return
     end
 
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false
-        api.nvim_set_current_buf(session.term_buf)
+        api.nvim_set_current_buf(term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
 end
@@ -57,7 +78,7 @@ M.open_term_buf_win = function()
         return nil
     end
 
-    local term_bufnr = session.term_buf
+    local term_bufnr = fetch_term_buf(session)
 
     if term_bufnr == nil then
         return nil
@@ -96,7 +117,7 @@ M.setup_term_buf = function()
 
     assert(session ~= nil, "has active session")
 
-    local term_bufnr = session.term_buf
+    local term_bufnr = fetch_term_buf(session)
 
     if term_bufnr == nil then
         return
@@ -123,7 +144,9 @@ M.switch_term_buf = function()
 
     assert(session ~= nil, "has active session")
 
-    if session.term_buf == nil then
+    local term_bufnr = fetch_term_buf(session)
+
+    if term_bufnr == nil then
         return
     end
 
@@ -132,7 +155,7 @@ M.switch_term_buf = function()
 
         api.nvim_win_call(winnr, function()
             vim.wo[winnr][0].winfixbuf = false
-            api.nvim_set_current_buf(session.term_buf)
+            api.nvim_set_current_buf(term_bufnr)
             vim.wo[winnr][0].winfixbuf = true
 
             if is_console_active then
