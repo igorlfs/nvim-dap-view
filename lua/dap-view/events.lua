@@ -23,7 +23,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         state.current_adapter = new.config.type
 
         -- Handle switching the buf if session is already initialized
-        if new.term_buf and not vim.tbl_contains(term_config.hide, state.current_adapter) then
+        if term.fetch_term_buf(new) and not vim.tbl_contains(term_config.hide, state.current_adapter) then
             term.switch_term_buf()
         end
 
