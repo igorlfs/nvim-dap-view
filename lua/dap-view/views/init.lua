@@ -54,7 +54,7 @@ M.switch_to_view = function(view)
     local buf_len = api.nvim_buf_line_count(state.bufnr)
     state.cur_pos[view] = math.min(cursor_line, buf_len)
 
-    api.nvim_win_set_cursor(state.winnr, { state.cur_pos[view], 1 })
+    api.nvim_win_set_cursor(state.winnr, { state.cur_pos[view], 0 })
 end
 
 return M

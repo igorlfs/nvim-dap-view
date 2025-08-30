@@ -1,31 +1,62 @@
 local dap = require("dap")
+local adapter = require("dap-view.util.adapter")
 
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
-local guard = require("dap-view.guard")
+local views = require("dap-view.views")
 local util = require("dap-view.util")
 
 local M = {}
 
 local api = vim.api
 
+---Workaround to fetch the term_buf for sessions created via `startDebugging` from js-debug-adapter
+---Only the top-level session owns the buf, children need to traverse parents to get it
+---The children sessions are the ones who actually control the interaction with the terminal
+---Therefore, the term_buf should be associated with them
+---@param session dap.Session
+M.fetch_term_buf = function(session)
+    local parent = session
+    while parent ~= nil do
+        if parent.term_buf then
+            return parent.term_buf
+        end
+        parent = session.parent
+    end
+end
+
 M.show = function()
-    if not util.is_win_valid(state.winnr) or not guard.expect_session() then
+    if not util.is_win_valid(state.winnr) then
         return
     end
 
-    assert(state.current_session_id, "has active session")
+    -- These should always be called, even if there's no session
+    winbar.refresh_winbar("console")
+    require("dap-view.term.options").set_win_options(state.winnr)
+
+    local session = dap.session()
+
+    if views.cleanup_view(session == nil, "No active session") then
+        return
+    end
+
+    assert(session ~= nil, "has active session")
+
+    local term_buf = M.fetch_term_buf(session)
+    -- Do not allow switching to the root session from js-debug-adapter
+    -- If that were shown, it could be misleading, since the top-level session does not have any control over the terminal
+    -- i.e., the user would see a terminal but they wouldn't be able to step or control the flow from the parent session
+    local should_hide = adapter.is_js_adapter(session.config.type) and session.parent == nil
+    if views.cleanup_view(term_buf == nil or should_hide, "No terminal for the current session") then
+        return
+    end
 
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false
-        api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+        api.nvim_set_current_buf(term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
-
-    require("dap-view.term.options").set_win_options(state.winnr)
-
-    winbar.refresh_winbar("console")
 end
 
 ---Hide the term win, does not affect the term buffer
@@ -41,10 +72,17 @@ end
 ---III. There's no term win or it is invalid
 ---@return integer?
 M.open_term_buf_win = function()
-    if not state.current_session_id then
+    local session = require("dap").session()
+
+    if session == nil then
         return nil
     end
-    local term_bufnr = state.term_bufnrs[state.current_session_id]
+
+    local term_bufnr = M.fetch_term_buf(session)
+
+    if term_bufnr == nil then
+        return nil
+    end
 
     local windows_config = setup.config.windows
     local term_config = setup.config.windows.terminal
@@ -74,13 +112,16 @@ M.open_term_buf_win = function()
     return state.term_winnr
 end
 
----Create a term buf and setup nvim-dap's `terminal_win_cmd` to use it
-M.setup_term_win_cmd = function()
-    -- Can't use an unlisted term buffers
-    -- See https://github.com/igorlfs/nvim-dap-view/pull/37#issuecomment-2785076872
-    local term_bufnr = api.nvim_create_buf(true, false)
+M.setup_term_buf = function()
+    local session = dap.session()
 
-    assert(term_bufnr ~= 0, "Failed to create dap-view-term buffer")
+    assert(session ~= nil, "has active session")
+
+    local term_bufnr = M.fetch_term_buf(session)
+
+    if term_bufnr == nil then
+        return
+    end
 
     -- We have to set the filetype for each term buf to avoid issues when calling switch_term_buf
     -- See https://github.com/igorlfs/nvim-dap-view/issues/69
@@ -90,13 +131,8 @@ M.setup_term_win_cmd = function()
         winbar.set_action_keymaps(term_bufnr)
     end
 
+    require("dap-view.term.keymaps").set_keymaps(term_bufnr)
     require("dap-view.term.scroll").scroll(term_bufnr)
-
-    dap.defaults.fallback.terminal_win_cmd = function()
-        return term_bufnr
-    end
-
-    return term_bufnr
 end
 
 M.switch_term_buf = function()
@@ -104,12 +140,22 @@ M.switch_term_buf = function()
     local winnr = (has_console and state.winnr) or state.term_winnr
     local is_console_active = state.current_section == "console"
 
+    local session = dap.session()
+
+    assert(session ~= nil, "has active session")
+
+    local term_bufnr = M.fetch_term_buf(session)
+
+    if term_bufnr == nil then
+        return
+    end
+
     if util.is_win_valid(winnr) and (is_console_active or not has_console) then
         ---@cast winnr integer
 
         api.nvim_win_call(winnr, function()
             vim.wo[winnr][0].winfixbuf = false
-            api.nvim_set_current_buf(state.term_bufnrs[state.current_session_id])
+            api.nvim_set_current_buf(term_bufnr)
             vim.wo[winnr][0].winfixbuf = true
 
             if is_console_active then

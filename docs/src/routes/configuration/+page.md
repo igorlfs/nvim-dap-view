@@ -20,7 +20,7 @@ return {
         show = true,
         -- You can add a "console" section to merge the terminal with the other views
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
-        -- Must be one of the sections declared above (except for "console")
+        -- Must be one of the sections declared above
         default_section = "watches",
         -- Configure each section individually
         base_sections = {

@@ -8,6 +8,7 @@ local term = require("dap-view.term")
 local state = require("dap-view.state")
 local globals = require("dap-view.globals")
 local tables = require("dap-view.util.tables")
+local traversal = require("dap-view.tree.traversal")
 
 local M = {}
 
@@ -96,12 +97,6 @@ M.open = function(hide_terminal)
         -- The buffer is already being wiped out, so prevent close() from doing it again.
         state.bufnr = nil
 
-        -- Prevent the following scenario: user finishes all sessions and quits via the console
-        -- In the next open, they would start at the console, which is forbidden
-        if state.current_section == "console" then
-            state.current_section = setup.config.winbar.default_section
-        end
-
         M.close()
     end)
 end
@@ -152,32 +147,52 @@ end
 ---@class dapview.NavigateOpts
 ---@field wrap boolean
 ---@field count number
+---@field type? "views" | "sessions"
 
 ---@param opts dapview.NavigateOpts
 M.navigate = function(opts)
-    if not util.is_buf_valid(state.bufnr) or not util.is_win_valid(state.winnr) then
+    local is_session = opts.type == "sessions"
+
+    if (not util.is_buf_valid(state.bufnr) or not util.is_win_valid(state.winnr)) and not is_session then
         vim.notify("Can't navigate within views: couldn't find the window")
         return
     end
 
-    local sections = setup.config.winbar.sections
-    local idx = tables.index_of(sections, state.current_section)
+    local session = dap.session()
+
+    if not session and is_session then
+        vim.notify("Can't navigate within sessions: no session running")
+        return
+    end
+
+    -- We actually need to flatten the session, because sessions can be nested
+    local array = is_session and traversal.flatten_sessions(dap.sessions()) or setup.config.winbar.sections
+    local idx, sorted_keys = unpack(tables.index_of(array, is_session and session or state.current_section) or {})
 
     if idx == nil then
-        vim.notify("Can't navigate within views: couldn't find the current view")
+        vim.notify("Can't navigate: couldn't find the current object")
         return
     end
 
     local new_idx = idx + opts.count
+    -- Length operator is unreliable for tables with gaps
+    local len = #sorted_keys
+
     if opts.wrap then
-        new_idx = ((new_idx - 1) % #sections) + 1
+        new_idx = ((new_idx - 1) % len) + 1
     else
-        new_idx = math.min(#sections, math.max(1, new_idx))
+        new_idx = math.min(len, math.max(1, new_idx))
     end
 
-    local new_view = sections[new_idx]
+    if opts.type == "sessions" then
+        ---@cast array table<number,dap.Session>
+        dap.set_session(array[sorted_keys[new_idx]])
+    else
+        ---@cast array dapview.Section[]
+        local new_view = array[sorted_keys[new_idx]]
 
-    winbar.show_content(new_view)
+        winbar.show_content(new_view)
+    end
 end
 
 return M
