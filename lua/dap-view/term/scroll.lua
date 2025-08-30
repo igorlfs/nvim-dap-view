@@ -23,10 +23,9 @@ M.scroll = function(bufnr)
         end,
     })
 
-    local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr or state.term_winnr
-
     api.nvim_buf_attach(bufnr, false, {
         on_lines = function()
+            local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr or state.term_winnr
             if not util.is_win_valid(winnr) then
                 return
             end
