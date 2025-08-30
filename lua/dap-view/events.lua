@@ -31,8 +31,11 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             -- TODO: upstream this?
             if state.current_section == "sessions" then
                 sessions.refresh()
-            end
-            if state.current_section == "console" then
+            elseif state.current_section == "threads" then
+                require("dap-view.views").switch_to_view("threads")
+            elseif state.current_section == "scopes" then
+                scopes.refresh()
+            elseif state.current_section == "console" then
                 require("dap-view.term").show()
             end
         end
