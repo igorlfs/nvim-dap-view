@@ -16,7 +16,7 @@ local api = vim.api
 ---The children sessions are the ones who actually control the interaction with the terminal
 ---Therefore, the term_buf should be associated with them
 ---@param session dap.Session
-local fetch_term_buf = function(session)
+M.fetch_term_buf = function(session)
     local parent = session
     while parent ~= nil do
         if parent.term_buf then
@@ -43,7 +43,7 @@ M.show = function()
 
     assert(session ~= nil, "has active session")
 
-    local term_buf = fetch_term_buf(session)
+    local term_buf = M.fetch_term_buf(session)
     -- Do not allow switching to the root session from js-debug-adapter
     -- If that were shown, it could be misleading, since the top-level session does not have any control over the terminal
     -- i.e., the user would see a terminal but they wouldn't be able to step or control the flow from the parent session
@@ -78,7 +78,7 @@ M.open_term_buf_win = function()
         return nil
     end
 
-    local term_bufnr = fetch_term_buf(session)
+    local term_bufnr = M.fetch_term_buf(session)
 
     if term_bufnr == nil then
         return nil
@@ -117,7 +117,7 @@ M.setup_term_buf = function()
 
     assert(session ~= nil, "has active session")
 
-    local term_bufnr = fetch_term_buf(session)
+    local term_bufnr = M.fetch_term_buf(session)
 
     if term_bufnr == nil then
         return
@@ -144,7 +144,7 @@ M.switch_term_buf = function()
 
     assert(session ~= nil, "has active session")
 
-    local term_bufnr = fetch_term_buf(session)
+    local term_bufnr = M.fetch_term_buf(session)
 
     if term_bufnr == nil then
         return
