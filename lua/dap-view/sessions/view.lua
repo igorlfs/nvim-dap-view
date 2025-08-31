@@ -21,14 +21,12 @@ local launch_and_refresh_widget = function()
     end
 
     sessions_widget.refresh()
+
+    views.cleanup_view(not dap.session(), "No active session")
 end
 
 M.show = function()
     winbar.refresh_winbar("sessions")
-
-    if views.cleanup_view(not dap.session(), "No active session") then
-        return
-    end
 
     launch_and_refresh_widget()
 end
