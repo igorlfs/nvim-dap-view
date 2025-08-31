@@ -31,10 +31,10 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             -- TODO: upstream this?
             if state.current_section == "sessions" then
                 sessions.refresh()
-            elseif state.current_section == "threads" then
-                require("dap-view.views").switch_to_view("threads")
             elseif state.current_section == "scopes" then
                 scopes.refresh()
+            elseif state.current_section == "threads" then
+                require("dap-view.views").switch_to_view("threads")
             elseif state.current_section == "console" then
                 require("dap-view.term").show()
             end
@@ -44,6 +44,8 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         -- Does not cover session initialization
         -- At this stage, the session is not fully initialized yet
         require("dap-view.exceptions").update_exception_breakpoints_filters()
+
+        -- TODO maybe we should have a better way to track and update watched expressions when changing sessions
     else
         state.current_session_id = nil
         state.current_adapter = nil
@@ -87,8 +89,7 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     if util.is_buf_valid(state.bufnr) then
         if state.current_section == "scopes" then
             scopes.refresh()
-        end
-        if state.current_section == "sessions" then
+        elseif state.current_section == "sessions" then
             sessions.refresh()
         end
     end
@@ -104,6 +105,20 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     -- It may cause race conditions
     for expr, _ in pairs(state.watched_expressions) do
         eval.eval_expr(expr)
+    end
+end
+
+---@type dap.RequestListener[]
+local continue = { "event_continued", "continue" }
+
+for _, listener in ipairs(continue) do
+    dap.listeners.after[listener][SUBSCRIPTION_ID] = function()
+        -- Program is no longer stopped, refresh threads to prevent user from jumping to a no longer accurate location
+        if state.current_section == "threads" then
+            require("dap-view.views").switch_to_view("threads")
+        end
+
+        winbar.redraw_controls()
     end
 end
 
@@ -178,27 +193,28 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
     winbar.redraw_controls()
 end
 
---- Refresh winbar on dap session state change events not having a dedicated event handler
-local winbar_redraw_events = { "continue", "disconnect", "event_exited", "event_stopped", "restart" }
+---@type dap.RequestListener[]
+local winbar_redraw = { "disconnect", "event_exited", "event_stopped", "restart" }
 
-for _, event in ipairs(winbar_redraw_events) do
-    dap.listeners.after[event][SUBSCRIPTION_ID] = winbar.redraw_controls
+for _, listener in ipairs(winbar_redraw) do
+    dap.listeners.after[listener][SUBSCRIPTION_ID] = winbar.redraw_controls
 end
 
-local auto_open_events = { "attach", "launch" }
+---@type dap.RequestListener[]
+local auto_open = { "attach", "launch" }
 
-for _, event in ipairs(auto_open_events) do
-    dap.listeners.before[event][SUBSCRIPTION_ID] = function()
+for _, listener in ipairs(auto_open) do
+    dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
         if setup.config.auto_toggle then
             require("dap-view").open()
         end
     end
 end
 
-local auto_close_events = { "event_terminated", "event_exited" }
+local auto_close = { "event_terminated", "event_exited" }
 
-for _, event in ipairs(auto_close_events) do
-    dap.listeners.before[event][SUBSCRIPTION_ID] = function()
+for _, listener in ipairs(auto_close) do
+    dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
         if setup.config.auto_toggle then
             require("dap-view").close()
         end

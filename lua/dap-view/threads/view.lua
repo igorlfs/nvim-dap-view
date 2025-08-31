@@ -24,6 +24,10 @@ M.show = function()
             return
         end
 
+        if views.cleanup_view(session.stopped_thread_id == nil, "No stopped thread") then
+            return
+        end
+
         if views.cleanup_view(vim.tbl_isempty(session.threads), "Debug adapter returned no threads") then
             return
         end
