@@ -1,7 +1,6 @@
 require("dap-view.highlight")
 require("dap-view.autocmds")
--- Connect hooks to listen to DAP events
-require("dap-view.events")
+require("dap-view.listeners")
 
 local actions = require("dap-view.actions")
 
