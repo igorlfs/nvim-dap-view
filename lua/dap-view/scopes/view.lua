@@ -4,6 +4,7 @@ local dap_widgets = require("dap.ui.widgets")
 local views = require("dap-view.views")
 local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
+local util = require("dap-view.util")
 local widgets = require("dap-view.util.widgets")
 
 local M = {}
@@ -24,6 +25,14 @@ local launch_and_refresh_widget = function()
     scopes_widget.refresh()
 
     local session = dap.session()
+
+    -- We need to ensure that the window is valid before calling `cleanup_view`
+    -- One scenario where it can invalid is when switching tabs: the window is valid for the original tab
+    -- but not for the new one
+    if not util.is_win_valid(state.winnr) then
+        return
+    end
+
     if views.cleanup_view(not session, "No active session") then
         return
     end

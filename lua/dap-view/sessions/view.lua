@@ -4,6 +4,7 @@ local dap_widgets = require("dap.ui.widgets")
 local views = require("dap-view.views")
 local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
+local util = require("dap-view.util")
 local widgets = require("dap-view.util.widgets")
 
 local M = {}
@@ -18,6 +19,10 @@ local launch_and_refresh_widget = function()
         last_sessions_bufnr = state.bufnr
 
         sessions_widget.open()
+    end
+
+    if not util.is_win_valid(state.winnr) then
+        return
     end
 
     sessions_widget.refresh()
