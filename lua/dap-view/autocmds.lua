@@ -118,6 +118,9 @@ api.nvim_create_autocmd("BufEnter", {
 api.nvim_create_autocmd("CursorMoved", {
     pattern = globals.MAIN_BUF_NAME,
     callback = function()
-        state.cur_pos[state.current_section] = api.nvim_win_get_cursor(state.winnr)[1]
+        -- The window may be invalid when switching tabs, given that now we defer the update when switching tabs
+        if util.is_win_valid(state.winnr) then
+            state.cur_pos[state.current_section] = api.nvim_win_get_cursor(state.winnr)[1]
+        end
     end,
 })
