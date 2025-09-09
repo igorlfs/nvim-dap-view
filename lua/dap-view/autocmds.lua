@@ -63,6 +63,16 @@ api.nvim_create_autocmd("TabEnter", {
                         winnr = win
                     end
                 end
+
+                for custom_section_id, custom_section in pairs(setup.config.winbar.custom_sections) do
+                    if
+                        ft == custom_section.filetype
+                        and state.current_section == custom_section_id
+                        and state.winnr == nil
+                    then
+                        winnr = win
+                    end
+                end
             end
 
             state.winnr = winnr
