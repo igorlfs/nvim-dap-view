@@ -27,7 +27,7 @@ M.fetch_term_buf = function(session)
 end
 
 M.show = function()
-    if not util.is_win_valid(state.winnr) then
+    if not util.is_win_valid(state.winnr) or not util.is_buf_valid(state.bufnr) then
         return
     end
 
