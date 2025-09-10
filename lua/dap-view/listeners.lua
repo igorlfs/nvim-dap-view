@@ -207,6 +207,19 @@ for _, listener in ipairs(auto_close) do
             -- Personally, I think it only makes sense to call close when all sessions finish
             if #dap_sessions == 1 then
                 require("dap-view.actions").close(true)
+
+                local session = assert(dap.session(), "has session")
+
+                -- If the console view is shown in another tab
+                -- it won't be closed by `actions.close` because the winnr is no longer valid
+                -- (given that we switched tabs) and the buffer isn't the main one.
+                --
+                -- Therefore, we have to handle this case separetely by deleting the buffer manually
+                local term_buf = term.fetch_term_buf(session)
+                if util.is_buf_valid(term_buf) then
+                    ---@cast term_buf integer
+                    vim.api.nvim_buf_delete(term_buf, { force = true })
+                end
             end
         end
     end
