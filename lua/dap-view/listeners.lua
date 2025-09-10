@@ -11,6 +11,7 @@ local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
 local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
+local traversal = require("dap-view.tree.traversal")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -199,7 +200,14 @@ local auto_close = { "event_terminated", "event_exited" }
 for _, listener in ipairs(auto_close) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
         if setup.config.auto_toggle then
-            require("dap-view").close()
+            local dap_sessions = traversal.flatten_sessions(dap.sessions())
+
+            -- Auto toggle is a bit ambiguous if there are multiple sessions running
+            -- Should we call close if a single session is finished, even if others are running?
+            -- Personally, I think it only makes sense to call close when all sessions finish
+            if #dap_sessions == 1 then
+                require("dap-view.actions").close(true)
+            end
         end
     end
 end

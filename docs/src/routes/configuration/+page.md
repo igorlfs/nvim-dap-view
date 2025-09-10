@@ -139,6 +139,7 @@ return {
     },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     switchbuf = "usetab",
+    -- Auto open when a session is started and auto close when all sessions finish
     auto_toggle = false,
     -- Reopen dapview when switching tabs
     follow_tab = false,
