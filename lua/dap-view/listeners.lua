@@ -195,6 +195,7 @@ for _, listener in ipairs(auto_open) do
     end
 end
 
+---@type dap.RequestListener[]
 local auto_close = { "event_terminated", "event_exited" }
 
 for _, listener in ipairs(auto_close) do

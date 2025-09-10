@@ -16,17 +16,15 @@ local M = {}
 M.refresh_session_based_views = function()
     if state.current_section == "threads" then
         threads.show()
-    end
-
-    if state.current_section == "exceptions" then
+    elseif state.current_section == "exceptions" then
         exceptions.show()
     end
 
     if util.is_buf_valid(state.bufnr) then
         if state.current_section == "scopes" then
             scopes.refresh()
-        end
-        if state.current_section == "sessions" then
+        elseif state.current_section == "sessions" then
+            -- TODO cursor position isn't kept after selecting a new session
             sessions.refresh()
         end
     end
