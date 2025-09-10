@@ -5,11 +5,11 @@ local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
 local sessions = require("dap-view.sessions.view")
 local util = require("dap-view.util")
-local threads = require("dap-view.threads.view")
 local exceptions = require("dap-view.exceptions.view")
 local term = require("dap-view.term")
 local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
+local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
 
 local SUBSCRIPTION_ID = "dap-view"
@@ -27,18 +27,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             term.switch_term_buf()
         end
 
-        if util.is_buf_valid(state.bufnr) then
-            -- TODO: upstream this?
-            if state.current_section == "sessions" then
-                sessions.refresh()
-            elseif state.current_section == "scopes" then
-                scopes.refresh()
-            elseif state.current_section == "threads" then
-                require("dap-view.views").switch_to_view("threads")
-            elseif state.current_section == "console" then
-                require("dap-view.term").show()
-            end
-        end
+        refresher.refresh_session_based_views()
 
         -- Sync exception breakpoints
         -- Does not cover session initialization
@@ -173,28 +162,22 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
     end
 end
 
+-- The debuggee has terminated
 dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
-    -- Refresh threads view on exit to avoid showing outdated trace
-    if state.current_section == "threads" then
-        threads.show()
-    end
-    if state.current_section == "exceptions" then
-        exceptions.show()
-    end
-    if util.is_buf_valid(state.bufnr) then
-        if state.current_section == "scopes" then
-            scopes.refresh()
-        end
-        if state.current_section == "sessions" then
-            sessions.refresh()
-        end
-    end
+    refresher.refresh_session_based_views()
+
+    winbar.redraw_controls()
+end
+
+-- The debuggee was disconnected, which may happen outside of a "regular termination"
+dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function()
+    refresher.refresh_session_based_views()
 
     winbar.redraw_controls()
 end
 
 ---@type dap.RequestListener[]
-local winbar_redraw = { "disconnect", "event_exited", "event_stopped", "restart" }
+local winbar_redraw = { "event_exited", "event_stopped", "restart" }
 
 for _, listener in ipairs(winbar_redraw) do
     dap.listeners.after[listener][SUBSCRIPTION_ID] = winbar.redraw_controls
