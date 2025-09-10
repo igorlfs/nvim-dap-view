@@ -22,7 +22,8 @@ M.fetch_term_buf = function(session)
         if parent.term_buf then
             return parent.term_buf
         end
-        parent = session.parent
+
+        parent = parent.parent
     end
 end
 
