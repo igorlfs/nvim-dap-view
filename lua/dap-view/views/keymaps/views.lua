@@ -61,9 +61,9 @@ M.views_keysmps = function()
         if state.current_section == "watches" then
             local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
-            local expression = state.expressions_by_line[cursor_line]
-            if expression then
-                vim.ui.input({ prompt = "Expression: ", default = expression.name }, function(input)
+            local expression_view = state.expression_views_by_line[cursor_line]
+            if expression_view then
+                vim.ui.input({ prompt = "Expression: ", default = expression_view.expression }, function(input)
                     if input then
                         watches_actions.edit_watch_expr(input, cursor_line)
                     end
@@ -99,14 +99,14 @@ M.views_keysmps = function()
             local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
             local get_default = function()
-                local expr = state.expressions_by_line[cursor_line]
-                if expr and expr.expression and type(expr.expression.response) ~= "string" then
-                    return expr.expression.response.result
+                local expression_view = state.expression_views_by_line[cursor_line]
+                if expression_view and expression_view.view and expression_view.view.response then
+                    return expression_view.view.response.result
                 end
 
-                local var = state.variables_by_line[cursor_line]
-                if var then
-                    return var.response.value
+                local variable_reference = state.variable_views_by_line[cursor_line]
+                if variable_reference then
+                    return variable_reference.variable.value
                 end
 
                 return ""

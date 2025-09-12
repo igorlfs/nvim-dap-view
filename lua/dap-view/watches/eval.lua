@@ -2,62 +2,64 @@ local state = require("dap-view.state")
 
 local M = {}
 
----@param expr_name string
----@param callback? fun(): nil
-M.eval_expr = function(expr_name, callback)
+---@param expression string
+---@param skip_redraw boolean?
+M.evaluate_expression = function(expression, skip_redraw)
     local session = assert(require("dap").session(), "has active session")
 
     coroutine.wrap(function()
         local frame_id = session.current_frame and session.current_frame.id
 
-        local err, result =
-            session:request("evaluate", { expression = expr_name, context = "watch", frameId = frame_id })
+        local err, response =
+            session:request("evaluate", { expression = expression, context = "watch", frameId = frame_id })
 
-        local previous_expr = state.watched_expressions[expr_name]
+        local previous_expression_view = state.watched_expressions[expression]
 
-        local previous_result = previous_expr and previous_expr.response and previous_expr.response.result
-        if previous_expr and result then
-            previous_expr.updated = previous_result ~= result.result
+        local previous_result = previous_expression_view
+            and previous_expression_view.response
+            and previous_expression_view.response.result
+
+        if previous_expression_view and response then
+            previous_expression_view.updated = previous_result ~= response.result
         end
 
-        if err and previous_expr then
-            previous_expr.children = nil
+        if previous_expression_view and err then
+            previous_expression_view.children = nil
+            previous_expression_view.updated = false
+            previous_expression_view.expanded = false
         end
 
-        local response = err and tostring(err) or result
+        ---@type dapview.ExpressionView
+        local default_expression_view = {
+            response = response,
+            err = err,
+            updated = false,
+            expanded = true,
+            children = nil,
+        }
 
-        ---@type dapview.ExpressionPack
-        local new_expr
-        if previous_expr then
-            previous_expr.response = response
-            new_expr = previous_expr
-        else
-            new_expr = { response = response, updated = false, expanded = true, children = nil }
+        if previous_expression_view then
+            previous_expression_view.response = response
+            previous_expression_view.err = err
         end
 
-        local variables_reference
-        if new_expr and type(new_expr.response) == "table" then
-            variables_reference = new_expr.response.variablesReference
-        end
+        ---@type dapview.ExpressionView
+        local new_expression_view = previous_expression_view or default_expression_view
 
-        local is_expanded = previous_expr and previous_expr.expanded or not previous_expr
+        if new_expression_view.expanded then
+            local variables_reference = response and response.variablesReference
 
-        if is_expanded and variables_reference and variables_reference > 0 then
-            M.expand_var(variables_reference, new_expr.children, function(children)
-                new_expr.children = children
-
-                state.watched_expressions[expr_name] = new_expr
-
-                if callback then
-                    callback()
-                end
-            end)
-        else
-            state.watched_expressions[expr_name] = new_expr
-
-            if callback then
-                callback()
+            if variables_reference and variables_reference > 0 then
+                new_expression_view.children = M.expand_variable(variables_reference, new_expression_view.children)
+            else
+                new_expression_view.children = nil
             end
+        end
+
+        state.watched_expressions[expression] = new_expression_view
+
+        if state.current_section == "watches" and not skip_redraw then
+            require("dap-view.views").switch_to_view("watches")
         end
     end)()
 end
@@ -86,88 +88,87 @@ M.copy_expr = function(expr)
 end
 
 ---@param variables_reference number
----@param original (dapview.VariablePack[] | string)?
----@param callback fun(result: dapview.VariablePack[] | string): nil
-function M.expand_var(variables_reference, original, callback)
+---@param previous_expansion_result dapview.VariableView[]?
+M.expand_variable = function(variables_reference, previous_expansion_result)
     local session = assert(require("dap").session(), "has active session")
 
     local frame_id = session.current_frame and session.current_frame.id
 
-    session:request(
+    local err, response = session:request(
         "variables",
-        { variablesReference = variables_reference, context = "watch", frameId = frame_id },
-        -- HACK Using a callback was the only way I could make this work
-        function(err, result)
-            local response = nil
-            if err then
-                response = tostring(err)
-            end
-            if result then
-                response = result.variables
-            end
+        { variablesReference = variables_reference, context = "watch", frameId = frame_id }
+    )
 
-            ---@type dapview.VariablePack[] | string
-            local variables = type(response) == "string" and response or {}
+    local response_variables = response and response.variables
 
-            if type(variables) ~= "string" and type(response) ~= "string" then
-                for k, var in pairs(response or {}) do
-                    ---@type dapview.VariablePack?
-                    local previous
+    ---@type dapview.VariableView[]
+    local varible_views = {}
 
-                    if type(original) ~= "string" then
-                        ---@type dapview.VariablePack?
-                        previous = vim.iter(original or {}):find(
-                            ---@param v dapview.VariablePack
-                            function(v)
-                                if v.variable.evaluateName then
-                                    return v.variable.evaluateName == var.evaluateName
-                                end
-                                if v.variable.variablesReference > 0 then
-                                    return v.variable.variablesReference == var.variablesReference
-                                end
-                            end
-                        )
-                        if err and previous then
-                            previous.children = nil
-                            previous.expanded = false
-                            previous.updated = false
-                        end
-                    end
-
-                    if previous and not err then
-                        previous.updated = previous.variable.value ~= var.value
-
-                        previous.variable = var
-                    end
-
-                    local default_var = { variable = var, updated = false, expanded = false, children = nil }
-
-                    local new_var = previous or default_var
-
-                    if previous and previous.expanded and previous.variable.variablesReference > 0 then
-                        M.expand_var(previous.variable.variablesReference, new_var.children, function(children)
-                            new_var.children = children
-
-                            variables[k] = new_var
-                        end)
-                    else
-                        variables[k] = new_var
-                    end
+    for k, variable in ipairs(response_variables or {}) do
+        ---@type dapview.VariableView?
+        local previous_variable_view = vim.iter(previous_expansion_result or {}):find(
+            ---@param v dapview.VariableView
+            function(v)
+                if v.variable.evaluateName then
+                    return v.variable.evaluateName == variable.evaluateName
+                end
+                if v.variable.variablesReference > 0 then
+                    return v.variable.variablesReference == variable.variablesReference
                 end
             end
+        )
 
-            callback(variables)
+        if previous_variable_view then
+            if err then
+                previous_variable_view.children = nil
+                previous_variable_view.expanded = false
+                previous_variable_view.updated = false
+            else
+                previous_variable_view.updated = previous_variable_view.variable.value ~= variable.value
+
+                previous_variable_view.variable = variable
+            end
         end
-    )
-end
 
-M.reeval = function()
-    for expr, _ in pairs(state.watched_expressions) do
-        M.eval_expr(expr)
+        ---@type dapview.VariableView
+        local default_variable_view = {
+            variable = variable,
+            updated = false,
+            expanded = false,
+            children = nil,
+            reference = variable.variablesReference,
+        }
+
+        ---@type dapview.VariableView
+        local new_variable_view = previous_variable_view or default_variable_view
+
+        local variables_reference_ = variable.variablesReference
+
+        if new_variable_view.expanded then
+            if variables_reference_ > 0 then
+                new_variable_view.children, new_variable_view.err =
+                    M.expand_variable(variables_reference_, new_variable_view.children)
+            else
+                -- We have to reset the children if the variable is no longer, otherwise it retains the old value indefinely
+                new_variable_view.children = nil
+            end
+        end
+
+        varible_views[k] = new_variable_view
     end
 
-    if state.current_section == "watches" then
-        require("dap-view.views").switch_to_view("watches")
+    return #varible_views > 0 and varible_views or nil, err
+end
+
+M.reevaluate_all_expressions = function()
+    local i = 0
+    local size = vim.tbl_count(state.watched_expressions)
+
+    for expr, _ in pairs(state.watched_expressions) do
+        i = i + 1
+
+        -- Avoid needless redrawing by waiting for the last expression
+        M.evaluate_expression(expr, i < size)
     end
 end
 

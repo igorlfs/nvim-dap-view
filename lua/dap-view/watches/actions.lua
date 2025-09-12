@@ -2,7 +2,6 @@ local state = require("dap-view.state")
 local guard = require("dap-view.guard")
 local eval = require("dap-view.watches.eval")
 local set = require("dap-view.watches.set")
-local traversal = require("dap-view.tree.traversal")
 
 local M = {}
 
@@ -13,18 +12,17 @@ M.add_watch_expr = function(expr)
         return false
     end
 
-    eval.eval_expr(expr, function()
-        require("dap-view.views").switch_to_view("watches")
-    end)
+    eval.evaluate_expression(expr)
 
     return true
 end
 
 ---@param line number
 M.remove_watch_expr = function(line)
-    local expr = state.expressions_by_line[line]
-    if expr then
-        state.watched_expressions[expr.name] = nil
+    local expression_view = state.expression_views_by_line[line]
+
+    if expression_view then
+        state.watched_expressions[expression_view.expression] = nil
     else
         vim.notify("No expression under the under cursor")
     end
@@ -32,14 +30,18 @@ end
 
 ---@param line number
 M.copy_watch_expr = function(line)
-    local expr = state.expressions_by_line[line]
-    if expr then
-        eval.copy_expr(expr.name)
+    local expression_view = state.expression_views_by_line[line]
+
+    if expression_view then
+        eval.copy_expr(expression_view.expression)
     else
-        local var = state.variables_by_line[line]
-        if var then
-            if var.response.evaluateName then
-                eval.copy_expr(var.response.evaluateName)
+        local variable_reference = state.variable_views_by_line[line]
+
+        if variable_reference then
+            local evaluate_name = variable_reference.variable.evaluateName
+
+            if evaluate_name then
+                eval.copy_expr(evaluate_name)
             else
                 vim.notify("Missing `evaluateName`, can't copy variable")
             end
@@ -56,19 +58,16 @@ M.set_watch_expr = function(value, line)
         return
     end
 
-    local expr = state.expressions_by_line[line]
-    if expr then
+    local expression_view = state.expression_views_by_line[line]
+
+    if expression_view then
         -- Top level expressions are responses for the `evaluate` request, they have no `evaluateName`
         -- Therefore, we can always use `setExpression` if the adapter supports it
-        set.set_expr(expr.name, value)
-
-        -- Reset expanded state to avoid leftover lines from the previous expansion
-        local watched_expr = state.watched_expressions[expr.name]
-        watched_expr.expanded = false
+        set.set_expr(expression_view.expression, value)
     else
-        local var = state.variables_by_line[line]
+        local variable_view = state.variable_views_by_line[line]
 
-        if var then
+        if variable_view then
             -- From the protocol:
             --
             -- "If a debug adapter implements both `setExpression` and `setVariable`,
@@ -77,29 +76,33 @@ M.set_watch_expr = function(value, line)
             local hasExpression = session.capabilities.supportsSetExpression
             local hasVariable = session.capabilities.supportsSetVariable
 
+            local variable_name = variable_view.variable.name
+            local evaluate_name = variable_view.variable.evaluateName
+
+            -- To update the value of a variable, we don't look at its own `variablesReference`,
+            -- as that's what's used to expand its children.
+            --
+            -- Instead, we have to use the `variablesReference` from the "parent" variable or expression,
+            -- as that's what was used to actually request the variable
+            local variable_view_reference = variable_view.parent_reference
+
             if hasExpression and hasVariable then
-                if var.response.evaluateName then
-                    set.set_expr(var.response.evaluateName, value)
+                if evaluate_name then
+                    set.set_expr(evaluate_name, value)
                 else
-                    set.set_var(var.response.name, value, var.reference)
+                    set.set_var(variable_name, value, variable_view_reference)
                 end
             elseif hasExpression then
-                if var.response.evaluateName then
-                    set.set_expr(var.response.evaluateName, value)
+                if evaluate_name then
+                    set.set_expr(evaluate_name, value)
                 else
-                    return vim.notify(
-                        "Can't set value for " .. var.response.name .. " because it lacks an `evaluateName`"
-                    )
+                    return vim.notify("Can't set value for " .. variable_name .. " because it lacks an `evaluateName`")
                 end
             elseif hasVariable then
-                set.set_var(var.response.name, value, var.reference)
+                set.set_var(variable_name, value, variable_view_reference)
             else
                 return vim.notify("Adapter lacks support for both `setExpression` and `setVariable` requests")
             end
-
-            -- Reset expanded state to avoid leftover lines
-            local var_state = traversal.find_node(var.response.variablesReference)
-            var_state.expanded = false
         else
             vim.notify("No expression or variable under the under cursor")
         end
@@ -116,9 +119,7 @@ M.edit_watch_expr = function(expr, line)
     -- The easiest way to edit is to delete and insert again
     M.remove_watch_expr(line)
 
-    eval.eval_expr(expr, function()
-        require("dap-view.views").switch_to_view("watches")
-    end)
+    eval.evaluate_expression(expr)
 end
 
 ---@param line number
@@ -127,31 +128,33 @@ M.expand_or_collapse = function(line)
         return
     end
 
-    local expr = state.expressions_by_line[line]
+    local expression_view = state.expression_views_by_line[line]
 
-    if expr then
-        local e = state.watched_expressions[expr.name]
-        if e then
-            e.expanded = not e.expanded
+    if expression_view then
+        expression_view.view.expanded = not expression_view.view.expanded
 
-            eval.eval_expr(expr.name, function()
-                require("dap-view.views").switch_to_view("watches")
-            end)
-        end
+        eval.evaluate_expression(expression_view.expression)
     else
-        local var = state.variables_by_line[line]
+        local variable_reference = state.variable_views_by_line[line]
 
-        if var then
-            local reference = var.response.variablesReference
+        if variable_reference then
+            local reference = variable_reference.variable.variablesReference
+
             if reference > 0 then
-                local var_state = traversal.find_node(reference)
-                if var_state then
-                    var_state.expanded = not var_state.expanded
-                    eval.expand_var(reference, var_state.children, function(result)
-                        var_state.children = result
+                local variable_view = variable_reference.view
 
-                        require("dap-view.views").switch_to_view("watches")
-                    end)
+                if variable_view then
+                    variable_view.expanded = not variable_view.expanded
+
+                    -- We have to wrap in a coroutine here because `expand_variable` lacks its own coroutine wrapping
+                    -- Therefore, if we call `switch_to_view` directly, the variable may not have been expanded yet
+                    coroutine.wrap(function()
+                        variable_view.children, variable_view.err = eval.expand_variable(reference)
+
+                        if state.current_section == "watches" then
+                            require("dap-view.views").switch_to_view("watches")
+                        end
+                    end)()
                 end
             else
                 vim.notify("Nothing to expand")

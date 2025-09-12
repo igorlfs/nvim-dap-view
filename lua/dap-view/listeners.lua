@@ -93,9 +93,7 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
 
     -- Do not use `event_stopped`
     -- It may cause race conditions
-    for expr, _ in pairs(state.watched_expressions) do
-        eval.eval_expr(expr)
-    end
+    eval.reevaluate_all_expressions()
 end
 
 ---@type dap.RequestListener[]
@@ -109,12 +107,6 @@ for _, listener in ipairs(continue) do
         end
 
         winbar.redraw_controls()
-    end
-end
-
-dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
-    if state.current_section == "watches" then
-        require("dap-view.views").switch_to_view("watches")
     end
 end
 
@@ -138,12 +130,11 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function(_, err, _, payload)
     end
 end
 
-dap.listeners.after.setExpression[SUBSCRIPTION_ID] = function()
-    eval.reeval()
-end
+---@type dap.RequestListener[]
+local reeval = { "setExpression", "setVariable" }
 
-dap.listeners.after.setVariable[SUBSCRIPTION_ID] = function()
-    eval.reeval()
+for _, listener in ipairs(reeval) do
+    dap.listeners.after[listener][SUBSCRIPTION_ID] = eval.reevaluate_all_expressions
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
