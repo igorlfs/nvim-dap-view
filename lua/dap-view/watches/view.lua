@@ -90,7 +90,25 @@ M.show = function()
 
         local line = 0
 
-        for expression, view in pairs(state.watched_expressions) do
+        -- Sort expressions to keep a "stable" experience
+        ---@type [string, dapview.ExpressionView][]
+        local expressions = vim.iter(state.watched_expressions)
+            :map(function(k, v)
+                return { k, v }
+            end)
+            :totable()
+
+        table.sort(
+            expressions,
+            ---@param lhs [string, dapview.ExpressionView]
+            ---@param rhs [string, dapview.ExpressionView]
+            function(lhs, rhs)
+                return lhs[2].id < rhs[2].id
+            end
+        )
+
+        for _, expression_view in ipairs(expressions) do
+            local expression, view = unpack(expression_view)
             local response = view.response
             local err = view.err
 

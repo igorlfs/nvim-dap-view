@@ -14,6 +14,8 @@ M.add_watch_expr = function(expr)
 
     eval.evaluate_expression(expr)
 
+    state.expr_count = state.expr_count + 1
+
     return true
 end
 

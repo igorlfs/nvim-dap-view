@@ -31,6 +31,7 @@ M.evaluate_expression = function(expression, skip_redraw)
 
         ---@type dapview.ExpressionView
         local default_expression_view = {
+            id = state.expr_count,
             response = response,
             err = err,
             updated = false,

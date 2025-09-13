@@ -11,6 +11,7 @@
 ---@field children? dapview.VariableView[]
 
 ---@class dapview.ExpressionView
+---@field id integer
 ---@field response? dap.EvaluateResponse
 ---@field err? dap.ErrorResponse
 ---@field children? dapview.VariableView[]
@@ -35,8 +36,10 @@
 ---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
 ---@field variable_views_by_line table<integer, {parent_reference: number, variable: dap.Variable, view: dapview.VariableView}>
 ---@field watched_expressions table<string, dapview.ExpressionView>
+---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,integer?>
 local M = {
+    expr_count = 0,
     threads_filter = "",
     threads_filter_invert = false,
     exceptions_options = {},
