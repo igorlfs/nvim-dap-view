@@ -21,6 +21,12 @@ M.views_keysmps = function()
         elseif state.current_section == "watches" then
             watches_actions.expand_or_collapse(cursor_line)
         end
+
+        -- Selecting a session triggers a full redraw
+        -- To properly restore the cursor position we have to call switch_to_view
+        if state.current_section == "sessions" then
+            require("dap-view.views").switch_to_view("sessions")
+        end
     end)
 
     keymap("o", function()

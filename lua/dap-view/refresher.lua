@@ -24,7 +24,6 @@ M.refresh_session_based_views = function()
         if state.current_section == "scopes" then
             scopes.refresh()
         elseif state.current_section == "sessions" then
-            -- TODO cursor position isn't kept after selecting a new session
             sessions.refresh()
         end
     end
