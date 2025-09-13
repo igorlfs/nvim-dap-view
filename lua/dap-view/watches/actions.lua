@@ -149,13 +149,8 @@ M.expand_or_collapse = function(line)
                     variable_view.expanded = not variable_view.expanded
 
                     -- We have to wrap in a coroutine here because `expand_variable` lacks its own coroutine wrapping
-                    -- Therefore, if we call `switch_to_view` directly, the variable may not have been expanded yet
                     coroutine.wrap(function()
                         variable_view.children, variable_view.err = eval.expand_variable(reference)
-
-                        if state.current_section == "watches" then
-                            require("dap-view.views").switch_to_view("watches")
-                        end
                     end)()
                 end
             else

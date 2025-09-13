@@ -130,6 +130,16 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function(_, err, _, payload)
     end
 end
 
+dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
+    -- When setting a variable for some adapters, the request may be slow.
+    -- And by the time we refresh the view "regularly", the data might not be up-to-date.
+    -- To avoid dealing with such edge cases, we force redrawing after the variables request.
+    -- This introduces an overrhead, but its robustness should be worth it
+    if state.current_section == "watches" then
+        require("dap-view.views").switch_to_view("watches")
+    end
+end
+
 ---@type dap.RequestListener[]
 local reeval = { "setExpression", "setVariable" }
 
