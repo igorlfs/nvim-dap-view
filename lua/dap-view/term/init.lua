@@ -133,7 +133,10 @@ M.setup_term_buf = function()
     end
 
     require("dap-view.term.keymaps").set_keymaps(term_bufnr)
-    require("dap-view.term.scroll").scroll(term_bufnr)
+
+    local scroll = require("dap-view.term.scroll")
+    scroll.scroll(term_bufnr)
+    scroll.setup_buf(term_bufnr)
 end
 
 M.switch_term_buf = function()
