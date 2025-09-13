@@ -17,6 +17,8 @@ local types_to_hl_group = {
     number = "Number",
     double = "Float",
     float = "Float",
+    -- debugpy's "None"
+    nonetype = "Constant",
     ["function"] = "Function",
 }
 
