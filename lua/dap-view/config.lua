@@ -147,7 +147,7 @@ M.config = {
                 label = "Console [C]",
                 short_label = "󰆍 [C]",
                 action = function()
-                    require("dap-view.term").show()
+                    views.switch_to_view("console")
                 end,
             },
         },

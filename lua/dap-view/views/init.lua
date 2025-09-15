@@ -12,16 +12,6 @@ M.cleanup_view = function(condition, message)
     assert(state.winnr ~= nil, "has nvim-dap-view window")
     assert(state.bufnr ~= nil, "has nvim-dap-view buffer")
 
-    -- Ensure state.bufnr is active if called from another buffer
-    --
-    -- This can happen when going from the REPL to the console,
-    -- if it has no corresponding term_buf
-    api.nvim_win_call(state.winnr, function()
-        vim.wo[state.winnr][0].winfixbuf = false
-        api.nvim_set_current_buf(state.bufnr)
-        vim.wo[state.winnr][0].winfixbuf = true
-    end)
-
     if condition then
         vim.wo[state.winnr][0].cursorline = false
 

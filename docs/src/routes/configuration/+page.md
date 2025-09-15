@@ -85,7 +85,7 @@ return {
                 label = "Console [C]",
                 short_label = "󰆍 [C]",
                 action = function()
-                    require("dap-view.term").show()
+                    require("dap-view.views").switch_to_view("console")
                 end,
             },
         },

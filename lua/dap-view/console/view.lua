@@ -34,7 +34,7 @@ M.show = function()
 
     -- These should always be called, even if there's no session
     winbar.refresh_winbar("console")
-    require("dap-view.term.options").set_win_options(state.winnr)
+    require("dap-view.console.options").set_win_options(state.winnr)
 
     local session = dap.session()
 
@@ -89,6 +89,7 @@ M.open_term_buf_win = function()
     local term_config = setup.config.windows.terminal
 
     local hide_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
+
     if term_bufnr and not hide_adapter and not util.is_win_valid(state.term_winnr) then
         local is_win_valid = util.is_win_valid(state.winnr)
 
@@ -107,7 +108,7 @@ M.open_term_buf_win = function()
 
         state.term_winnr = term_winnr
 
-        require("dap-view.term.options").set_win_options(state.term_winnr)
+        require("dap-view.console.options").set_win_options(state.term_winnr)
     end
 
     return state.term_winnr
@@ -132,8 +133,8 @@ M.setup_term_buf = function()
         winbar.set_action_keymaps(term_bufnr)
     end
 
-    require("dap-view.term.keymaps").set_keymaps(term_bufnr)
-    require("dap-view.term.scroll").scroll(term_bufnr)
+    require("dap-view.console.keymaps").set_keymaps(term_bufnr)
+    require("dap-view.console.scroll").scroll(term_bufnr)
 end
 
 M.switch_term_buf = function()

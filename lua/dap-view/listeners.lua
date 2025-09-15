@@ -5,13 +5,13 @@ local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
 local sessions = require("dap-view.sessions.view")
 local util = require("dap-view.util")
-local exceptions = require("dap-view.exceptions.view")
-local term = require("dap-view.term")
+local term = require("dap-view.console.view")
 local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
 local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
 local traversal = require("dap-view.tree.traversal")
+local adapter_ = require("dap-view.util.adapter")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -42,11 +42,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
     end
 end
 
-dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
-    -- Sync exception breakpoints for the newly initialized session
-    -- The downside is that not all adapters support `configurationDone` :/
-    require("dap-view.exceptions").update_exception_breakpoints_filters()
-
+dap.listeners.after.event_initialized[SUBSCRIPTION_ID] = function()
     local config = setup.config
     local term_config = config.windows.terminal
 
@@ -66,6 +62,20 @@ dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
     if has_console or not hidden_adapter then
         term.switch_term_buf()
     end
+
+    -- In some scenarios we have to force a refresh after initializing a session
+    -- For instance, for the sessions view, a child session might not be shown otherwise
+    -- Steps: js-debug-adapter (chrome) + attach
+    refresher.refresh_session_based_views()
+end
+
+dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
+    -- Sync exception breakpoints for the newly initialized session
+    -- This can't happen right after `event_initialized` because it can be overridden by session configuration
+    -- (as a setExceptionBreakpoints request is fired during configuration)
+    -- The downside is that not all adapters support `configurationDone`
+    -- (though it's an old feature, so it should be widely available)
+    require("dap-view.exceptions").update_exception_breakpoints_filters()
 end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
@@ -159,14 +169,18 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
             )
             :totable()
     end
-    if state.current_section == "exceptions" then
-        exceptions.show()
-    end
 end
 
 -- The debuggee has terminated
-dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
-    refresher.refresh_session_based_views()
+dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
+    -- When terminating, outdated sessions may be shown
+    -- As a workaround, do not refresh for the root session from js-debug-adapter
+    -- Steps: js-debug-adapter (chrome) + attach
+    local is_js_adapter = adapter_.is_js_adapter(session.config.type)
+
+    if not is_js_adapter or session.parent then
+        refresher.refresh_session_based_views()
+    end
 
     winbar.redraw_controls()
 end
