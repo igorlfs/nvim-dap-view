@@ -205,7 +205,7 @@ local auto_open = { "attach", "launch" }
 for _, listener in ipairs(auto_open) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
         if setup.config.auto_toggle then
-            require("dap-view").open()
+            require("dap-view.actions").open()
         end
     end
 end
@@ -215,27 +215,15 @@ local auto_close = { "event_terminated", "event_exited" }
 
 for _, listener in ipairs(auto_close) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
-        if setup.config.auto_toggle then
+        local auto_toggle = setup.config.auto_toggle
+
+        if auto_toggle then
             local dap_sessions = traversal.flatten_sessions(dap.sessions())
 
             -- Auto toggle is a bit ambiguous if there are multiple sessions running
             -- Should we call close if a single session is finished, even if others are running?
-            -- Personally, I think it only makes sense to call close when all sessions finish
             if #dap_sessions == 1 then
-                require("dap-view.actions").close(true)
-
-                local session = assert(dap.session(), "has session")
-
-                -- If the console view is shown in another tab
-                -- it won't be closed by `actions.close` because the winnr is no longer valid
-                -- (given that we switched tabs) and the buffer isn't the main one.
-                --
-                -- Therefore, we have to handle this case separetely by deleting the buffer manually
-                local term_buf = term.fetch_term_buf(session)
-                if util.is_buf_valid(term_buf) then
-                    ---@cast term_buf integer
-                    vim.api.nvim_buf_delete(term_buf, { force = true })
-                end
+                require("dap-view.actions").close(not (auto_toggle == "keep_terminal"))
             end
         end
     end

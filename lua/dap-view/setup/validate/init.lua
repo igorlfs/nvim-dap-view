@@ -8,9 +8,13 @@ function M.validate(config)
         help = { config.help, "table" },
         switchbuf = { config.switchbuf, "string" },
         icons = { config.icons, "table" },
-        auto_toggle = { config.auto_toggle, "boolean" },
+        auto_toggle = { config.auto_toggle, { "boolean", "string" } },
         follow_tab = { config.follow_tab, "boolean" },
     }, config)
+
+    if type(config.auto_toggle) == "string" and config.auto_toggle ~= "keep_terminal" then
+        error("Unknown auto_toggle option: " .. config.auto_toggle)
+    end
 
     require("dap-view.setup.validate.winbar").validate(config.winbar)
     require("dap-view.setup.validate.windows").validate(config.windows)

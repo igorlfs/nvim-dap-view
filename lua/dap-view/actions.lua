@@ -43,7 +43,8 @@ M.close = function(hide_terminal)
     state.bufnr = nil
 
     -- Close leftover terminal (if left open in another tab)
-    if state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
+    -- Might not be considered leftover, though. Let the caller decide
+    if hide_terminal and state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
         api.nvim_win_close(state.last_term_winnr, true)
     end
 
@@ -52,8 +53,15 @@ M.close = function(hide_terminal)
     end
 end
 
+---@param hide_terminal? boolean
 M.open = function(hide_terminal)
     M.close(hide_terminal)
+
+    -- Force closing leftover terminal when reopening, even when not hiding term explicitly
+    -- Prevents opening multiple terminal windows
+    if not hide_terminal and state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
+        api.nvim_win_close(state.last_term_winnr, true)
+    end
 
     local bufnr = api.nvim_create_buf(false, false)
 
