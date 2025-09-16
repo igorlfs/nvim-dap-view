@@ -18,6 +18,8 @@ M.refresh_session_based_views = function()
         threads.show()
     elseif state.current_section == "exceptions" then
         exceptions.show()
+    elseif state.current_section == "watches" then
+        require("dap-view.views").switch_to_view("watches")
     end
 
     if util.is_buf_valid(state.bufnr) then

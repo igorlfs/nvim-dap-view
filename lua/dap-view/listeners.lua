@@ -35,7 +35,9 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         -- At this stage, the session is not fully initialized yet
         require("dap-view.exceptions").update_exception_breakpoints_filters()
 
-        -- TODO maybe we should have a better way to track and update watched expressions when changing sessions
+        if new.initialized and new.stopped_thread_id then
+            eval.reevaluate_all_expressions()
+        end
     else
         state.current_session_id = nil
         state.current_adapter = nil

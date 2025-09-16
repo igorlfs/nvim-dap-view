@@ -7,7 +7,6 @@ local M = {}
 
 local api = vim.api
 
--- TODO There's also 'list' and 'dict'
 local types_to_hl_group = {
     boolean = "Boolean",
     str = "String",
