@@ -15,9 +15,11 @@ local autoscroll = true
 M.scroll = function(bufnr)
     api.nvim_create_autocmd({ "InsertEnter", "CursorMoved" }, {
         buffer = bufnr,
-        callback = function(args)
-            if args.buf == bufnr then
-                local cursor = api.nvim_win_get_cursor(0)
+        callback = function()
+            local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr or state.term_winnr
+            if util.is_win_valid(winnr) then
+                ---@cast winnr integer
+                local cursor = api.nvim_win_get_cursor(winnr)
                 autoscroll = cursor[1] == api.nvim_buf_line_count(bufnr)
             end
         end,
