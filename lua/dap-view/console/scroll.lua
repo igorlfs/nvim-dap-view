@@ -60,10 +60,13 @@ M.setup_autoscroll = function(bufnr)
     })
 end
 
+---@param bufnr integer
 M.is_autoscrolling = function(bufnr)
     return termbuf_is_autoscrolling[bufnr]
 end
 
+---@param winnr integer
+---@param bufnr integer
 M.set_cursor_bottom = function(winnr, bufnr)
     -- vim.schedule ensures the cursor movement happens in the main event loop
     -- otherwise the call may happen too early
