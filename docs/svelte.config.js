@@ -12,7 +12,7 @@ const config = {
             pages: 'dist',
         }),
         paths: {
-            base: process.env.NODE_ENV === 'production' ? '/igorlfs.github.io/nvim-dap-view' : ''
+            base: process.env.NODE_ENV === 'production' ? '/nvim-dap-view' : ''
         }
     },
 }

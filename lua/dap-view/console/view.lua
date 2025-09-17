@@ -22,18 +22,19 @@ M.fetch_term_buf = function(session)
         if parent.term_buf then
             return parent.term_buf
         end
-        parent = session.parent
+
+        parent = parent.parent
     end
 end
 
 M.show = function()
-    if not util.is_win_valid(state.winnr) then
+    if not util.is_win_valid(state.winnr) or not util.is_buf_valid(state.bufnr) then
         return
     end
 
     -- These should always be called, even if there's no session
     winbar.refresh_winbar("console")
-    require("dap-view.term.options").set_win_options(state.winnr)
+    require("dap-view.console.options").set_win_options(state.winnr)
 
     local session = dap.session()
 
@@ -88,6 +89,7 @@ M.open_term_buf_win = function()
     local term_config = setup.config.windows.terminal
 
     local hide_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
+
     if term_bufnr and not hide_adapter and not util.is_win_valid(state.term_winnr) then
         local is_win_valid = util.is_win_valid(state.winnr)
 
@@ -106,7 +108,7 @@ M.open_term_buf_win = function()
 
         state.term_winnr = term_winnr
 
-        require("dap-view.term.options").set_win_options(state.term_winnr)
+        require("dap-view.console.options").set_win_options(state.term_winnr)
     end
 
     return state.term_winnr

@@ -5,12 +5,13 @@ local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
 local sessions = require("dap-view.sessions.view")
 local util = require("dap-view.util")
-local threads = require("dap-view.threads.view")
-local exceptions = require("dap-view.exceptions.view")
-local term = require("dap-view.term")
+local term = require("dap-view.console.view")
 local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
+local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
+local traversal = require("dap-view.tree.traversal")
+local adapter_ = require("dap-view.util.adapter")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -27,36 +28,23 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             term.switch_term_buf()
         end
 
-        if util.is_buf_valid(state.bufnr) then
-            -- TODO: upstream this?
-            if state.current_section == "sessions" then
-                sessions.refresh()
-            elseif state.current_section == "scopes" then
-                scopes.refresh()
-            elseif state.current_section == "threads" then
-                require("dap-view.views").switch_to_view("threads")
-            elseif state.current_section == "console" then
-                require("dap-view.term").show()
-            end
-        end
+        refresher.refresh_session_based_views()
 
         -- Sync exception breakpoints
         -- Does not cover session initialization
         -- At this stage, the session is not fully initialized yet
         require("dap-view.exceptions").update_exception_breakpoints_filters()
 
-        -- TODO maybe we should have a better way to track and update watched expressions when changing sessions
+        if new.initialized and new.stopped_thread_id then
+            eval.reevaluate_all_expressions()
+        end
     else
         state.current_session_id = nil
         state.current_adapter = nil
     end
 end
 
-dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
-    -- Sync exception breakpoints for the newly initialized session
-    -- The downside is that not all adapters support `configurationDone` :/
-    require("dap-view.exceptions").update_exception_breakpoints_filters()
-
+dap.listeners.after.event_initialized[SUBSCRIPTION_ID] = function()
     local config = setup.config
     local term_config = config.windows.terminal
 
@@ -76,6 +64,20 @@ dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
     if has_console or not hidden_adapter then
         term.switch_term_buf()
     end
+
+    -- In some scenarios we have to force a refresh after initializing a session
+    -- For instance, for the sessions view, a child session might not be shown otherwise
+    -- Steps: js-debug-adapter (chrome) + attach
+    refresher.refresh_session_based_views()
+end
+
+dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
+    -- Sync exception breakpoints for the newly initialized session
+    -- This can't happen right after `event_initialized` because it can be overridden by session configuration
+    -- (as a setExceptionBreakpoints request is fired during configuration)
+    -- The downside is that not all adapters support `configurationDone`
+    -- (though it's an old feature, so it should be widely available)
+    require("dap-view.exceptions").update_exception_breakpoints_filters()
 end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
@@ -103,9 +105,7 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
 
     -- Do not use `event_stopped`
     -- It may cause race conditions
-    for expr, _ in pairs(state.watched_expressions) do
-        eval.eval_expr(expr)
-    end
+    eval.reevaluate_all_expressions()
 end
 
 ---@type dap.RequestListener[]
@@ -119,12 +119,6 @@ for _, listener in ipairs(continue) do
         end
 
         winbar.redraw_controls()
-    end
-end
-
-dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
-    if state.current_section == "watches" then
-        require("dap-view.views").switch_to_view("watches")
     end
 end
 
@@ -148,12 +142,21 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function(_, err, _, payload)
     end
 end
 
-dap.listeners.after.setExpression[SUBSCRIPTION_ID] = function()
-    eval.reeval()
+dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
+    -- When setting a variable for some adapters, the request may be slow.
+    -- And by the time we refresh the view "regularly", the data might not be up-to-date.
+    -- To avoid dealing with such edge cases, we force redrawing after the variables request.
+    -- This introduces an overrhead, but its robustness should be worth it
+    if state.current_section == "watches" then
+        require("dap-view.views").switch_to_view("watches")
+    end
 end
 
-dap.listeners.after.setVariable[SUBSCRIPTION_ID] = function()
-    eval.reeval()
+---@type dap.RequestListener[]
+local reeval = { "setExpression", "setVariable" }
+
+for _, listener in ipairs(reeval) do
+    dap.listeners.after[listener][SUBSCRIPTION_ID] = eval.reevaluate_all_expressions
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
@@ -168,33 +171,31 @@ dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
             )
             :totable()
     end
-    if state.current_section == "exceptions" then
-        exceptions.show()
-    end
 end
 
-dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function()
-    -- Refresh threads view on exit to avoid showing outdated trace
-    if state.current_section == "threads" then
-        threads.show()
-    end
-    if state.current_section == "exceptions" then
-        exceptions.show()
-    end
-    if util.is_buf_valid(state.bufnr) then
-        if state.current_section == "scopes" then
-            scopes.refresh()
-        end
-        if state.current_section == "sessions" then
-            sessions.refresh()
-        end
+-- The debuggee has terminated
+dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
+    -- When terminating, outdated sessions may be shown
+    -- As a workaround, do not refresh for the root session from js-debug-adapter
+    -- Steps: js-debug-adapter (chrome) + attach
+    local is_js_adapter = adapter_.is_js_adapter(session.config.type)
+
+    if not is_js_adapter or session.parent then
+        refresher.refresh_session_based_views()
     end
 
     winbar.redraw_controls()
 end
 
+-- The debuggee was disconnected, which may happen outside of a "regular termination"
+dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function()
+    refresher.refresh_session_based_views()
+
+    winbar.redraw_controls()
+end
+
 ---@type dap.RequestListener[]
-local winbar_redraw = { "disconnect", "event_exited", "event_stopped", "restart" }
+local winbar_redraw = { "event_exited", "event_stopped", "restart" }
 
 for _, listener in ipairs(winbar_redraw) do
     dap.listeners.after[listener][SUBSCRIPTION_ID] = winbar.redraw_controls
@@ -206,17 +207,26 @@ local auto_open = { "attach", "launch" }
 for _, listener in ipairs(auto_open) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
         if setup.config.auto_toggle then
-            require("dap-view").open()
+            require("dap-view.actions").open()
         end
     end
 end
 
+---@type dap.RequestListener[]
 local auto_close = { "event_terminated", "event_exited" }
 
 for _, listener in ipairs(auto_close) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
-        if setup.config.auto_toggle then
-            require("dap-view").close()
+        local auto_toggle = setup.config.auto_toggle
+
+        if auto_toggle then
+            local dap_sessions = traversal.flatten_sessions(dap.sessions())
+
+            -- Auto toggle is a bit ambiguous if there are multiple sessions running
+            -- Should we call close if a single session is finished, even if others are running?
+            if #dap_sessions == 1 then
+                require("dap-view.actions").close(not (auto_toggle == "keep_terminal"))
+            end
         end
     end
 end

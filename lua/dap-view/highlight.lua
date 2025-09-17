@@ -46,6 +46,7 @@ local define_base_links = function()
     hl_create("Number", "Number")
     hl_create("Float", "Float")
     hl_create("Function", "Function")
+    hl_create("Constant", "Constant")
 end
 
 define_base_links()

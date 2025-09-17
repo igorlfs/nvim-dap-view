@@ -2,20 +2,19 @@
 ---@field exception_filter dap.ExceptionBreakpointsFilter
 ---@field enabled boolean
 
----@class dapview.VariablePack
+---@class dapview.VariableView
 ---@field variable dap.Variable
+---@field err? dap.ErrorResponse
 ---@field updated boolean
 ---@field reference number
 ---@field expanded boolean
----@field children string|dapview.VariablePack[]
+---@field children? dapview.VariableView[]
 
--- Necessary for some type assertions
----@class dapview.VariablePackStrict : dapview.VariablePack
----@field children dapview.VariablePack[]
-
----@class dapview.ExpressionPack
----@field response? dap.EvaluateResponse | string
----@field children? dapview.VariablePack[] | string
+---@class dapview.ExpressionView
+---@field id integer
+---@field response? dap.EvaluateResponse
+---@field err? dap.ErrorResponse
+---@field children? dapview.VariableView[]
 ---@field expanded boolean
 ---@field updated boolean
 
@@ -34,18 +33,20 @@
 ---@field stack_trace_errors string[]
 ---@field threads_error? string
 ---@field frames_by_line table<integer, dap.StackFrame>
----@field expressions_by_line table<integer, {name: string, expression: dapview.ExpressionPack}>
----@field variables_by_line table<integer, {response: dap.Variable, reference: number}>
----@field watched_expressions table<string, dapview.ExpressionPack>
+---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
+---@field variable_views_by_line table<integer, {parent_reference: number, variable: dap.Variable, view: dapview.VariableView}>
+---@field watched_expressions table<string, dapview.ExpressionView>
+---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,integer?>
 local M = {
+    expr_count = 0,
     threads_filter = "",
     threads_filter_invert = false,
     exceptions_options = {},
     stack_trace_errors = {},
     frames_by_line = {},
-    expressions_by_line = {},
-    variables_by_line = {},
+    expression_views_by_line = {},
+    variable_views_by_line = {},
     subtle_frames = false,
     watched_expressions = {},
     cur_pos = {},

@@ -85,7 +85,7 @@ return {
                 label = "Console [C]",
                 short_label = "󰆍 [C]",
                 action = function()
-                    require("dap-view.term").show()
+                    require("dap-view.views").switch_to_view("console")
                 end,
             },
         },
@@ -139,6 +139,7 @@ return {
     },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     switchbuf = "usetab",
+    -- Auto open when a session is started and auto close when all sessions finish
     auto_toggle = false,
     -- Reopen dapview when switching tabs
     follow_tab = false,

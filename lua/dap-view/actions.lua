@@ -4,7 +4,7 @@ local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 local autocmd = require("dap-view.options.autocmd")
-local term = require("dap-view.term")
+local term = require("dap-view.console.view")
 local state = require("dap-view.state")
 local globals = require("dap-view.globals")
 local tables = require("dap-view.util.tables")
@@ -28,27 +28,40 @@ M.close = function(hide_terminal)
     if state.current_section == "repl" then
         dap.repl.close({ mode = "toggle" })
     end
+
     if util.is_win_valid(state.winnr) then
         -- Avoid "E444: Cannot close last window"
         pcall(api.nvim_win_close, state.winnr, true)
     end
+
     state.winnr = nil
+
     if util.is_buf_valid(state.bufnr) then
         api.nvim_buf_delete(state.bufnr, { force = true })
     end
+
     state.bufnr = nil
+
+    -- Close leftover terminal (if left open in another tab)
+    -- Might not be considered leftover, though. Let the caller decide
+    if hide_terminal and state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
+        api.nvim_win_close(state.last_term_winnr, true)
+    end
+
     if hide_terminal then
         term.hide_term_buf_win()
     end
 end
 
+---@param hide_terminal? boolean
 M.open = function(hide_terminal)
-    -- Close leftover terminal (if left open in another tab)
-    if state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
+    M.close(hide_terminal)
+
+    -- Force closing leftover terminal when reopening, even when not hiding term explicitly
+    -- Prevents opening multiple terminal windows
+    if not hide_terminal and state.last_term_winnr ~= state.term_winnr and util.is_win_valid(state.last_term_winnr) then
         api.nvim_win_close(state.last_term_winnr, true)
     end
-
-    M.close(hide_terminal)
 
     local bufnr = api.nvim_create_buf(false, false)
 

@@ -10,6 +10,7 @@ local api = vim.api
 ---@param message string
 M.cleanup_view = function(condition, message)
     assert(state.winnr ~= nil, "has nvim-dap-view window")
+    assert(state.bufnr ~= nil, "has nvim-dap-view buffer")
 
     if condition then
         vim.wo[state.winnr][0].cursorline = false

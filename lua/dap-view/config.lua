@@ -76,7 +76,7 @@ local M = {}
 ---@field help dapview.HelpConfig
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string Control how to jump when selecting a breakpoint or a call in the stack
----@field auto_toggle boolean
+---@field auto_toggle boolean|"keep_terminal"
 ---@field follow_tab boolean Reopen dapview when switching tabs
 
 ---@type dapview.ConfigStrict
@@ -147,7 +147,7 @@ M.config = {
                 label = "Console [C]",
                 short_label = "󰆍 [C]",
                 action = function()
-                    require("dap-view.term").show()
+                    views.switch_to_view("console")
                 end,
             },
         },
