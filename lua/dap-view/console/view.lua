@@ -6,6 +6,7 @@ local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local views = require("dap-view.views")
 local util = require("dap-view.util")
+local scroll = require("dap-view.console.scroll")
 
 local M = {}
 
@@ -53,11 +54,25 @@ M.show = function()
         return
     end
 
+    local is_autoscrolling
+    local winnr = scroll.get_winnr()
+
+    -- get the current autoscrolling state before showing section
+    -- should we maybe even get it before the main window opens to ensure no data race? hmm...
+    if winnr ~= nil then
+        is_autoscrolling = scroll.is_autoscrolling(term_buf)
+    end
+
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false
         api.nvim_set_current_buf(term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
+
+    -- if the autoscrolling state was true, re-set the cursor position
+    if winnr ~= nil and is_autoscrolling then
+        scroll.set_cursor_bottom(winnr, term_buf)
+    end
 end
 
 ---Hide the term win, does not affect the term buffer
@@ -133,11 +148,8 @@ M.setup_term_buf = function()
         winbar.set_action_keymaps(term_bufnr)
     end
 
-    require("dap-view.term.keymaps").set_keymaps(term_bufnr)
-
-    local scroll = require("dap-view.term.scroll")
+    require("dap-view.console.keymaps").set_keymaps(term_bufnr)
     scroll.setup_autoscroll(term_bufnr)
-    scroll.trigger_autoscroll(term_bufnr)
 end
 
 M.switch_term_buf = function()
