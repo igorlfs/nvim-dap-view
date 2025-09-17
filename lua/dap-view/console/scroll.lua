@@ -29,7 +29,7 @@ M.setup_autoscroll = function(bufnr)
     -- this autocmd gets recreated for each restart
     api.nvim_create_autocmd({ "InsertEnter", "CursorMoved" }, {
         buffer = bufnr,
-        callback = function(args)
+        callback = function()
             local winnr = M.get_winnr()
             if winnr == nil then
                 return
@@ -38,13 +38,6 @@ M.setup_autoscroll = function(bufnr)
             ---@cast winnr integer
             local cursor = api.nvim_win_get_cursor(winnr)
             termbuf_is_autoscrolling[bufnr] = cursor[1] == api.nvim_buf_line_count(bufnr)
-
-            vim.notify(vim.inspect({
-                args.event,
-                cursor[1],
-                api.nvim_buf_line_count(bufnr),
-                termbuf_is_autoscrolling[bufnr],
-            }))
         end,
     })
 
