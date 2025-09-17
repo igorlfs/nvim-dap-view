@@ -12,7 +12,7 @@ local autoscroll = true
 -- https://github.com/rcarriga/nvim-dap-ui/blob/73a26abf4941aa27da59820fd6b028ebcdbcf932/lua/dapui/elements/console.lua#L23-L46
 
 ---@param bufnr integer
-M.scroll = function(bufnr)
+M.setup_autoscroll = function(bufnr)
     api.nvim_create_autocmd({ "InsertEnter", "CursorMoved" }, {
         buffer = bufnr,
         callback = function()
@@ -27,13 +27,13 @@ M.scroll = function(bufnr)
 
     api.nvim_buf_attach(bufnr, false, {
         on_lines = function()
-            M.setup_buf(bufnr)
+            M.trigger_autoscroll(bufnr)
         end,
     })
 end
 
 ---@param bufnr integer
-M.setup_buf = function(bufnr)
+M.trigger_autoscroll = function(bufnr)
     local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr or state.term_winnr
     if not util.is_win_valid(winnr) then
         return
