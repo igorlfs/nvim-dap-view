@@ -213,7 +213,7 @@ for _, listener in ipairs(auto_open) do
 end
 
 ---@type dap.RequestListener[]
-local auto_close = { "event_terminated", "event_exited" }
+local auto_close = { "event_terminated", "disconnect" }
 
 for _, listener in ipairs(auto_close) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
