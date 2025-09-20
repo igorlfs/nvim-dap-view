@@ -135,8 +135,8 @@ M.show = function()
 
             state.expression_views_by_line[line] = { expression = expression, view = view }
 
-            if err == nil and view.children ~= nil and view.expanded and view.response ~= nil then
-                line = show_variables(view.children, view.response.variablesReference, line, 1)
+            if err == nil and view.children ~= nil and view.expanded and response ~= nil then
+                line = show_variables(view.children, response.variablesReference, line, 1)
             end
         end
 

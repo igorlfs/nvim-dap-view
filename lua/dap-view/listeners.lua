@@ -108,7 +108,6 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     eval.reevaluate_all_expressions()
 end
 
----@type dap.RequestListener[]
 local continue = { "event_continued", "continue" }
 
 for _, listener in ipairs(continue) do
@@ -152,7 +151,6 @@ dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
     end
 end
 
----@type dap.RequestListener[]
 local reeval = { "setExpression", "setVariable" }
 
 for _, listener in ipairs(reeval) do
@@ -194,14 +192,12 @@ dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function()
     winbar.redraw_controls()
 end
 
----@type dap.RequestListener[]
 local winbar_redraw = { "event_exited", "event_stopped", "restart" }
 
 for _, listener in ipairs(winbar_redraw) do
     dap.listeners.after[listener][SUBSCRIPTION_ID] = winbar.redraw_controls
 end
 
----@type dap.RequestListener[]
 local auto_open = { "attach", "launch" }
 
 for _, listener in ipairs(auto_open) do
@@ -212,7 +208,6 @@ for _, listener in ipairs(auto_open) do
     end
 end
 
----@type dap.RequestListener[]
 local auto_close = { "event_terminated", "disconnect" }
 
 for _, listener in ipairs(auto_close) do

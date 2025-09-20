@@ -16,7 +16,9 @@ local api = vim.api
 ---The children sessions are the ones who actually control the interaction with the terminal
 ---Therefore, the term_buf should be associated with them
 ---@param session dap.Session
+---@return integer?
 M.fetch_term_buf = function(session)
+    ---@type dap.Session?
     local parent = session
     while parent ~= nil do
         if parent.term_buf then
@@ -52,6 +54,9 @@ M.show = function()
     if views.cleanup_view(term_buf == nil or should_hide, "No terminal for the current session") then
         return
     end
+
+    ---`cleanup_view` ensures the buffer exists
+    ---@cast term_buf integer
 
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false

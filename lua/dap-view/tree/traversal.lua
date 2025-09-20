@@ -4,6 +4,7 @@ local M = {}
 
 ---@param sessions table<number,dap.Session>
 ---@param acc dap.Session[]
+---@return dap.Session[]
 local function fold_sessions(sessions, acc)
     for _, session in pairs(sessions) do
         local js_adapter = adapter.is_js_adapter(session.config.type)
