@@ -42,7 +42,8 @@ end
 
 ---@param pattern string
 ---@param column? integer
-M.jump_to_location = function(pattern, column)
+---@param switchbuffun? dapview.SwitchBufFun
+M.jump_to_location = function(pattern, column, switchbuffun)
     local bufnr, line_num = unpack(M.get_bufnr(pattern) or {})
 
     if bufnr == nil then
@@ -51,9 +52,16 @@ M.jump_to_location = function(pattern, column)
 
     local config = setup.config
 
-    local win = window.get_win_respecting_switchbuf(config.switchbuf, bufnr)
+    ---@type integer?
+    local win
 
-    if not win then
+    if switchbuffun then
+        win = window.get_win_respecting_switchbuf(switchbuffun, bufnr)
+    else
+        win = window.get_win_respecting_switchbuf(config.switchbuf, bufnr)
+    end
+
+    if win == nil then
         local windows = config.windows
 
         win = api.nvim_open_win(0, true, {

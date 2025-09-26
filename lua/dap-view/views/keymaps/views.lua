@@ -1,19 +1,21 @@
 local state = require("dap-view.state")
 local watches_actions = require("dap-view.watches.actions")
+local setup = require("dap-view.setup")
 local keymap = require("dap-view.views.keymaps.util").keymap
+local switchbuf = require("dap-view.views.windows.switchbuf")
 
 local M = {}
 
 local api = vim.api
 
-M.views_keysmps = function()
+M.views_keymaps = function()
     keymap("<CR>", function()
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         if state.current_section == "breakpoints" then
             require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|")
         elseif state.current_section == "threads" then
-            require("dap-view.threads.actions").jump_or_noop(cursor_line)
+            require("dap-view.threads.actions").jump_and_set_frame(cursor_line)
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
         elseif state.current_section == "scopes" or state.current_section == "sessions" then
@@ -26,6 +28,42 @@ M.views_keysmps = function()
         -- To properly restore the cursor position we have to call switch_to_view
         if state.current_section == "sessions" then
             require("dap-view.views").switch_to_view("sessions")
+        end
+    end)
+
+    keymap("<C-w><CR>", function()
+        if state.current_section == "breakpoints" or state.current_section == "threads" then
+            local options = vim.iter(switchbuf.switchbuf_winfn):fold({}, function(acc, k, v)
+                acc[#acc + 1] = { label = k, cb = v }
+                return acc
+            end)
+
+            if type(setup.config.switchbuf) == "function" then
+                options[#options + 1] = { label = "custom", cb = setup.config.switchbuf }
+            end
+
+            local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
+
+            vim.ui.select(
+                options,
+                {
+                    prompt = "Specify jump behavior: ",
+                    ---@param item {label: string}
+                    format_item = function(item)
+                        return item.label
+                    end,
+                },
+                ---@param choice {label: string, cb: dapview.SwitchBufFun}?
+                function(choice)
+                    if choice ~= nil then
+                        if state.current_section == "breakpoints" then
+                            require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|", nil, choice.cb)
+                        elseif state.current_section == "threads" then
+                            require("dap-view.threads.actions").jump_and_set_frame(cursor_line, choice.cb)
+                        end
+                    end
+                end
+            )
         end
     end)
 

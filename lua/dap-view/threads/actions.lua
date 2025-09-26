@@ -8,11 +8,12 @@ local M = {}
 local log = vim.log.levels
 
 ---@param lnum number
-M.jump_or_noop = function(lnum)
+---@param switchbuffun? dapview.SwitchBufFun
+M.jump_and_set_frame = function(lnum, switchbuffun)
     local line = vim.fn.getline(".")
 
     if string.find(line, "\t") then
-        util.jump_to_location("^\t(.-)|(%d+)|")
+        util.jump_to_location("^\t(.-)|(%d+)|", nil, switchbuffun)
 
         local frame = state.frames_by_line[lnum]
         if frame then

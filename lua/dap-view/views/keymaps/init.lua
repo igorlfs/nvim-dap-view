@@ -22,7 +22,7 @@ M.set_keymaps = function(buf)
     end, buf)
 
     if not buf then
-        require("dap-view.views.keymaps.views").views_keysmps()
+        require("dap-view.views.keymaps.views").views_keymaps()
     end
 
     keymap("g?", function()
