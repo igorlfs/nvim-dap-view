@@ -51,15 +51,16 @@ M.jump_to_location = function(pattern, column)
 
     local config = setup.config
 
-    local switchbufopt = config.switchbuf
-    local win = window.get_win_respecting_switchbuf(switchbufopt, bufnr)
+    local win = window.get_win_respecting_switchbuf(config.switchbuf, bufnr)
 
     if not win then
+        local windows = config.windows
+
         win = api.nvim_open_win(0, true, {
-            split = util.inverted_directions[config.windows.position],
+            split = util.inverted_directions[windows.position],
             win = -1,
-            height = config.windows.height < 1 and math.floor(vim.go.lines * (1 - config.windows.height))
-                or math.floor(vim.go.lines - config.windows.height),
+            height = windows.height < 1 and math.floor(vim.go.lines * (1 - windows.height))
+                or math.floor(vim.go.lines - windows.height),
         })
     end
 

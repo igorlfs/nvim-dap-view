@@ -4,12 +4,16 @@ local M = {}
 
 local api = vim.api
 
----@param switchbufopt string
+---@param switchbufopt string|dapview.SwitchBufFun
 ---@param bufnr integer
 M.get_win_respecting_switchbuf = function(switchbufopt, bufnr)
     local winnr = api.nvim_get_current_win()
 
     local switchbuf_winfn = switchbuf.switchbuf_winfn
+
+    if type(switchbufopt) == "function" then
+        return switchbufopt(bufnr, winnr)
+    end
 
     if switchbufopt:find("usetab") then
         switchbuf_winfn.useopen = switchbuf_winfn.usetab

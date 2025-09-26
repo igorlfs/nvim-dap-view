@@ -54,6 +54,10 @@ export const sidebar = {
             collapsible: true,
             items: [
                 {
+                    title: "Advanced 'switchbuf'",
+                    to: '/advanced-switchbuf'
+                },
+                {
                     title: 'Hide Terminal',
                     to: '/hide-terminal'
                 },

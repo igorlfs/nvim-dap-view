@@ -29,7 +29,7 @@ M.get_trimmed_selection = function()
     end
 
     -- EmmyLuaLs is not smart enough to infer that #lines > 1
-    -- It alsoe does not care about assertting that #lines > 1
+    -- It also does not care about asserting that #lines > 1
     lines[1] = string.sub(lines[1], start_col)
     lines[#lines] = string.sub(lines[#lines], 1, finish_col)
 

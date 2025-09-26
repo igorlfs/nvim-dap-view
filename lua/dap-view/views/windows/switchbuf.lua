@@ -2,7 +2,9 @@ local M = {}
 
 local api = vim.api
 
----@type table<string, fun(bufnr: integer, winnr: integer): integer?>
+---@alias dapview.SwitchBufFun fun(bufnr: integer, winnr: integer): (integer?)
+
+---@type table<string, dapview.SwitchBufFun>
 M.switchbuf_winfn = {}
 
 M.switchbuf_winfn.newtab = function(bufnr)

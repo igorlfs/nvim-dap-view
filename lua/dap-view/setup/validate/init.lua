@@ -6,7 +6,7 @@ function M.validate(config)
         windows = { config.windows, "table" },
         winbar = { config.winbar, "table" },
         help = { config.help, "table" },
-        switchbuf = { config.switchbuf, "string" },
+        switchbuf = { config.switchbuf, { "string", "function" } },
         icons = { config.icons, "table" },
         auto_toggle = { config.auto_toggle, { "boolean", "string" } },
         follow_tab = { config.follow_tab, "boolean" },

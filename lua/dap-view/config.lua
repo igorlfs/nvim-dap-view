@@ -75,7 +75,7 @@ local M = {}
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
 ---@field icons dapview.IconsConfig Icons for each button
----@field switchbuf string Control how to jump when selecting a breakpoint or a call in the stack
+---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"
 ---@field follow_tab boolean Reopen dapview when switching tabs
 
