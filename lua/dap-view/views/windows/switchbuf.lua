@@ -59,7 +59,7 @@ M.switchbuf_winfn.uselast = function(_, winnr)
         return winnr
     else
         local win = vim.fn.win_getid(vim.fn.winnr("#"))
-        if win then
+        if win and not vim.wo[win].winfixbuf then
             return win
         end
 
