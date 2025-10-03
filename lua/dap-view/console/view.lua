@@ -74,9 +74,11 @@ M.show = function()
         vim.wo[state.winnr][0].winfixbuf = true
     end)
 
-    -- if the autoscrolling state was true, re-set the cursor position
-    if winnr ~= nil and is_autoscrolling then
-        scroll.set_cursor_bottom(winnr, term_buf)
+    -- When showing a session for the first time, assume the user wants autoscroll to just work™
+    -- That's necessary because when a terminal buffer is created, the number of lines is assigned to the number of
+    -- lines in the window. This may lead to autoscroll being set to false, since the user may not be "at the bottom".
+    if is_autoscrolling then
+        scroll.scroll_to_bottom(state.winnr, term_buf)
     end
 end
 
@@ -154,6 +156,7 @@ M.setup_term_buf = function()
     end
 
     require("dap-view.console.keymaps").set_keymaps(term_bufnr)
+
     scroll.setup_autoscroll(term_bufnr)
 end
 
