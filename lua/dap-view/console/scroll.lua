@@ -77,9 +77,9 @@ end
 M.cleanup_autoscroll = function(bufnr)
     if termbuf_is_autoscrolling[bufnr] then
         api.nvim_del_augroup_by_name("nvim-dap-view-scroll-" .. bufnr)
-    end
 
-    termbuf_is_autoscrolling[bufnr] = nil
+        termbuf_is_autoscrolling[bufnr] = nil
+    end
 end
 
 return M
