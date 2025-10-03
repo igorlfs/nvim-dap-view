@@ -6,6 +6,7 @@ local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")
 local views = require("dap-view.views")
 local util = require("dap-view.util")
+local scroll = require("dap-view.console.scroll")
 
 local M = {}
 
@@ -58,11 +59,20 @@ M.show = function()
     ---`cleanup_view` ensures the buffer exists
     ---@cast term_buf integer
 
+    local is_autoscrolling = scroll.is_autoscrolling(term_buf)
+
     api.nvim_win_call(state.winnr, function()
         vim.wo[state.winnr][0].winfixbuf = false
         api.nvim_set_current_buf(term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
+
+    -- When showing a session for the first time, assume the user wants autoscroll to just work™
+    -- That's necessary because when a terminal buffer is created, the number of lines is assigned to the number of
+    -- lines in the window. This may lead to autoscroll being set to false, since the user may not be "at the bottom".
+    if is_autoscrolling then
+        scroll.scroll_to_bottom(state.winnr, term_buf)
+    end
 end
 
 ---Hide the term win, does not affect the term buffer
@@ -139,7 +149,8 @@ M.setup_term_buf = function()
     end
 
     require("dap-view.console.keymaps").set_keymaps(term_bufnr)
-    require("dap-view.console.scroll").scroll(term_bufnr)
+
+    scroll.setup_autoscroll(term_bufnr)
 end
 
 M.switch_term_buf = function()

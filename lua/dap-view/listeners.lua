@@ -11,6 +11,7 @@ local setup = require("dap-view.setup")
 local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
 local traversal = require("dap-view.tree.traversal")
+local scroll = require("dap-view.console.scroll")
 local adapter_ = require("dap-view.util.adapter")
 
 local SUBSCRIPTION_ID = "dap-view"
@@ -35,8 +36,20 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         -- At this stage, the session is not fully initialized yet
         require("dap-view.exceptions").update_exception_breakpoints_filters()
 
-        if new.initialized and new.stopped_thread_id then
-            eval.reevaluate_all_expressions()
+        if new.initialized then
+            -- Handle autoscrolling when switching sessions
+            -- Straightforward way of taking into account "console" not being set
+            if util.is_buf_valid(new.term_buf) and scroll.is_autoscrolling(new.term_buf) then
+                local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr
+                    or state.term_winnr
+                if util.is_win_valid(winnr) then
+                    ---@cast winnr integer
+                    scroll.scroll_to_bottom(winnr, new.term_buf)
+                end
+            end
+            if new.stopped_thread_id then
+                eval.reevaluate_all_expressions()
+            end
         end
     else
         state.current_session_id = nil
@@ -183,13 +196,17 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     end
 
     winbar.redraw_controls()
+
+    scroll.cleanup_autoscroll(session.term_buf)
 end
 
 -- The debuggee was disconnected, which may happen outside of a "regular termination"
-dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function()
+dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function(session)
     refresher.refresh_session_based_views()
 
     winbar.redraw_controls()
+
+    scroll.cleanup_autoscroll(session.term_buf)
 end
 
 local winbar_redraw = { "event_exited", "event_stopped", "restart" }
