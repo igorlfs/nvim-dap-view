@@ -3,8 +3,9 @@ local state = require("dap-view.state")
 local M = {}
 
 ---@param expression string
----@param skip_redraw boolean?
-M.evaluate_expression = function(expression, skip_redraw)
+---@param default_expanded boolean
+---@param co thread?
+M.evaluate_expression = function(expression, default_expanded, co)
     local session = assert(require("dap").session(), "has active session")
 
     coroutine.wrap(function()
@@ -35,7 +36,7 @@ M.evaluate_expression = function(expression, skip_redraw)
             response = response,
             err = err,
             updated = false,
-            expanded = true,
+            expanded = default_expanded,
             children = nil,
         }
 
@@ -59,8 +60,8 @@ M.evaluate_expression = function(expression, skip_redraw)
 
         state.watched_expressions[expression] = new_expression_view
 
-        if state.current_section == "watches" and not skip_redraw then
-            require("dap-view.views").switch_to_view("watches")
+        if co then
+            coroutine.resume(co)
         end
     end)()
 end
@@ -161,16 +162,19 @@ M.expand_variable = function(variables_reference, previous_expansion_result)
     return #varible_views > 0 and varible_views or nil, err
 end
 
-M.reevaluate_all_expressions = function()
+---@param co thread?
+M.reevaluate_all_expressions = function(co)
     local i = 0
     local size = vim.tbl_count(state.watched_expressions)
 
     for expr, _ in pairs(state.watched_expressions) do
         i = i + 1
 
-        -- Avoid needless redrawing by waiting for the last expression
-        M.evaluate_expression(expr, i < size)
+        -- This assumes that the last evaluation will be the last one to fnish, but I'm not sure that's the case?
+        M.evaluate_expression(expr, true, i == size and co or nil)
     end
+
+    coroutine.yield(co)
 end
 
 return M

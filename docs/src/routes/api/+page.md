@@ -34,10 +34,11 @@ Calls `require("dap-view").open()` if there's no views window. Else, behaves lik
 
 ```lua
 ---@param expr? string
-require("dap-view").add_expr(expr)
+---@param default_expanded? boolean
+require("dap-view").add_expr(expr, default_expanded)
 ```
 
-In normal mode, adds the expression under the cursor to the watch list (see [caveats](faq#Why-is-DapViewWatch-not-adding-the-whole-variable-)). In visual mode, adds the selection to the watch list. If `expr` is specified, adds the expression directly, overriding previous conditions.
+In normal mode, adds the expression under the cursor to the watch list (see [caveats](faq#Why-is-DapViewWatch-not-adding-the-whole-variable-)). In visual mode, adds the selection to the watch list. If `expr` is specified, adds the expression directly, overriding previous conditions. Expressions are expanded (non recursively). This behavior can be overridden by setting `default_expanded` to false.
 
 ## Jump To View
 

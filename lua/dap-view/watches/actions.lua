@@ -6,13 +6,16 @@ local set = require("dap-view.watches.set")
 local M = {}
 
 ---@param expr string
----@return boolean
-M.add_watch_expr = function(expr)
+---@param default_expanded boolean
+---@param co thread
+M.add_watch_expr = function(expr, default_expanded, co)
     if #expr == 0 or not guard.expect_session() then
         return false
     end
 
-    eval.evaluate_expression(expr)
+    eval.evaluate_expression(expr, default_expanded, co)
+
+    coroutine.yield(co)
 
     state.expr_count = state.expr_count + 1
 
@@ -25,6 +28,8 @@ M.remove_watch_expr = function(line)
 
     if expression_view then
         state.watched_expressions[expression_view.expression] = nil
+
+        return expression_view
     else
         vim.notify("No expression under the under cursor")
     end
@@ -113,19 +118,29 @@ end
 
 ---@param expr string
 ---@param line number
-M.edit_watch_expr = function(expr, line)
+---@param co thread
+M.edit_watch_expr = function(expr, line, co)
     if #expr == 0 or not guard.expect_session() then
-        return
+        return false
     end
 
     -- The easiest way to edit is to delete and insert again
-    M.remove_watch_expr(line)
+    local expression_view = M.remove_watch_expr(line)
 
-    eval.evaluate_expression(expr)
+    if expression_view == nil then
+        return false
+    end
+
+    eval.evaluate_expression(expr, expression_view.view.expanded, co)
+
+    coroutine.yield(co)
+
+    return true
 end
 
 ---@param line number
-M.expand_or_collapse = function(line)
+---@param co thread
+M.expand_or_collapse = function(line, co)
     if not guard.expect_session() then
         return
     end
@@ -135,7 +150,11 @@ M.expand_or_collapse = function(line)
     if expression_view then
         expression_view.view.expanded = not expression_view.view.expanded
 
-        eval.evaluate_expression(expression_view.expression)
+        eval.evaluate_expression(expression_view.expression, true, co)
+
+        coroutine.yield(co)
+
+        return true
     else
         local variable_reference = state.variable_views_by_line[line]
 

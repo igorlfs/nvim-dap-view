@@ -6,7 +6,6 @@ local scopes = require("dap-view.scopes.view")
 local sessions = require("dap-view.sessions.view")
 local util = require("dap-view.util")
 local term = require("dap-view.console.view")
-local eval = require("dap-view.watches.eval")
 local setup = require("dap-view.setup")
 local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
@@ -48,7 +47,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
                 end
             end
             if new.stopped_thread_id then
-                eval.reevaluate_all_expressions()
+                refresher.refresh_all_expressions()
             end
         end
     else
@@ -118,7 +117,7 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
 
     -- Do not use `event_stopped`
     -- It may cause race conditions
-    eval.reevaluate_all_expressions()
+    refresher.refresh_all_expressions()
 end
 
 local continue = { "event_continued", "continue" }
@@ -167,7 +166,7 @@ end
 local reeval = { "setExpression", "setVariable" }
 
 for _, listener in ipairs(reeval) do
-    dap.listeners.after[listener][SUBSCRIPTION_ID] = eval.reevaluate_all_expressions
+    dap.listeners.after[listener][SUBSCRIPTION_ID] = refresher.refresh_all_expressions
 end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)

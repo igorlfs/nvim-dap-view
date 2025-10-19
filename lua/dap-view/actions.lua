@@ -115,11 +115,15 @@ M.open = function(hide_terminal)
 end
 
 ---@param expr? string
-M.add_expr = function(expr)
-    local final_expr = expr or require("dap-view.util.exprs").get_current_expr()
-    if require("dap-view.watches.actions").add_watch_expr(final_expr) then
-        require("dap-view.views").switch_to_view("watches")
-    end
+---@param default_expanded boolean
+M.add_expr = function(expr, default_expanded)
+    local expr_ = expr or require("dap-view.util.exprs").get_current_expr()
+    coroutine.wrap(function()
+        local co = coroutine.running()
+        if require("dap-view.watches.actions").add_watch_expr(expr_, default_expanded, co) then
+            require("dap-view.views").switch_to_view("watches")
+        end
+    end)()
 end
 
 ---@param view dapview.Section|string

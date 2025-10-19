@@ -21,7 +21,13 @@ M.views_keymaps = function()
         elseif state.current_section == "scopes" or state.current_section == "sessions" then
             require("dap.ui").trigger_actions({ mode = "first" })
         elseif state.current_section == "watches" then
-            watches_actions.expand_or_collapse(cursor_line)
+            coroutine.wrap(function()
+                local co = coroutine.running()
+
+                if watches_actions.expand_or_collapse(cursor_line, co) then
+                    require("dap-view.views").switch_to_view("watches")
+                end
+            end)()
         end
 
         -- Selecting a session triggers a full redraw
@@ -81,7 +87,13 @@ M.views_keymaps = function()
         if state.current_section == "watches" then
             vim.ui.input({ prompt = "Expression: " }, function(input)
                 if input then
-                    watches_actions.add_watch_expr(input)
+                    coroutine.wrap(function()
+                        local co = coroutine.running()
+
+                        if watches_actions.add_watch_expr(input, true, co) then
+                            require("dap-view.views").switch_to_view("watches")
+                        end
+                    end)()
                 end
             end)
         end
@@ -109,7 +121,13 @@ M.views_keymaps = function()
             if expression_view then
                 vim.ui.input({ prompt = "Expression: ", default = expression_view.expression }, function(input)
                     if input then
-                        watches_actions.edit_watch_expr(input, cursor_line)
+                        coroutine.wrap(function()
+                            local co = coroutine.running()
+
+                            if watches_actions.edit_watch_expr(input, cursor_line, co) then
+                                require("dap-view.views").switch_to_view("watches")
+                            end
+                        end)()
                     end
                 end)
             end

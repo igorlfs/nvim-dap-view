@@ -26,8 +26,9 @@ M.toggle = function(hide_terminal)
 end
 
 ---@param expr? string
-M.add_expr = function(expr)
-    actions.add_expr(expr)
+---@param default_expanded? boolean
+M.add_expr = function(expr, default_expanded)
+    actions.add_expr(expr, default_expanded == nil or default_expanded)
 end
 
 ---@param view dapview.Section

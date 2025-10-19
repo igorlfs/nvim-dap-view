@@ -3,6 +3,7 @@ local threads = require("dap-view.threads.view")
 local scopes = require("dap-view.scopes.view")
 local sessions = require("dap-view.sessions.view")
 local exceptions = require("dap-view.exceptions.view")
+local eval = require("dap-view.watches.eval")
 local util = require("dap-view.util")
 
 local M = {}
@@ -29,6 +30,17 @@ M.refresh_session_based_views = function()
             sessions.refresh()
         end
     end
+end
+
+M.refresh_all_expressions = function()
+    coroutine.wrap(function()
+        local co = coroutine.running()
+        eval.reevaluate_all_expressions(co)
+
+        if state.current_section == "watches" then
+            require("dap-view.views").switch_to_view("watches")
+        end
+    end)()
 end
 
 return M
