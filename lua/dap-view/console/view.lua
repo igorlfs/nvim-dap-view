@@ -35,9 +35,8 @@ M.show = function()
         return
     end
 
-    -- These should always be called, even if there's no session
+    -- Don't apply window options for the console, because there might no terminal
     winbar.refresh_winbar("console")
-    require("dap-view.console.options").set_win_options(state.winnr)
 
     local session = dap.session()
 
@@ -66,6 +65,9 @@ M.show = function()
         api.nvim_set_current_buf(term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
+
+    -- Only apply window options for the console once we set the terminal
+    require("dap-view.console.options").set_win_options(state.winnr)
 
     -- When showing a session for the first time, assume the user wants autoscroll to just work™
     -- That's necessary because when a terminal buffer is created, the number of lines is assigned to the number of
@@ -178,6 +180,12 @@ M.switch_term_buf = function()
 
             if is_console_active then
                 winbar.refresh_winbar("console")
+
+                -- Reset window options since they only take effect for the current buffer
+                -- When starting a new session, if the console view is already active,
+                -- these settings wouldn't be applied otherwise
+                -- (since we don't refresh the view by calling `show`)
+                require("dap-view.console.options").set_win_options(winnr)
             end
         end)
     end
