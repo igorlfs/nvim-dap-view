@@ -67,8 +67,6 @@ M.jump_to_location = function(pattern, column, switchbuffun)
         win = api.nvim_open_win(0, true, {
             split = util.inverted_directions[windows.position],
             win = -1,
-            height = windows.height < 1 and math.floor(vim.go.lines * (1 - windows.height))
-                or math.floor(vim.go.lines - windows.height),
         })
     end
 
