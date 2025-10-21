@@ -167,10 +167,7 @@ M.expand_or_collapse = function(line, co)
                 if variable_view then
                     variable_view.expanded = not variable_view.expanded
 
-                    -- We have to wrap in a coroutine here because `expand_variable` lacks its own coroutine wrapping
-                    coroutine.wrap(function()
-                        variable_view.children, variable_view.err = eval.expand_variable(reference)
-                    end)()
+                    variable_view.children, variable_view.err = eval.expand_variable(reference)
                 end
             else
                 vim.notify("Nothing to expand")
