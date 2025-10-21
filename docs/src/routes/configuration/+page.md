@@ -142,7 +142,7 @@ return {
     -- Only a subset of the options is available: newtab, useopen, usetab and uselast
     -- Can also be a function that takes the current winnr and the bufnr that will jumped to
     -- If a function, should return the winnr of the destination window
-    switchbuf = "usetab",
+    switchbuf = "usetab,uselast",
     -- Auto open when a session is started and auto close when all sessions finish
     auto_toggle = false,
     -- Reopen dapview when switching tabs
