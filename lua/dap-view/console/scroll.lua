@@ -47,9 +47,7 @@ M.setup_autoscroll = function(bufnr)
                     if api.nvim_get_current_buf() == bufnr then
                         -- Ensure the cursor movement happens in the main event loop
                         -- Otherwise the call may happen too early
-                        vim.schedule(function()
-                            M.scroll_to_bottom(winnr, bufnr)
-                        end)
+                        M.scroll_to_bottom(winnr, bufnr)
                     end
                 end)
             end
@@ -67,7 +65,9 @@ end
 ---@param bufnr integer
 M.scroll_to_bottom = function(winnr, bufnr)
     if util.is_win_valid(winnr) and util.is_buf_valid(bufnr) then
-        api.nvim_win_set_cursor(winnr, { api.nvim_buf_line_count(bufnr), 0 })
+        vim.schedule(function()
+            api.nvim_win_set_cursor(winnr, { api.nvim_buf_line_count(bufnr), 0 })
+        end)
 
         termbuf_is_autoscrolling[bufnr] = true
     end
