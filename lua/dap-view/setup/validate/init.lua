@@ -9,7 +9,7 @@ function M.validate(config)
         switchbuf = { config.switchbuf, { "string", "function" } },
         icons = { config.icons, "table" },
         auto_toggle = { config.auto_toggle, { "boolean", "string" } },
-        follow_tab = { config.follow_tab, "boolean" },
+        follow_tab = { config.follow_tab, { "boolean", "function" } },
     }, config)
 
     if type(config.auto_toggle) == "string" and config.auto_toggle ~= "keep_terminal" then

@@ -9,6 +9,7 @@ title: FAQ
 ```lua
 -- Your nvim-dap-view config
 return {
+    -- Can also be a function to dynamically choose when to follow, by returning a boolean
     follow_tab = true,
 }
 ```

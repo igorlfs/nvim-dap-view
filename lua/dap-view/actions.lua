@@ -79,7 +79,7 @@ M.open = function(hide_terminal)
     local windows_config = setup.config.windows
     local term_config = windows_config.terminal
 
-    local term_position = require("dap-view.util").inverted_directions[term_config.position]
+    local term_position = util.inverted_directions[term_config.position]
 
     local anchor_win = windows_config.anchor and windows_config.anchor()
     local is_anchor_win_valid = util.is_win_valid(anchor_win)
@@ -96,6 +96,8 @@ M.open = function(hide_terminal)
     assert(winnr ~= 0, "Failed to create nvim-dap-view window")
 
     state.winnr = winnr
+
+    vim.w[state.winnr].dapview_win = true
 
     require("dap-view.views.options").set_options()
     require("dap-view.views.keymaps").set_keymaps()

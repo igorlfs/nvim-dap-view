@@ -77,7 +77,7 @@ local M = {}
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"
----@field follow_tab boolean Reopen dapview when switching tabs
+---@field follow_tab boolean|fun(adapter?: string): boolean Reopen dapview when switching tabs
 
 ---@type dapview.ConfigStrict
 M.config = {
