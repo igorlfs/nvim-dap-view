@@ -74,16 +74,20 @@ M.show_help = function()
 
     vim.treesitter.language.register("markdown", "dap-view-help")
 
-    vim.bo[help_buf].filetype = "dap-view-help"
-    vim.bo[help_buf].modifiable = false
+    local buf = vim.bo[help_buf]
 
-    vim.wo[help_win][0].conceallevel = 2
-    vim.wo[help_win][0].concealcursor = "nvc"
+    buf.filetype = "dap-view-help"
+    buf.modifiable = false
 
-    vim.wo[help_win][0].cursorline = true
-    vim.wo[help_win][0].cursorlineopt = "line"
+    local win = vim.wo[help_win][0]
 
-    vim.wo[help_win][0].winfixbuf = true
+    win.conceallevel = 2
+    win.concealcursor = "nvc"
+
+    win.cursorline = true
+    win.cursorlineopt = "line"
+
+    win.winfixbuf = true
 
     api.nvim_create_autocmd("WinClosed", {
         buffer = help_buf,
