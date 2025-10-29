@@ -91,7 +91,8 @@ end
 
 ---@param variables_reference number
 ---@param previous_expansion_result dapview.VariableView[]?
-M.expand_variable = function(variables_reference, previous_expansion_result)
+---@param co thread?
+M.expand_variable = function(variables_reference, previous_expansion_result, co)
     local session = assert(require("dap").session(), "has active session")
 
     local frame_id = session.current_frame and session.current_frame.id
@@ -157,6 +158,10 @@ M.expand_variable = function(variables_reference, previous_expansion_result)
         end
 
         varible_views[k] = new_variable_view
+    end
+
+    if co then
+        coroutine.resume(co)
     end
 
     return #varible_views > 0 and varible_views or nil, err

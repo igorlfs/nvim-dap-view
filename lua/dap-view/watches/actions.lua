@@ -167,7 +167,9 @@ M.expand_or_collapse = function(line, co)
                 if variable_view then
                     variable_view.expanded = not variable_view.expanded
 
-                    variable_view.children, variable_view.err = eval.expand_variable(reference)
+                    variable_view.children, variable_view.err = eval.expand_variable(reference, nil, co)
+
+                    return true
                 end
             else
                 vim.notify("Nothing to expand")
