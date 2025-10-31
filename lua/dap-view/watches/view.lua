@@ -9,6 +9,7 @@ local api = vim.api
 
 local types_to_hl_group = {
     boolean = "Boolean",
+    bool = "Boolean",
     str = "String",
     string = "String",
     int = "Number",
