@@ -125,6 +125,8 @@ M.open_term_buf_win = function()
 
         state.term_winnr = term_winnr
 
+        vim.w[state.term_winnr].dapview_win_term = true
+
         require("dap-view.console.options").set_win_options(state.term_winnr)
     end
 
