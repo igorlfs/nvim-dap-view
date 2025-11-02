@@ -15,8 +15,11 @@
 
 ---@class dapview.HelpConfigPartial : dapview.HelpConfig, {}
 
+---@class dapview.ConsoleConfigPartial : dapview.ConsoleConfig, {}
+
 ---@class dapview.Config : dapview.ConfigStrict, {}
 ---@field winbar? dapview.WinbarConfigPartial
 ---@field windows? dapview.WindowsConfigPartial
 ---@field help? dapview.HelpConfigPartial
 ---@field icons? dapview.IconsConfigPartial
+---@field console? dapview.ConsoleConfigPartial

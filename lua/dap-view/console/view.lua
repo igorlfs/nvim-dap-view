@@ -11,6 +11,7 @@ local scroll = require("dap-view.console.scroll")
 local M = {}
 
 local api = vim.api
+local log = vim.log.levels
 
 ---Workaround to fetch the term_buf for sessions created via `startDebugging` from js-debug-adapter
 ---Only the top-level session owns the buf, children need to traverse parents to get it
@@ -57,6 +58,13 @@ M.show = function()
 
     ---`cleanup_view` ensures the buffer exists
     ---@cast term_buf integer
+
+    if not util.is_buf_valid(term_buf) then
+        vim.notify("Terminal buffer is invalid: " .. term_buf, log.ERROR)
+        return
+    end
+
+    require("dap-view.console.keymaps").set_keymaps(term_buf)
 
     local is_autoscrolling = scroll.is_autoscrolling(term_buf)
 

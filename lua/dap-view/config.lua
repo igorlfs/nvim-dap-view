@@ -69,10 +69,14 @@ local M = {}
 ---@class dapview.HelpConfig
 ---@field border? string|string[] Override `winborder` in the help window
 
+---@class dapview.ConsoleConfig
+---@field capture_ctrl_c boolean
+
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
+---@field console dapview.ConsoleConfig
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"
@@ -194,6 +198,9 @@ M.config = {
     },
     help = {
         border = nil,
+    },
+    console = {
+        capture_ctrl_c = true,
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,

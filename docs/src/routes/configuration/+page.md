@@ -119,6 +119,10 @@ return {
             start_hidden = true,
         },
     },
+    console = {
+        -- Capture <C-c> to unfocus the window instead of aborting the terminal process
+        capture_ctrl_c = true,
+    },
     icons = {
         disabled = "",
         disconnect = "",
