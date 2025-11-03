@@ -51,7 +51,7 @@ M.show = function()
     -- If that were shown, it could be misleading, since the top-level session does not have any control over the terminal
     -- i.e., the user would see a terminal but they wouldn't be able to step or control the flow from the parent session
     local should_hide = adapter.is_js_adapter(session.config.type) and session.parent == nil
-    if views.cleanup_view(term_buf == nil or should_hide, "No terminal for the current session") then
+    if views.cleanup_view(not util.is_buf_valid(term_buf) or should_hide, "No terminal for the current session") then
         return
     end
 
