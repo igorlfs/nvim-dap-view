@@ -35,7 +35,6 @@ return {
                 buffer = function()
                     return vim.api.nvim_create_buf(true, false)
                 end,
-                ft = "my-custom-ft",
             },
         },
     },
