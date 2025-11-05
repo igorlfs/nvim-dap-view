@@ -56,13 +56,16 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
     end
 end
 
-dap.listeners.after.event_initialized[SUBSCRIPTION_ID] = function()
+dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
     local config = setup.config
     local term_config = config.windows.terminal
 
     local has_console = vim.tbl_contains(config.winbar.sections, "console")
     local hidden_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
     local open_term = not term_config.start_hidden and not has_console and not hidden_adapter
+
+    -- Setting up the terminal must happen after `configurationDone`
+    -- Otherwise (earlier, on `event_initialized`) the term_buf might be nil (see #125)
 
     -- We can't setup inside `on_session` hook because at that stage the session does not have a `term_buf`
     term.setup_term_buf()
@@ -81,9 +84,7 @@ dap.listeners.after.event_initialized[SUBSCRIPTION_ID] = function()
     -- For instance, for the sessions view, a child session might not be shown otherwise
     -- Steps: js-debug-adapter (chrome) + attach
     refresher.refresh_session_based_views()
-end
 
-dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
     -- Sync exception breakpoints for the newly initialized session
     -- This can't happen right after `event_initialized` because it can be overridden by session configuration
     -- (as a setExceptionBreakpoints request is fired during configuration)
