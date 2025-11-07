@@ -4,18 +4,22 @@ title: Acknowledgements
 
 ## Special Thanks To
 
-- [Mathias Fußenegger](https://github.com/mfussenegger) (mfussenegger), the **truest** Neovim GOAT, for developing [nvim-dap](https://github.com/mfussenegger/nvim-dap) :goat:
+- [@mfussenegger](https://github.com/mfussenegger) - Mathias Fußenegger, the **truest** Neovim GOAT, for developing [nvim-dap](https://github.com/mfussenegger/nvim-dap) :goat:
 
 ### Contributors
 
-- [noirbizarre](https://github.com/noirbizarre) for the initial [control bar](/control-bar) implementation
-- [tomtomjhj](https://github.com/tomtomjhj) for multiple buffer life-cycle improvements
+- [noirbizarre](https://github.com/noirbizarre) - Axel H, for the initial [control bar](/control-bar) implementation
+- [tomtomjhj](https://github.com/tomtomjhj) - Jaehwang Jung, for multiple buffer life-cycle improvements
 
 And [everyone else](https://github.com/igorlfs/nvim-dap-view/graphs/contributors) who contributed so far! :heart:
 
 ### Sponsors
 
 You can make your nickname show up here by making a small, one-time, [donation](https://github.com/sponsors/igorlfs)
+
+- [@pscschn](https://github.com/pscschn) - Pascal Schneider
+
+**Note**: private sponsorships are not listed by default. If you make a private donation and want a shout-out nonetheless, [ping me](https://matrix.to/#/@igorlfs:matrix.org).
 
 ## Inspirations
 
