@@ -82,7 +82,9 @@ Use the scopes widget provided by nvim-dap
 
 <img src="https://i.ibb.co/1fSHs7J1/image.png" alt="sessions view">
 
-Use the sessions widget provided by nvim-dap (**disabled by default**)
+List all debugging sessions (**disabled by default**)
+
+- Switch to a session
 
 ### REPL view
 

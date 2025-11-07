@@ -27,6 +27,7 @@ return {
 - Watch expressions
 - Manipulate breakpoints
 - Navigate in the call stack
+- Manage ongoing debug sessions
 - Inspect all variables in scope[^1]
 - REPL
 

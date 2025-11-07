@@ -16,6 +16,8 @@ M.views_keymaps = function()
             require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|")
         elseif state.current_section == "threads" then
             require("dap-view.threads.actions").jump_and_set_frame(cursor_line)
+        elseif state.current_section == "sessions" then
+            require("dap-view.sessions.actions").switch_to_session(cursor_line)
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
         elseif state.current_section == "scopes" or state.current_section == "sessions" then
@@ -28,12 +30,6 @@ M.views_keymaps = function()
                     require("dap-view.views").switch_to_view("watches")
                 end
             end)()
-        end
-
-        -- Selecting a session triggers a full redraw
-        -- To properly restore the cursor position we have to call switch_to_view
-        if state.current_section == "sessions" then
-            require("dap-view.views").switch_to_view("sessions")
         end
     end)
 

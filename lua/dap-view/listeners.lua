@@ -3,7 +3,6 @@ local dap = require("dap")
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
 local scopes = require("dap-view.scopes.view")
-local sessions = require("dap-view.sessions.view")
 local util = require("dap-view.util")
 local term = require("dap-view.console.view")
 local setup = require("dap-view.setup")
@@ -11,7 +10,6 @@ local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
 local traversal = require("dap-view.tree.traversal")
 local scroll = require("dap-view.console.scroll")
-local adapter_ = require("dap-view.util.adapter")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -41,7 +39,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             if util.is_buf_valid(new.term_buf) and scroll.is_autoscrolling(new.term_buf) then
                 local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr
                     or state.term_winnr
-                if util.is_win_valid(winnr) then
+                if util.is_win_valid(winnr) and state.current_section == "console" then
                     ---@cast winnr integer
                     scroll.scroll_to_bottom(winnr, new.term_buf)
                 end
@@ -53,6 +51,15 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
     else
         state.current_session_id = nil
         state.current_adapter = nil
+
+        -- Forces a refresh when terminating the last session
+        -- Schedule so the session can properly finish (workaroundy)
+        --
+        -- This is useful when terminating sessions from the js-debug-adapter
+        -- Setup: any attach configuration, when terminating either the root or any child
+        -- (more consistent when terminating a child)
+        -- View: sessions
+        vim.schedule(refresher.refresh_session_based_views)
     end
 end
 
@@ -100,12 +107,14 @@ dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
 end
 
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
+    if state.current_section == "sessions" then
+        require("dap-view.views").switch_to_view("sessions")
+    end
+
     -- nvim-dap needs a buffer to operate
     if util.is_buf_valid(state.bufnr) then
         if state.current_section == "scopes" then
             scopes.refresh()
-        elseif state.current_section == "sessions" then
-            sessions.refresh()
         end
     end
     if state.current_section == "threads" then
@@ -176,14 +185,7 @@ end
 
 -- The debuggee has terminated
 dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
-    -- When terminating, outdated sessions may be shown
-    -- As a workaround, do not refresh for the root session from js-debug-adapter
-    -- Steps: js-debug-adapter (chrome) + attach
-    local is_js_adapter = adapter_.is_js_adapter(session.config.type)
-
-    if not is_js_adapter or session.parent then
-        refresher.refresh_session_based_views()
-    end
+    refresher.refresh_session_based_views()
 
     winbar.redraw_controls()
 

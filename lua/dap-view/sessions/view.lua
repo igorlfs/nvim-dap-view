@@ -1,41 +1,63 @@
 local dap = require("dap")
-local dap_widgets = require("dap.ui.widgets")
 
 local views = require("dap-view.views")
-local winbar = require("dap-view.options.winbar")
 local state = require("dap-view.state")
 local util = require("dap-view.util")
-local widgets = require("dap-view.util.widgets")
+local hl = require("dap-view.util.hl")
 
 local M = {}
 
-local sessions_widget
+local api = vim.api
 
-local last_sessions_bufnr
+---@param children table<number,dap.Session>
+---@param focused_id number
+---@param line number
+local function show_children_sessions(children, focused_id, line)
+    for _, session in pairs(children) do
+        local content = session.id .. ": " .. session.config.name
 
-local launch_and_refresh_widget = function()
-    if last_sessions_bufnr == nil or last_sessions_bufnr ~= state.bufnr then
-        sessions_widget = widgets.new_widget(state.bufnr, state.winnr, dap_widgets.sessions)
-        last_sessions_bufnr = state.bufnr
+        local parent = session.parent
+        local num_parents = 0
+        while parent ~= nil do
+            parent = parent.parent
+            num_parents = num_parents + 1
+        end
 
-        sessions_widget.open()
+        local prefix = string.rep("  ", num_parents)
+        local indented_content = prefix .. content
+
+        api.nvim_buf_set_lines(state.bufnr, line, line, true, { indented_content })
+
+        if focused_id == session.id then
+            hl.hl_range("FrameCurrent", { line, 0 }, { line, -1 })
+        end
+
+        state.sessions_by_line[line + 1] = session
+
+        line = line + 1
+
+        line = show_children_sessions(session.children, focused_id, line)
     end
 
-    if not util.is_win_valid(state.winnr) then
-        return
-    end
-
-    sessions_widget.refresh()
-
-    views.cleanup_view(not dap.session(), "No active session")
+    return line
 end
 
 M.show = function()
-    winbar.refresh_winbar("sessions")
+    if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
+        local focused = dap.session()
 
-    launch_and_refresh_widget()
+        if views.cleanup_view(focused == nil, "No active session") then
+            return
+        end
+
+        ---@cast focused dap.Session
+
+        local line = 0
+
+        line = show_children_sessions(dap.sessions(), focused.id, line)
+
+        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+    end
 end
-
-M.refresh = launch_and_refresh_widget
 
 return M

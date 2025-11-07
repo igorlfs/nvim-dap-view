@@ -1,7 +1,6 @@
 local state = require("dap-view.state")
 local threads = require("dap-view.threads.view")
 local scopes = require("dap-view.scopes.view")
-local sessions = require("dap-view.sessions.view")
 local exceptions = require("dap-view.exceptions.view")
 local eval = require("dap-view.watches.eval")
 local util = require("dap-view.util")
@@ -21,13 +20,13 @@ M.refresh_session_based_views = function()
         exceptions.show()
     elseif state.current_section == "watches" then
         require("dap-view.views").switch_to_view("watches")
+    elseif state.current_section == "sessions" then
+        require("dap-view.views").switch_to_view("sessions")
     end
 
     if util.is_buf_valid(state.bufnr) then
         if state.current_section == "scopes" then
             scopes.refresh()
-        elseif state.current_section == "sessions" then
-            sessions.refresh()
         end
     end
 end
