@@ -8,6 +8,7 @@ M.set_options = function()
     win.wrap = false
     win.number = false
     win.relativenumber = false
+    -- TODO setting this up show depend if state is "below" or "above"
     win.winfixheight = true
     win.cursorlineopt = "line"
     win.cursorline = true

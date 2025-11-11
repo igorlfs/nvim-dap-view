@@ -98,7 +98,9 @@ M.config = {
                 label = "Scopes [S]",
                 short_label = "󰂥 [S]",
                 action = function()
-                    views.switch_to_view("scopes")
+                    coroutine.wrap(function()
+                        views.switch_to_view("scopes")
+                    end)()
                 end,
             },
             exceptions = {

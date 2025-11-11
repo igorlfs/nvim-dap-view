@@ -42,7 +42,7 @@ M.copy_watch_expr = function(line)
         local variable_reference = state.variable_views_by_line[line]
 
         if variable_reference then
-            local evaluate_name = variable_reference.variable.evaluateName
+            local evaluate_name = variable_reference.view.variable.evaluateName
 
             if evaluate_name then
                 eval.copy_expr(evaluate_name)
@@ -80,8 +80,8 @@ M.set_watch_expr = function(value, line)
             local hasExpression = session.capabilities.supportsSetExpression
             local hasVariable = session.capabilities.supportsSetVariable
 
-            local variable_name = variable_view.variable.name
-            local evaluate_name = variable_view.variable.evaluateName
+            local variable_name = variable_view.view.variable.name
+            local evaluate_name = variable_view.view.variable.evaluateName
 
             -- To update the value of a variable, we don't look at its own `variablesReference`,
             -- as that's what's used to expand its children.
@@ -150,18 +150,15 @@ M.expand_or_collapse = function(line)
         local variable_reference = state.variable_views_by_line[line]
 
         if variable_reference then
-            local reference = variable_reference.variable.variablesReference
+            local variable_view = variable_reference.view
+            local reference = variable_view.variable.variablesReference
 
             if reference > 0 then
-                local variable_view = variable_reference.view
+                variable_view.expanded = not variable_view.expanded
 
-                if variable_view then
-                    variable_view.expanded = not variable_view.expanded
+                variable_view.children, variable_view.err = eval.expand_variable(reference)
 
-                    variable_view.children, variable_view.err = eval.expand_variable(reference, nil)
-
-                    return true
-                end
+                return true
             else
                 vim.notify("Nothing to expand")
             end

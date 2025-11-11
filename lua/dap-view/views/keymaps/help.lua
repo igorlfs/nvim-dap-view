@@ -31,7 +31,6 @@ M.show_help = function()
         "## Views",
         "### Scopes",
         "`<CR>`  Expand or collapse a variable",
-        "   `o`  Trigger actions",
         "   `s`  Set the value of an expression",
         "### Threads",
         "`<CR>`  Jump to a frame. Use `<C-w><CR>` to force a specific behavior.",

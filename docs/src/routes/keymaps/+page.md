@@ -17,7 +17,6 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 |    `o` | Omit results matching filter (invert filter) |
 | **Scopes**                                            |
 | `<CR>` | Expand or collapse a variable                |
-|    `o` | Trigger actions                              |
 |    `s` | Set the value of an expression               |
 | **Breakpoints**                                       |
 | `<CR>` | Jump to a breakpoint                         |

@@ -34,8 +34,12 @@
 ---@field threads_error? string
 ---@field frames_by_line table<integer, dap.StackFrame>
 ---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
----@field variable_views_by_line table<integer, {parent_reference: number, variable: dap.Variable, view: dapview.VariableView}>
+---@field variable_views_by_line table<integer, {parent_reference: number, view: dapview.VariableView}>
 ---@field sessions_by_line table<integer, dap.Session>
+---@field variable_views_by_evaluate_name table<string, dapview.VariableView>
+---@field variable_values table<string,string>
+---@field expanded_variables table<string,boolean>
+---@field line_to_path table<integer,string>
 ---@field watched_expressions table<string, dapview.ExpressionView>
 ---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,integer?>
@@ -51,6 +55,10 @@ local M = {
     sessions_by_line = {},
     subtle_frames = false,
     watched_expressions = {},
+    variable_views_by_evaluate_name = {},
+    expanded_variables = {},
+    variable_values = {},
+    line_to_path = {},
     cur_pos = {},
 }
 
