@@ -7,21 +7,6 @@ local M = {}
 
 local api = vim.api
 
-local types_to_hl_group = {
-    boolean = "Boolean",
-    bool = "Boolean",
-    str = "String",
-    string = "String",
-    int = "Number",
-    long = "Number",
-    number = "Number",
-    double = "Float",
-    float = "Float",
-    -- debugpy's "None"
-    nonetype = "Constant",
-    ["function"] = "Function",
-}
-
 ---@param children dapview.VariableView[]
 ---@param reference number
 ---@param line integer
@@ -30,7 +15,8 @@ local types_to_hl_group = {
 local function show_variables(children, reference, line, depth)
     for _, child in ipairs(children) do
         local variable = child.variable
-        local value = #variable.value > 0 and variable.value or variable.variablesReference > 0 and "..." or ""
+        local show_expand_hint = #variable.value == 0 and variable.variablesReference > 0
+        local value = show_expand_hint and "..." or variable.value
         local content = variable.name .. " = " .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
@@ -42,7 +28,9 @@ local function show_variables(children, reference, line, depth)
 
         hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
 
-        local hl_group = child.updated and "WatchUpdated" or variable.type and types_to_hl_group[variable.type:lower()]
+        local hl_group = (show_expand_hint and "WatchMore")
+            or (child.updated and "WatchUpdated")
+            or (variable.type and hl.types_to_hl_group[variable.type:lower()])
 
         if hl_group then
             local _hl_start = #variable.name + 3 + depth
@@ -125,7 +113,7 @@ M.show = function()
 
             local hl_group = err and "WatchError"
                 or view.updated and "WatchUpdated"
-                or response and response.type and types_to_hl_group[response.type:lower()]
+                or response and response.type and hl.types_to_hl_group[response.type:lower()]
 
             if hl_group then
                 local hl_start = #expression + 3

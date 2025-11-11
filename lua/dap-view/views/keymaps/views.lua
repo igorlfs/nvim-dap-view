@@ -20,12 +20,16 @@ M.views_keymaps = function()
             require("dap-view.sessions.actions").switch_to_session(cursor_line)
         elseif state.current_section == "exceptions" then
             require("dap-view.exceptions.actions").toggle_exception_filter()
-        elseif state.current_section == "scopes" or state.current_section == "sessions" then
-            require("dap.ui").trigger_actions({ mode = "first" })
         elseif state.current_section == "watches" then
             coroutine.wrap(function()
                 if watches_actions.expand_or_collapse(cursor_line) then
                     require("dap-view.views").switch_to_view("watches")
+                end
+            end)()
+        elseif state.current_section == "scopes" then
+            coroutine.wrap(function()
+                if require("dap-view.scopes.actions").expand_or_collapse(cursor_line) then
+                    require("dap-view.views").switch_to_view("scopes", true)
                 end
             end)()
         end
@@ -68,9 +72,7 @@ M.views_keymaps = function()
     end)
 
     keymap("o", function()
-        if state.current_section == "scopes" then
-            require("dap.ui").trigger_actions()
-        elseif state.current_section == "threads" then
+        if state.current_section == "threads" then
             state.threads_filter_invert = not state.threads_filter_invert
 
             require("dap-view.views").switch_to_view("threads")
@@ -145,6 +147,7 @@ M.views_keymaps = function()
     end)
 
     keymap("s", function()
+        -- TODO migrate this
         if state.current_section == "scopes" then
             require("dap.ui").trigger_actions({ filter = "Set expression" })
         elseif state.current_section == "watches" then
@@ -158,7 +161,7 @@ M.views_keymaps = function()
 
                 local variable_reference = state.variable_views_by_line[cursor_line]
                 if variable_reference then
-                    return variable_reference.variable.value
+                    return variable_reference.view.variable.value
                 end
 
                 return ""

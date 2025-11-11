@@ -37,7 +37,9 @@ return {
                 label = "Scopes [S]",
                 short_label = "󰂥 [S]",
                 action = function()
-                    require("dap-view.views").switch_to_view("scopes")
+                    coroutine.wrap(function()
+                        require("dap-view.views").switch_to_view("scopes")
+                    end)()
                 end,
             },
             exceptions = {

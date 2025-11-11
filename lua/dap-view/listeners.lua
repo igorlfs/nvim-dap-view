@@ -2,7 +2,6 @@ local dap = require("dap")
 
 local state = require("dap-view.state")
 local breakpoints = require("dap-view.breakpoints.view")
-local scopes = require("dap-view.scopes.view")
 local util = require("dap-view.util")
 local term = require("dap-view.console.view")
 local setup = require("dap-view.setup")
@@ -109,15 +108,7 @@ end
 dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     if state.current_section == "sessions" then
         require("dap-view.views").switch_to_view("sessions")
-    end
-
-    -- nvim-dap needs a buffer to operate
-    if util.is_buf_valid(state.bufnr) then
-        if state.current_section == "scopes" then
-            scopes.refresh()
-        end
-    end
-    if state.current_section == "threads" then
+    elseif state.current_section == "threads" then
         require("dap-view.views").switch_to_view("threads")
 
         if session.current_frame ~= nil and util.is_win_valid(state.winnr) then
@@ -128,6 +119,13 @@ dap.listeners.after.scopes[SUBSCRIPTION_ID] = function(session)
     -- Do not use `event_stopped`
     -- It may cause race conditions
     refresher.refresh_all_expressions()
+
+    if state.current_section == "scopes" then
+        -- We must wrap in a coroutine because we fetch variables on the fly
+        coroutine.wrap(function()
+            require("dap-view.views").switch_to_view("scopes")
+        end)()
+    end
 end
 
 local continue = { "event_continued", "continue" }
