@@ -33,8 +33,9 @@ end
 
 M.refresh_all_expressions = function()
     coroutine.wrap(function()
-        local co = coroutine.running()
-        eval.reevaluate_all_expressions(co)
+        for expr, _ in pairs(state.watched_expressions) do
+            eval.evaluate_expression(expr, true)
+        end
 
         if state.current_section == "watches" then
             require("dap-view.views").switch_to_view("watches")

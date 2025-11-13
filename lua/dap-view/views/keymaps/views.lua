@@ -24,9 +24,7 @@ M.views_keymaps = function()
             require("dap.ui").trigger_actions({ mode = "first" })
         elseif state.current_section == "watches" then
             coroutine.wrap(function()
-                local co = coroutine.running()
-
-                if watches_actions.expand_or_collapse(cursor_line, co) then
+                if watches_actions.expand_or_collapse(cursor_line) then
                     require("dap-view.views").switch_to_view("watches")
                 end
             end)()
@@ -84,9 +82,7 @@ M.views_keymaps = function()
             vim.ui.input({ prompt = "Expression: " }, function(input)
                 if input then
                     coroutine.wrap(function()
-                        local co = coroutine.running()
-
-                        if watches_actions.add_watch_expr(input, true, co) then
+                        if watches_actions.add_watch_expr(input, true) then
                             require("dap-view.views").switch_to_view("watches")
                         end
                     end)()
@@ -118,9 +114,7 @@ M.views_keymaps = function()
                 vim.ui.input({ prompt = "Expression: ", default = expression_view.expression }, function(input)
                     if input then
                         coroutine.wrap(function()
-                            local co = coroutine.running()
-
-                            if watches_actions.edit_watch_expr(input, cursor_line, co) then
+                            if watches_actions.edit_watch_expr(input, cursor_line) then
                                 require("dap-view.views").switch_to_view("watches")
                             end
                         end)()

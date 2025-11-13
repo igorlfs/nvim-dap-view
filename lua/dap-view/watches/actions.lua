@@ -7,15 +7,12 @@ local M = {}
 
 ---@param expr string
 ---@param default_expanded boolean
----@param co thread
-M.add_watch_expr = function(expr, default_expanded, co)
+M.add_watch_expr = function(expr, default_expanded)
     if #expr == 0 or not guard.expect_session() then
         return false
     end
 
-    eval.evaluate_expression(expr, default_expanded, co)
-
-    coroutine.yield(co)
+    eval.evaluate_expression(expr, default_expanded)
 
     state.expr_count = state.expr_count + 1
 
@@ -118,8 +115,7 @@ end
 
 ---@param expr string
 ---@param line number
----@param co thread
-M.edit_watch_expr = function(expr, line, co)
+M.edit_watch_expr = function(expr, line)
     if #expr == 0 or not guard.expect_session() then
         return false
     end
@@ -131,16 +127,13 @@ M.edit_watch_expr = function(expr, line, co)
         return false
     end
 
-    eval.evaluate_expression(expr, expression_view.view.expanded, co)
-
-    coroutine.yield(co)
+    eval.evaluate_expression(expr, expression_view.view.expanded)
 
     return true
 end
 
 ---@param line number
----@param co thread
-M.expand_or_collapse = function(line, co)
+M.expand_or_collapse = function(line)
     if not guard.expect_session() then
         return
     end
@@ -150,9 +143,7 @@ M.expand_or_collapse = function(line, co)
     if expression_view then
         expression_view.view.expanded = not expression_view.view.expanded
 
-        eval.evaluate_expression(expression_view.expression, true, co)
-
-        coroutine.yield(co)
+        eval.evaluate_expression(expression_view.expression, true)
 
         return true
     else
@@ -167,7 +158,7 @@ M.expand_or_collapse = function(line, co)
                 if variable_view then
                     variable_view.expanded = not variable_view.expanded
 
-                    variable_view.children, variable_view.err = eval.expand_variable(reference, nil, co)
+                    variable_view.children, variable_view.err = eval.expand_variable(reference, nil)
 
                     return true
                 end

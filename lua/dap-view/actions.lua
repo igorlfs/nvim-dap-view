@@ -121,8 +121,7 @@ end
 M.add_expr = function(expr, default_expanded)
     local expr_ = expr or require("dap-view.util.exprs").get_current_expr()
     coroutine.wrap(function()
-        local co = coroutine.running()
-        if require("dap-view.watches.actions").add_watch_expr(expr_, default_expanded, co) then
+        if require("dap-view.watches.actions").add_watch_expr(expr_, default_expanded) then
             require("dap-view.views").switch_to_view("watches")
         end
     end)()

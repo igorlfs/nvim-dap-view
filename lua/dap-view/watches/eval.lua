@@ -4,66 +4,59 @@ local M = {}
 
 ---@param expression string
 ---@param default_expanded boolean
----@param co thread?
-M.evaluate_expression = function(expression, default_expanded, co)
+M.evaluate_expression = function(expression, default_expanded)
     local session = assert(require("dap").session(), "has active session")
 
-    coroutine.wrap(function()
-        local frame_id = session.current_frame and session.current_frame.id
+    local frame_id = session.current_frame and session.current_frame.id
 
-        local err, response =
-            session:request("evaluate", { expression = expression, context = "watch", frameId = frame_id })
+    local err, response =
+        session:request("evaluate", { expression = expression, context = "watch", frameId = frame_id })
 
-        local previous_expression_view = state.watched_expressions[expression]
+    local previous_expression_view = state.watched_expressions[expression]
 
-        local previous_result = previous_expression_view
-            and previous_expression_view.response
-            and previous_expression_view.response.result
+    local previous_result = previous_expression_view
+        and previous_expression_view.response
+        and previous_expression_view.response.result
 
-        if previous_expression_view and response then
-            previous_expression_view.updated = previous_result ~= response.result
+    if previous_expression_view and response then
+        previous_expression_view.updated = previous_result ~= response.result
+    end
+
+    if previous_expression_view and err then
+        previous_expression_view.children = nil
+        previous_expression_view.updated = false
+        previous_expression_view.expanded = false
+    end
+
+    ---@type dapview.ExpressionView
+    local default_expression_view = {
+        id = state.expr_count,
+        response = response,
+        err = err,
+        updated = false,
+        expanded = default_expanded,
+        children = nil,
+    }
+
+    if previous_expression_view then
+        previous_expression_view.response = response
+        previous_expression_view.err = err
+    end
+
+    ---@type dapview.ExpressionView
+    local new_expression_view = previous_expression_view or default_expression_view
+
+    if new_expression_view.expanded then
+        local variables_reference = response and response.variablesReference
+
+        if variables_reference and variables_reference > 0 then
+            new_expression_view.children = M.expand_variable(variables_reference, new_expression_view.children)
+        else
+            new_expression_view.children = nil
         end
+    end
 
-        if previous_expression_view and err then
-            previous_expression_view.children = nil
-            previous_expression_view.updated = false
-            previous_expression_view.expanded = false
-        end
-
-        ---@type dapview.ExpressionView
-        local default_expression_view = {
-            id = state.expr_count,
-            response = response,
-            err = err,
-            updated = false,
-            expanded = default_expanded,
-            children = nil,
-        }
-
-        if previous_expression_view then
-            previous_expression_view.response = response
-            previous_expression_view.err = err
-        end
-
-        ---@type dapview.ExpressionView
-        local new_expression_view = previous_expression_view or default_expression_view
-
-        if new_expression_view.expanded then
-            local variables_reference = response and response.variablesReference
-
-            if variables_reference and variables_reference > 0 then
-                new_expression_view.children = M.expand_variable(variables_reference, new_expression_view.children)
-            else
-                new_expression_view.children = nil
-            end
-        end
-
-        state.watched_expressions[expression] = new_expression_view
-
-        if co then
-            coroutine.resume(co)
-        end
-    end)()
+    state.watched_expressions[expression] = new_expression_view
 end
 
 ---@param expr string
@@ -91,8 +84,7 @@ end
 
 ---@param variables_reference number
 ---@param previous_expansion_result dapview.VariableView[]?
----@param co thread?
-M.expand_variable = function(variables_reference, previous_expansion_result, co)
+M.expand_variable = function(variables_reference, previous_expansion_result)
     local session = assert(require("dap").session(), "has active session")
 
     local frame_id = session.current_frame and session.current_frame.id
@@ -152,7 +144,7 @@ M.expand_variable = function(variables_reference, previous_expansion_result, co)
                 new_variable_view.children, new_variable_view.err =
                     M.expand_variable(variables_reference_, new_variable_view.children)
             else
-                -- We have to reset the children if the variable is no longer, otherwise it retains the old value indefinely
+                -- We have to reset the children if the variable is no longer, otherwise it retains the old value indefinitely
                 new_variable_view.children = nil
             end
         end
@@ -160,26 +152,7 @@ M.expand_variable = function(variables_reference, previous_expansion_result, co)
         varible_views[k] = new_variable_view
     end
 
-    if co then
-        coroutine.resume(co)
-    end
-
     return #varible_views > 0 and varible_views or nil, err
-end
-
----@param co thread?
-M.reevaluate_all_expressions = function(co)
-    local i = 0
-    local size = vim.tbl_count(state.watched_expressions)
-
-    for expr, _ in pairs(state.watched_expressions) do
-        i = i + 1
-
-        -- This assumes that the last evaluation will be the last one to fnish, but I'm not sure that's the case?
-        M.evaluate_expression(expr, true, i == size and co or nil)
-    end
-
-    coroutine.yield(co)
 end
 
 return M
