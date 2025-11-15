@@ -64,11 +64,14 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
         local path = parent_path .. "." .. variable.name
 
-        local prev_variable_value = state.variable_values[path]
+        local prev_variable_value = state.variable_path_to_value[path]
 
         local updated = prev_variable_value and prev_variable_value ~= variable.value
 
-        state.variable_values[path] = variable.value
+        state.variable_path_to_value[path] = variable.value
+        state.variable_path_to_name[path] = variable.name
+        state.variable_path_to_evaluate_name[path] = variable.evaluateName
+        state.variable_path_to_parent_reference[path] = variables_reference
 
         local type_hl_group = (updated and "WatchUpdated")
             or (show_expand_hint and "WatchMore")
@@ -81,7 +84,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
         line = line + 1
 
-        state.line_to_path[line] = path
+        state.line_to_variable_path[line] = path
 
         if state.variable_path_is_expanded[path] and variable.variablesReference > 0 then
             line = show_variables(variable.variablesReference, path, line, depth + 1, canvas)
