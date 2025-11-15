@@ -147,12 +147,26 @@ M.views_keymaps = function()
     end)
 
     keymap("s", function()
-        -- TODO migrate this
-        if state.current_section == "scopes" then
-            require("dap.ui").trigger_actions({ filter = "Set expression" })
-        elseif state.current_section == "watches" then
-            local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
+        if state.current_section == "scopes" then
+            local variable_path = state.line_to_variable_path[cursor_line]
+
+            if variable_path then
+                local variable_value = state.variable_path_to_value[variable_path]
+                local parent_reference = state.variable_path_to_parent_reference[variable_path]
+                local variable_name = state.variable_path_to_name[variable_path]
+                local evaluate_name = state.variable_path_to_evaluate_name[variable_path]
+
+                vim.ui.input({ prompt = "New value: ", default = variable_value }, function(value)
+                    if value then
+                        require("dap-view.views.set").set_value(parent_reference, variable_name, value, evaluate_name)
+
+                        setup.config.winbar.base_sections.scopes.action()
+                    end
+                end)
+            end
+        elseif state.current_section == "watches" then
             local get_default = function()
                 local expression_view = state.expression_views_by_line[cursor_line]
                 if expression_view and expression_view.view and expression_view.view.response then

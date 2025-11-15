@@ -1,7 +1,7 @@
 local state = require("dap-view.state")
 local guard = require("dap-view.guard")
 local eval = require("dap-view.watches.eval")
-local set = require("dap-view.watches.set")
+local set = require("dap-view.views.set")
 
 local M = {}
 
@@ -72,41 +72,12 @@ M.set_watch_expr = function(value, line)
         local variable_view = state.variable_views_by_line[line]
 
         if variable_view then
-            -- From the protocol:
-            --
-            -- "If a debug adapter implements both `setExpression` and `setVariable`,
-            -- a client uses `setExpression` if the variable has an evaluateName property."
-            local session = assert(require("dap").session(), "has active session")
-            local hasExpression = session.capabilities.supportsSetExpression
-            local hasVariable = session.capabilities.supportsSetVariable
-
             local variable_name = variable_view.view.variable.name
             local evaluate_name = variable_view.view.variable.evaluateName
 
-            -- To update the value of a variable, we don't look at its own `variablesReference`,
-            -- as that's what's used to expand its children.
-            --
-            -- Instead, we have to use the `variablesReference` from the "parent" variable or expression,
-            -- as that's what was used to actually request the variable
-            local variable_view_reference = variable_view.parent_reference
+            local parent_reference = variable_view.parent_reference
 
-            if hasExpression and hasVariable then
-                if evaluate_name then
-                    set.set_expr(evaluate_name, value)
-                else
-                    set.set_var(variable_name, value, variable_view_reference)
-                end
-            elseif hasExpression then
-                if evaluate_name then
-                    set.set_expr(evaluate_name, value)
-                else
-                    return vim.notify("Can't set value for " .. variable_name .. " because it lacks an `evaluateName`")
-                end
-            elseif hasVariable then
-                set.set_var(variable_name, value, variable_view_reference)
-            else
-                return vim.notify("Adapter lacks support for both `setExpression` and `setVariable` requests")
-            end
+            set.set_value(parent_reference, variable_name, value, evaluate_name)
         else
             vim.notify("No expression or variable under the under cursor")
         end

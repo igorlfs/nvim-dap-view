@@ -36,10 +36,12 @@
 ---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
 ---@field variable_views_by_line table<integer, {parent_reference: number, view: dapview.VariableView}>
 ---@field sessions_by_line table<integer, dap.Session>
----@field variable_views_by_evaluate_name table<string, dapview.VariableView>
----@field variable_values table<string,string>
----@field expanded_variables table<string,boolean>
----@field line_to_path table<integer,string>
+---@field variable_path_to_name table<string,string>
+---@field variable_path_to_evaluate_name table<string,string>
+---@field variable_path_to_value table<string,string>
+---@field variable_path_is_expanded table<string,boolean>
+---@field variable_path_to_parent_reference table<string,integer>
+---@field line_to_variable_path table<integer,string>
 ---@field watched_expressions table<string, dapview.ExpressionView>
 ---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,integer?>
@@ -55,10 +57,12 @@ local M = {
     sessions_by_line = {},
     subtle_frames = false,
     watched_expressions = {},
-    variable_views_by_evaluate_name = {},
-    expanded_variables = {},
-    variable_values = {},
-    line_to_path = {},
+    variable_path_is_expanded = {},
+    variable_path_to_evaluate_name = {},
+    variable_path_to_value = {},
+    variable_path_to_parent_reference = {},
+    variable_path_to_name = {},
+    line_to_variable_path = {},
     cur_pos = {},
 }
 
