@@ -69,10 +69,14 @@ local M = {}
 ---@class dapview.HelpConfig
 ---@field border? string|string[] Override `winborder` in the help window
 
+---@class dapview.RenderConfig
+---@field sort_variables? fun(lhs: dap.Variable, rhs: dap.Variable): boolean Override order of variables
+
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
+---@field render dapview.RenderConfig
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"
@@ -196,6 +200,9 @@ M.config = {
     },
     help = {
         border = nil,
+    },
+    render = {
+        sort_variables = nil,
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,

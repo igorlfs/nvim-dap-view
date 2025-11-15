@@ -2,6 +2,7 @@ local dap = require("dap")
 
 local views = require("dap-view.views")
 local state = require("dap-view.state")
+local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
@@ -46,6 +47,11 @@ local function show_variables(variables_reference, parent_path, line, depth, can
     end
 
     local variables = response and response.variables or {}
+
+    local sort_variables = setup.config.render.sort_variables
+    if sort_variables then
+        table.sort(variables, sort_variables)
+    end
 
     for _, variable in pairs(variables) do
         local show_expand_hint = #variable.value == 0 and variable.variablesReference > 0

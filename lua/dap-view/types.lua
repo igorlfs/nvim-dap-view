@@ -15,6 +15,8 @@
 
 ---@class dapview.HelpConfigPartial : dapview.HelpConfig, {}
 
+---@class dapview.RenderConfigPartial : dapview.RenderConfig, {}
+
 ---@class dapview.Config : dapview.ConfigStrict, {}
 ---@field winbar? dapview.WinbarConfigPartial
 ---@field windows? dapview.WindowsConfigPartial
