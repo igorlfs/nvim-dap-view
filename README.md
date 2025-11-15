@@ -28,7 +28,7 @@ return {
 - Manipulate breakpoints
 - Navigate in the call stack
 - Manage ongoing debug sessions
-- Inspect all variables in scope[^1]
+- Inspect all variables
 - REPL
 
 All of that in a unified, unintrusive window.
@@ -49,5 +49,3 @@ You can contribute in many ways:
 - If something isn't working, create a [bug report](https://github.com/igorlfs/nvim-dap-view/issues/new?template=bug_report.yml).
 - If you have an idea, file a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml). You can also go ahead and implement it yourself with a [PR](https://github.com/igorlfs/nvim-dap-view/compare).
 - If you have some spare bucks, consider [sponsoring](https://github.com/sponsors/igorlfs).
-
-[^1]: using nvim-dap's widgets
