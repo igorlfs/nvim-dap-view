@@ -1,4 +1,5 @@
 local state = require("dap-view.state")
+local setup = require("dap-view.setup")
 
 local M = {}
 
@@ -8,13 +9,19 @@ M.set_options = function()
     win.wrap = false
     win.number = false
     win.relativenumber = false
-    -- TODO setting this up show depend if state is "below" or "above"
-    win.winfixheight = true
     win.cursorlineopt = "line"
     win.cursorline = true
     win.statuscolumn = ""
     win.foldcolumn = "0"
     win.winfixbuf = true
+
+    local pos = setup.config.windows.position
+
+    if pos == "above" or pos == "below" then
+        win.winfixheight = true
+    else
+        win.winfixwidth = true
+    end
 
     local buf = vim.bo[state.bufnr]
     buf.buftype = "nofile"
