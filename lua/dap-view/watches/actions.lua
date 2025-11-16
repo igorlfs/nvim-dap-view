@@ -1,7 +1,7 @@
 local state = require("dap-view.state")
 local guard = require("dap-view.guard")
 local eval = require("dap-view.watches.eval")
-local set = require("dap-view.watches.set")
+local set = require("dap-view.views.set")
 
 local M = {}
 
@@ -42,7 +42,7 @@ M.copy_watch_expr = function(line)
         local variable_reference = state.variable_views_by_line[line]
 
         if variable_reference then
-            local evaluate_name = variable_reference.variable.evaluateName
+            local evaluate_name = variable_reference.view.variable.evaluateName
 
             if evaluate_name then
                 eval.copy_expr(evaluate_name)
@@ -72,41 +72,12 @@ M.set_watch_expr = function(value, line)
         local variable_view = state.variable_views_by_line[line]
 
         if variable_view then
-            -- From the protocol:
-            --
-            -- "If a debug adapter implements both `setExpression` and `setVariable`,
-            -- a client uses `setExpression` if the variable has an evaluateName property."
-            local session = assert(require("dap").session(), "has active session")
-            local hasExpression = session.capabilities.supportsSetExpression
-            local hasVariable = session.capabilities.supportsSetVariable
+            local variable_name = variable_view.view.variable.name
+            local evaluate_name = variable_view.view.variable.evaluateName
 
-            local variable_name = variable_view.variable.name
-            local evaluate_name = variable_view.variable.evaluateName
+            local parent_reference = variable_view.parent_reference
 
-            -- To update the value of a variable, we don't look at its own `variablesReference`,
-            -- as that's what's used to expand its children.
-            --
-            -- Instead, we have to use the `variablesReference` from the "parent" variable or expression,
-            -- as that's what was used to actually request the variable
-            local variable_view_reference = variable_view.parent_reference
-
-            if hasExpression and hasVariable then
-                if evaluate_name then
-                    set.set_expr(evaluate_name, value)
-                else
-                    set.set_var(variable_name, value, variable_view_reference)
-                end
-            elseif hasExpression then
-                if evaluate_name then
-                    set.set_expr(evaluate_name, value)
-                else
-                    return vim.notify("Can't set value for " .. variable_name .. " because it lacks an `evaluateName`")
-                end
-            elseif hasVariable then
-                set.set_var(variable_name, value, variable_view_reference)
-            else
-                return vim.notify("Adapter lacks support for both `setExpression` and `setVariable` requests")
-            end
+            set.set_value(parent_reference, variable_name, value, evaluate_name)
         else
             vim.notify("No expression or variable under the under cursor")
         end
@@ -150,18 +121,15 @@ M.expand_or_collapse = function(line)
         local variable_reference = state.variable_views_by_line[line]
 
         if variable_reference then
-            local reference = variable_reference.variable.variablesReference
+            local variable_view = variable_reference.view
+            local reference = variable_view.variable.variablesReference
 
             if reference > 0 then
-                local variable_view = variable_reference.view
+                variable_view.expanded = not variable_view.expanded
 
-                if variable_view then
-                    variable_view.expanded = not variable_view.expanded
+                variable_view.children, variable_view.err = eval.expand_variable(reference)
 
-                    variable_view.children, variable_view.err = eval.expand_variable(reference, nil)
-
-                    return true
-                end
+                return true
             else
                 vim.notify("Nothing to expand")
             end

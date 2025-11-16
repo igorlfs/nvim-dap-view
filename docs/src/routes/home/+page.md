@@ -74,9 +74,11 @@ Control when the debugger should stop, outside of regular breakpoints (e.g., whe
 
 ### Scopes view
 
-<img src="https://github.com/user-attachments/assets/2628ae8e-9224-4b2f-94c7-88e7800c232b" alt="scopes view" />
+<img src="https://i.ibb.co/Y7RgbsW3/image.png" alt="scopes view" />
 
-Use the scopes widget provided by nvim-dap
+Inspect all variables in scope
+
+- Expand, collapse and set the values of variables
 
 ### Sessions view
 

@@ -23,4 +23,19 @@ M.highlight_file_name_and_line_number = function(row, len_path, len_lnum)
     M.hl_range("Separator", { row, lnum_end }, { row, lnum_end + 1 })
 end
 
+M.types_to_hl_group = {
+    boolean = "Boolean",
+    bool = "Boolean",
+    str = "String",
+    string = "String",
+    int = "Number",
+    long = "Number",
+    number = "Number",
+    double = "Float",
+    float = "Float",
+    -- debugpy's "None"
+    nonetype = "Constant",
+    ["function"] = "Function",
+}
+
 return M

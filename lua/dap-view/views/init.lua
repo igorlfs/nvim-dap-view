@@ -26,7 +26,8 @@ M.cleanup_view = function(condition, message)
 end
 
 ---@param view dapview.Section
-M.switch_to_view = function(view)
+---@param skip_restore_cursor? boolean
+M.switch_to_view = function(view, skip_restore_cursor)
     if not util.is_buf_valid(state.bufnr) or not util.is_win_valid(state.winnr) then
         return
     end
@@ -52,10 +53,12 @@ M.switch_to_view = function(view)
 
     require("dap-view." .. view .. ".view").show()
 
-    local buf_len = api.nvim_buf_line_count(state.bufnr)
-    state.cur_pos[view] = math.min(cursor_line, buf_len)
+    if not skip_restore_cursor then
+        local buf_len = api.nvim_buf_line_count(state.bufnr)
+        state.cur_pos[view] = math.min(cursor_line, buf_len)
 
-    api.nvim_win_set_cursor(state.winnr, { state.cur_pos[view], 0 })
+        api.nvim_win_set_cursor(state.winnr, { state.cur_pos[view], 0 })
+    end
 end
 
 return M

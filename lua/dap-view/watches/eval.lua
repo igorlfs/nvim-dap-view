@@ -144,7 +144,7 @@ M.expand_variable = function(variables_reference, previous_expansion_result)
                 new_variable_view.children, new_variable_view.err =
                     M.expand_variable(variables_reference_, new_variable_view.children)
             else
-                -- We have to reset the children if the variable is no longer, otherwise it retains the old value indefinitely
+                -- We have to reset the children if the variable is no longer valid, otherwise it retains the old value indefinitely
                 new_variable_view.children = nil
             end
         end

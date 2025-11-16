@@ -6,6 +6,7 @@ function M.validate(config)
         windows = { config.windows, "table" },
         winbar = { config.winbar, "table" },
         help = { config.help, "table" },
+        render = { config.render, "table" },
         switchbuf = { config.switchbuf, { "string", "function" } },
         icons = { config.icons, "table" },
         auto_toggle = { config.auto_toggle, { "boolean", "string" } },
@@ -20,6 +21,7 @@ function M.validate(config)
     require("dap-view.setup.validate.windows").validate(config.windows)
     require("dap-view.setup.validate.help").validate(config.help)
     require("dap-view.setup.validate.icons").validate(config.icons)
+    require("dap-view.setup.validate.render").validate(config.render)
 end
 
 return M
