@@ -13,7 +13,7 @@ M.views_keymaps = function()
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         if state.current_section == "breakpoints" then
-            require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|")
+            require("dap-view.breakpoints.actions").jump(cursor_line)
         elseif state.current_section == "threads" then
             require("dap-view.threads.actions").jump_and_set_frame(cursor_line)
         elseif state.current_section == "sessions" then
@@ -61,7 +61,7 @@ M.views_keymaps = function()
                 function(choice)
                     if choice ~= nil then
                         if state.current_section == "breakpoints" then
-                            require("dap-view.views.util").jump_to_location("^(.-)|(%d+)|", nil, choice.cb)
+                            require("dap-view.views.util").jump(cursor_line, choice.cb)
                         elseif state.current_section == "threads" then
                             require("dap-view.threads.actions").jump_and_set_frame(cursor_line, choice.cb)
                         end
@@ -92,16 +92,19 @@ M.views_keymaps = function()
     end)
 
     keymap("d", function()
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
         if state.current_section == "watches" then
-            local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
-
             watches_actions.remove_watch_expr(cursor_line)
 
             require("dap-view.views").switch_to_view("watches")
         elseif state.current_section == "breakpoints" then
-            require("dap-view.breakpoints.actions").remove_breakpoint()
+            require("dap-view.breakpoints.actions").remove(cursor_line)
 
-            require("dap-view.breakpoints.view").show()
+            -- If a session is active, `setBreakpoints` will trigger anyway
+            -- It's best avoid a redraw here
+            if require("dap").session() == nil then
+                require("dap-view.views").switch_to_view("breakpoints")
+            end
         end
     end)
 

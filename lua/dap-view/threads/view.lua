@@ -8,6 +8,10 @@ local setup = require("dap-view.setup")
 
 local M = {}
 
+---@class dapview.Label
+---@field labels {part: string, hl?: string}[]
+---@field id string
+
 M.show = function()
     -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
     if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
@@ -32,6 +36,12 @@ M.show = function()
 
         for k, _ in pairs(state.frames_by_line) do
             state.frames_by_line[k] = nil
+        end
+        for k, _ in pairs(state.frame_paths_by_frame_id) do
+            state.frame_paths_by_frame_id[k] = nil
+        end
+        for k, _ in pairs(state.frame_line_by_frame_id) do
+            state.frame_line_by_frame_id[k] = nil
         end
 
         local line = 0
@@ -61,6 +71,8 @@ M.show = function()
             line = line + 1
         end
 
+        local has_no_filter = state.threads_filter == ""
+
         for k, thread in pairs(session.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
             local thread_name = is_stopped_thread and thread.name .. " " .. setup.config.icons["pause"] or thread.name
@@ -87,7 +99,7 @@ M.show = function()
                     line = line + 1
                 end
             else
-                ---@type {label: string, id: number}[]
+                ---@type dapview.Label[]
                 local frames = vim.iter(valid_frames):fold(
                     {},
                     ---@param acc string[]
@@ -99,30 +111,52 @@ M.show = function()
                         if show_frame then
                             local path = f.source and f.source.path
                             local relative_path = path and vim.fn.fnamemodify(path, ":.") or ""
-                            local label = "\t" .. relative_path .. "|" .. f.line .. "|" .. f.name
 
-                            table.insert(acc, { label = label, id = f.id })
+                            state.frame_paths_by_frame_id[f.id] = relative_path
+                            state.frame_line_by_frame_id[f.id] = f.line
+
+                            table.insert(acc, {
+                                labels = {
+                                    { part = relative_path, hl = "FileName" },
+                                    { part = tostring(f.line), hl = "LineNumber" },
+                                    { part = f.name },
+                                },
+                                id = f.id,
+                            })
                         end
                         return acc
                     end
                 )
 
+                ---@type dapview.Label[]
                 local filtered_frames = vim.iter(frames)
                     :filter(
-                        ---@param f {label: string, id: number}
+                        ---@param f dapview.Label
                         function(f)
-                            local match = f.label:match(state.threads_filter)
+                            local label = ""
+                            for _, l in ipairs(f.labels) do
+                                label = label .. l.part
+                            end
+                            local match = label:match(state.threads_filter)
                             local invert = state.threads_filter_invert
-                            return state.threads_filter == "" or (invert and not match) or (not invert and match)
+                            return has_no_filter or (invert and not match) or (not invert and match)
                         end
                     )
                     :totable()
 
+                ---@type string[]
                 local content = vim.iter(filtered_frames)
                     :map(
-                        ---@param f {label: string, id: number}
+                        ---@param f dapview.Label
                         function(f)
-                            return f.label
+                            local label = "\t"
+                            for n, l in ipairs(f.labels) do
+                                label = label .. l.part
+                                if n ~= #f.labels then
+                                    label = label .. "|"
+                                end
+                            end
+                            return label
                         end
                     )
                     :totable()
@@ -130,22 +164,23 @@ M.show = function()
                 util.set_lines(state.bufnr, line, line + #content, false, content)
 
                 for i, f in pairs(filtered_frames) do
-                    local first_pipe_pos = string.find(f.label, "|")
-                    assert(first_pipe_pos, "missing pipe, buffer may have been edited")
-
-                    local last_pipe = string.find(string.reverse(f.label), "|")
-                    assert(last_pipe, "missing pipe, buffer may have been edited")
-
-                    local last_pipe_pos = #f.label - last_pipe
-
-                    hl.highlight_file_name_and_line_number(
-                        line + i - 1,
-                        first_pipe_pos - 1,
-                        last_pipe_pos - first_pipe_pos
-                    )
+                    local actual_line = line + i - 1
 
                     if session.current_frame and f.id == session.current_frame.id then
-                        hl.hl_range("FrameCurrent", { line + i - 1, 0 }, { line + i - 1, -1 })
+                        hl.hl_range("FrameCurrent", { actual_line, 0 }, { actual_line, -1 })
+                    else
+                        local hl_init = 1
+                        for _, p in ipairs(f.labels) do
+                            local hl_end = hl_init + #p.part
+
+                            if p.hl then
+                                hl.hl_range(p.hl, { actual_line, hl_init }, { actual_line, hl_end })
+                            end
+
+                            hl.hl_range("Separator", { actual_line, hl_end }, { actual_line, hl_end + 1 })
+
+                            hl_init = hl_init + #p.part + 1
+                        end
                     end
 
                     -- We can't index directly here, because we filter the valid_frames on the show_frame condition

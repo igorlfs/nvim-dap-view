@@ -100,7 +100,7 @@ end
 
 dap.listeners.after.setBreakpoints[SUBSCRIPTION_ID] = function()
     if state.current_section == "breakpoints" then
-        breakpoints.show()
+        require("dap-view.views").switch_to_view("breakpoints")
     end
 end
 

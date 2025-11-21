@@ -33,6 +33,10 @@
 ---@field stack_trace_errors string[]
 ---@field threads_error? string
 ---@field frames_by_line table<integer, dap.StackFrame>
+---@field frame_paths_by_frame_id table<integer, string>
+---@field frame_line_by_frame_id table<integer, integer>
+---@field breakpoint_paths_by_line string[]
+---@field breakpoint_lines_by_line integer[]
 ---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
 ---@field variable_views_by_line table<integer, {parent_reference: number, view: dapview.VariableView}>
 ---@field sessions_by_line table<integer, dap.Session>
@@ -53,6 +57,10 @@ local M = {
     exceptions_options = {},
     stack_trace_errors = {},
     frames_by_line = {},
+    frame_paths_by_frame_id = {},
+    frame_line_by_frame_id = {},
+    breakpoint_paths_by_line = {},
+    breakpoint_lines_by_line = {},
     expression_views_by_line = {},
     variable_views_by_line = {},
     sessions_by_line = {},

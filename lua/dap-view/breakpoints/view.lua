@@ -21,6 +21,14 @@ M.show = function()
             return
         end
 
+        for i, _ in ipairs(state.breakpoint_paths_by_line) do
+            state.breakpoint_paths_by_line[i] = nil
+        end
+
+        for i, _ in ipairs(state.breakpoint_lines_by_line) do
+            state.breakpoint_lines_by_line[i] = nil
+        end
+
         for buf, buf_entries in pairs(breakpoints) do
             local filename = api.nvim_buf_get_name(buf)
             local relative_path = vim.fn.fnamemodify(filename, ":.")
@@ -29,16 +37,42 @@ M.show = function()
                 local buf_lines = api.nvim_buf_get_lines(buf, entry.lnum - 1, entry.lnum, true)
                 local text = table.concat(buf_lines, "\n")
 
-                local content = { relative_path .. "|" .. entry.lnum .. "|" .. text }
+                local parts = {
+                    { part = relative_path, hl = "FileName" },
+                    { part = tostring(entry.lnum), hl = "LineNumber" },
+                    { part = text, hl = true },
+                }
 
-                util.set_lines(state.bufnr, line, line, false, content)
+                table.insert(state.breakpoint_paths_by_line, relative_path)
+                table.insert(state.breakpoint_lines_by_line, entry.lnum)
 
-                local col_offset = #relative_path + #tostring(entry.lnum) + 2
+                local content = ""
+                for k, p in ipairs(parts) do
+                    content = content .. p.part
+                    if k ~= #parts then
+                        content = content .. "|"
+                    end
+                end
 
-                treesitter.copy_highlights(buf, entry.lnum - 1, line, col_offset)
-                extmarks.copy_extmarks(buf, entry.lnum - 1, line, col_offset)
+                util.set_lines(state.bufnr, line, line, false, { content })
 
-                hl.highlight_file_name_and_line_number(line, #relative_path, #tostring(entry.lnum))
+                local hl_init = 0
+                for _, p in ipairs(parts) do
+                    if p.hl then
+                        local hl_end = hl_init + #p.part
+
+                        if type(p.hl) == "string" then
+                            hl.hl_range(p.hl, { line, hl_init }, { line, hl_end })
+                        else
+                            treesitter.copy_highlights(buf, entry.lnum - 1, line, hl_init)
+                            extmarks.copy_extmarks(buf, entry.lnum - 1, line, hl_init)
+                        end
+
+                        hl.hl_range("Separator", { line, hl_end }, { line, hl_end + 1 })
+
+                        hl_init = hl_init + #p.part + 1
+                    end
+                end
 
                 line = line + 1
             end
