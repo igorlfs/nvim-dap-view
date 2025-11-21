@@ -113,6 +113,11 @@ return {
     help = {
         border = nil,
     },
+    render = {
+        -- Optionally a function that takes two `dap.Variable`'s as arguments
+        -- and is forwarded to a `table.sort` when rendering variables in the scopes view
+        sort_variables = nil,
+    },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     -- Comma separated list, like the built-in 'switchbuf'. See :help 'switchbuf'
     -- Only a subset of the options is available: newtab, useopen, usetab and uselast
