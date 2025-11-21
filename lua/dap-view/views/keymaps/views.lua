@@ -162,7 +162,9 @@ M.views_keymaps = function()
                     if value then
                         require("dap-view.views.set").set_value(parent_reference, variable_name, value, evaluate_name)
 
-                        setup.config.winbar.base_sections.scopes.action()
+                        coroutine.wrap(function()
+                            require("dap-view.views").switch_to_view("scopes")
+                        end)()
                     end
                 end)
             end
