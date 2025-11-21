@@ -51,8 +51,16 @@ local wrapped_action = function(view, action)
     if setup.config.winbar.custom_sections[view] ~= nil then
         ---@cast view dapview.CustomSection
         custom_action_wrapper(view)
+        action()
+    else
+        if view == "repl" then
+            require("dap-view.repl").show()
+        else
+            coroutine.wrap(function()
+                require("dap-view.views").switch_to_view(view)
+            end)()
+        end
     end
-    action()
 end
 
 ---@param bufnr? integer
