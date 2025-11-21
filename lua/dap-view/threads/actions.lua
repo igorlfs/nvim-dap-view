@@ -7,16 +7,19 @@ local M = {}
 
 local log = vim.log.levels
 
----@param lnum number
+---@param line integer
 ---@param switchbuffun? dapview.SwitchBufFun
-M.jump_and_set_frame = function(lnum, switchbuffun)
-    local line = vim.fn.getline(".")
+M.jump_and_set_frame = function(line, switchbuffun)
+    local line_content = vim.fn.getline(".")
 
-    if string.find(line, "\t") then
-        util.jump_to_location("^\t(.-)|(%d+)|", nil, switchbuffun)
-
-        local frame = state.frames_by_line[lnum]
+    if string.find(line_content, "\t") then
+        local frame = state.frames_by_line[line]
         if frame then
+            local file_path = state.file_paths_by_frame_id[frame.id]
+            local line_ = state.file_location_by_frame_id[frame.id]
+
+            util.jump_to_location(file_path, line_, nil, switchbuffun)
+
             local session = assert(dap.session(), "has active session")
             session:_frame_set(frame)
         end
