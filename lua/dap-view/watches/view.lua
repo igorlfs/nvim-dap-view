@@ -17,7 +17,8 @@ local function show_variables(children, reference, line, depth)
         local variable = child.variable
         local show_expand_hint = #variable.value == 0 and variable.variablesReference > 0
         local value = show_expand_hint and "..." or variable.value
-        local content = variable.name .. " = " .. value
+        local prefix = util.get_variable_prefix(variable, child.expanded)
+        local content = prefix .. variable.name .. " = " .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
         local trimmed_content = content:gsub("%s+", " ")
@@ -26,14 +27,14 @@ local function show_variables(children, reference, line, depth)
 
         api.nvim_buf_set_lines(state.bufnr, line, line, true, { indented_content })
 
-        hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
+        hl.hl_range("WatchExpr", { line, depth + #prefix }, { line, depth + #prefix + #variable.name })
 
         local hl_group = (show_expand_hint and "WatchMore")
             or (child.updated and "WatchUpdated")
             or (variable.type and hl.types_to_hl_group[variable.type:lower()])
 
         if hl_group then
-            local _hl_start = #variable.name + 3 + depth
+            local _hl_start = #prefix + #variable.name + 3 + depth
             hl.hl_range(hl_group, { line, _hl_start }, { line, -1 })
         end
 
@@ -101,22 +102,23 @@ M.show = function()
             local err = view.err
 
             local result = response and response.result or err and tostring(err)
+            local prefix = util.get_expression_prefix(expression_view[2], expression_view[2].expanded)
 
-            local content = expression .. " = " .. result
+            local content = prefix .. expression .. " = " .. result
 
             -- Can't have linebreaks with nvim_buf_set_lines
             local trimmed_content = content:gsub("%s+", " ")
 
             api.nvim_buf_set_lines(state.bufnr, line, line, true, { trimmed_content })
 
-            hl.hl_range("WatchExpr", { line, 0 }, { line, #expression })
+            hl.hl_range("WatchExpr", { line, #prefix }, { line, #prefix + #expression })
 
             local hl_group = err and "WatchError"
                 or view.updated and "WatchUpdated"
                 or response and response.type and hl.types_to_hl_group[response.type:lower()]
 
             if hl_group then
-                local hl_start = #expression + 3
+                local hl_start = #prefix + #expression + 3
                 hl.hl_range(hl_group, { line, hl_start }, { line, -1 })
             end
 
