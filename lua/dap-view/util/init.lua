@@ -19,4 +19,19 @@ M.is_win_valid = function(winnr)
     return winnr and api.nvim_win_is_valid(winnr)
 end
 
+---@param variable dap.Variable
+---@param expanded boolean
+---@return string
+M.get_variable_prefix = function(variable, expanded)
+    if variable.variablesReference > 0 then
+        if expanded then
+            return "▼ "
+        else
+            return "▶ "
+        end
+    end
+
+    return ""
+end
+
 return M

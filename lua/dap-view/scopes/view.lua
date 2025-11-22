@@ -57,7 +57,12 @@ local function show_variables(variables_reference, parent_path, line, depth, can
         local show_expand_hint = #variable.value == 0 and variable.variablesReference > 0
         local value = show_expand_hint and "..." or variable.value
         local variable_name = variable.name
-        local content = variable_name .. " = " .. value
+
+        local path = parent_path .. "." .. variable.name
+
+        local prefix = util.get_variable_prefix(variable, state.variable_path_is_expanded[path])
+
+        local content = prefix .. variable_name .. " = " .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
         local trimmed_content = content:gsub("%s+", " ")
@@ -66,9 +71,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
         canvas.contents[#canvas.contents + 1] = indented_content
 
-        hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
-
-        local path = parent_path .. "." .. variable.name
+        hl.hl_range("WatchExpr", { line, depth + #prefix }, { line, depth + #prefix + #variable.name })
 
         local prev_variable_value = state.variable_path_to_value[path]
 
@@ -84,8 +87,8 @@ local function show_variables(variables_reference, parent_path, line, depth, can
             or (variable.type and hl.types_to_hl_group[variable.type:lower()])
 
         canvas.highlights[#canvas.highlights + 1] = {
-            { "WatchExpr", { line, depth }, { line, depth + #variable.name } },
-            type_hl_group and { type_hl_group, { line, #variable_name + 3 + depth }, { line, -1 } } or nil,
+            { "WatchExpr", { line, depth + #prefix }, { line, depth + #prefix + #variable.name } },
+            type_hl_group and { type_hl_group, { line, #variable_name + 3 + depth + #prefix }, { line, -1 } } or nil,
         }
 
         line = line + 1
