@@ -34,4 +34,19 @@ M.get_variable_prefix = function(variable, expanded)
     return ""
 end
 
+---@param expression dapview.ExpressionView
+---@param expanded boolean
+---@return string
+M.get_expression_prefix = function(expression, expanded)
+    if expression.children ~= nil then
+        if expanded then
+            return "▼ "
+        else
+            return "▶ "
+        end
+    end
+
+    return ""
+end
+
 return M
