@@ -5,7 +5,7 @@ local api = vim.api
 ---@param name string
 ---@param link string
 local hl_create = function(name, link)
-    api.nvim_set_hl(0, globals.HL_PREFIX .. name, { link = link })
+    api.nvim_set_hl(0, globals.HL_PREFIX .. name, { default = true, link = link })
 end
 
 local define_base_links = function()
