@@ -36,7 +36,6 @@ M.show = function()
     end
 
     -- Don't apply window options for the console, because there might no terminal
-    winbar.refresh_winbar("console")
 
     local session = dap.session()
 
@@ -65,6 +64,8 @@ M.show = function()
         api.nvim_set_current_buf(term_buf)
         vim.wo[state.winnr][0].winfixbuf = true
     end)
+
+    winbar.refresh_winbar("console")
 
     -- Only apply window options for the console once we set the terminal
     require("dap-view.console.options").set_win_options(state.winnr)
