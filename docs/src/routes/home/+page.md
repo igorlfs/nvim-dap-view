@@ -104,7 +104,7 @@ You can also write [your own](custom-views) views.
 
 #### Disassembly view
 
-A custom view is used to power the [disassembly view](disassembly), an integration with [nvim-dap-disasm](https://github.com/Jorenar/nvim-dap-disasm).
+A custom view is used to power the [disassembly view](disassembly), an integration with [nvim-dap-disasm](https://codeberg.org/Jorenar/nvim-dap-disasm).
 
 <img src="https://github.com/user-attachments/assets/97ed9e8c-20a0-4355-bb00-5199c7b3cd59" alt="disassembly view" />
 
