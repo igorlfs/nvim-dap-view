@@ -18,6 +18,7 @@ And [everyone else](https://github.com/igorlfs/nvim-dap-view/graphs/contributors
 You can make your nickname show up here by making a small, one-time, [donation](https://github.com/sponsors/igorlfs)
 
 - [@pscschn](https://github.com/pscschn) - Pascal Schneider
+- [@chkhetiani](https://github.com/chkhetiani) - Irakli Chkhetiaini
 
 **Note**: private sponsorships are not listed by default. If you make a private donation and want a shout-out nonetheless, [ping me](https://matrix.to/#/@igorlfs:matrix.org).
 
