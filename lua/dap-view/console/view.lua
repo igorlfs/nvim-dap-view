@@ -111,8 +111,19 @@ M.open_term_buf_win = function()
     if term_bufnr and not hide_adapter and not util.is_win_valid(state.term_winnr) then
         local is_win_valid = util.is_win_valid(state.winnr)
 
+        local position = windows_config.position
+        local win_pos = (type(position) == "function" and position()) or (type(position) == "string" and position)
+
+        ---@cast win_pos dapview.Position
+
+        local term_position = term_config.position
+        local term_win_pos = (type(term_position) == "function" and term_position(win_pos))
+            or (type(term_position) == "string" and term_position)
+
+        ---@cast term_win_pos dapview.Position
+
         local term_winnr = api.nvim_open_win(term_bufnr, false, {
-            split = is_win_valid and term_config.position or windows_config.position,
+            split = is_win_valid and term_win_pos or win_pos,
             win = is_win_valid and state.winnr or -1,
             height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
                 or windows_config.height,

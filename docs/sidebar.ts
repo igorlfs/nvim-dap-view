@@ -58,6 +58,10 @@ export const sidebar = {
                     to: '/advanced-switchbuf'
                 },
                 {
+                    title: "Dynamic Layout",
+                    to: '/dynamic-layout',
+                },
+                {
                     title: 'Hide Terminal',
                     to: '/hide-terminal'
                 },

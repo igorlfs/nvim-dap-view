@@ -15,7 +15,8 @@ M.set_options = function()
     win.foldcolumn = "0"
     win.winfixbuf = true
 
-    local pos = setup.config.windows.position
+    local position = setup.config.windows.position
+    local pos = (type(position) == "function" and position and position()) or (type(position) == "string" and position)
 
     if pos == "above" or pos == "below" then
         win.winfixheight = true

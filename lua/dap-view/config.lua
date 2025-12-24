@@ -8,15 +8,17 @@ local M = {}
 ---@alias dapview.DefaultButton "play" | "step_into" | "step_over" | "step_out" | "step_back" | "run_last" | "terminate" | "disconnect"
 ---@alias dapview.Button dapview.CustomButton | dapview.DefaultButton
 
+---@alias dapview.Position 'right' | 'left' | 'above' | 'below'
+
 ---@class dapview.TerminalConfig
 ---@field hide string[] List of adapters for which the terminal should be hidden
----@field position 'right' | 'left' | 'above' | 'below'
+---@field position dapview.Position|fun(position: dapview.Position): dapview.Position
 ---@field width number If > 1 number of columns, else percentage the terminal window should use
 ---@field start_hidden boolean Don't show the terminal window when starting a new session
 
 ---@class dapview.WindowsConfig
 ---@field height number If > 1 number of lines, else percentage the windows should use
----@field position 'right' | 'left' | 'above' | 'below'
+---@field position dapview.Position|fun(): dapview.Position
 ---@field anchor? fun(): integer? Function that returns a window number for the main nvim-dap-view window to follow
 ---@field terminal dapview.TerminalConfig
 

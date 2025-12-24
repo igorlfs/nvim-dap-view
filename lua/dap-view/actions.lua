@@ -79,13 +79,24 @@ M.open = function(hide_terminal)
     local windows_config = setup.config.windows
     local term_config = windows_config.terminal
 
-    local term_position = util.inverted_directions[term_config.position]
+    local position = windows_config.position
+    local win_pos = (type(position) == "function" and position()) or (type(position) == "string" and position)
+
+    ---@cast win_pos dapview.Position
+
+    local term_position_ = term_config.position
+    local term_win_pos = (type(term_position_) == "function" and term_position_(win_pos))
+        or (type(term_position_) == "string" and term_position_)
+
+    ---@cast term_win_pos dapview.Position
+
+    local term_position = util.inverted_directions[term_win_pos]
 
     local anchor_win = windows_config.anchor and windows_config.anchor()
     local is_anchor_win_valid = util.is_win_valid(anchor_win)
 
     local winnr = api.nvim_open_win(bufnr, false, {
-        split = (is_anchor_win_valid or is_term_win_valid) and term_position or windows_config.position,
+        split = (is_anchor_win_valid or is_term_win_valid) and term_position or win_pos,
         win = is_anchor_win_valid and anchor_win or is_term_win_valid and term_winnr or -1,
         height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
             or windows_config.height,

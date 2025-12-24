@@ -64,8 +64,11 @@ M.jump_to_location = function(pattern, column, switchbuffun)
     if win == nil then
         local windows = config.windows
 
+        local position = windows.position
+        local pos = (type(position) == "function" and position()) or (type(position) == "string" and position)
+
         win = api.nvim_open_win(0, true, {
-            split = util.inverted_directions[windows.position],
+            split = util.inverted_directions[pos],
             win = -1,
         })
     end
