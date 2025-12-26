@@ -194,7 +194,9 @@ M.switch_term_buf = function()
 
             if is_console_active then
                 winbar.refresh_winbar("console")
+            end
 
+            if is_console_active or not has_console then
                 -- Reset window options since they only take effect for the current buffer
                 -- When starting a new session, if the console view is already active,
                 -- these settings wouldn't be applied otherwise
