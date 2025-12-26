@@ -8,8 +8,6 @@ local setup = require("dap-view.setup")
 
 local M = {}
 
-local api = vim.api
-
 M.show = function()
     -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
     if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
@@ -29,7 +27,7 @@ M.show = function()
             end)
             :totable()
 
-        api.nvim_buf_set_lines(state.bufnr, 0, -1, false, content)
+        util.set_lines(state.bufnr, 0, -1, false, content)
 
         for i, opt in ipairs(adapter_exception_options) do
             local hl_type = opt.enabled and "Enabled" or "Disabled"

@@ -1,4 +1,5 @@
 local setup = require("dap-view.setup")
+local util = require("dap-view.util")
 
 local M = {}
 
@@ -69,7 +70,7 @@ M.show_help = function()
         api.nvim_win_close(help_win, true)
     end, { buffer = help_buf })
 
-    api.nvim_buf_set_lines(help_buf, 0, -1, true, content)
+    util.set_lines(help_buf, 0, -1, true, content)
 
     vim.treesitter.language.register("markdown", "dap-view-help")
 

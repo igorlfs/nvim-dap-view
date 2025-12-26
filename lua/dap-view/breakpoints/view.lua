@@ -31,7 +31,7 @@ M.show = function()
 
                 local content = { relative_path .. "|" .. entry.lnum .. "|" .. text }
 
-                api.nvim_buf_set_lines(state.bufnr, line, line, false, content)
+                util.set_lines(state.bufnr, line, line, false, content)
 
                 local col_offset = #relative_path + #tostring(entry.lnum) + 2
 
@@ -45,7 +45,7 @@ M.show = function()
         end
 
         -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+        util.set_lines(state.bufnr, line, -1, true, {})
     end
 end
 

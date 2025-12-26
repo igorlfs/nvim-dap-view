@@ -7,8 +7,6 @@ local hl = require("dap-view.util.hl")
 
 local M = {}
 
-local api = vim.api
-
 ---@param children table<number,dap.Session>
 ---@param focused_id number
 ---@param line number
@@ -26,7 +24,7 @@ local function show_children_sessions(children, focused_id, line)
         local prefix = string.rep("  ", num_parents)
         local indented_content = prefix .. content
 
-        api.nvim_buf_set_lines(state.bufnr, line, line, true, { indented_content })
+        util.set_lines(state.bufnr, line, line, true, { indented_content })
 
         if focused_id == session.id then
             hl.hl_range("FrameCurrent", { line, 0 }, { line, -1 })
@@ -56,7 +54,7 @@ M.show = function()
 
         line = show_children_sessions(dap.sessions(), focused.id, line)
 
-        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+        util.set_lines(state.bufnr, line, -1, true, {})
     end
 end
 

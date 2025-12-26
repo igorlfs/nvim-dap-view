@@ -27,6 +27,7 @@ M.set_options = function()
     local buf = vim.bo[state.bufnr]
     buf.buftype = "nofile"
     buf.swapfile = false
+    buf.modifiable = false
     buf.filetype = "dap-view"
 end
 

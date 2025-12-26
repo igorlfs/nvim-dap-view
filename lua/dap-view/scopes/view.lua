@@ -8,8 +8,6 @@ local hl = require("dap-view.util.hl")
 
 local M = {}
 
-local api = vim.api
-
 ---@type dap.Session
 local session
 
@@ -155,7 +153,7 @@ M.show = function()
             line = show_variables(scope.variablesReference, scope.name, line, 1, canvas)
         end
 
-        api.nvim_buf_set_lines(state.bufnr, 0, line - 1, false, canvas.contents)
+        util.set_lines(state.bufnr, 0, line - 1, false, canvas.contents)
 
         for _, highlights in ipairs(canvas.highlights) do
             for _, highlight in ipairs(highlights) do
@@ -163,7 +161,7 @@ M.show = function()
             end
         end
 
-        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+        util.set_lines(state.bufnr, line, -1, true, {})
     end
 end
 

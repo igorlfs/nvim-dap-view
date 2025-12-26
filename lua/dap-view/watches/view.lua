@@ -5,8 +5,6 @@ local hl = require("dap-view.util.hl")
 
 local M = {}
 
-local api = vim.api
-
 ---@param children dapview.VariableView[]
 ---@param reference number
 ---@param line integer
@@ -24,7 +22,7 @@ local function show_variables(children, reference, line, depth)
 
         local indented_content = string.rep("\t", depth) .. trimmed_content
 
-        api.nvim_buf_set_lines(state.bufnr, line, line, true, { indented_content })
+        util.set_lines(state.bufnr, line, line, true, { indented_content })
 
         hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
 
@@ -44,7 +42,7 @@ local function show_variables(children, reference, line, depth)
         if child.err then
             local err_content = string.rep("\t", depth + 1) .. tostring(child.err)
 
-            api.nvim_buf_set_lines(state.bufnr, line, line, true, { err_content })
+            util.set_lines(state.bufnr, line, line, true, { err_content })
 
             hl.hl_range("WatchError", { line, 0 }, { line, #err_content })
 
@@ -107,7 +105,7 @@ M.show = function()
             -- Can't have linebreaks with nvim_buf_set_lines
             local trimmed_content = content:gsub("%s+", " ")
 
-            api.nvim_buf_set_lines(state.bufnr, line, line, true, { trimmed_content })
+            util.set_lines(state.bufnr, line, line, true, { trimmed_content })
 
             hl.hl_range("WatchExpr", { line, 0 }, { line, #expression })
 
@@ -129,7 +127,7 @@ M.show = function()
             end
         end
 
-        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+        util.set_lines(state.bufnr, line, -1, true, {})
     end
 end
 

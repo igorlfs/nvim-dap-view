@@ -8,8 +8,6 @@ local setup = require("dap-view.setup")
 
 local M = {}
 
-local api = vim.api
-
 M.show = function()
     -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
     if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
@@ -52,7 +50,7 @@ M.show = function()
                 filter = filter .. omit_icon
             end
 
-            api.nvim_buf_set_lines(state.bufnr, line, line, true, { filter })
+            util.set_lines(state.bufnr, line, line, true, { filter })
 
             hl.hl_range("FrameCurrent", { 0, 0 }, { 0, filter_icon_len })
 
@@ -66,7 +64,7 @@ M.show = function()
         for k, thread in pairs(session.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
             local thread_name = is_stopped_thread and thread.name .. " " .. setup.config.icons["pause"] or thread.name
-            api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread_name })
+            util.set_lines(state.bufnr, line, line, true, { thread_name })
 
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
 
@@ -84,7 +82,7 @@ M.show = function()
             if vim.tbl_isempty(valid_frames) then
                 local thread_err = state.stack_trace_errors[k]
                 if thread_err then
-                    api.nvim_buf_set_lines(state.bufnr, line, line, true, { thread_err })
+                    util.set_lines(state.bufnr, line, line, true, { thread_err })
                     hl.hl_range("ThreadError", { line, 0 }, { line, -1 })
                     line = line + 1
                 end
@@ -129,7 +127,7 @@ M.show = function()
                     )
                     :totable()
 
-                api.nvim_buf_set_lines(state.bufnr, line, line + #content, false, content)
+                util.set_lines(state.bufnr, line, line + #content, false, content)
 
                 for i, f in pairs(filtered_frames) do
                     local first_pipe_pos = string.find(f.label, "|")
@@ -165,7 +163,7 @@ M.show = function()
         end
 
         -- Clear previous content
-        api.nvim_buf_set_lines(state.bufnr, line, -1, true, {})
+        util.set_lines(state.bufnr, line, -1, true, {})
     end
 end
 
