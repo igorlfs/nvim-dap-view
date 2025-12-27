@@ -69,6 +69,14 @@ M.open = function(hide_terminal)
 
     state.bufnr = bufnr
 
+    -- Handle session restoration, where a leftover buffer can prevent reopening (#132)
+    for _, buf in ipairs(api.nvim_list_bufs()) do
+        local name = api.nvim_buf_get_name(buf)
+        if name == globals.MAIN_BUF_NAME then
+            api.nvim_buf_delete(buf, { force = true })
+        end
+    end
+
     api.nvim_buf_set_name(bufnr, globals.MAIN_BUF_NAME)
 
     local separate_term_win = not vim.tbl_contains(setup.config.winbar.sections, "console")

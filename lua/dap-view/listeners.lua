@@ -7,7 +7,6 @@ local term = require("dap-view.console.view")
 local setup = require("dap-view.setup")
 local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
-local traversal = require("dap-view.tree.traversal")
 local scroll = require("dap-view.console.scroll")
 
 local SUBSCRIPTION_ID = "dap-view"
