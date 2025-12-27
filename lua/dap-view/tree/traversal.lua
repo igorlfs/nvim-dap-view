@@ -2,6 +2,7 @@ local adapter = require("dap-view.util.adapter")
 
 local M = {}
 
+---Does not count sessions that dot not have terminals (`term_buf`)
 ---@param sessions table<number,dap.Session>
 ---@param acc dap.Session[]
 ---@return dap.Session[]

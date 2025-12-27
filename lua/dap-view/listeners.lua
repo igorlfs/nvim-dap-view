@@ -222,11 +222,9 @@ for _, listener in ipairs(auto_close) do
         local auto_toggle = setup.config.auto_toggle
 
         if auto_toggle then
-            local dap_sessions = traversal.flatten_sessions(dap.sessions())
-
             -- Auto toggle is a bit ambiguous if there are multiple sessions running
             -- Should we call close if a single session is finished, even if others are running?
-            if #dap_sessions == 1 then
+            if vim.tbl_count(dap.sessions()) == 1 then
                 require("dap-view.actions").close(not (auto_toggle == "keep_terminal"))
             end
         end
