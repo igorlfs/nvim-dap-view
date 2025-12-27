@@ -1,5 +1,5 @@
 require("dap-view.highlight")
-require("dap-view.dap")
+require("dap-view.dap-defaults")
 require("dap-view.autocmds")
 require("dap-view.listeners")
 
