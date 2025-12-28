@@ -1,4 +1,6 @@
-local command = vim.api.nvim_create_user_command
+local api = vim.api
+
+local command = api.nvim_create_user_command
 
 command("DapViewOpen", function()
     require("dap-view").open()
@@ -44,4 +46,10 @@ command("DapViewNavigate", function(opts)
 end, {
     nargs = 1,
     bang = true,
+})
+
+api.nvim_create_autocmd("SessionLoadPost", {
+    callback = function()
+        require("dap-view.vim-sessions").load_session_hook()
+    end,
 })

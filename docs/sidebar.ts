@@ -68,6 +68,10 @@ export const sidebar = {
                 {
                     title: 'Custom Views',
                     to: '/custom-views'
+                },
+                {
+                    title: 'Restoring Sessions',
+                    to: '/restoring-sessions'
                 }
             ]
         },

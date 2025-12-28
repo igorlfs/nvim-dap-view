@@ -74,6 +74,15 @@ api.nvim_create_autocmd("TabEnter", {
     end,
 })
 
+-- VimLeavePre may run "too late"
+-- Session plugins may run "autosave" hooks with this event as well
+-- Which chould lead to race conditions
+api.nvim_create_autocmd("VimLeavePre", {
+    callback = function()
+        require("dap-view.vim-sessions").save_state()
+    end,
+})
+
 api.nvim_create_autocmd("CursorMoved", {
     pattern = globals.MAIN_BUF_NAME,
     callback = function()
