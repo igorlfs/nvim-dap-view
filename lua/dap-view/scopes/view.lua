@@ -138,6 +138,8 @@ M.show = function()
             end
         end
 
+        local has_variables = false
+
         local line = 0
 
         ---@type dapview.Canvas
@@ -150,7 +152,29 @@ M.show = function()
 
             line = line + 1
 
+            local prev_line = line
+
             line = show_variables(scope.variablesReference, scope.name, line, 1, canvas)
+
+            if prev_line ~= line then
+                has_variables = true
+            end
+        end
+
+        -- Sometimes the JS debug adapter simply does not return any variables at all, in spite of
+        -- returning the scopes themselves. This happens, for instance, when debugging firebase functions.
+        -- Upon refreshing the scopes for a function that is no longer in execution.
+        --
+        -- This could be a bug in nvim-dap where it does not refresh the scopes, or a bug with the
+        -- adapter itself, where it doesn't send the updated scopes (if there are none)
+        --
+        -- Either way, that's not much of a big deal
+        --
+        -- More concerning though, is the fact that if the user does not force a refresh,
+        -- The scopes may show "outdated info" until a trigger to refresh is hit
+        -- But I guess that's more of a feature instead of a bug?
+        if views.cleanup_view(not has_variables, "No variables returned from adapter") then
+            return
         end
 
         util.set_lines(state.bufnr, 0, line - 1, false, canvas.contents)
