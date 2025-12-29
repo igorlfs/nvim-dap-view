@@ -149,6 +149,11 @@ M.views_keymaps = function()
     keymap("s", function()
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
+        -- Can only set value if stopped
+        if not require("dap-view.guard").expect_stopped() then
+            return
+        end
+
         if state.current_section == "scopes" then
             local variable_path = state.line_to_variable_path[cursor_line]
 

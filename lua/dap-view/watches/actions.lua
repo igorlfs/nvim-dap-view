@@ -8,7 +8,7 @@ local M = {}
 ---@param expr string
 ---@param default_expanded boolean
 M.add_watch_expr = function(expr, default_expanded)
-    if #expr == 0 or not guard.expect_session() then
+    if #expr == 0 or not guard.expect_stopped() then
         return false
     end
 
@@ -58,7 +58,7 @@ end
 ---@param value string
 ---@param line number
 M.set_watch_expr = function(value, line)
-    if not guard.expect_session() then
+    if not guard.expect_stopped() then
         return
     end
 
@@ -87,7 +87,7 @@ end
 ---@param expr string
 ---@param line number
 M.edit_watch_expr = function(expr, line)
-    if #expr == 0 or not guard.expect_session() then
+    if #expr == 0 or not guard.expect_stopped() then
         return false
     end
 
@@ -105,7 +105,7 @@ end
 
 ---@param line number
 M.expand_or_collapse = function(line)
-    if not guard.expect_session() then
+    if not guard.expect_stopped() then
         return
     end
 
