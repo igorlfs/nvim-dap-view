@@ -13,13 +13,13 @@ M.cleanup_view = function(condition, message)
     assert(state.bufnr ~= nil, "has nvim-dap-view buffer")
 
     if condition then
-        vim.wo[state.winnr][0].cursorline = false
+        vim.wo[state.winnr][0].cursorlineopt = "number"
 
         util.set_lines(state.bufnr, 0, -1, false, { message })
 
         hl.hl_range("MissingData", { 0, 0 }, { 0, #message })
     else
-        vim.wo[state.winnr][0].cursorline = true
+        vim.wo[state.winnr][0].cursorlineopt = "both"
     end
 
     return condition
