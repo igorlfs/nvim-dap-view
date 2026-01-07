@@ -12,14 +12,14 @@ local M = {}
 
 ---@class dapview.TerminalConfig
 ---@field hide string[] List of adapters for which the terminal should be hidden
----@field position dapview.Position|fun(position: dapview.Position): dapview.Position
----@field width number If > 1 number of columns, else percentage the terminal window should use
+---@field position dapview.Position|fun(position: dapview.Position): dapview.Position Can be a function, receiving the main window's position as its argument
+---@field size number|fun(position: dapview.Position): number Size of the terminal window's split. Either a number, where if > 1 it's the absolute size, or else the percentage. Can also be a function, receiving the position and returning a number, that then follows the same logic.
 ---@field start_hidden boolean Don't show the terminal window when starting a new session
 
 ---@class dapview.WindowsConfig
----@field height number If > 1 number of lines, else percentage the windows should use
----@field position dapview.Position|fun(): dapview.Position
----@field anchor? fun(): integer? Function that returns a window number for the main nvim-dap-view window to follow
+---@field size number|fun(position: dapview.Position): number Size of the main window's split. Either a number, where if > 1 it's the absolute size, or else the percentage. Can also be a function, receiving the position and returning a number, that then follows the same logic.
+---@field position dapview.Position|fun(prev_position?: dapview.Position): dapview.Position Position of the top level split. Can also be a function, receiving its previous position (if any) as its argument.
+---@field anchor? fun(): integer? Function that returns a window number for the main nvim-dap-view window to treat as the terminal window
 ---@field terminal dapview.TerminalConfig
 
 ---@alias dapview.DefaultIcons dapview.DefaultButton | "pause"
@@ -148,10 +148,10 @@ M.config = {
         },
     },
     windows = {
-        height = 0.25,
+        size = 0.25,
         position = "below",
         terminal = {
-            width = 0.5,
+            size = 0.5,
             position = "left",
             hide = {},
             start_hidden = true,

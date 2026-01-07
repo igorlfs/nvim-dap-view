@@ -13,6 +13,7 @@ local traversal = require("dap-view.tree.traversal")
 local M = {}
 
 local api = vim.api
+local go = vim.go
 
 ---@param hide_terminal? boolean
 M.toggle = function(hide_terminal)
@@ -88,9 +89,12 @@ M.open = function(hide_terminal)
     local term_config = windows_config.terminal
 
     local position = windows_config.position
-    local win_pos = (type(position) == "function" and position()) or (type(position) == "string" and position)
+    local win_pos = (type(position) == "function" and position(state.win_pos))
+        or (type(position) == "string" and position)
 
     ---@cast win_pos dapview.Position
+
+    state.win_pos = win_pos
 
     local term_position_ = term_config.position
     local term_win_pos = (type(term_position_) == "function" and term_position_(win_pos))
@@ -98,19 +102,68 @@ M.open = function(hide_terminal)
 
     ---@cast term_win_pos dapview.Position
 
-    local term_position = util.inverted_directions[term_win_pos]
+    local inv_term_position = util.inverted_directions[term_win_pos]
 
     local anchor_win = windows_config.anchor and windows_config.anchor()
     local is_anchor_win_valid = util.is_win_valid(anchor_win)
 
+    local size_ = windows_config.size
+    local size__ = (type(size_) == "function" and size_(win_pos)) or size_
+
+    ---@cast size__ number
+
+    local is_vertical = win_pos == "above" or win_pos == "below"
+
+    local term_size_ = term_config.size
+    local term_size__ = (type(term_size_) == "function" and term_size_(inv_term_position)) or term_size_
+
+    ---@cast term_size__ number
+
+    local term_is_vertical = term_win_pos == "above" or term_win_pos == "below"
+
+    local is_win_valid = is_anchor_win_valid or is_term_win_valid
+
+    local size = size__ < 1 and math.floor((is_vertical and go.lines or go.columns) * size__) or size__
+
+    local shared_split = term_is_vertical == is_vertical
+
+    local winfix_setting = is_vertical and "winfixheight" or "winfixwidth"
+
+    -- Temporarily disable fixed size
+    -- If the window exists, it's using the space of both
+    -- Do not touch anchor because we don't own it
+    if is_term_win_valid and shared_split then
+        vim.wo[state.term_winnr][winfix_setting] = false
+
+        -- `size` is already an integer at this point
+        if term_size__ < 1 then
+            term_size__ = term_size__ * size
+        end
+    end
+
+    local go_max = term_is_vertical and go.lines or go.columns
+
+    local term_size = term_size__ < 1 and math.floor(go_max * term_size__) or math.floor(term_size__)
+
     local winnr = api.nvim_open_win(bufnr, false, {
-        split = (is_anchor_win_valid or is_term_win_valid) and term_position or win_pos,
+        split = is_win_valid and inv_term_position or win_pos,
         win = is_anchor_win_valid and anchor_win or is_term_win_valid and term_winnr or -1,
-        height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
-            or windows_config.height,
-        width = term_config.width < 1 and math.floor(vim.go.columns * (1 - term_config.width))
-            or math.floor(vim.go.columns - term_config.width),
+        -- Oh lord
+        height = (
+            is_win_valid and (term_is_vertical and ((is_vertical and size or go.lines) - term_size) or size)
+            or (is_vertical and size or nil)
+        ),
+        width = (
+            is_win_valid
+                and (not term_is_vertical and ((not is_vertical and size or go.columns) - term_size) or size)
+            or (not is_vertical and size or nil)
+        ),
     })
+
+    -- Restore fixed size
+    if is_term_win_valid and shared_split then
+        vim.wo[state.term_winnr][winfix_setting] = true
+    end
 
     assert(winnr ~= 0, "Failed to create nvim-dap-view window")
 

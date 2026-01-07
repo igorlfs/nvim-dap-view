@@ -45,6 +45,7 @@
 ---@field watched_expressions table<string, dapview.ExpressionView>
 ---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,integer?>
+---@field win_pos? dapview.Position
 local M = {
     expr_count = 0,
     threads_filter = "",

@@ -1,3 +1,6 @@
+local state = require("dap-view.state")
+local setup = require("dap-view.setup")
+
 local api = vim.api
 
 local M = {}
@@ -23,6 +26,37 @@ M.fetch_window = function(opts)
         if win then
             return win
         end
+    end
+end
+
+---Restores the configured size for a given window
+---@param winnr integer
+M.resize = function(winnr)
+    local wo = vim.wo[winnr]
+
+    local size_ = setup.config.windows.size
+    local size__ = ((type(size_) == "function" and size_(state.win_pos)) or size_)
+
+    ---@cast size__ number
+
+    if wo.winfixheight then
+        wo.winfixheight = false
+
+        local size = math.floor(size__ < 1 and size__ * vim.go.lines or size__)
+
+        api.nvim_win_set_height(state.term_winnr, size)
+
+        wo.winfixheight = true
+    end
+
+    if wo.winfixwidth then
+        wo.winfixwidth = false
+
+        local size = math.floor(size__ < 1 and size__ * vim.go.columns or size__)
+
+        api.nvim_win_set_width(state.term_winnr, size)
+
+        wo.winfixwidth = true
     end
 end
 

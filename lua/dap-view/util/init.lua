@@ -3,10 +3,10 @@ local M = {}
 local api = vim.api
 
 M.inverted_directions = {
-    ["above"] = "below",
-    ["below"] = "above",
-    ["right"] = "left",
-    ["left"] = "right",
+    above = "below",
+    below = "above",
+    right = "left",
+    left = "right",
 }
 
 ---@param bufnr? integer

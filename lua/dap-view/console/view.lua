@@ -11,6 +11,7 @@ local scroll = require("dap-view.console.scroll")
 local M = {}
 
 local api = vim.api
+local go = vim.go
 
 ---Workaround to fetch the term_buf for sessions created via `startDebugging` from js-debug-adapter
 ---Only the top-level session owns the buf, children need to traverse parents to get it
@@ -112,9 +113,12 @@ M.open_term_buf_win = function()
         local is_win_valid = util.is_win_valid(state.winnr)
 
         local position = windows_config.position
-        local win_pos = (type(position) == "function" and position()) or (type(position) == "string" and position)
+        local win_pos = (type(position) == "function" and position(state.win_pos))
+            or (type(position) == "string" and position)
 
         ---@cast win_pos dapview.Position
+
+        state.win_pos = win_pos
 
         local term_position = term_config.position
         local term_win_pos = (type(term_position) == "function" and term_position(win_pos))
@@ -122,13 +126,59 @@ M.open_term_buf_win = function()
 
         ---@cast term_win_pos dapview.Position
 
+        local size_ = windows_config.size
+        local size__ = (type(size_) == "function" and size_(win_pos)) or size_
+
+        ---@cast size__ number
+
+        local is_vertical = win_pos == "above" or win_pos == "below"
+
+        local go_max = is_vertical and go.lines or go.columns
+
+        local size = size__ < 1 and math.floor(go_max * size__) or size__
+
+        local term_size_ = term_config.size
+        local term_size__ = (type(term_size_) == "function" and term_size_(term_win_pos)) or term_size_
+
+        ---@cast term_size__ number
+
+        local term_is_vertical = term_win_pos == "above" or term_win_pos == "below"
+
+        local shared_split = term_is_vertical == is_vertical
+
+        local winfix_setting = is_vertical and "winfixheight" or "winfixwidth"
+
+        -- Temporarily disable fixed size
+        -- If the window exists, it's using the space of both
+        if is_win_valid and shared_split then
+            vim.wo[state.winnr][winfix_setting] = false
+
+            -- `size` is already an integer at this point
+            if term_size__ < 1 then
+                term_size__ = term_size__ * size
+            end
+        end
+
+        local term_go_max = term_is_vertical and go.lines or go.columns
+
+        local term_size = math.floor(term_size__ < 1 and term_go_max * term_size__ or term_size__)
+
         local term_winnr = api.nvim_open_win(term_bufnr, false, {
             split = is_win_valid and term_win_pos or win_pos,
             win = is_win_valid and state.winnr or -1,
-            height = windows_config.height < 1 and math.floor(vim.go.lines * windows_config.height)
-                or windows_config.height,
-            width = term_config.width < 1 and math.floor(vim.go.columns * term_config.width) or term_config.width,
+            -- If there is a valid main window, we just need to apply whatever the term config says
+            -- Which means that we'd only set the height for vertical terms
+            -- Else, we need to create the window as if it occupied the space of both windows
+            -- Which means that, we'd only set the height if the main window is a vertical split
+            height = (is_win_valid and (term_is_vertical and term_size or nil)) or (is_vertical and size or nil),
+            -- Symmetric for width
+            width = (is_win_valid and (not term_is_vertical and term_size or nil) or (not is_vertical and size or nil)),
         })
+
+        -- Restore fixed size
+        if is_win_valid and shared_split then
+            vim.wo[state.winnr][winfix_setting] = true
+        end
 
         -- Track the state of the last term win, so it can be closed later if becomes a leftover window
         if state.term_winnr and term_winnr ~= state.term_winnr then
