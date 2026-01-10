@@ -95,7 +95,9 @@ M.open_term_buf_win = function()
     local session = require("dap").session()
 
     if session == nil then
-        return nil
+        -- There's no session, but there might a leftover terminal from the last session (#144)
+        -- If that's the case we shouldn't open a new window, but retrieve this last one instead
+        return require("dap-view.util.window").fetch_window({ current_tab = true, term = true })
     end
 
     local term_bufnr = M.fetch_term_buf(session)
