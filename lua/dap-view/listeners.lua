@@ -67,7 +67,7 @@ dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
 
     local has_console = vim.tbl_contains(config.winbar.sections, "console")
     local hidden_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
-    local open_term = not term_config.start_hidden and not has_console and not hidden_adapter
+    local open_term = config.auto_toggle == "open_term" and not has_console and not hidden_adapter
 
     -- Setting up the terminal must happen after `configurationDone`
     -- Otherwise (earlier, on `event_initialized`) the term_buf might be nil (see #125)
@@ -208,7 +208,9 @@ local auto_open = { "attach", "launch" }
 
 for _, listener in ipairs(auto_open) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
-        if setup.config.auto_toggle then
+        local auto_toggle = setup.config.auto_toggle
+
+        if auto_toggle and auto_toggle ~= "open_term" then
             require("dap-view.actions").open()
         end
     end
@@ -220,7 +222,7 @@ for _, listener in ipairs(auto_close) do
     dap.listeners.before[listener][SUBSCRIPTION_ID] = function()
         local auto_toggle = setup.config.auto_toggle
 
-        if auto_toggle then
+        if auto_toggle and auto_toggle ~= "open_term" then
             -- Auto toggle is a bit ambiguous if there are multiple sessions running
             -- Should we call close if a single session is finished, even if others are running?
             if vim.tbl_count(dap.sessions()) == 1 then

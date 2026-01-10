@@ -14,7 +14,7 @@ return {
     windows = {
         -- `prev` is the last used position, might be nil
         position = function(prev)
-            local wins = api.nvim_tabpage_list_wins(0)
+            local wins = vim.api.nvim_tabpage_list_wins(0)
 
             -- Restores previous position if terminal is visible
             if
@@ -27,7 +27,7 @@ return {
 
             return vim.tbl_count(vim.iter(wins)
                 :filter(function(win)
-                    local buf = api.nvim_win_get_buf(win)
+                    local buf = vim.api.nvim_win_get_buf(win)
                     local valid_buftype =
                         vim.tbl_contains({ "", "help", "prompt", "quickfix", "terminal" }, vim.bo[buf].buftype)
                     local dapview_win = vim.w[win].dapview_win or vim.w[win].dapview_win_term

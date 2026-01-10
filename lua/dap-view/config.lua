@@ -14,7 +14,6 @@ local M = {}
 ---@field hide string[] List of adapters for which the terminal should be hidden
 ---@field position dapview.Position|fun(position: dapview.Position): dapview.Position Can be a function, receiving the main window's position as its argument
 ---@field size number|fun(position: dapview.Position): number Size of the terminal window's split. Either a number, where if > 1 it's the absolute size, or else the percentage. Can also be a function, receiving the position and returning a number, that then follows the same logic.
----@field start_hidden boolean Don't show the terminal window when starting a new session
 
 ---@class dapview.WindowsConfig
 ---@field size number|fun(position: dapview.Position): number Size of the main window's split. Either a number, where if > 1 it's the absolute size, or else the percentage. Can also be a function, receiving the position and returning a number, that then follows the same logic.
@@ -79,7 +78,7 @@ local M = {}
 ---@field render dapview.RenderConfig
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
----@field auto_toggle boolean|"keep_terminal"
+---@field auto_toggle boolean|"keep_terminal"|"open_term"
 ---@field follow_tab boolean|fun(adapter?: string): boolean Reopen dapview when switching tabs
 
 ---@type dapview.ConfigStrict
@@ -154,7 +153,6 @@ M.config = {
             size = 0.5,
             position = "left",
             hide = {},
-            start_hidden = true,
         },
     },
     icons = {

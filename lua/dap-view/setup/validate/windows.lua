@@ -15,7 +15,6 @@ function M.validate(config)
         position = { config.terminal.position, { "string", "function" } },
         hide = { config.terminal.hide, "table" },
         size = { config.terminal.size, { "number", "function" } },
-        start_hidden = { config.terminal.start_hidden, "boolean" },
     }, config.terminal)
 end
 

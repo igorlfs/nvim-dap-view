@@ -91,8 +91,6 @@ return {
             position = "left",
             -- List of debug adapters for which the terminal should be ALWAYS hidden
             hide = {},
-            -- Hide the terminal when starting a new session
-            start_hidden = true,
         },
     },
     icons = {
@@ -125,6 +123,9 @@ return {
     -- If a function, should return the winnr of the destination window
     switchbuf = "usetab,uselast",
     -- Auto open when a session is started and auto close when all sessions finish
+    -- Alternatively, can be a string:
+    -- - "keep_terminal": as above, but keeps the terminal when the session finishes
+    -- - "open_term": open the terminal when starting a new session, nothing else
     auto_toggle = false,
     -- Reopen dapview when switching to a different tab
     -- Can also be a function to dynamically choose when to follow, by returning a boolean

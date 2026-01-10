@@ -13,7 +13,10 @@ function M.validate(config)
         follow_tab = { config.follow_tab, { "boolean", "function" } },
     }, config)
 
-    if type(config.auto_toggle) == "string" and config.auto_toggle ~= "keep_terminal" then
+    if
+        type(config.auto_toggle) == "string"
+        and not vim.tbl_contains({ "keep_terminal", "open_term" }, config.auto_toggle)
+    then
         error("Unknown auto_toggle option: " .. config.auto_toggle)
     end
 
