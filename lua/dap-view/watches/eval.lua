@@ -4,7 +4,8 @@ local M = {}
 
 ---@param expression string
 ---@param default_expanded boolean
-M.evaluate_expression = function(expression, default_expanded)
+---@param id? integer
+M.evaluate_expression = function(expression, default_expanded, id)
     local session = assert(require("dap").session(), "has active session")
 
     local frame_id = session.current_frame and session.current_frame.id
@@ -30,7 +31,7 @@ M.evaluate_expression = function(expression, default_expanded)
 
     ---@type dapview.ExpressionView
     local default_expression_view = {
-        id = state.expr_count,
+        id = id or state.expr_count,
         response = response,
         err = err,
         updated = false,

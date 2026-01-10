@@ -79,17 +79,15 @@ M.views_keymaps = function()
         end
     end)
 
+    keymap("a", function()
+        if state.current_section == "watches" then
+            require("dap-view.watches.keymaps").new_expression(true)
+        end
+    end)
+
     keymap("i", function()
         if state.current_section == "watches" then
-            vim.ui.input({ prompt = "Expression: " }, function(input)
-                if input then
-                    coroutine.wrap(function()
-                        if watches_actions.add_watch_expr(input, true) then
-                            require("dap-view.views").switch_to_view("watches")
-                        end
-                    end)()
-                end
-            end)
+            require("dap-view.watches.keymaps").new_expression(false)
         end
     end)
 

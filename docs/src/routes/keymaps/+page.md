@@ -23,6 +23,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 |    `d` | Delete a breakpoint                          |
 | **Watches**                                           |
 | `<CR>` | Expand or collapse a variable                |
+|    `a` | Append an expression                         |
 |    `i` | Insert an expression                         |
 |    `d` | Delete an expression                         |
 |    `e` | Edit an expression                           |

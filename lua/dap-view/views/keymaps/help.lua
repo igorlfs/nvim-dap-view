@@ -43,6 +43,7 @@ M.show_help = function()
         "   `d`  Delete a breakpoint",
         "### Watches",
         "`<CR>`  Expand or collapse a variable",
+        "   `a`  Append an expression",
         "   `i`  Insert an expression",
         "   `d`  Delete an expression",
         "   `e`  Edit an expression",

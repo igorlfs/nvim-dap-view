@@ -7,12 +7,13 @@ local M = {}
 
 ---@param expr string
 ---@param default_expanded boolean
-M.add_watch_expr = function(expr, default_expanded)
+---@param append? boolean
+M.add_watch_expr = function(expr, default_expanded, append)
     if #expr == 0 or not guard.expect_stopped() then
         return false
     end
 
-    eval.evaluate_expression(expr, default_expanded)
+    eval.evaluate_expression(expr, default_expanded, (append and 1 or -1) * state.expr_count)
 
     state.expr_count = state.expr_count + 1
 

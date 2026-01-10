@@ -36,7 +36,7 @@ M.restore_state = function()
         state.current_section = setup.config.winbar.default_section
     end
 
-    state.expr_count = vim.g[SESSION_VARIABLES["expr_count"]]
+    state.expr_count = vim.g[SESSION_VARIABLES["expr_count"]] or 0
 
     state.watched_expressions = vim.json.decode(vim.g[SESSION_VARIABLES["watches"]] or "{}") or {}
 end
