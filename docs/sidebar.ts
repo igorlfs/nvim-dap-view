@@ -58,16 +58,20 @@ export const sidebar = {
                     to: '/advanced-switchbuf'
                 },
                 {
+                    title: 'Custom Formatting',
+                    to: '/custom-formatting'
+                },
+                {
+                    title: 'Custom Views',
+                    to: '/custom-views'
+                },
+                {
                     title: "Dynamic Layout",
                     to: '/dynamic-layout',
                 },
                 {
                     title: 'Hide Terminal',
                     to: '/hide-terminal'
-                },
-                {
-                    title: 'Custom Views',
-                    to: '/custom-views'
                 },
                 {
                     title: 'Restoring Sessions',
