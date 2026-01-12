@@ -10,7 +10,7 @@ local M = {}
 
 ---@class dapview.Label
 ---@field labels {part: string, hl?: string}[]
----@field id string
+---@field id number
 
 M.show = function()
     -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
@@ -143,6 +143,13 @@ M.show = function()
                         end
                     )
                     :totable()
+
+                local preprocess = setup.config.render.threads.preprocess
+                if preprocess then
+                    for _, v in ipairs(filtered_frames) do
+                        v.labels = preprocess(v.labels)
+                    end
+                end
 
                 ---@type string[]
                 local content = vim.iter(filtered_frames)

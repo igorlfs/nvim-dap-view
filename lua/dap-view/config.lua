@@ -68,8 +68,12 @@ local M = {}
 ---@class dapview.HelpConfig
 ---@field border? string|string[] Override `winborder` in the help window
 
+---@class dapview.RenderThreadsConfig
+---@field preprocess? fun(parts: {part: string, hl?: string}[]): {part: string, hl?: string}[]
+
 ---@class dapview.RenderConfig
 ---@field sort_variables? fun(lhs: dap.Variable, rhs: dap.Variable): boolean Override order of variables
+---@field threads dapview.RenderThreadsConfig
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
@@ -175,6 +179,9 @@ M.config = {
     },
     render = {
         sort_variables = nil,
+        threads = {
+            preprocess = nil,
+        },
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,

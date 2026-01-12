@@ -13,6 +13,9 @@
 ---@field base_sections? table<dapview.Section,dapview.SectionConfigPartial>
 ---@field controls? dapview.ControlsConfigPartial
 
+---@class dapview.RenderConfigPartial : dapview.RenderConfig, {}
+---@field threads? dapview.RenderThreadsConfig
+
 ---@class dapview.HelpConfigPartial : dapview.HelpConfig, {}
 
 ---@class dapview.RenderConfigPartial : dapview.RenderConfig, {}
