@@ -8,9 +8,15 @@ local setup = require("dap-view.setup")
 
 local M = {}
 
----@class dapview.Label
----@field labels {part: string, hl?: string}[]
----@field id string
+---@class dapview.Frame
+---@field path string
+---@field lnum string
+---@field name string
+---@field id number
+
+---@class dapview.FrameContent
+---@field content dapview.Content[]
+---@field id number
 
 M.show = function()
     -- We have to check if the win is valid, since this function may be triggered by an event when the window is closed
@@ -45,9 +51,10 @@ M.show = function()
         end
 
         local line = 0
+        local config = setup.config
 
         if state.threads_filter ~= "" then
-            local filter = setup.config.icons["filter"] .. " "
+            local filter = config.icons["filter"] .. " "
             local filter_icon_len = #filter
 
             filter = filter .. state.threads_filter
@@ -55,7 +62,7 @@ M.show = function()
             local omit_icon_len = 0
 
             if state.threads_filter_invert then
-                local omit_icon = " " .. setup.config.icons["negate"]
+                local omit_icon = " " .. config.icons["negate"]
                 omit_icon_len = #omit_icon
                 filter = filter .. omit_icon
             end
@@ -75,13 +82,14 @@ M.show = function()
 
         for k, thread in pairs(session.threads) do
             local is_stopped_thread = session.stopped_thread_id == thread.id
-            local thread_name = is_stopped_thread and thread.name .. " " .. setup.config.icons["pause"] or thread.name
+            local thread_name = is_stopped_thread and thread.name .. " " .. config.icons["pause"] or thread.name
             util.set_lines(state.bufnr, line, line, true, { thread_name })
 
             hl.hl_range(is_stopped_thread and "ThreadStopped" or "Thread", { line, 0 }, { line, -1 })
 
             line = line + 1
 
+            ---@type dap.StackFrame[]
             local valid_frames = vim.iter(thread.frames or {})
                 :filter(
                     ---@param f dap.StackFrame
@@ -99,7 +107,7 @@ M.show = function()
                     line = line + 1
                 end
             else
-                ---@type dapview.Label[]
+                ---@type dapview.Frame[]
                 local frames = vim.iter(valid_frames):fold(
                     {},
                     ---@param acc string[]
@@ -116,11 +124,9 @@ M.show = function()
                             state.frame_line_by_frame_id[f.id] = f.line
 
                             table.insert(acc, {
-                                labels = {
-                                    { part = relative_path, hl = "FileName" },
-                                    { part = tostring(f.line), hl = "LineNumber" },
-                                    { part = f.name },
-                                },
+                                path = relative_path,
+                                lnum = tostring(f.line),
+                                name = f.name,
                                 id = f.id,
                             })
                         end
@@ -128,13 +134,21 @@ M.show = function()
                     end
                 )
 
-                ---@type dapview.Label[]
-                local filtered_frames = vim.iter(frames)
+                local formated_frames = vim.iter(frames):map(
+                    ---@param frame dapview.Frame
+                    function(frame)
+                        local format = config.render.threads.format(frame.name, frame.lnum, frame.path)
+                        return { content = format, id = frame.id }
+                    end
+                )
+
+                ---@type dapview.FrameContent[]
+                local filtered_frames = formated_frames
                     :filter(
-                        ---@param f dapview.Label
+                        ---@param f dapview.FrameContent
                         function(f)
                             local label = ""
-                            for _, l in ipairs(f.labels) do
+                            for _, l in ipairs(f.content) do
                                 label = label .. l.part
                             end
                             local match = label:match(state.threads_filter)
@@ -147,13 +161,13 @@ M.show = function()
                 ---@type string[]
                 local content = vim.iter(filtered_frames)
                     :map(
-                        ---@param f dapview.Label
+                        ---@param f dapview.FrameContent
                         function(f)
                             local label = "\t"
-                            for n, l in ipairs(f.labels) do
+                            for n, l in ipairs(f.content) do
                                 label = label .. l.part
-                                if n ~= #f.labels then
-                                    label = label .. "|"
+                                if n ~= #f.content then
+                                    label = label .. (l.separator or "|")
                                 end
                             end
                             return label
@@ -170,10 +184,11 @@ M.show = function()
                         hl.hl_range("FrameCurrent", { actual_line, 0 }, { actual_line, -1 })
                     else
                         local hl_init = 1
-                        for _, p in ipairs(f.labels) do
+                        for _, p in ipairs(f.content) do
                             local hl_end = hl_init + #p.part
 
-                            if p.hl then
+                            if type(p.hl) == "string" then
+                                ---@cast p {hl: string}
                                 hl.hl_range(p.hl, { actual_line, hl_init }, { actual_line, hl_end })
                             end
 

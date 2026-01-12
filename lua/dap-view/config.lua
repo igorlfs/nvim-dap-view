@@ -10,6 +10,11 @@ local M = {}
 
 ---@alias dapview.Position 'right' | 'left' | 'above' | 'below'
 
+---@class dapview.Content
+---@field part string
+---@field hl? string|boolean
+---@field separator? string
+
 ---@class dapview.TerminalConfig
 ---@field hide string[] List of adapters for which the terminal should be hidden
 ---@field position dapview.Position|fun(position: dapview.Position): dapview.Position Can be a function, receiving the main window's position as its argument
@@ -68,8 +73,12 @@ local M = {}
 ---@class dapview.HelpConfig
 ---@field border? string|string[] Override `winborder` in the help window
 
+---@class dapview.RenderThreadsConfig
+---@field format fun(name: string, lnum: string, path: string): dapview.Content[]
+
 ---@class dapview.RenderConfig
 ---@field sort_variables? fun(lhs: dap.Variable, rhs: dap.Variable): boolean Override order of variables
+---@field threads dapview.RenderThreadsConfig
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
@@ -175,6 +184,15 @@ M.config = {
     },
     render = {
         sort_variables = nil,
+        threads = {
+            format = function(name, lnum, path)
+                return {
+                    { part = name, separator = " " },
+                    { part = path, hl = "FileName", separator = ":" },
+                    { part = lnum, hl = "LineNumber" },
+                }
+            end,
+        },
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,
