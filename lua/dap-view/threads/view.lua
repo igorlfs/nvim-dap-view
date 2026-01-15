@@ -1,5 +1,6 @@
 local dap = require("dap")
 
+local globals = require("dap-view.globals")
 local views = require("dap-view.views")
 local util = require("dap-view.util")
 local state = require("dap-view.state")
@@ -7,6 +8,8 @@ local hl = require("dap-view.util.hl")
 local setup = require("dap-view.setup")
 
 local M = {}
+
+local api = vim.api
 
 ---@class dapview.Frame
 ---@field path string
@@ -181,7 +184,9 @@ M.show = function()
                     local actual_line = line + i - 1
 
                     if session.current_frame and f.id == session.current_frame.id then
-                        hl.hl_range("FrameCurrent", { actual_line, 0 }, { actual_line, -1 })
+                        api.nvim_buf_set_extmark(state.bufnr, globals.NAMESPACE, actual_line, 0, {
+                            line_hl_group = "NvimDapViewFrameCurrent",
+                        })
                     else
                         local hl_init = 1
                         for _, p in ipairs(f.content) do
