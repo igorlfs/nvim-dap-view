@@ -52,7 +52,7 @@ M.show = function()
                 for k, p in ipairs(parts) do
                     content = content .. p.part
                     if k ~= #parts then
-                        content = content .. "|"
+                        content = content .. (p.separator or "|")
                     end
                 end
 
