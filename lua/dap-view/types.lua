@@ -13,10 +13,13 @@
 ---@field base_sections? table<dapview.Section,dapview.SectionConfigPartial>
 ---@field controls? dapview.ControlsConfigPartial
 
+---@class dapview.RenderBreakpointsConfigPartial : dapview.RenderBreakpointsConfig, {}
+
 ---@class dapview.RenderThreadsConfigPartial : dapview.RenderThreadsConfig, {}
 
 ---@class dapview.RenderConfigPartial : dapview.RenderConfig, {}
 ---@field threads? dapview.RenderThreadsConfigPartial
+---@field breakpoints? dapview.RenderBreakpointsConfigPartial
 
 ---@class dapview.HelpConfigPartial : dapview.HelpConfig, {}
 

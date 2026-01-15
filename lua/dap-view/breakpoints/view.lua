@@ -2,11 +2,17 @@ local state = require("dap-view.state")
 local vendor = require("dap-view.breakpoints.vendor")
 local extmarks = require("dap-view.breakpoints.util.extmarks")
 local treesitter = require("dap-view.breakpoints.util.treesitter")
+local setup = require("dap-view.setup")
 local views = require("dap-view.views")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
 local M = {}
+
+---@class dapview.Breakpoint
+---@field path string
+---@field lnum string
+---@field line string
 
 local api = vim.api
 
@@ -37,11 +43,7 @@ M.show = function()
                 local buf_lines = api.nvim_buf_get_lines(buf, entry.lnum - 1, entry.lnum, true)
                 local text = table.concat(buf_lines, "\n")
 
-                local parts = {
-                    { part = relative_path, hl = "FileName" },
-                    { part = tostring(entry.lnum), hl = "LineNumber" },
-                    { part = text, hl = true },
-                }
+                local parts = setup.config.render.breakpoints.format(text, tostring(entry.lnum), relative_path)
 
                 table.insert(state.breakpoint_paths_by_line, relative_path)
                 table.insert(state.breakpoint_lines_by_line, entry.lnum)
@@ -62,6 +64,7 @@ M.show = function()
                         local hl_end = hl_init + #p.part
 
                         if type(p.hl) == "string" then
+                            ---@cast p {hl: string}
                             hl.hl_range(p.hl, { line, hl_init }, { line, hl_end })
                         else
                             treesitter.copy_highlights(buf, entry.lnum - 1, line, hl_init)
