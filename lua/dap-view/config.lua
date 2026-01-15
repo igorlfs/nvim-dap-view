@@ -73,12 +73,16 @@ local M = {}
 ---@class dapview.HelpConfig
 ---@field border? string|string[] Override `winborder` in the help window
 
+---@class dapview.RenderBreakpointsConfig
+---@field format fun(line: string, lnum: string, path: string): dapview.Content[]
+
 ---@class dapview.RenderThreadsConfig
 ---@field format fun(name: string, lnum: string, path: string): dapview.Content[]
 
 ---@class dapview.RenderConfig
 ---@field sort_variables? fun(lhs: dap.Variable, rhs: dap.Variable): boolean Override order of variables
 ---@field threads dapview.RenderThreadsConfig
+---@field breakpoints dapview.RenderBreakpointsConfig
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
@@ -190,6 +194,15 @@ M.config = {
                     { part = name, separator = " " },
                     { part = path, hl = "FileName", separator = ":" },
                     { part = lnum, hl = "LineNumber" },
+                }
+            end,
+        },
+        breakpoints = {
+            format = function(line, lnum, path)
+                return {
+                    { part = path, hl = "FileName" },
+                    { part = lnum, hl = "LineNumber" },
+                    { part = line, hl = true },
                 }
             end,
         },
