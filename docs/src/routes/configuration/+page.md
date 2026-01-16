@@ -11,7 +11,7 @@ The default configuration below is applied when the plugin is _loaded_ (**no `se
 These are the default options for `nvim-dap-view`.
 
 :::note
-You don't have to copy and paste these options. Use them as a reference.
+**You don't have to copy and paste these options.** Use them as a reference.
 :::
 
 ```lua
@@ -115,6 +115,32 @@ return {
         -- Optionally a function that takes two `dap.Variable`'s as arguments
         -- and is forwarded to a `table.sort` when rendering variables in the scopes view
         sort_variables = nil,
+        -- Full control of how frames are rendered, see the "Custom Formatting" page
+        threads = {
+            -- Choose which items to display and how
+            format = function(name, lnum, path)
+                return {
+                    { part = name, separator = " " },
+                    { part = path, hl = "FileName", separator = ":" },
+                    { part = lnum, hl = "LineNumber" },
+                }
+            end,
+            -- Align columns
+            align = false,
+        },
+        -- Full control of how breakpoints are rendered, see the "Custom Formatting" page
+        breakpoints = {
+            -- Choose which items to display and how
+            format = function(line, lnum, path)
+                return {
+                    { part = path, hl = "FileName" },
+                    { part = lnum, hl = "LineNumber" },
+                    { part = line, hl = true },
+                }
+            end,
+            -- Align columns
+            align = false,
+        },
     },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     -- Comma separated list, like the built-in 'switchbuf'. See :help 'switchbuf'

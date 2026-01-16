@@ -57,7 +57,9 @@ local function show_variables(children, reference, line, depth)
 end
 
 M.show = function()
-    -- Since variables aren't ordered, lines may change unexpectedly
+    -- New expressions may prepended
+    -- And lines may be no longer valid if a variable changes (e.g., array's size changes)
+    -- Hence, lines may change unexpectedly
     -- To handle that, always clear the storage table
     for k, _ in pairs(state.expression_views_by_line) do
         state.expression_views_by_line[k] = nil

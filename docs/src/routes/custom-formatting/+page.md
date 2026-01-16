@@ -5,6 +5,10 @@ category: Recipes
 
 You can control how the text is displayed for some views, using special `format` functions. Each customizable view has its own parameters, but the expected return type is the same: an array of `{part: string, hl?: string, separator?: string}`. The `part` is the "content" itself, `hl` is one of `nvim-dap-view`'s [highlight groups](./highlight-groups) (without the `NvimDapView` prefix) and the separator can be used to customize the divider between the current part and the next one.
 
+The separator must be a single character. A pipe (`|`) is used if not specified.
+
+Additionally, both `threads` and `breakpoints` support a flag for aligning their columns.
+
 ## Threads
 
 You can manipulate the frame _name_ (usually the function name), its line number and path.
@@ -65,6 +69,8 @@ return {
                     { part = line, hl = true },
                 }
             end,
+            -- Alignment enjoyer
+            align = true,
         },
     },
 }

@@ -83,7 +83,19 @@ M.show = function()
 
         local has_no_filter = state.threads_filter == ""
 
+        ---@type integer[][]
+        local lengths = {}
+
+        local num_parts = 0
+
+        ---@type integer[]
+        local row_offsets = {}
+
+        local row_offset = 0
+
         for k, thread in pairs(session.threads) do
+            row_offset = row_offset + 1
+
             local is_stopped_thread = session.stopped_thread_id == thread.id
             local thread_name = is_stopped_thread and thread.name .. " " .. config.icons["pause"] or thread.name
             util.set_lines(state.bufnr, line, line, true, { thread_name })
@@ -137,16 +149,37 @@ M.show = function()
                     end
                 )
 
-                local formated_frames = vim.iter(frames):map(
+                local formatted_frames = vim.iter(frames):map(
                     ---@param frame dapview.Frame
                     function(frame)
                         local format = config.render.threads.format(frame.name, frame.lnum, frame.path)
+
+                        for _, p in ipairs(format) do
+                            assert(
+                                not p.separator or #p.separator == 1,
+                                "Separator length must not exceeed 1 character"
+                            )
+                        end
+
+                        num_parts = #format - 1
+
+                        lengths[#lengths + 1] = vim.iter(format)
+                            :map(
+                                ---@param part dapview.Content
+                                function(part)
+                                    return #part.part
+                                end
+                            )
+                            :totable()
+
+                        row_offsets[#row_offsets + 1] = row_offset
+
                         return { content = format, id = frame.id }
                     end
                 )
 
                 ---@type dapview.FrameContent[]
-                local filtered_frames = formated_frames
+                local filtered_frames = formatted_frames
                     :filter(
                         ---@param f dapview.FrameContent
                         function(f)
@@ -215,6 +248,10 @@ M.show = function()
 
                 line = line + #content
             end
+        end
+
+        if setup.config.render.breakpoints.align then
+            require("dap-view.util.align").align(num_parts, lengths, 1, row_offsets)
         end
 
         -- Clear previous content

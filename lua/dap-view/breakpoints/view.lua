@@ -35,6 +35,11 @@ M.show = function()
             state.breakpoint_lines_by_line[i] = nil
         end
 
+        ---@type integer[][]
+        local lengths = {}
+
+        local num_parts = 0
+
         for buf, buf_entries in pairs(breakpoints) do
             local filename = api.nvim_buf_get_name(buf)
             local relative_path = vim.fn.fnamemodify(filename, ":.")
@@ -44,6 +49,21 @@ M.show = function()
                 local text = table.concat(buf_lines, "\n")
 
                 local parts = setup.config.render.breakpoints.format(text, tostring(entry.lnum), relative_path)
+
+                for _, p in ipairs(parts) do
+                    assert(not p.separator or #p.separator == 1, "Separator length must not exceeed 1 character")
+                end
+
+                num_parts = #parts - 1
+
+                lengths[#lengths + 1] = vim.iter(parts)
+                    :map(
+                        ---@param part dapview.Content
+                        function(part)
+                            return #part.part
+                        end
+                    )
+                    :totable()
 
                 table.insert(state.breakpoint_paths_by_line, relative_path)
                 table.insert(state.breakpoint_lines_by_line, entry.lnum)
@@ -79,6 +99,10 @@ M.show = function()
 
                 line = line + 1
             end
+        end
+
+        if setup.config.render.breakpoints.align then
+            require("dap-view.util.align").align(num_parts, lengths)
         end
 
         -- Clear previous content

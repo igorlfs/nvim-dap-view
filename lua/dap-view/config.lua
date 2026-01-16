@@ -75,9 +75,11 @@ local M = {}
 
 ---@class dapview.RenderBreakpointsConfig
 ---@field format fun(line: string, lnum: string, path: string): dapview.Content[]
+---@field align boolean
 
 ---@class dapview.RenderThreadsConfig
 ---@field format fun(name: string, lnum: string, path: string): dapview.Content[]
+---@field align boolean
 
 ---@class dapview.RenderConfig
 ---@field sort_variables? fun(lhs: dap.Variable, rhs: dap.Variable): boolean Override order of variables
@@ -189,6 +191,7 @@ M.config = {
     render = {
         sort_variables = nil,
         threads = {
+            align = false,
             format = function(name, lnum, path)
                 return {
                     { part = name, separator = " " },
@@ -198,6 +201,7 @@ M.config = {
             end,
         },
         breakpoints = {
+            align = false,
             format = function(line, lnum, path)
                 return {
                     { part = path, hl = "FileName" },
