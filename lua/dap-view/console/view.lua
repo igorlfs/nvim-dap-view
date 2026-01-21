@@ -97,12 +97,17 @@ M.open_term_buf_win = function()
     if session == nil then
         -- There's no session, but there might a leftover terminal from the last session (#144)
         -- If that's the case we shouldn't open a new window, but retrieve this last one instead
-        return require("dap-view.util.window").fetch_window({ current_tab = true, term = true })
+        local win = require("dap-view.util.window").fetch_window({ current_tab = true, term = true })
+        if win then
+            return win
+        end
     end
 
-    local term_bufnr = M.fetch_term_buf(session)
+    -- Attempt to restore previous buffer even when there's no session (#147)
+    local term_bufnr = (session and M.fetch_term_buf(session))
+        or (util.is_buf_valid(state.last_session_buf) and state.last_session_buf)
 
-    if term_bufnr == nil then
+    if not term_bufnr then
         return nil
     end
 
@@ -231,6 +236,9 @@ M.switch_term_buf = function()
     assert(session ~= nil, "has active session")
 
     local term_bufnr = M.fetch_term_buf(session)
+
+    -- Users might wanna restore the term buf even after the session ends (#147)
+    state.last_session_buf = term_bufnr
 
     if term_bufnr == nil then
         return

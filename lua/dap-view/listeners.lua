@@ -15,7 +15,6 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         local config = setup.config
         local term_config = config.windows.terminal
 
-        state.current_session_id = new.id
         state.current_adapter = new.config.type
 
         -- Handle switching the buf if session is already initialized
@@ -46,7 +45,6 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             end
         end
     else
-        state.current_session_id = nil
         state.current_adapter = nil
 
         -- Forces a refresh when terminating the last session

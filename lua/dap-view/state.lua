@@ -28,7 +28,7 @@
 ---@field current_adapter? string
 ---@field subtle_frames boolean
 ---@field current_section? dapview.Section
----@field current_session_id? number
+---@field last_session_buf? integer
 ---@field exceptions_options table<string,dapview.ExceptionsOption[]>
 ---@field stack_trace_errors string[]
 ---@field threads_error? string
