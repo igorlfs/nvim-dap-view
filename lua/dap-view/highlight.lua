@@ -38,7 +38,6 @@ local define_base_links = function()
     hl_create("ControlDisconnect", "DapBreakpoint")
 
     hl_create("WatchExpr", "Identifier")
-    hl_create("WatchMore", "Comment")
     hl_create("WatchError", "DiagnosticError")
     hl_create("WatchUpdated", "DiagnosticVirtualTextWarn")
 

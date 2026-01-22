@@ -29,9 +29,11 @@ local M = {}
 ---@alias dapview.DefaultIcons dapview.DefaultButton | "pause"
 
 ---@class dapview.IconsConfig
+---@field collapsed string
 ---@field disabled string
 ---@field disconnect string
 ---@field enabled string
+---@field expanded string
 ---@field filter string
 ---@field negate string
 ---@field pause string
@@ -171,9 +173,11 @@ M.config = {
         },
     },
     icons = {
+        collapsed = "󰅂 ",
         disabled = "",
         disconnect = "",
         enabled = "",
+        expanded = "󰅀 ",
         filter = "󰈲",
         negate = " ",
         pause = "",

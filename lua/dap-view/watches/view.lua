@@ -1,5 +1,6 @@
 local state = require("dap-view.state")
 local views = require("dap-view.views")
+local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
 
@@ -13,9 +14,16 @@ local M = {}
 local function show_variables(children, reference, line, depth)
     for _, child in ipairs(children) do
         local variable = child.variable
-        local show_expand_hint = #variable.value == 0 and variable.variablesReference > 0
-        local value = show_expand_hint and "..." or variable.value
-        local content = variable.name .. " = " .. value
+
+        local prefix = ""
+
+        local icons = setup.config.icons
+        if variable.variablesReference > 0 then
+            prefix = child.expanded and icons.expanded or icons.collapsed
+        end
+
+        local value = variable.value
+        local content = prefix .. variable.name .. (#value > 0 and " = " or "") .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
         local trimmed_content = content:gsub("%s+", " ")
@@ -24,15 +32,14 @@ local function show_variables(children, reference, line, depth)
 
         util.set_lines(state.bufnr, line, line, true, { indented_content })
 
-        hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
+        local hl_start = depth + #prefix
+        hl.hl_range("WatchExpr", { line, hl_start }, { line, hl_start + #variable.name })
 
-        local hl_group = (show_expand_hint and "WatchMore")
-            or (child.updated and "WatchUpdated")
+        local hl_group = (child.updated and "WatchUpdated")
             or (variable.type and hl.types_to_hl_group[variable.type:lower()])
 
         if hl_group then
-            local _hl_start = #variable.name + 3 + depth
-            hl.hl_range(hl_group, { line, _hl_start }, { line, -1 })
+            hl.hl_range(hl_group, { line, hl_start + #variable.name + 3 }, { line, -1 })
         end
 
         line = line + 1
@@ -102,21 +109,28 @@ M.show = function()
 
             local result = response and response.result or err and tostring(err)
 
-            local content = expression .. " = " .. result
+            local prefix = ""
+
+            local icons = setup.config.icons
+            if view.children ~= nil then
+                prefix = view.expanded and icons.expanded or icons.collapsed
+            end
+
+            local content = prefix .. expression .. " = " .. result
 
             -- Can't have linebreaks with nvim_buf_set_lines
             local trimmed_content = content:gsub("%s+", " ")
 
             util.set_lines(state.bufnr, line, line, true, { trimmed_content })
 
-            hl.hl_range("WatchExpr", { line, 0 }, { line, #expression })
+            hl.hl_range("WatchExpr", { line, #prefix }, { line, #prefix + #expression })
 
             local hl_group = err and "WatchError"
                 or view.updated and "WatchUpdated"
                 or response and response.type and hl.types_to_hl_group[response.type:lower()]
 
             if hl_group then
-                local hl_start = #expression + 3
+                local hl_start = #prefix + #expression + 3
                 hl.hl_range(hl_group, { line, hl_start }, { line, -1 })
             end
 

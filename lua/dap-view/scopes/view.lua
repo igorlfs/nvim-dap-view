@@ -46,16 +46,28 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
     local variables = response and response.variables or {}
 
-    local sort_variables = setup.config.render.sort_variables
+    local config = setup.config
+    local sort_variables = config.render.sort_variables
     if sort_variables then
         table.sort(variables, sort_variables)
     end
 
     for _, variable in pairs(variables) do
-        local show_expand_hint = #variable.value == 0 and variable.variablesReference > 0
-        local value = show_expand_hint and "..." or variable.value
         local variable_name = variable.name
-        local content = variable_name .. " = " .. value
+
+        local path = parent_path .. "." .. variable.name
+
+        local is_expanded = state.variable_path_is_expanded[path]
+        local is_structured = variable.variablesReference > 0
+
+        local prefix = ""
+
+        if is_structured then
+            prefix = is_expanded and config.icons.expanded or config.icons.collapsed
+        end
+
+        local value = variable.value
+        local content = prefix .. variable_name .. (#value > 0 and " = " or "") .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
         local trimmed_content = content:gsub("%s+", " ")
@@ -63,10 +75,6 @@ local function show_variables(variables_reference, parent_path, line, depth, can
         local indented_content = string.rep("\t", depth) .. trimmed_content
 
         canvas.contents[#canvas.contents + 1] = indented_content
-
-        hl.hl_range("WatchExpr", { line, depth }, { line, depth + #variable.name })
-
-        local path = parent_path .. "." .. variable.name
 
         local prev_variable_value = state.variable_path_to_value[path]
 
@@ -78,19 +86,19 @@ local function show_variables(variables_reference, parent_path, line, depth, can
         state.variable_path_to_parent_reference[path] = variables_reference
 
         local type_hl_group = (updated and "WatchUpdated")
-            or (show_expand_hint and "WatchMore")
             or (variable.type and hl.types_to_hl_group[variable.type:lower()])
 
+        local hl_start = depth + #prefix
         canvas.highlights[#canvas.highlights + 1] = {
-            { "WatchExpr", { line, depth }, { line, depth + #variable.name } },
-            type_hl_group and { type_hl_group, { line, #variable_name + 3 + depth }, { line, -1 } } or nil,
+            { "WatchExpr", { line, hl_start }, { line, hl_start + #variable.name } },
+            type_hl_group and { type_hl_group, { line, hl_start + #variable_name + 3 }, { line, -1 } } or nil,
         }
 
         line = line + 1
 
         state.line_to_variable_path[line] = path
 
-        if state.variable_path_is_expanded[path] and variable.variablesReference > 0 then
+        if is_expanded and is_structured then
             line = show_variables(variable.variablesReference, path, line, depth + 1, canvas)
         end
     end
