@@ -1,6 +1,4 @@
 local state = require("dap-view.state")
-local threads = require("dap-view.threads.view")
-local exceptions = require("dap-view.exceptions.view")
 local eval = require("dap-view.watches.eval")
 
 local M = {}
@@ -12,14 +10,8 @@ local M = {}
 ---scopes => no longer valid after finishing a session
 ---sessions => obviously needs to be updated when switching / finishing a session
 M.refresh_session_based_views = function()
-    if state.current_section == "threads" then
-        threads.show()
-    elseif state.current_section == "exceptions" then
-        exceptions.show()
-    elseif state.current_section == "watches" then
-        require("dap-view.views").switch_to_view("watches")
-    elseif state.current_section == "sessions" then
-        require("dap-view.views").switch_to_view("sessions")
+    if vim.tbl_contains({ "threads", "exceptions", "watches", "sessions" }, state.current_section) then
+        require("dap-view.views").switch_to_view(state.current_section)
     elseif state.current_section == "scopes" then
         coroutine.wrap(function()
             require("dap-view.views").switch_to_view("scopes")
