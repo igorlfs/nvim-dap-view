@@ -3,7 +3,6 @@ local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
 local statusline = require("dap-view.util.statusline")
 local util = require("dap-view.util")
-local base_buttons = require("dap-view.options.controls.base")
 local module = ...
 
 local M = {}
@@ -91,50 +90,6 @@ M.on_click = function(idx)
     wrapped_action(view, section.action)
 end
 
----@type integer?
-local width_limit
-
-local get_width_limit = function()
-    local winbar = setup.config.winbar
-    local controls_ = winbar.controls
-
-    local labels_len = vim.iter(winbar.sections)
-        :map(
-            ---@param s string
-            function(s)
-                return (winbar.custom_sections[s] or winbar.base_sections[s]).label
-            end
-        )
-        :fold(
-            0,
-            ---@param label string
-            function(acc, label)
-                -- length including margin
-                return acc + vim.fn.strdisplaywidth(label) + 2
-            end
-        )
-    local controls_len = controls_.enabled
-            and vim.iter(controls_.buttons)
-                :map(
-                    ---@param b string
-                    function(b)
-                        local str = (controls_.custom_buttons[b] or base_buttons[b]).render()
-                        -- Extract highlight groups and other parts of string that do not count for the final length
-                        return str:match("#([^#]+)%%%*") or str
-                    end
-                )
-                :fold(
-                    0,
-                    ---@param label string
-                    function(acc, label)
-                        -- length including margin
-                        return acc + vim.fn.strdisplaywidth(label) + 2
-                    end
-                )
-        or 0
-    return labels_len + controls_len
-end
-
 M.set_winbar_opt = function()
     if util.is_win_valid(state.winnr) then
         local winbar_title = {}
@@ -142,22 +97,25 @@ M.set_winbar_opt = function()
         local winbar = setup.config.winbar
         local controls_ = winbar.controls
 
-        width_limit = width_limit or get_width_limit()
-
-        local winnr_width = api.nvim_win_get_width(state.winnr)
-
         if controls_.enabled and controls_.position == "left" then
             table.insert(winbar_title, controls.render() .. "%=")
         end
+
+        local win_width = api.nvim_win_get_width(state.winnr)
 
         for k, v in ipairs(winbar.sections) do
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
             if section ~= nil then
-                local is_current_section = state.current_section == v
-                local label = not is_current_section and winnr_width < width_limit and section.short_label
+                local label = type(section.label) == "function" and section.label(win_width, state.current_section)
                     or section.label
+
+                ---@cast label string
+
                 local desc = " " .. label .. " "
+                if winbar.show_keymap_hints then
+                    desc = desc .. "[" .. section.keymap .. "]" .. " "
+                end
                 desc = statusline.clickable(desc, module, "on_click", k)
 
                 if state.current_section == v then

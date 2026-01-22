@@ -7,13 +7,12 @@ You can write your own views. If you are a plugin author, this allows you to emb
 
 If you are a regular user and you are missing a view, consider making a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml) instead of writing your own implementation.
 
-Writing a custom view is similar to writing a [custom button](control-bar#Custom-Buttons). A view consists of an ID and 5 fields:
+Writing a custom view is similar to writing a [custom button](control-bar#Custom-Buttons). A view consists of an ID and 4 fields:
 
 1. A `label`, the string that will show up in the user's winbar
-2. A `short_label`, which is used when there's not enough space to display the whole winbar
-3. An `action` function to render the component
-4. A `keymap`, which will trigger the action
-5. A `buffer` function that will create a new buffer and return its `bufnr`
+2. An `action` function to render the component
+3. A `keymap`, which will trigger the action
+4. A `buffer` function that will create a new buffer and return its `bufnr`
 
 The logic after the action is triggered is **not** handled by `nvim-dap-view`.
 
@@ -27,7 +26,6 @@ return {
         custom_sections = {
             my_new_view = { -- the ID
                 label = "My new view",
-                short_label = "mnv",
                 action = function()
                     vim.print("Hi from view")
                 end,

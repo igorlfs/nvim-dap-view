@@ -8,6 +8,7 @@ function M.validate(config)
         show = { config.show, "boolean" },
         sections = { config.sections, "table" },
         default_section = { config.default_section, "string" },
+        show_keymap_hints = { config.show_keymap_hints, "boolean" },
         base_sections = { config.base_sections, "table" },
         controls = { config.controls, "table" },
         custom_sections = { config.custom_sections, "table" },
@@ -27,50 +28,42 @@ function M.validate(config)
 
     validate("winbar.sections.breakpoints", {
         keymap = { base_sections.breakpoints.keymap, "string" },
-        label = { base_sections.breakpoints.label, "string" },
-        short_label = { base_sections.breakpoints.short_label, "string" },
+        label = { base_sections.breakpoints.label, { "function", "string" } },
     }, base_sections.breakpoints)
 
     validate("winbar.sections.scopes", {
         keymap = { base_sections.scopes.keymap, "string" },
-        label = { base_sections.scopes.label, "string" },
-        short_label = { base_sections.scopes.short_label, "string" },
+        label = { base_sections.scopes.label, { "function", "string" } },
     }, base_sections.scopes)
 
     validate("winbar.sections.exceptions", {
         keymap = { base_sections.exceptions.keymap, "string" },
-        label = { base_sections.exceptions.label, "string" },
-        short_label = { base_sections.exceptions.short_label, "string" },
+        label = { base_sections.exceptions.label, { "function", "string" } },
     }, base_sections.exceptions)
 
     validate("winbar.sections.watches", {
         keymap = { base_sections.watches.keymap, "string" },
-        label = { base_sections.watches.label, "string" },
-        short_label = { base_sections.watches.short_label, "string" },
+        label = { base_sections.watches.label, { "function", "string" } },
     }, base_sections.watches)
 
     validate("winbar.sections.threads", {
         keymap = { base_sections.threads.keymap, "string" },
-        label = { base_sections.threads.label, "string" },
-        short_label = { base_sections.threads.short_label, "string" },
+        label = { base_sections.threads.label, { "function", "string" } },
     }, base_sections.threads)
 
     validate("winbar.sections.repl", {
         keymap = { base_sections.repl.keymap, "string" },
-        label = { base_sections.repl.label, "string" },
-        short_label = { base_sections.repl.short_label, "string" },
+        label = { base_sections.repl.label, { "function", "string" } },
     }, base_sections.repl)
 
     validate("winbar.sections.sessions", {
         keymap = { base_sections.sessions.keymap, "string" },
-        label = { base_sections.sessions.label, "string" },
-        short_label = { base_sections.sessions.short_label, "string" },
+        label = { base_sections.sessions.label, { "function", "string" } },
     }, base_sections.sessions)
 
     validate("winbar.sections.console", {
         keymap = { base_sections.console.keymap, "string" },
-        label = { base_sections.console.label, "string" },
-        short_label = { base_sections.console.short_label, "string" },
+        label = { base_sections.console.label, { "function", "string" } },
     }, base_sections.console)
 
     local controls = config.controls

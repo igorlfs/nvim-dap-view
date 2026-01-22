@@ -22,48 +22,20 @@ return {
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         -- Must be one of the sections declared above
         default_section = "watches",
+        -- Append hints with keymaps within the labels
+        show_keymap_hints = true,
         -- Configure each section individually
         base_sections = {
-            breakpoints = {
-                keymap = "B",
-                label = "Breakpoints [B]",
-                short_label = " [B]",
-            },
-            scopes = {
-                keymap = "S",
-                label = "Scopes [S]",
-                short_label = "󰂥 [S]",
-            },
-            exceptions = {
-                keymap = "E",
-                label = "Exceptions [E]",
-                short_label = "󰢃 [E]",
-            },
-            watches = {
-                keymap = "W",
-                label = "Watches [W]",
-                short_label = "󰛐 [W]",
-            },
-            threads = {
-                keymap = "T",
-                label = "Threads [T]",
-                short_label = "󱉯 [T]",
-            },
-            repl = {
-                keymap = "R",
-                label = "REPL [R]",
-                short_label = "󰯃 [R]",
-            },
-            sessions = {
-                keymap = "K", -- I ran out of mnemonics
-                label = "Sessions [K]",
-                short_label = " [K]",
-            },
-            console = {
-                keymap = "C",
-                label = "Console [C]",
-                short_label = "󰆍 [C]",
-            },
+            -- Labels can be set dynamically with functions
+            -- Each function receives the window's width and the current section as arguments
+            breakpoints = { label = "Breakpoints", keymap = "B" },
+            scopes = { label = "Scopes", keymap = "S" },
+            exceptions = { label = "Exceptions", keymap = "E" },
+            watches = { label = "Watches", keymap = "W" },
+            threads = { label = "Threads", keymap = "T" },
+            repl = { label = "REPL", keymap = "R" },
+            sessions = { label = "Sessions", keymap = "K" },
+            console = { label = "Console", keymap = "C" },
         },
         -- Add your own sections
         custom_sections = {},
@@ -94,9 +66,11 @@ return {
         },
     },
     icons = {
+        collapsed = "󰅂 ",
         disabled = "",
         disconnect = "",
         enabled = "",
+        expanded = "󰅀 ",
         filter = "󰈲",
         negate = " ",
         pause = "",

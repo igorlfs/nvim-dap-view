@@ -56,8 +56,7 @@ local M = {}
 ---@field custom_buttons table<dapview.CustomButton, dapview.ButtonConfig> Custom buttons to show in the controls section
 
 ---@class dapview.SectionConfig
----@field label string
----@field short_label string Label to be shown if there's not enough space to display the entire winbar
+---@field label string|fun(width: integer, current: string): string
 ---@field keymap string
 
 ---@class dapview.CustomSectionConfig : dapview.SectionConfig
@@ -68,6 +67,7 @@ local M = {}
 ---@field sections dapview.Section[]
 ---@field default_section dapview.Section
 ---@field show boolean
+---@field show_keymap_hints boolean
 ---@field base_sections table<dapview.Section,dapview.SectionConfig>
 ---@field custom_sections table<dapview.CustomSection, dapview.CustomSectionConfig>
 ---@field controls dapview.ControlsConfig
@@ -104,47 +104,16 @@ M.config = {
         show = true,
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         default_section = "watches",
+        show_keymap_hints = true,
         base_sections = {
-            breakpoints = {
-                keymap = "B",
-                label = "Breakpoints [B]",
-                short_label = " [B]",
-            },
-            scopes = {
-                keymap = "S",
-                label = "Scopes [S]",
-                short_label = "󰂥 [S]",
-            },
-            exceptions = {
-                keymap = "E",
-                label = "Exceptions [E]",
-                short_label = "󰢃 [E]",
-            },
-            watches = {
-                keymap = "W",
-                label = "Watches [W]",
-                short_label = "󰛐 [W]",
-            },
-            threads = {
-                keymap = "T",
-                label = "Threads [T]",
-                short_label = "󱉯 [T]",
-            },
-            repl = {
-                keymap = "R",
-                label = "REPL [R]",
-                short_label = "󰯃 [R]",
-            },
-            sessions = {
-                keymap = "K", -- I ran out of mnemonics
-                label = "Sessions [K]",
-                short_label = " [K]",
-            },
-            console = {
-                keymap = "C",
-                label = "Console [C]",
-                short_label = "󰆍 [C]",
-            },
+            breakpoints = { label = "Breakpoints", keymap = "B" },
+            scopes = { label = "Scopes", keymap = "S" },
+            exceptions = { label = "Exceptions", keymap = "E" },
+            watches = { label = "Watches", keymap = "W" },
+            threads = { label = "Threads", keymap = "T" },
+            repl = { label = "REPL", keymap = "R" },
+            sessions = { label = "Sessions", keymap = "K" },
+            console = { label = "Console", keymap = "C" },
         },
         custom_sections = {},
         controls = {
@@ -195,7 +164,6 @@ M.config = {
     render = {
         sort_variables = nil,
         threads = {
-            align = false,
             format = function(name, lnum, path)
                 return {
                     { part = name, separator = " " },
@@ -203,9 +171,9 @@ M.config = {
                     { part = lnum, hl = "LineNumber" },
                 }
             end,
+            align = false,
         },
         breakpoints = {
-            align = false,
             format = function(line, lnum, path)
                 return {
                     { part = path, hl = "FileName" },
@@ -213,6 +181,7 @@ M.config = {
                     { part = line, hl = true },
                 }
             end,
+            align = false,
         },
     },
     switchbuf = "usetab,uselast",
