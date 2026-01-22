@@ -32,7 +32,7 @@ M.switch_to_view = function(view, skip_restore_cursor)
         return
     end
 
-    local cursor_line = state.cur_pos[view] or 1
+    local cursor_line, cursor_col = unpack(state.cur_pos[view] or { 1, 0 })
 
     -- Switch to main buf if using another one
     -- Users may have custom views so we need to check against base sections instead
@@ -55,9 +55,13 @@ M.switch_to_view = function(view, skip_restore_cursor)
 
     if not skip_restore_cursor then
         local buf_len = api.nvim_buf_line_count(state.bufnr)
-        state.cur_pos[view] = math.min(cursor_line, buf_len)
+        local line = math.min(cursor_line, buf_len)
+        local line_len = #api.nvim_buf_get_lines(state.bufnr, line - 1, line, true)[1]
+        local col = math.min(cursor_col, line_len)
 
-        api.nvim_win_set_cursor(state.winnr, { state.cur_pos[view], 0 })
+        state.cur_pos[view] = { line, col }
+
+        api.nvim_win_set_cursor(state.winnr, state.cur_pos[view])
     end
 end
 
