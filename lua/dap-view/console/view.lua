@@ -40,23 +40,34 @@ M.show = function()
 
     local session = dap.session()
 
-    if views.cleanup_view(session == nil, "No active session") then
-        return
-    end
+    local has_session = session ~= nil
 
-    assert(session ~= nil, "has active session")
+    local term_buf
+    if not has_session and util.is_buf_valid(state.last_session_buf) then
+        term_buf = state.last_session_buf
+    else
+        if views.cleanup_view(not has_session, "No active session") then
+            return
+        end
 
-    local term_buf = M.fetch_term_buf(session)
-    -- Do not allow switching to the root session from js-debug-adapter
-    -- If that were shown, it could be misleading, since the top-level session does not have any control over the terminal
-    -- i.e., the user would see a terminal but they wouldn't be able to step or control the flow from the parent session
-    local should_hide = adapter.is_js_adapter(session.config.type) and session.parent == nil
-    if views.cleanup_view(not util.is_buf_valid(term_buf) or should_hide, "No terminal for the current session") then
-        return
+        ---@cast session dap.Session
+
+        term_buf = M.fetch_term_buf(session)
+        -- Do not allow switching to the root session from js-debug-adapter
+        -- If that were shown, it could be misleading, since the top-level session does not have any control over the terminal
+        -- i.e., the user would see a terminal but they wouldn't be able to step or control the flow from the parent session
+        local should_hide = adapter.is_js_adapter(session.config.type) and session.parent == nil
+        if
+            views.cleanup_view(not util.is_buf_valid(term_buf) or should_hide, "No terminal for the current session")
+        then
+            return
+        end
     end
 
     ---`cleanup_view` ensures the buffer exists
     ---@cast term_buf integer
+
+    state.last_session_buf = term_buf
 
     local is_autoscrolling = scroll.is_autoscrolling(term_buf)
 
