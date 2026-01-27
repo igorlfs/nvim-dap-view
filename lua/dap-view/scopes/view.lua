@@ -146,9 +146,27 @@ M.show = function()
             end
         end
 
-        local has_variables = false
+        local all_scopes_collapsed = vim.iter(filtered_scopes):all(
+            ---@param s dap.Scope
+            function(s)
+                return vim.iter(state.collapsed_scopes):find(function(s_)
+                    return s_ == s.name
+                end)
+            end
+        )
+
+        -- If all scopes are manually collapsed,
+        -- we can reasonably assume it's likely at least one of them has variables
+        local has_variables = all_scopes_collapsed
 
         local line = 0
+
+        for k, _ in pairs(state.line_to_scope_name) do
+            state.line_to_scope_name[k] = nil
+        end
+        for k, _ in pairs(state.line_to_variable_path) do
+            state.line_to_variable_path[k] = nil
+        end
 
         ---@type dapview.Canvas
         local canvas = { contents = {}, highlights = {} }
@@ -160,9 +178,13 @@ M.show = function()
 
             line = line + 1
 
+            state.line_to_scope_name[line] = scope.name
+
             local prev_line = line
 
-            line = show_variables(scope.variablesReference, scope.name, line, 1, canvas)
+            if not vim.tbl_contains(state.collapsed_scopes, scope.name) then
+                line = show_variables(scope.variablesReference, scope.name, line, 1, canvas)
+            end
 
             if prev_line ~= line then
                 has_variables = true

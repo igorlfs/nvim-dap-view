@@ -40,6 +40,8 @@
 ---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
 ---@field variable_views_by_line table<integer, {parent_reference: number, view: dapview.VariableView}>
 ---@field sessions_by_line table<integer, dap.Session>
+---@field collapsed_scopes string[]
+---@field line_to_scope_name table<integer,string>
 ---@field variable_path_to_name table<string,string>
 ---@field variable_path_to_evaluate_name table<string,string>
 ---@field variable_path_to_value table<string,string>
@@ -64,6 +66,8 @@ local M = {
     expression_views_by_line = {},
     variable_views_by_line = {},
     sessions_by_line = {},
+    collapsed_scopes = {},
+    line_to_scope_name = {},
     subtle_frames = false,
     watched_expressions = {},
     variable_path_is_expanded = {},
