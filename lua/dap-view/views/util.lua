@@ -59,7 +59,13 @@ M.jump_to_location = function(file_path, line, column, switchbuffun)
         api.nvim_set_current_buf(bufnr)
     end)
 
-    api.nvim_win_set_cursor(win, { line, column or 0 })
+    local line_count = api.nvim_buf_line_count(bufnr)
+
+    -- Handle out of bounds line
+    -- May happen in some bizarre situation where a file is edited mid session?
+    if line <= line_count then
+        api.nvim_win_set_cursor(win, { line, column or 0 })
+    end
 
     api.nvim_set_current_win(win)
 end
