@@ -9,7 +9,7 @@ M.expect_stopped = function()
     end
 
     if not session.stopped_thread_id then
-        vim.notify("No stopped thread, cannot toggle variables")
+        vim.notify("No stopped thread")
     end
 
     return session.stopped_thread_id and true or false

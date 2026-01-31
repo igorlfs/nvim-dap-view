@@ -12,6 +12,10 @@ local log = vim.log.levels
 M.jump_and_set_frame = function(line, switchbuffun)
     local line_content = vim.fn.getline(".")
 
+    if not require("dap-view.guard").expect_stopped() then
+        return
+    end
+
     if string.find(line_content, "\t") then
         local frame = state.frames_by_line[line]
         if frame then
