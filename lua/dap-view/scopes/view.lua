@@ -146,6 +146,10 @@ M.show = function()
             end
         end
 
+        if views.cleanup_view(vim.tbl_isempty(filtered_scopes), "No eligible scopes returned from adapter") then
+            return
+        end
+
         local all_scopes_collapsed = vim.iter(filtered_scopes):all(
             ---@param s dap.Scope
             function(s)
