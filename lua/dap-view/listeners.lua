@@ -7,6 +7,7 @@ local setup = require("dap-view.setup")
 local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
 local scroll = require("dap-view.console.scroll")
+local fmt = require("dap-view.util.fmt")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -141,7 +142,7 @@ dap.listeners.after.threads[SUBSCRIPTION_ID] = function(_, err)
     state.threads_error = nil
 
     if err then
-        state.threads_error = tostring(err)
+        state.threads_error = fmt.dap_error(err)
     end
 
     winbar.redraw_controls()
@@ -153,7 +154,7 @@ dap.listeners.after.stackTrace[SUBSCRIPTION_ID] = function(_, err, _, payload)
     state.stack_trace_errors[threadId] = nil
 
     if err then
-        state.stack_trace_errors[threadId] = tostring(err)
+        state.stack_trace_errors[threadId] = fmt.dap_error(err)
     end
 end
 

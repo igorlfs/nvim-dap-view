@@ -5,6 +5,7 @@ local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
+local fmt = require("dap-view.util.fmt")
 
 local M = {}
 
@@ -33,7 +34,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
     )
 
     if err then
-        local err_content = string.rep("\t", depth + 1) .. tostring(err)
+        local err_content = string.rep("\t", depth + 1) .. fmt.dap_error(err)
 
         canvas.contents[#canvas.contents + 1] = err_content
 

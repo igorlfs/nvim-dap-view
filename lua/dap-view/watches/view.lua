@@ -3,6 +3,7 @@ local views = require("dap-view.views")
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 local hl = require("dap-view.util.hl")
+local fmt = require("dap-view.util.fmt")
 
 local M = {}
 
@@ -47,7 +48,7 @@ local function show_variables(children, reference, line, depth)
         state.variable_views_by_line[line] = { parent_reference = reference, variable = variable, view = child }
 
         if child.err then
-            local err_content = string.rep("\t", depth + 1) .. tostring(child.err)
+            local err_content = string.rep("\t", depth + 1) .. fmt.dap_error(child.err)
 
             util.set_lines(state.bufnr, line, line, true, { err_content })
 
@@ -107,7 +108,7 @@ M.show = function()
             local response = view.response
             local err = view.err
 
-            local result = response and response.result or err and tostring(err)
+            local result = response and response.result or err and fmt.dap_error(err)
 
             local prefix = ""
 
