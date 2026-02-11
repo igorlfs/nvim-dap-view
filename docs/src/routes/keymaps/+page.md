@@ -44,7 +44,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | **Help**                                              |
 |    `q` | Close                                        |
 
-Additionally, when jumping to a frame or breakpoint you can use `<C-w><CR>` to pick a specific [jump behavior](advanced-switchbuf#).
+Additionally, when jumping to a frame or breakpoint you can use `<C-w><CR>` to pick a specific [jump behavior](advanced-switchbuf#). Similarly, `<2-LeftMouse>` (double click) can be used instead of `<CR>`, for every `<CR>` mapping.
 
 `nvim-dap-view` doesn't define any keybindings outside its own buffers: you have to create your own bindings to call `open`, `close` or `toggle` and other API [functions](api) (or [commands](commands)).
 

@@ -9,7 +9,7 @@ local M = {}
 local api = vim.api
 
 M.views_keymaps = function()
-    keymap("<CR>", function()
+    keymap({ "<CR>", "<2-LeftMouse>" }, function()
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 
         if state.current_section == "breakpoints" then
