@@ -12,9 +12,6 @@ local M = {}
 ---@type dap.Session
 local session
 
----@type integer
-local frame_id
-
 ---Redrawing is jittery if we set lines on the fly
 ---Prevent that by batching all buffer updates
 ---Also need to handle concurrent calls, by creating multiple instances
@@ -28,10 +25,7 @@ local frame_id
 ---@param depth integer
 ---@param canvas dapview.Canvas
 local function show_variables(variables_reference, parent_path, line, depth, canvas)
-    local err, response = session:request(
-        "variables",
-        { variablesReference = variables_reference, context = "variables", frameId = frame_id }
-    )
+    local err, response = session:request("variables", { variablesReference = variables_reference })
 
     if err then
         local err_content = string.rep("\t", depth + 1) .. fmt.dap_error(err)
@@ -126,8 +120,6 @@ M.show = function()
         end
 
         ---@cast current_frame dap.StackFrame
-
-        frame_id = current_frame.id
 
         local frame_scopes = current_frame.scopes
 
