@@ -25,6 +25,7 @@ local define_base_links = function()
 
     hl_create("Tab", "TabLine")
     hl_create("TabSelected", "TabLineSel")
+    hl_create("TabFill", "TabLineFill")
 
     hl_create("ControlNC", "Comment")
     hl_create("ControlPlay", "Keyword")

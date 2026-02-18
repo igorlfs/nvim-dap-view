@@ -97,6 +97,8 @@ M.set_winbar_opt = function()
         local winbar = setup.config.winbar
         local controls_ = winbar.controls
 
+        table.insert(winbar_title, statusline.hl("", "TabFill", nil, false))
+
         if controls_.enabled and controls_.position == "left" then
             table.insert(winbar_title, controls.render() .. "%=")
         end
@@ -127,6 +129,8 @@ M.set_winbar_opt = function()
                 table.insert(winbar_title, desc)
             end
         end
+
+        table.insert(winbar_title, statusline.hl("", "TabFill", nil, false))
 
         if controls_.enabled and controls_.position == "right" then
             table.insert(winbar_title, "%=" .. controls.render())
