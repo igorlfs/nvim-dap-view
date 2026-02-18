@@ -11,7 +11,7 @@ local M = {}
 ---@alias dapview.Position 'right' | 'left' | 'above' | 'below'
 
 ---@class dapview.Content
----@field part string
+---@field text string
 ---@field hl? string|boolean
 ---@field separator? string
 
@@ -166,9 +166,9 @@ M.config = {
         threads = {
             format = function(name, lnum, path)
                 return {
-                    { part = name, separator = " " },
-                    { part = path, hl = "FileName", separator = ":" },
-                    { part = lnum, hl = "LineNumber" },
+                    { text = name, separator = " " },
+                    { text = path, hl = "FileName", separator = ":" },
+                    { text = lnum, hl = "LineNumber" },
                 }
             end,
             align = false,
@@ -176,9 +176,9 @@ M.config = {
         breakpoints = {
             format = function(line, lnum, path)
                 return {
-                    { part = path, hl = "FileName" },
-                    { part = lnum, hl = "LineNumber" },
-                    { part = line, hl = true },
+                    { text = path, hl = "FileName" },
+                    { text = lnum, hl = "LineNumber" },
+                    { text = line, hl = true },
                 }
             end,
             align = false,

@@ -167,7 +167,7 @@ M.show = function()
                             :map(
                                 ---@param part dapview.Content
                                 function(part)
-                                    return #part.part
+                                    return #part.text
                                 end
                             )
                             :totable()
@@ -185,7 +185,7 @@ M.show = function()
                         function(f)
                             local label = ""
                             for _, l in ipairs(f.content) do
-                                label = label .. l.part
+                                label = label .. l.text
                             end
                             local match = label:match(state.threads_filter)
                             local invert = state.threads_filter_invert
@@ -201,7 +201,7 @@ M.show = function()
                         function(f)
                             local label = "\t"
                             for n, l in ipairs(f.content) do
-                                label = label .. l.part
+                                label = label .. l.text
                                 if n ~= #f.content then
                                     label = label .. (l.separator or "|")
                                 end
@@ -223,7 +223,7 @@ M.show = function()
                     else
                         local hl_init = 1
                         for _, p in ipairs(f.content) do
-                            local hl_end = hl_init + #p.part
+                            local hl_end = hl_init + #p.text
 
                             if type(p.hl) == "string" then
                                 ---@cast p {hl: string}
@@ -232,7 +232,7 @@ M.show = function()
 
                             hl.hl_range("Separator", { actual_line, hl_end }, { actual_line, hl_end + 1 })
 
-                            hl_init = hl_init + #p.part + 1
+                            hl_init = hl_init + #p.text + 1
                         end
                     end
 

@@ -3,7 +3,7 @@ title: Custom Formatting
 category: Recipes
 ---
 
-You can control how the text is displayed for some views, using special `format` functions. Each customizable view has its own parameters, but the expected return type is the same: an array of `{part: string, hl?: string, separator?: string}`. The `part` is the "content" itself, `hl` is one of `nvim-dap-view`'s [highlight groups](./highlight-groups) (without the `NvimDapView` prefix) and the separator can be used to customize the divider between the current part and the next one.
+You can control how the text is displayed for some views, using special `format` functions. Each customizable view has its own parameters, but the expected return type is the same: an array of `{text: string, hl?: string, separator?: string}`. The `text` is the "content" itself, `hl` is one of `nvim-dap-view`'s [highlight groups](./highlight-groups) (without the `NvimDapView` prefix) and the separator can be used to customize the divider between the current part and the next one.
 
 The separator must be a single character. A pipe (`|`) is used if not specified.
 
@@ -23,10 +23,10 @@ return {
         threads = {
             format = function(name, lnum, path)
                 return {
-                    { part = name, separator = " " },
+                    { text = name, separator = " " },
                     -- See :h filename-modifiers
-                    { part = vim.fn.fnamemodify(buf_name, ":t"), hl = "FileName", separator = ":" },
-                    { part = lnum, hl = "LineNumber" },
+                    { text = vim.fn.fnamemodify(buf_name, ":t"), hl = "FileName", separator = ":" },
+                    { text = lnum, hl = "LineNumber" },
                 }
             end,
         },
@@ -42,9 +42,9 @@ return {
         threads = {
             format = function(name, lnum, path)
                 return {
-                    { part = path, hl = "FileName" },
-                    { part = lnum, hl = "LineNumber" },
-                    { part = name },
+                    { text = path, hl = "FileName" },
+                    { text = lnum, hl = "LineNumber" },
+                    { text = name },
                 }
             end,
         },
@@ -65,8 +65,8 @@ return {
             -- The line number HATER
             format = function(line, _, path)
                 return {
-                    { part = path, hl = "FileName" },
-                    { part = line, hl = true },
+                    { text = path, hl = "FileName" },
+                    { text = line, hl = true },
                 }
             end,
             -- Alignment enjoyer

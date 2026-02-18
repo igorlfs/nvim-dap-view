@@ -60,7 +60,7 @@ M.show = function()
                     :map(
                         ---@param part dapview.Content
                         function(part)
-                            return #part.part
+                            return #part.text
                         end
                     )
                     :totable()
@@ -70,7 +70,7 @@ M.show = function()
 
                 local content = ""
                 for k, p in ipairs(parts) do
-                    content = content .. p.part
+                    content = content .. p.text
                     if k ~= #parts then
                         content = content .. (p.separator or "|")
                     end
@@ -81,7 +81,7 @@ M.show = function()
                 local hl_init = 0
                 for _, p in ipairs(parts) do
                     if p.hl then
-                        local hl_end = hl_init + #p.part
+                        local hl_end = hl_init + #p.text
 
                         if type(p.hl) == "string" then
                             ---@cast p {hl: string}
@@ -93,7 +93,7 @@ M.show = function()
 
                         hl.hl_range("Separator", { line, hl_end }, { line, hl_end + 1 })
 
-                        hl_init = hl_init + #p.part + 1
+                        hl_init = hl_init + #p.text + 1
                     end
                 end
 
