@@ -134,6 +134,11 @@ for _, listener in ipairs(continue) do
             require("dap-view.views").switch_to_view("threads")
         end
 
+        -- Workaround for https://github.com/microsoft/vscode-js-debug/issues/2320
+        for k, _ in pairs(state.variable_path_to_set_variables) do
+            state.variable_path_to_set_variables[k] = nil
+        end
+
         winbar.redraw_controls()
     end
 end

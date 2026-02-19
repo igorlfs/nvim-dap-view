@@ -1,3 +1,6 @@
+local state = require("dap-view.state")
+local adapter = require("dap-view.util.adapter")
+
 local M = {}
 
 ---@param name string
@@ -22,17 +25,24 @@ end
 
 ---@param expr string
 ---@param value string
-M.set_expr = function(expr, value)
+---@param variable_path? string
+M.set_expr = function(expr, value, variable_path)
     local session = assert(require("dap").session(), "has active session")
 
     if session.capabilities.supportsSetExpression then
         coroutine.wrap(function()
             local frame_id = session.current_frame and session.current_frame.id
 
-            local err, _ = session:request("setExpression", { expression = expr, value = value, frameId = frame_id })
+            local err, response =
+                session:request("setExpression", { expression = expr, value = value, frameId = frame_id })
 
             if err then
                 vim.notify("Failed to set expression " .. expr .. " to value " .. value)
+            elseif variable_path and response and adapter.is_js_adapter(session.config.type) then
+                -- Workaround for https://github.com/microsoft/vscode-js-debug/issues/2320
+                -- We know for a fact `setExpression` will be used
+                state.variable_path_to_value[variable_path] = response.value
+                state.variable_path_to_set_variables[variable_path] = true
             end
         end)()
     else
@@ -44,7 +54,8 @@ end
 ---@param variable_name string
 ---@param value string
 ---@param evaluate_name string?
-M.set_value = function(parent_reference, variable_name, value, evaluate_name)
+---@param variable_path string?
+M.set_value = function(parent_reference, variable_name, value, evaluate_name, variable_path)
     -- From the protocol:
     --
     -- "If a debug adapter implements both `setExpression` and `setVariable`,
@@ -61,7 +72,7 @@ M.set_value = function(parent_reference, variable_name, value, evaluate_name)
 
     if hasExpression and hasVariable then
         if evaluate_name then
-            M.set_expr(evaluate_name, value)
+            M.set_expr(evaluate_name, value, variable_path)
         else
             set_var(variable_name, value, parent_reference)
         end

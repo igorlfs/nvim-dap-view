@@ -166,7 +166,13 @@ M.views_keymaps = function()
 
                 vim.ui.input({ prompt = "New value: ", default = variable_value }, function(value)
                     if value then
-                        require("dap-view.views.set").set_value(parent_reference, variable_name, value, evaluate_name)
+                        require("dap-view.views.set").set_value(
+                            parent_reference,
+                            variable_name,
+                            value,
+                            evaluate_name,
+                            variable_path
+                        )
 
                         coroutine.wrap(function()
                             require("dap-view.views").switch_to_view("scopes")

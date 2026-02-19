@@ -47,6 +47,7 @@
 ---@field variable_path_to_value table<string,string>
 ---@field variable_path_is_expanded table<string,boolean>
 ---@field variable_path_to_parent_reference table<string,integer>
+---@field variable_path_to_set_variables table<string, boolean>
 ---@field line_to_variable_path table<integer,string>
 ---@field watched_expressions table<string, dapview.ExpressionView>
 ---@field expr_count integer
@@ -75,6 +76,7 @@ local M = {
     variable_path_to_value = {},
     variable_path_to_parent_reference = {},
     variable_path_to_name = {},
+    variable_path_to_set_variables = {},
     line_to_variable_path = {},
     cur_pos = {},
 }

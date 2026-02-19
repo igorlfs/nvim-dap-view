@@ -1,6 +1,6 @@
 local dap = require("dap")
-local adapter = require("dap-view.util.adapter")
 
+local adapter = require("dap-view.util.adapter")
 local state = require("dap-view.state")
 local winbar = require("dap-view.options.winbar")
 local setup = require("dap-view.setup")

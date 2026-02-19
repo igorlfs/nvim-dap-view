@@ -61,7 +61,9 @@ local function show_variables(variables_reference, parent_path, line, depth, can
             prefix = is_expanded and config.icons.expanded or config.icons.collapsed
         end
 
-        local value = variable.value
+        -- Workaround for https://github.com/microsoft/vscode-js-debug/issues/2320
+        local value = state.variable_path_to_set_variables[path] and state.variable_path_to_value[path]
+            or variable.value
         local content = prefix .. variable_name .. (#value > 0 and " = " or "") .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
@@ -73,9 +75,11 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
         local prev_variable_value = state.variable_path_to_value[path]
 
+        -- Use actual return from scopes to check if variable was updated
+        -- Allows checking if `setExpression` with js-debug updated the value
         local updated = prev_variable_value and prev_variable_value ~= variable.value
 
-        state.variable_path_to_value[path] = variable.value
+        state.variable_path_to_value[path] = value
         state.variable_path_to_name[path] = variable.name
         state.variable_path_to_evaluate_name[path] = variable.evaluateName
         state.variable_path_to_parent_reference[path] = variables_reference
