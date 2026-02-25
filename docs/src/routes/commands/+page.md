@@ -30,6 +30,6 @@ Shows a given view. If the specified view is already the current one, jumps to i
 
 ## `DapViewNavigate [number]`
 
-Switches from the current view to another one by taking the current view's index (in the winbar) and adding a count. Can optionally specify a bang to allow wrapping. Has some default [keymaps](keymaps).
+Switches from the current view to another one by taking the current view's index (in the winbar) and adding a count (`number`). Can optionally specify a bang to allow wrapping. Has some default [keymaps](keymaps).
 
 [^1]: In the current tab. May close the views window in another tab.

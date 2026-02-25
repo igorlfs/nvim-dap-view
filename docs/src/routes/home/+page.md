@@ -44,7 +44,7 @@ The plugin provides 8 "views" (aka "sections") that (mostly) share the same wind
 
 <img src="https://i.ibb.co/h1XpdNrm/image.png" alt="watches view" />
 
-Shows a list of user defined expressions, that are evaluated by debug adapter
+Shows a list of user defined expressions, that are evaluated by the debug adapter
 
 - Basic CRUD operations for expressions
 - Expand, collapse, copy or set the value of expressions and variables

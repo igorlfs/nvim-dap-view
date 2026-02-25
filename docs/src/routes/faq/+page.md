@@ -33,7 +33,7 @@ return {
 }
 ```
 
-You can use commas to define fallback behavior (e.g., `"useopen,newtab"` creates a new tab if the buffer is not found). If there's no match even for the fallback behavior, `nvim-dap-view` just opens a top-level split.
+You can use commas to define fallback behavior (e.g., `"useopen,newtab"` creates a new tab if the buffer is not found). If there's no match even for the fallback behavior, `nvim-dap-view` just opens a top-level split. See [advanced 'switchbuf'](advanced-switchbuf) if the default options do not fulfill your needs.
 
 ## Why is `nvim-dap` overriding one of the `nvim-dap-view`'s windows when the program stops?
 

@@ -119,7 +119,7 @@ return {
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     -- Comma separated list, like the built-in 'switchbuf'. See :help 'switchbuf'
     -- Only a subset of the options is available: newtab, useopen, usetab and uselast
-    -- Can also be a function that takes the current winnr and the bufnr that will jumped to
+    -- Can also be a function that takes the current winnr and the destination bufnr
     -- If a function, should return the winnr of the destination window
     switchbuf = "usetab,uselast",
     -- Auto open when a session is started and auto close when all sessions finish

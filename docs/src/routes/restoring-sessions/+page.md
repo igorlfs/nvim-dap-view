@@ -3,7 +3,7 @@ title: Restoring Sessions
 category: Recipes
 ---
 
-Vim offers a powerful way of restoring the state of the editor: sessions (see `:h Session`). Sessions are native, but they can be greatly enhanced by plugins: some "session managers" bring a seamless experience to what would otherwise be a rather manual setup.
+Vim offers a powerful way of restoring the state of the editor: sessions (see `:help Session`). Sessions are native, but they can be greatly enhanced by plugins: some "session managers" bring a seamless experience to what would otherwise be a rather manual setup.
 
 :::info
 Whenever this page refers to a "session", it is referring to a _vim session_, except when explicitly stated.

@@ -54,7 +54,7 @@ return {
 
 ## Breakpoints
 
-Besides the path (and line number) to the breakpoint, one can also manipulate the content of the line itself. It can be highlighted with treesitter by using the specifying `hl` as `true`.
+Besides the path (and line number) to the breakpoint, one can also manipulate the content of the line itself. It can be highlighted with treesitter by setting `hl` as `true`.
 
 ### Example
 

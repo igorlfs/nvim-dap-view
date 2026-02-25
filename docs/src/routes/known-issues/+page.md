@@ -4,7 +4,7 @@ title: Known Issues
 
 ## Limitations with the breakpoints view
 
-- Doesn't show breakpoint conditions
+- Doesn't show breakpoint conditions ([#138](https://github.com/igorlfs/nvim-dap-view/issues/138))
 - Isn't updated when there's no active session
 - Can't "toggle" a breakpoint ([#74](https://github.com/igorlfs/nvim-dap-view/issues/74))
 

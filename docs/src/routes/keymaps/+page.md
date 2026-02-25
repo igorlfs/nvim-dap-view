@@ -17,12 +17,12 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 |    `o` | Omit results matching filter (invert filter) |
 | **Scopes**                                            |
 | `<CR>` | Expand or collapse a variable                |
-|    `s` | Set the value of an expression               |
+|    `s` | Set the value of a variable                  |
 | **Breakpoints**                                       |
 | `<CR>` | Jump to a breakpoint                         |
 |    `d` | Delete a breakpoint                          |
 | **Watches**                                           |
-| `<CR>` | Expand or collapse a variable                |
+| `<CR>` | Expand or collapse a variable or expression  |
 |    `a` | Append an expression                         |
 |    `i` | Insert an expression                         |
 |    `d` | Delete an expression                         |
@@ -33,7 +33,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | `<CR>` | Toggle filter                                |
 | **Sessions**                                          |
 | `<CR>` | Switch to a session                          |
-| **Terminal**                                          |
+| **Console**                                           |
 |   `]s` | Go to next session                           |
 |   `[s` | Go to previous session                       |
 | **Navigation**                                        |
