@@ -6,7 +6,7 @@ The control bar can be used to control a session with clickable "buttons".
 
 It is disabled by default. It can be enabled by setting `winbar.controls.enable`.
 
-<img src="https://i.ibb.co/wNbqBnyN/image.png" alt="control bar">
+<img src="https://i.ibb.co/Fkm7HwYj/image.png" alt="control bar">
 
 Visit the [config](configuration) page to learn about its options.
 

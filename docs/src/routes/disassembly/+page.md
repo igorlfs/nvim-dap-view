@@ -2,7 +2,7 @@
 title: Disassembly View
 ---
 
-<img src="https://github.com/user-attachments/assets/97ed9e8c-20a0-4355-bb00-5199c7b3cd59" alt="disassembly view" />
+<img src="https://i.ibb.co/0HXpxqD/image.png" alt="disassembly view" />
 
 The disassembly view is a [custom view](custom-views), built on top of [nvim-dap-disasm](https://codeberg.org/Jorenar/nvim-dap-disasm). To enable it, **you need to install nvim-dap-disasm**. After installing the extension, add it to your `winbar.sections` table:
 

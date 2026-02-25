@@ -2,7 +2,7 @@
 
 > minimalistic [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) alternative
 
-<https://github.com/user-attachments/assets/e7d428f2-8361-4407-a4d0-5f3c4f97332e>
+<https://github.com/user-attachments/assets/357bb05d-5645-4cfc-9975-97313c57e770>
 
 ## Installation
 
