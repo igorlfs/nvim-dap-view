@@ -25,7 +25,10 @@ M.update_exception_breakpoints_filters = function()
         -- (since `capabilities` will not be populated yet)
         -- To prevent that, only set the exception breakpoints for fully initialized sessions
         if session.config.type == state.current_adapter and session.initialized then
-            session:set_exception_breakpoints(filters)
+            -- Dirty workaround for #148
+            if not (state.current_adapter == "delve" and not session.stopped_thread_id) then
+                session:set_exception_breakpoints(filters)
+            end
         end
     end
 end
