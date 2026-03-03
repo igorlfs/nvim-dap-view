@@ -8,7 +8,7 @@ Getting started with `nvim-dap` is easier than it sounds! This guide aims to exp
 
 If you already know what is the Language Server Protocol (LSP), the Debug Adapter Protocol is just one step ahead: it's the same concept, but applied to debugging. If you're not sure if you get the hang of the Language Server Protocol, I recommend watching this [video](https://www.youtube.com/watch?v=LaS32vctfOY) by [TJ](https://github.com/tjdevries).
 
-Much like the LSP, the DAP is a protocol created to solve a scalability problem: before the protocol, each text editor had to have a custom integration for each debugger they wanted to support. That means handling the communication between the editor and the debuggers was essentially a _nightmare_: each debugger has its own way of defining breakpoints, evaluating expressions, navigating the stack and whatnot. What DAP brings to the table is a **standardization for this communication which massively simplifies the implementation**.
+Much like the LSP, the DAP is a protocol created to solve a scalability problem: before the protocol, each text editor had to have a custom integration for each debugger they wanted to support. That means handling the communication between the editor and the debuggers was essentially a _nightmare_: each debugger has its own way of defining breakpoints, evaluating expressions, navigating the stack and whatnot. What DAP brings to the table is a **standardization for this communication, which massively simplifies the implementation**.
 
 To accomplish its goal, the DAP introduces the concept of **debug adapters**: programs that make _debuggers_ comply with the protocol's communication standards. It's important to have this distinction clear: a _debugger_ and a debug adapter are _distinct programs_. All throughout `nvim-dap-view`'s you'll the see the term _adapter_, referring to a _debug adapter_, but there are only a couple or so mentions of _debuggers_, since the protocol is about _adapters_.
 
@@ -63,7 +63,7 @@ The configuration itself can be a bit tricky. There are some base options, but m
 
 Great! The tricky part is over! Now all you have to do is configure `nvim-dap` like any other plugin[^3]: get to know the commands and define some keybindings (take a look at [my config](https://github.com/igorlfs/dotfiles/blob/main/nvim/.config/nvim/lua/plugins/bare/nvim-dap.lua) if you need inspiration). I recommend using the `<FX>` keys to create the bindings. Refer to `:help dap-user-commands` to learn what you can do. A bare bones setup would include at least a mapping to `:DapToggleBreakpoint` and `:DapContinue`.
 
-The last step is to test your setup. Remember to compile your program with debug symbols if necessary. To start a basic session, **add a breakpoint**. It's important to define a breakpoint beforehand, to not have the program finish executing before you're able to add one. You can then use `:DapContinue` (or your own mapping) to create the session. If all goes well, the execution will be stopped when hitting the line with the breakpoint.
+The last step is to test your setup. Remember to compile your program with debug symbols if necessary. To start a basic session, **add a breakpoint**. It's important to define a breakpoint beforehand, to not have the program finish executing before you're able to add one. You can then use `:DapContinue` (or your own mapping) to create the session. If all goes well, the execution will stop when hitting the line with the breakpoint.
 
 Hooray! Now you can start tweaking `nvim-dap-view`! 🎉
 

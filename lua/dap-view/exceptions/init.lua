@@ -26,7 +26,7 @@ M.update_exception_breakpoints_filters = function()
         -- To prevent that, only set the exception breakpoints for fully initialized sessions
         if session.config.type == state.current_adapter and session.initialized then
             -- Dirty workaround for #148
-            if not (state.current_adapter == "delve" and not session.stopped_thread_id) then
+            if not (vim.tbl_contains({ "delve", "go" }, state.current_adapter) and not session.stopped_thread_id) then
                 session:set_exception_breakpoints(filters)
             end
         end
