@@ -228,7 +228,7 @@ for _, listener in ipairs(auto_close) do
         if auto_toggle and auto_toggle ~= "open_term" then
             -- Auto toggle is a bit ambiguous if there are multiple sessions running
             -- Should we call close if a single session is finished, even if others are running?
-            if vim.tbl_count(dap.sessions()) == 1 then
+            if vim.tbl_count(dap.sessions()) <= 1 then
                 require("dap-view.actions").close(not (auto_toggle == "keep_terminal"))
             end
         end
