@@ -1,6 +1,7 @@
 local setup = require("dap-view.setup")
 local window = require("dap-view.views.windows")
 local util = require("dap-view.util")
+local state = require("dap-view.state")
 
 local M = {}
 
@@ -68,6 +69,20 @@ M.jump_to_location = function(file_path, line, column, switchbuffun)
     end
 
     api.nvim_set_current_win(win)
+end
+
+---@param jump_to_line number
+M.jump_to_parent = function(jump_to_line)
+    local _, cursor_col = unpack(api.nvim_win_get_cursor(state.winnr))
+
+    local buf_line_count = api.nvim_buf_line_count(state.bufnr)
+
+    if jump_to_line <= buf_line_count then
+        local line_len = #api.nvim_buf_get_lines(state.bufnr, jump_to_line - 1, jump_to_line, true)[1]
+        local col = math.min(cursor_col, line_len)
+
+        api.nvim_win_set_cursor(state.winnr, { jump_to_line, col })
+    end
 end
 
 return M

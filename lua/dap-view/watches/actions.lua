@@ -5,6 +5,19 @@ local set = require("dap-view.views.set")
 
 local M = {}
 
+---@param line number
+M.jump_to_parent = function(line)
+    local variable_reference = state.variable_views_by_line[line]
+
+    if variable_reference then
+        local jump_to_line = variable_reference.parent_line
+
+        if jump_to_line then
+            require("dap-view.views.util").jump_to_parent(jump_to_line)
+        end
+    end
+end
+
 ---@param expr string
 ---@param default_expanded boolean
 ---@param append? boolean

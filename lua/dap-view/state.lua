@@ -38,7 +38,7 @@
 ---@field breakpoint_paths_by_line string[]
 ---@field breakpoint_lines_by_line integer[]
 ---@field expression_views_by_line table<integer, {expression: string, view: dapview.ExpressionView}>
----@field variable_views_by_line table<integer, {parent_reference: number, view: dapview.VariableView}>
+---@field variable_views_by_line table<integer, {parent_reference: number, parent_line: integer, view: dapview.VariableView}>
 ---@field sessions_by_line table<integer, dap.Session>
 ---@field collapsed_scopes string[]
 ---@field line_to_scope_name table<integer,string>
@@ -47,6 +47,7 @@
 ---@field variable_path_to_value table<string,string>
 ---@field variable_path_is_expanded table<string,boolean>
 ---@field variable_path_to_parent_reference table<string,integer>
+---@field variable_path_to_parent_line table<string,integer>
 ---@field variable_path_to_set_variables table<string, boolean>
 ---@field line_to_variable_path table<integer,string>
 ---@field watched_expressions table<string, dapview.ExpressionView>
@@ -75,6 +76,7 @@ local M = {
     variable_path_to_evaluate_name = {},
     variable_path_to_value = {},
     variable_path_to_parent_reference = {},
+    variable_path_to_parent_line = {},
     variable_path_to_name = {},
     variable_path_to_set_variables = {},
     line_to_variable_path = {},

@@ -13,6 +13,8 @@ local M = {}
 ---@param depth integer
 ---@return integer
 local function show_variables(children, reference, line, depth)
+    local parent_line = line
+
     for _, child in ipairs(children) do
         local variable = child.variable
 
@@ -45,7 +47,8 @@ local function show_variables(children, reference, line, depth)
 
         line = line + 1
 
-        state.variable_views_by_line[line] = { parent_reference = reference, variable = variable, view = child }
+        state.variable_views_by_line[line] =
+            { parent_reference = reference, parent_line = parent_line, variable = variable, view = child }
 
         if child.err then
             local err_content = string.rep("\t", depth + 1) .. fmt.dap_error(child.err)

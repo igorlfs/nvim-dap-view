@@ -9,6 +9,18 @@ local M = {}
 local api = vim.api
 
 M.views_keymaps = function()
+    keymap("[[", function()
+        local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
+
+        if state.winnr then
+            if state.current_section == "scopes" then
+                require("dap-view.scopes.actions").jump_to_parent(cursor_line)
+            elseif state.current_section == "watches" then
+                require("dap-view.watches.actions").jump_to_parent(cursor_line)
+            end
+        end
+    end)
+
     keymap({ "<CR>", "<2-LeftMouse>" }, function()
         local cursor_line = api.nvim_win_get_cursor(state.winnr)[1]
 

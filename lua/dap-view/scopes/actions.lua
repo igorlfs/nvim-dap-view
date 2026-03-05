@@ -3,6 +3,19 @@ local state = require("dap-view.state")
 local M = {}
 
 ---@param line number
+M.jump_to_parent = function(line)
+    local variable_path = state.line_to_variable_path[line]
+
+    if variable_path then
+        local jump_to_line = state.variable_path_to_parent_line[variable_path]
+
+        if jump_to_line then
+            require("dap-view.views.util").jump_to_parent(jump_to_line)
+        end
+    end
+end
+
+---@param line number
 M.expand_or_collapse = function(line)
     if not require("dap-view.guard").expect_stopped() then
         return

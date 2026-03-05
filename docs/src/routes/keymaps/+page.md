@@ -18,6 +18,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 | **Scopes**                                            |
 | `<CR>` | Expand or collapse a variable                |
 |    `s` | Set the value of a variable                  |
+|   `[[` | Jump to parent                               |
 | **Breakpoints**                                       |
 | `<CR>` | Jump to a breakpoint                         |
 |    `d` | Delete a breakpoint                          |
@@ -29,6 +30,7 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 |    `e` | Edit an expression                           |
 |    `c` | Copy the value of an expression or variable  |
 |    `s` | Set the value of an expression or variable   |
+|   `[[` | Jump to parent                               |
 | **Exceptions**                                        |
 | `<CR>` | Toggle filter                                |
 | **Sessions**                                          |

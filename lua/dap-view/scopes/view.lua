@@ -25,6 +25,7 @@ local session
 ---@param depth integer
 ---@param canvas dapview.Canvas
 local function show_variables(variables_reference, parent_path, line, depth, canvas)
+    local parent_line = line
     local err, response = session:request("variables", { variablesReference = variables_reference })
 
     if err then
@@ -81,6 +82,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
         state.variable_path_to_value[path] = value
         state.variable_path_to_name[path] = variable.name
+        state.variable_path_to_parent_line[path] = parent_line
         state.variable_path_to_evaluate_name[path] = variable.evaluateName
         state.variable_path_to_parent_reference[path] = variables_reference
 
