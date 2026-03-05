@@ -1,6 +1,10 @@
+<div align="center">
+    <img src="https://i.ibb.co/gbSZvN0S/logo.png" alt="logo" border="0"  width="200" height="200" />
+</div>
+
 # nvim-dap-view
 
-> minimalistic [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) alternative
+> Modern debugging UI for neovim
 
 <https://github.com/user-attachments/assets/357bb05d-5645-4cfc-9975-97313c57e770>
 
@@ -15,6 +19,8 @@
 return {
     {
         "igorlfs/nvim-dap-view",
+        -- let the plugin lazy load itself
+        lazy = false,
         ---@module 'dap-view'
         ---@type dapview.Config
         opts = {},
@@ -25,13 +31,28 @@ return {
 ## Features
 
 - Watch expressions
-- Manipulate breakpoints
+
+<img src="https://i.ibb.co/h1XpdNrm/image.png" alt="watches view" />
+
 - Navigate in the call stack
-- Manage ongoing debug sessions
-- Inspect all variables
+
+<img src="https://i.ibb.co/MDGZZ4hn/image.png" alt="threads view">
+
+- Manipulate breakpoints
+
+<img src="https://i.ibb.co/5hgCTCc1/image.png" alt="breakpoints view" />
+
+- Inspect and modify variables in scope
+
+<img src="https://i.ibb.co/3yvcM6tw/image.png" alt="scopes view" />
+
 - REPL
 
-All of that in a unified, unintrusive window.
+<img src="https://i.ibb.co/XfcD5wtT/image.png" alt="repl view" />
+
+- And more!
+
+All of that in a **unified**, **unintrusive** window.
 
 ## Getting Started
 
@@ -48,4 +69,4 @@ You can contribute in many ways:
 - If you have any questions, create a [discussion](https://github.com/igorlfs/nvim-dap-view/discussions/new/choose).
 - If something isn't working, create a [bug report](https://github.com/igorlfs/nvim-dap-view/issues/new?template=bug_report.yml).
 - If you have an idea, file a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml). You can also go ahead and implement it yourself with a [PR](https://github.com/igorlfs/nvim-dap-view/compare).
-- If you have some spare bucks, consider [sponsoring](https://github.com/sponsors/igorlfs).
+- If you have some spare bucks, consider becoming a [sponsor](https://github.com/sponsors/igorlfs).

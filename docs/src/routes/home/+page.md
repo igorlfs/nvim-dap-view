@@ -2,7 +2,7 @@
 title: NVIM DAP View
 ---
 
-> Modern, minimalistic debugging UI for neovim
+> Modern debugging UI for neovim
 
 <video controls width="100%">
     <source src="videos/dap-view-demo.mp4" type="video/mp4" />
