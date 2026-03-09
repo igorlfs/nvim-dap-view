@@ -8,6 +8,10 @@
 
 <https://github.com/user-attachments/assets/357bb05d-5645-4cfc-9975-97313c57e770>
 
+## Introduction
+
+A UI for [`nvim-dap`](https://github.com/mfussenegger/nvim-dap) (the quasi canonical neovim implementation of [`DAP`](https://microsoft.github.io/debug-adapter-protocol/); the protocol that enhances text editors with IDE-like debugging capabilities).
+
 ## Installation
 
 > [!WARNING]  
