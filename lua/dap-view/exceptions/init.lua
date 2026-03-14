@@ -1,6 +1,7 @@
 local dap = require("dap")
 
 local state = require("dap-view.state")
+local traversal = require("dap-view.tree.traversal")
 
 local M = {}
 
@@ -19,7 +20,8 @@ M.update_exception_breakpoints_filters = function()
         end)
         :totable()
 
-    for _, session in pairs(dap.sessions()) do
+    -- Apply exception breakpoints to all sessions, including children
+    for _, session in pairs(traversal.flatten_sessions(dap.sessions(), true)) do
         -- When switching to a new session, its initialization may not have finished yet
         -- Which makes the request to `setExceptionBreakpoints` fail
         -- (since `capabilities` will not be populated yet)

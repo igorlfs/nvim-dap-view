@@ -2,6 +2,20 @@ local adapter = require("dap-view.util.adapter")
 
 local M = {}
 
+---@param sessions table<number,dap.Session>
+---@param acc dap.Session[]
+---@return dap.Session[]
+local function fold_all_sessions(sessions, acc)
+    for _, session in pairs(sessions) do
+        table.insert(acc, session)
+
+        for _, child in pairs(session.children) do
+            fold_all_sessions({ child }, acc)
+        end
+    end
+    return acc
+end
+
 ---Does not count sessions that do not have terminals (`term_buf`)
 ---@param sessions table<number,dap.Session>
 ---@param acc dap.Session[]
@@ -24,7 +38,11 @@ end
 
 ---@generic T
 ---@param sessions table<number,dap.Session>
-M.flatten_sessions = function(sessions)
+---@param all boolean?
+M.flatten_sessions = function(sessions, all)
+    if all then
+        return fold_all_sessions(sessions, {})
+    end
     return fold_sessions(sessions, {})
 end
 
