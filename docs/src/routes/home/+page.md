@@ -122,4 +122,4 @@ Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get
 
 `nvim-dap-view` is fully customizable! Visit the [config](configuration) page to learn what you can do.
 
-[^1]: Nerd font icons can be disabled in the [cofiguration](configuration)
+[^1]: Nerd font icons can be disabled in the [configuration](configuration)
