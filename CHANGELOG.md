@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.0.0...v1.0.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* set exception breakpoints for child sessions ([#160](https://github.com/igorlfs/nvim-dap-view/issues/160)) ([cd14d34](https://github.com/igorlfs/nvim-dap-view/commit/cd14d34150b05d633610ff8d39d6934110696923))
+
 ## 1.0.0 (2026-03-05)
 
 
