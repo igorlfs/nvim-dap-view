@@ -66,7 +66,7 @@ List all threads and their stack traces
 
 List all breakpoints with full syntax highlighting, including treesitter and semantic tokens (from LSP)
 
-- Jump to the location of a brakpoint
+- Jump to the location of a breakpoint
 - Delete a breakpoint
 
 ### Exceptions view
