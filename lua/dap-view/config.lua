@@ -88,12 +88,17 @@ local M = {}
 ---@field threads dapview.RenderThreadsConfig
 ---@field breakpoints dapview.RenderBreakpointsConfig
 
+---@class dapview.VirtualTextConfig
+---@field enabled boolean
+---@field format fun(variable: dap.Variable, frame: dap.StackFrame, node: TSNode): string?
+
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
 ---@field render dapview.RenderConfig
 ---@field icons dapview.IconsConfig Icons for each button
+---@field virtual_text dapview.VirtualTextConfig
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"|"open_term"
 ---@field follow_tab boolean|fun(adapter?: string): boolean Reopen dapview when switching tabs
@@ -183,6 +188,13 @@ M.config = {
             end,
             align = false,
         },
+    },
+    virtual_text = {
+        enabled = false,
+        format = function(variable, _, _)
+            -- Strip out excessive whitespace
+            return " " .. variable.value:gsub("%s+", " ")
+        end,
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,

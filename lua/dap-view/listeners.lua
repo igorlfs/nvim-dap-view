@@ -8,6 +8,7 @@ local refresher = require("dap-view.refresher")
 local winbar = require("dap-view.options.winbar")
 local scroll = require("dap-view.console.scroll")
 local fmt = require("dap-view.util.fmt")
+local vt = require("dap-view.virtual-text")
 
 local SUBSCRIPTION_ID = "dap-view"
 
@@ -143,6 +144,14 @@ for _, listener in ipairs(continue) do
     end
 end
 
+dap.listeners.after.variables[SUBSCRIPTION_ID] = function(session)
+    vt.virtual_text(session.current_frame)
+end
+
+dap.listeners.before.event_stopped[SUBSCRIPTION_ID] = function(session)
+    vt.set_last_frames(session.threads)
+end
+
 dap.listeners.after.threads[SUBSCRIPTION_ID] = function(_, err)
     state.threads_error = nil
 
@@ -190,6 +199,10 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
     winbar.redraw_controls()
 
     scroll.cleanup_autoscroll(session.term_buf)
+
+    vt.clear_virtual_text(session.current_frame)
+
+    state.last_frames = {}
 end
 
 -- The debuggee was disconnected, which may happen outside of a "regular termination"
@@ -199,6 +212,10 @@ dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function(session)
     winbar.redraw_controls()
 
     scroll.cleanup_autoscroll(session.term_buf)
+
+    vt.clear_virtual_text(session.current_frame)
+
+    state.last_frames = {}
 end
 
 local winbar_redraw = { "event_exited", "event_stopped", "restart" }

@@ -41,7 +41,7 @@ return {
 
 - Navigate in the call stack
 
-<img src="https://i.ibb.co/MDGZZ4hn/image.png" alt="threads view">
+<img src="https://i.ibb.co/MDGZZ4hn/image.png" alt="threads view" />
 
 - Manipulate breakpoints
 
@@ -55,9 +55,11 @@ return {
 
 <img src="https://i.ibb.co/XfcD5wtT/image.png" alt="repl view" />
 
-- And more!
+- Inline virtual text variables
 
-All of that in a **unified**, **unintrusive** window.
+<img src="<https://i.ibb.co/gb2sD9c0/image.png>" alt="image" />
+
+- And more!
 
 ## Getting Started
 

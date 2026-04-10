@@ -12,10 +12,10 @@ title: NVIM DAP View
 ## Installation
 
 :::info
-**Requires neovim 0.11+**
+**Requires neovim 0.11+[^1]**
 :::
 
-A nerd font is a "soft requirement"[^1].
+A nerd font is a "soft requirement"[^2].
 
 ### Via lazy.nvim
 
@@ -40,6 +40,8 @@ If using a plugin that overrides the `'winbar'` option, make sure to disable it 
 ## Features
 
 The plugin provides 8 "views" (aka "sections") that (mostly) share the same window (so there's clutter).
+
+It also previews variables with inline virtual text.
 
 ### Watches view
 
@@ -115,6 +117,12 @@ A custom view is used to power the [disassembly view](disassembly), an integrati
 
 <img src="https://i.ibb.co/Fkm7HwYj/image.png" alt="control bar">
 
+### Virtual text
+
+`nvim-dap-view` ships a minimal reimplementation of [nvim-dap-virtual-text](https://github.com/thehamsta/nvim-dap-virtual-text): it displays the values of variables using "inline" virtual text. It has some advantages over the original implementation: it leverages asynchronous treesitter parsing and highlights variables based on their type (instead of using a single group for everything). Being a "minimal" reimplementation, it lacks some features. If you miss anything, open a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml). **Disabled by default**.
+
+<img src="https://i.ibb.co/gb2sD9c0/image.png" alt="image" />
+
 ## Usage
 
 Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get started. If it's your first time setting up `nvim-dap`, start [here](basics). By default, `nvim-dap-view` **is not launched automatically** (i.e., when initializing a new session), you have to use the commands or the API. To change this behavior, enable the `auto_toggle` option.
@@ -123,4 +131,5 @@ Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get
 
 `nvim-dap-view` is fully customizable! Visit the [config](configuration) page to learn what you can do.
 
-[^1]: Nerd font icons can be disabled in the [configuration](configuration)
+[^1]: Inline virtual text requires 0.12+
+[^2]: Nerd font icons can be disabled in the [configuration](configuration)
