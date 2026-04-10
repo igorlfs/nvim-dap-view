@@ -116,6 +116,15 @@ return {
             align = false,
         },
     },
+    -- Requires neovim 0.12+
+    virtual_text = {
+        -- Control with `DapViewVirtualTextToggle`
+        enabled = false,
+        format = function(variable, _, _)
+            -- Strip out excessive whitespace
+            return " " .. variable.value:gsub("%s+", " ")
+        end,
+    },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     -- Comma separated list, like the built-in 'switchbuf'. See :help 'switchbuf'
     -- Only a subset of the options is available: newtab, useopen, usetab and uselast

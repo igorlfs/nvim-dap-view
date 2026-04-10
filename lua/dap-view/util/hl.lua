@@ -35,6 +35,7 @@ M.types_to_hl_group = {
     float = "Float",
     -- debugpy's "None"
     nonetype = "Constant",
+    ["nil"] = "Constant",
     ["function"] = "Function",
 }
 

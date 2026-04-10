@@ -32,6 +32,7 @@
 ---@field exceptions_options table<string,dapview.ExceptionsOption[]>
 ---@field stack_trace_errors string[]
 ---@field threads_error? string
+---@field last_frames table<integer,dap.StackFrame>
 ---@field frames_by_line table<integer, dap.StackFrame>
 ---@field frame_paths_by_frame_id table<integer, string>
 ---@field frame_line_by_frame_id table<integer, integer>
@@ -60,6 +61,7 @@ local M = {
     threads_filter_invert = false,
     exceptions_options = {},
     stack_trace_errors = {},
+    last_frames = {},
     frames_by_line = {},
     frame_paths_by_frame_id = {},
     frame_line_by_frame_id = {},

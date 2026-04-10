@@ -25,6 +25,7 @@ You can make your nickname show up here by making a small, one-time, [donation](
 ## Inspirations
 
 - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) is obviously a huge inspiration. Numerous implementation details were made much easier with access to its code.
+- [nvim-dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text), which was the basis for the [virtual text](home#Virtual-text) implementation.
 - [nvim-dap-exception-breakpoints](https://github.com/lucaSartore/nvim-dap-exception-breakpoints), for the handling of exception breakpoints as a separate "view".
 - [Kulala](https://github.com/mistweaverco/kulala.nvim) for the creative usage of Neovim's `'winbar'` to handle multiple "views". Great plugin, by the way!
 - Believe it or not, but [Zed](https://zed.dev/)'s debugger was also a huge source of inspiration!

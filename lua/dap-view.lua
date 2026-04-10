@@ -12,6 +12,18 @@ M.setup = function(config)
     require("dap-view.setup").setup(config)
 end
 
+M.virtual_text_enable = function()
+    require("dap-view.virtual-text").set_virtual_text(true)
+end
+
+M.virtual_text_disable = function()
+    require("dap-view.virtual-text").set_virtual_text(false)
+end
+
+M.virtual_text_toggle = function()
+    require("dap-view.virtual-text").set_virtual_text(not require("dap-view.setup").config.virtual_text.enabled)
+end
+
 M.open = function()
     actions.open()
 end
