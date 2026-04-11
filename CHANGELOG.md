@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.0.1...v1.1.0) (2026-04-11)
+
+
+### Features
+
+* inline virtual text ([78080d3](https://github.com/igorlfs/nvim-dap-view/commit/78080d3655b67b67e48eea06c20249138debfd45))
+
+
+### Bug Fixes
+
+* breakpoint misspelling in page.md ([e57ac40](https://github.com/igorlfs/nvim-dap-view/commit/e57ac4051aa56293e89991ab93bc148de35321ca))
+
 ## [1.0.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.0.0...v1.0.1) (2026-03-17)
 
 
