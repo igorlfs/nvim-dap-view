@@ -57,7 +57,7 @@ return {
 
 - Inline virtual text variables
 
-<img src="<https://i.ibb.co/gb2sD9c0/image.png>" alt="image" />
+<img src="https://i.ibb.co/gb2sD9c0/image.png>" alt="image" />
 
 - And more!
 
