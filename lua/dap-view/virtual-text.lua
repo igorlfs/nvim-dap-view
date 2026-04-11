@@ -213,7 +213,7 @@ M.virtual_text = function(frame)
                     -- clear extmark after, e.g., commenting the line
                     invalidate = true,
                     virt_text = { { virt_text[1], virt_text[2] } },
-                    virt_text_pos = "inline",
+                    virt_text_pos = vt_config.position,
                 })
             end
         end

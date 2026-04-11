@@ -91,6 +91,7 @@ local M = {}
 ---@class dapview.VirtualTextConfig
 ---@field enabled boolean
 ---@field format fun(variable: dap.Variable, frame: dap.StackFrame, node: TSNode): string?
+---@field position "eol"|"eol_right_align"|"inline"|"overlay"|"right_align"
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
@@ -195,6 +196,7 @@ M.config = {
             -- Strip out excessive whitespace
             return " " .. variable.value:gsub("%s+", " ")
         end,
+        position = "inline",
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,

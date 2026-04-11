@@ -7,6 +7,7 @@ function M.validate(config)
     validate("virtual_text", {
         enabled = { config.enabled, "boolean" },
         format = { config.format, "function" },
+        position = { config.position, "string" },
     }, config)
 end
 
