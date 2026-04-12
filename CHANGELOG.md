@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.0...v1.1.1) (2026-04-12)
+
+
+### Bug Fixes
+
+* MIT -&gt; GPL v3 ([683a97d](https://github.com/igorlfs/nvim-dap-view/commit/683a97d8a545aa8884f2fef85b55964d2ef7a837))
+
 ## [1.1.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.0.1...v1.1.0) (2026-04-11)
 
 
