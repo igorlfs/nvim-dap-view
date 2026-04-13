@@ -27,7 +27,9 @@ local define_base_links = function()
     hl_create("ExceptionFilterDisabled", "DiagnosticError")
 
     hl_create("Tab", "TabLine")
+    hl_create("TabSeparator", "NvimDapViewTab")
     hl_create("TabSelected", "TabLineSel")
+    hl_create("TabSelectedSeparator", "TabSelected")
     hl_create("TabFill", "TabLineFill")
 
     hl_create("ControlNC", "Comment")

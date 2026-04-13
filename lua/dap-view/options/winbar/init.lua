@@ -1,3 +1,4 @@
+local global = require("dap-view.globals")
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
@@ -109,6 +110,18 @@ M.set_winbar_opt = function()
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
             if section ~= nil then
+                local is_current = state.current_section == v
+
+                local sep = winbar.separators
+
+                local hl_sep = is_current and "TabSelectedSeparator" or "TabSeparator"
+
+                local prefix = ""
+
+                if sep and sep[1] then
+                    prefix = "%#" .. global.HL_PREFIX .. hl_sep .. "#" .. sep[1] .. "%*"
+                end
+
                 local label = type(section.label) == "function" and section.label(win_width, state.current_section)
                     or section.label
 
@@ -120,13 +133,19 @@ M.set_winbar_opt = function()
                 end
                 desc = statusline.clickable(desc, module, "on_click", k)
 
-                if state.current_section == v then
+                if is_current then
                     desc = statusline.hl(desc, "TabSelected")
                 else
                     desc = statusline.hl(desc, "Tab")
                 end
 
-                table.insert(winbar_title, desc)
+                local suffix = ""
+
+                if sep and sep[2] then
+                    suffix = "%#" .. global.HL_PREFIX .. hl_sep .. "#" .. sep[2] .. "%*"
+                end
+
+                table.insert(winbar_title, prefix .. desc .. suffix)
             end
         end
 

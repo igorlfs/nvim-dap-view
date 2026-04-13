@@ -24,6 +24,8 @@ return {
         default_section = "watches",
         -- Append hints with keymaps within the labels
         show_keymap_hints = true,
+        -- List of up to 2 strings, defining left and right separators
+        separators = nil,
         -- Configure each section individually
         base_sections = {
             -- Labels can be set dynamically with functions
