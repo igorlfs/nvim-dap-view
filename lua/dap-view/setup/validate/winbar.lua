@@ -7,6 +7,7 @@ function M.validate(config)
     validate("winbar", {
         show = { config.show, "boolean" },
         sections = { config.sections, "table" },
+        separators = { config.separators, { "nil", "table" } },
         default_section = { config.default_section, "string" },
         show_keymap_hints = { config.show_keymap_hints, "boolean" },
         base_sections = { config.base_sections, "table" },
@@ -76,10 +77,14 @@ function M.validate(config)
 
     local sections = config.sections
     local default = config.default_section
+    local separators = config.separators
 
     -- Also check the "semantics"
     if #sections == 0 then
         error("There must be at least one section")
+    end
+    if type(separators) == "table" and vim.tbl_count(separators) > 2 then
+        error("Separators table must contain at most 2 elements")
     end
     if not vim.tbl_contains(sections, default) then
         local pretty_sections = vim.inspect(sections)

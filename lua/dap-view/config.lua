@@ -65,6 +65,7 @@ local M = {}
 
 ---@class dapview.WinbarConfig
 ---@field sections dapview.Section[]
+---@field separators? string[]
 ---@field default_section dapview.Section
 ---@field show boolean
 ---@field show_keymap_hints boolean
@@ -111,6 +112,7 @@ M.config = {
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
         default_section = "watches",
         show_keymap_hints = true,
+        separators = nil,
         base_sections = {
             breakpoints = { label = "Breakpoints", keymap = "B" },
             scopes = { label = "Scopes", keymap = "S" },
