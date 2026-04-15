@@ -124,6 +124,8 @@ return {
             -- Strip out excessive whitespace
             return " " .. variable.value:gsub("%s+", " ")
         end,
+        -- Supported options include "inline", "eol", and "eol_right_align"
+        position = "inline",
     },
     -- Controls how to jump when selecting a breakpoint or navigating the stack
     -- Comma separated list, like the built-in 'switchbuf'. See :help 'switchbuf'
