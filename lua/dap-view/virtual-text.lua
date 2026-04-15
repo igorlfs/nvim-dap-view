@@ -202,12 +202,11 @@ M.virtual_text = function(frame)
             end
         end
 
-        local is_eol_position = vt_config.position == "eol"
-            or vt_config.position == "eol_right_align"
-            or vt_config.position == "right_align"
+        local is_eol_position = vt_config.position == "eol" or vt_config.position == "eol_right_align"
 
         for line, content in pairs(virt_lines) do
             if #content > 1 and is_eol_position then
+                ---@type [string, string][]
                 local chunks = {}
                 for i, virt_text in ipairs(content) do
                     local name = ts.get_node_text(virt_text.node, bufnr)
