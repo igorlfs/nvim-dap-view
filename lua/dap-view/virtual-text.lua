@@ -90,30 +90,25 @@ M.virtual_text = function()
         ---@type TSNode[]
         local definition_nodes = {}
 
-        vim.iter(trees):each(
-            ---@param tree TSTree
-            function(tree)
-                -- This probably wouldn't work with injections,
-                -- but then, what's the magic adapter that would support them?
-                local query = ts.query.get(parser:lang(), "locals")
+        parser:for_each_tree(function(tree, ltree)
+            local query = ts.query.get(ltree:lang(), "locals")
 
-                if query then
-                    for _, match, _ in query:iter_matches(tree:root(), bufnr, 0, -1) do
-                        for id, nodes in pairs(match) do
-                            for _, node in ipairs(nodes) do
-                                local cap_id = query.captures[id]
+            if query then
+                for _, match, _ in query:iter_matches(tree:root(), bufnr, 0, -1) do
+                    for id, nodes in pairs(match) do
+                        for _, node in ipairs(nodes) do
+                            local cap_id = query.captures[id]
 
-                                if cap_id:find("scope") then
-                                    table.insert(scope_nodes, node)
-                                elseif cap_id:find("definition") then
-                                    table.insert(definition_nodes, node)
-                                end
+                            if cap_id:find("scope") then
+                                table.insert(scope_nodes, node)
+                            elseif cap_id:find("definition") then
+                                table.insert(definition_nodes, node)
                             end
                         end
                     end
                 end
             end
-        )
+        end)
 
         ---@type {value: dap.Variable, presentationHint: string}[]
         local variables = {}
