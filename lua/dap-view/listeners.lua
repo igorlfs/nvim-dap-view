@@ -144,8 +144,8 @@ for _, listener in ipairs(continue) do
     end
 end
 
-dap.listeners.after.variables[SUBSCRIPTION_ID] = function(session)
-    vt.virtual_text(session.current_frame)
+dap.listeners.after.variables[SUBSCRIPTION_ID] = function()
+    vt.virtual_text()
 end
 
 dap.listeners.before.event_stopped[SUBSCRIPTION_ID] = function(session)
