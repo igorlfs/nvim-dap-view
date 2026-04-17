@@ -9,22 +9,17 @@ local ts = vim.treesitter
 
 local ns = require("dap-view.globals").NAMESPACE_VT
 
----@param bool boolean
----@param session dap.Session?
-M.set_virtual_text = function(bool, session)
-    setup.config.virtual_text.enabled = bool
+---@param enable boolean
+M.set_virtual_text = function(enable)
+    setup.config.virtual_text.enabled = enable
 
-    session = session or require("dap").session()
-
-    if session ~= nil then
-        M.virtual_text(session.current_frame)
-    end
+    M.virtual_text()
 end
 
----@param frame dap.StackFrame?
-M.clear_virtual_text = function(frame)
-    if frame and require("dap-view.util.source").source_exists(frame) then
-        local buf = vim.uri_to_bufnr(vim.uri_from_fname(frame.source.path))
+---@param session dap.Session?
+M.clear_virtual_text = function(session)
+    if session and session.current_frame and require("dap-view.util.source").source_exists(session.current_frame) then
+        local buf = vim.uri_to_bufnr(vim.uri_from_fname(session.current_frame.source.path))
 
         api.nvim_buf_clear_namespace(buf, ns, 0, -1)
     else
@@ -43,9 +38,10 @@ M.set_last_frames = function(threads)
     end
 end
 
----@param frame dap.StackFrame?
-M.virtual_text = function(frame)
-    M.clear_virtual_text(frame)
+M.virtual_text = function()
+    local session = require("dap").session()
+
+    M.clear_virtual_text(session)
 
     local vt_config = setup.config.virtual_text
 
@@ -53,9 +49,16 @@ M.virtual_text = function(frame)
         return
     end
 
-    if frame == nil or not require("dap-view.util.source").source_exists(frame) then
+    if
+        session == nil
+        or session.current_frame == nil
+        or not require("dap-view.util.source").source_exists(session.current_frame)
+    then
         return
     end
+
+    local frame = session.current_frame
+    assert(frame, "has frame")
 
     local bufnr = vim.fn.bufnr(frame.source.path, false)
     if bufnr == -1 then

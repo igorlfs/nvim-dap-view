@@ -200,7 +200,7 @@ dap.listeners.after.event_terminated[SUBSCRIPTION_ID] = function(session)
 
     scroll.cleanup_autoscroll(session.term_buf)
 
-    vt.clear_virtual_text(session.current_frame)
+    vt.clear_virtual_text()
 
     state.last_frames = {}
 end
@@ -213,7 +213,7 @@ dap.listeners.after.disconnect[SUBSCRIPTION_ID] = function(session)
 
     scroll.cleanup_autoscroll(session.term_buf)
 
-    vt.clear_virtual_text(session.current_frame)
+    vt.clear_virtual_text()
 
     state.last_frames = {}
 end
