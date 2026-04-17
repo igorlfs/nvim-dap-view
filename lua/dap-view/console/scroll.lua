@@ -64,13 +64,13 @@ end
 ---@param winnr integer
 ---@param bufnr integer
 M.scroll_to_bottom = function(winnr, bufnr)
-    if util.is_win_valid(winnr) and util.is_buf_valid(bufnr) then
-        vim.schedule(function()
+    vim.schedule(function()
+        if util.is_win_valid(winnr) and util.is_buf_valid(bufnr) then
             api.nvim_win_set_cursor(winnr, { api.nvim_buf_line_count(bufnr), 0 })
-        end)
 
-        termbuf_is_autoscrolling[bufnr] = true
-    end
+            termbuf_is_autoscrolling[bufnr] = true
+        end
+    end)
 end
 
 ---@param bufnr integer
