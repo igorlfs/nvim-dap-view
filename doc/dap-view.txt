@@ -1,0 +1,837 @@
+*dap-view.txt*
+
+nvim-dap-view is a UI for nvim-dap.
+
+WARNING: If using a plugin that overrides the |winbar| option, make sure to
+disable it for nvim-dap-view buffers (see |dap-view-filetypes|).
+
+==============================================================================
+FEATURES                                                   *dap-view-features*
+
+The plugin provides 8 "views" (aka "sections") that (mostly) share the same
+window (so there's clutter).
+
+It also previews variables with inline virtual text.
+
+Watches view ~
+
+Shows a list of user defined expressions, that are evaluated by the debug
+adapter
+
+- Basic CRUD operations for expressions
+- Expand, collapse, copy or set the value of expressions and variables
+
+Threads view ~
+
+List all threads and their stack traces
+
+- Jump to a function in the call stack, switching the context to that call
+- Filter frames using Lua patterns
+- Toggle "subtle" (hidden) frames
+
+Breakpoints view ~
+
+List all breakpoints with full syntax highlighting, including treesitter and
+semantic tokens (from LSP)
+
+- Jump to the location of a breakpoint
+- Delete a breakpoint
+
+Exceptions view ~
+
+Control when the debugger should stop, outside of regular breakpoints (e.g.,
+whenever an exception is thrown)
+
+Scopes view ~
+
+Inspect all variables in scope
+
+- Expand, collapse and set the values of variables
+
+Sessions view ~
+
+List all debugging sessions (disabled by default)
+
+- Switch to a session
+
+REPL view ~
+
+Use REPL provided by nvim-dap
+
+Console view ~
+
+You can also interact with the console (terminal), which is also provided by
+nvim-dap. By default, the console has its own window, but it can be configured
+to be shown with the other views (check |dap-view-configuration|). 
+
+Custom views ~
+
+You can also write your own views (see |dap-view-custom-views|).
+
+Control bar ~
+
+nvim-dap-view also provides a "non view" component: the control bar, which
+exposes some clickable buttons to control your session. It's disabled by
+default.
+
+Virtual text ~
+
+nvim-dap-view ships a minimal reimplementation of nvim-dap-virtual-text:
+it displays the values of variables using "inline" virtual text. Disabled by
+default. Requires 0.12+.
+
+WARNING: nvim-dap-view is not launched automatically, you have to use the
+commands or the API. To change this behavior, enable the `auto_toggle` option.
+
+==============================================================================
+CONFIGURATION                                         *dap-view-configuration*
+
+
+The default configuration is applied when the plugin is loaded. You can tweak
+the options by calling `require"dap-view".setup(opts)`. Your options are deep
+merged with the defaults, so you only have to override what you actually want
+to change.
+
+You don't have to copy and paste these options. Use them as a reference.
+
+    >lua
+    return {
+        winbar = {
+            show = true,
+            -- You can add a "console" section to merge the terminal with the other views
+            sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
+            -- Must be one of the sections declared above
+            default_section = "watches",
+            -- Append hints with keymaps within the labels
+            show_keymap_hints = true,
+            -- List of up to 2 strings, defining left and right separators
+            separators = nil,
+            -- Configure each section individually
+            base_sections = {
+                -- Labels can be set dynamically with functions
+                -- Each function receives the window's width and the current section as arguments
+                breakpoints = { label = "Breakpoints", keymap = "B" },
+                scopes = { label = "Scopes", keymap = "S" },
+                exceptions = { label = "Exceptions", keymap = "E" },
+                watches = { label = "Watches", keymap = "W" },
+                threads = { label = "Threads", keymap = "T" },
+                repl = { label = "REPL", keymap = "R" },
+                sessions = { label = "Sessions", keymap = "K" },
+                console = { label = "Console", keymap = "C" },
+            },
+            -- Add your own sections
+            custom_sections = {},
+            controls = {
+                enabled = false,
+                position = "right",
+                buttons = {
+                    "play",
+                    "step_into",
+                    "step_over",
+                    "step_out",
+                    "step_back",
+                    "run_last",
+                    "terminate",
+                    "disconnect",
+                },
+                custom_buttons = {},
+            },
+        },
+        windows = {
+            size = 0.25,
+            position = "below",
+            terminal = {
+                size = 0.5,
+                position = "left",
+                -- List of debug adapters for which the terminal should be ALWAYS hidden
+                hide = {},
+            },
+        },
+        icons = {
+            collapsed = "󰅂 ",
+            disabled = "",
+            disconnect = "",
+            enabled = "",
+            expanded = "󰅀 ",
+            filter = "󰈲",
+            negate = " ",
+            pause = "",
+            play = "",
+            run_last = "",
+            step_back = "",
+            step_into = "",
+            step_out = "",
+            step_over = "",
+            terminate = "",
+        },
+        help = {
+            border = nil,
+        },
+        render = {
+            -- Optionally a function that takes two `dap.Variable`'s as arguments
+            -- and is forwarded to a `table.sort` when rendering variables in the scopes view
+            sort_variables = nil,
+            -- Full control of how frames are rendered, see the "Custom Formatting" section
+            threads = {
+                -- Choose which items to display and how
+                format = function(name, lnum, path)
+                    return {
+                        { part = name, separator = " " },
+                        { part = path, hl = "FileName", separator = ":" },
+                        { part = lnum, hl = "LineNumber" },
+                    }
+                end,
+                -- Align columns
+                align = false,
+            },
+            -- Full control of how breakpoints are rendered, see the "Custom Formatting" section
+            breakpoints = {
+                -- Choose which items to display and how
+                format = function(line, lnum, path)
+                    return {
+                        { part = path, hl = "FileName" },
+                        { part = lnum, hl = "LineNumber" },
+                        { part = line, hl = true },
+                    }
+                end,
+                -- Align columns
+                align = false,
+            },
+        },
+        -- Requires neovim 0.12+
+        virtual_text = {
+            -- Control with `DapViewVirtualTextToggle`
+            enabled = false,
+            format = function(variable)
+                -- Strip out excessive whitespace
+                return " " .. variable.value:gsub("%s+", " ")
+            end,
+        },
+        -- Controls how to jump when selecting a breakpoint or navigating the stack
+        -- Comma separated list, like the built-in 'switchbuf'. See :help 'switchbuf'
+        -- Only a subset of the options is available: newtab, useopen, usetab and uselast
+        -- Can also be a function that takes the current winnr and the destination bufnr
+        -- If a function, should return the winnr of the destination window
+        switchbuf = "usetab,uselast",
+        -- Auto open when a session is started and auto close when all sessions finish
+        -- Alternatively, can be a string:
+        -- - "keep_terminal": as above, but keeps the terminal when the session finishes
+        -- - "open_term": open the terminal when starting a new session, nothing else
+        auto_toggle = false,
+        -- Reopen dapview when switching to a different tab
+        -- Can also be a function to dynamically choose when to follow, by returning a boolean
+        -- If a function, receives the name of the adapter for the current session as an argument
+        follow_tab = false,
+    }
+    <
+==============================================================================
+KEYMAPS                                                     *dap-view-keymaps*
+
+Besides the keymaps to change the views, each view has its own keymaps. At any
+time (from within nvim-dap-view's main window) you can use `g?` to show a
+"help" window that lists all of them.
+
+nvim-dap-view doesn't define any keybindings outside its own buffers: you have
+to create your own bindings to call `open`, `close` or `toggle` and other API
+functions or commands.
+
+==============================================================================
+COMMANDS                                                   *dap-view-commands*
+
+Commands offer the same functionality as the API.
+
+DapViewOpen ~
+
+Opens both dap-view windows: views + console.
+
+DapViewClose ~
+
+Closes the views window. Accepts a bang (i.e., `:DapViewClose!`) to also hide
+the terminal window.
+
+DapViewToggle ~
+
+Behaves like `DapViewOpen` if there's no views window. Else behaves like
+`DapViewClose` (also accepts a bang to behave like `DapViewClose!`).
+
+DapViewWatch ~
+
+In normal mode, adds the expression under the cursor to the watch list. In
+visual mode, adds the selection to the watch list. Also accepts adding an
+expression directly (i.e., `:DapViewWatch foo + bar`), which takes precedence.
+
+DapViewJump [view] ~
+
+Shows a given view and jumps to its window. For instance, to jump to the REPL,
+you can use `:DapViewJump repl`.
+
+DapViewShow [view] ~
+
+Shows a given view. If the specified view is already the current one, jumps to
+its window.
+
+DapViewNavigate [number] ~
+
+Switches from the current view to another one by taking the current view's
+index (in the winbar) and adding a count. Can optionally specify a bang to
+allow wrapping. Has some default keymaps.
+
+Virtual Text ~
+
+Fine grained control over displaying virtual text:
+- `DapViewVirtualTextEnable`
+- `DapViewVirtualTextDisable`
+- `DapViewVirtualTextToggle`
+
+==============================================================================
+API                                                             *dap-view-api*
+
+The API offers the same functionality as the commands.
+
+Open ~
+
+    >lua
+    require("dap-view").open()
+    <
+
+Opens both nvim-dap-view windows: views + console.
+
+Close ~
+
+    >lua
+    ---@param hide_terminal? boolean
+    require("dap-view").close()
+    <
+
+Closes the views window. Can also hide the terminal window if specified.
+
+Toggle ~
+
+    >lua
+    ---@param hide_terminal? boolean
+    require("dap-view").toggle()
+    <
+
+Calls `require("dap-view").open()` if there's no views window. Else, behaves
+like `require("dap-view").close()`
+
+Add Expression ~
+
+    >lua
+    ---@param expr? string
+    ---@param default_expanded? boolean
+    require("dap-view").add_expr(expr, default_expanded)
+    <
+
+In normal mode, adds the expression under the cursor to the watch list. In
+visual mode, adds the selection to the watch list. If expr is specified,
+adds the expression directly, overriding previous conditions. Expressions are
+expanded (non recursively): this behavior can be overridden by setting
+`default_expanded` to false.
+
+Jump To View ~
+
+    >lua
+    ---@param view dapview.Section
+    require("dap-view").jump_to_view(view)
+    <
+
+Shows a given view and jumps to its window.
+
+Show View ~
+
+    >lua
+    ---@param view dapview.Section
+    require("dap-view").show_view(view)
+    <
+
+Shows a given view. If the specified view is already the current one, jumps to
+its window.
+
+Navigate ~
+
+    >lua
+    ---@param opts {count: number, wrap: boolean, type?: 'views' | 'sessions'}
+    require("dap-view").navigate(opts)
+    <
+
+Switches from the current view to another one by taking the current view's
+index (in the winbar) and adding a count. Can also be used to navigate within
+sessions, if specified. Has some default keymaps.
+
+Virtual Text ~
+
+Fine grained control over displaying virtual text:
+
+    >lua
+    require("dap-view").virtual_text_enable()
+    require("dap-view").virtual_text_disable()
+    require("dap-view").virtual_text_toggle()
+    <
+
+==============================================================================
+FILETYPES                                                 *dap-view-filetypes*
+
+nvim-dap-view sets the following filetypes: dap-view, dap-view-term and
+dap-view-help.
+
+They can be used to override buffer and window options.
+
+If the REPL is enabled, the dap-repl filetype (which is set by nvim-dap) is
+also used.
+
+Custom views may also set their own filetypes.
+
+==============================================================================
+FAQ                                                             *dap-view-faq*
+
+Why is nvim-dap-view GONE when switching tabs? ~
+
+nvim-dap-view's defaults aim to be unintrusive: it won't be invoked if not
+called explicitly. Which means that, by default, it won't reopen when
+switching tabs. If you would rather have nvim-dap-view's windows "follow" the
+current tab, you can toggle the `follow_tab` option:
+
+    >lua
+    -- Your nvim-dap-view config
+    return {
+        -- Can also be a function to dynamically choose when to follow, by returning a boolean
+        follow_tab = true,
+    }
+    <
+
+How can I see the value of an expression under cursor (hover)? ~
+
+You can use nvim-dap's built-in hover widget by calling
+`require("dap.ui.widgets").hover()`. See |dap-widgets| for details.
+
+Why is `DapViewWatch` not adding the whole variable? ~
+
+In normal mode, `:DapViewWatch` expands the <cexpr> under the cursor. By
+default, this setting works really well for C-like languages, but it can be
+cumbersome for others. To handle that, you can tweak the value for the
+'iskeyword' option. For instance, with PHP, you can use:
+
+    >vim
+    set iskeyword+=$
+    <
+
+How to control which window to jump to? ~
+
+nvim-dap-view ships its own |switchbuf|, which supports a subset of Neovim's
+built-in options: newtab, useopen, usetab and uselast. You can customize it
+with:
+
+    >lua
+    -- Your nvim-dap-view config
+    return {
+        switchbuf = "useopen",
+    }
+    <
+
+You can use commas to define fallback behavior (e.g., `useopen,newtab` creates
+a new tab if the buffer is not found). If there's no match even for the
+fallback behavior, a top-level split is opened. See |dap-view-switchbuf| if
+the default options do not fulfill your needs.
+
+Why is nvim-dap overriding one of the windows when the program stops? ~
+
+When `windows.terminal.position` is set to right, the main window may be used
+to display the current frame, because nvim-dap has its own internal
+|switchbuf| setting, which defaults to the global value. A common solution is
+to set nvim-dap's switchbuf to another value. For instance:
+
+    >lua
+    -- Don't change focus if the window is visible,
+    -- otherwise jump to the first window (from any tab) containing the buffer
+    --
+    -- If no window contains the buffer, create a new tab
+    --
+    -- See :help dap-defaults to learn more
+    require("dap").defaults.fallback.switchbuf = "usevisible,usetab,newtab"
+    <
+==============================================================================
+HIGHLIGHT GROUPS                                   *dap-view-highlight-groups*
+
+nvim-dap-view defines 34 (42 on nvim 0.12+) highlight groups, linked to
+(somewhat) reasonable defaults.
+
+Highlight Group                       Default Link
+
+`NvimDapViewBoolean`                  Boolean
+`NvimDapViewConstant`                 Constant
+`NvimDapViewControlDisconnect`        DapBreakpoint
+`NvimDapViewControlNC`                Comment
+`NvimDapViewControlPause`             Boolean
+`NvimDapViewControlPlay`              Keyword
+`NvimDapViewControlRunLast`           Keyword
+`NvimDapViewControlStepBack`          Function
+`NvimDapViewControlStepInto`          Function
+`NvimDapViewControlStepOut`           Function
+`NvimDapViewControlStepOver`          Function
+`NvimDapViewControlTerminate`         DapBreakpoint
+`NvimDapViewExceptionFilterDisabled`  DiagnosticError
+`NvimDapViewExceptionFilterEnabled`   DiagnosticOk
+`NvimDapViewFileName`                 qfFileName
+`NvimDapViewFloat`                    Float
+`NvimDapViewFrameCurrent`             DiagnosticVirtualTextWarn
+`NvimDapViewFunction`                 Function
+`NvimDapViewLineNumber`               qfLineNr
+`NvimDapViewMissingData`              DapBreakpoint
+`NvimDapViewNumber`                   Number
+`NvimDapViewSeparator`                Comment
+`NvimDapViewString`                   String
+`NvimDapViewTabFill`                  TabLineFill
+`NvimDapViewTabSelectedSeparator`     NvimDapViewTabSelected
+`NvimDapViewTabSelected`              TabLineSel
+`NvimDapViewTabSeparator`             NvimDapViewTab
+`NvimDapViewTab`                      TabLine
+`NvimDapViewThreadError`              DiagnosticError
+`NvimDapViewThreadStopped`            Conditional
+`NvimDapViewThread`                   Tag
+`NvimDapViewWatchError`               DiagnosticError
+`NvimDapViewWatchExpr`                Identifier
+`NvimDapViewWatchUpdated`             DiagnosticVirtualTextWarn
+
+For neovim 0.12+, `Boolean`, `Constant`, `Float`, `Function`, `Number` and
+`String` have a `Dim` variant, which is used for virtual text. Additionaly,
+there's `NvimDapViewVirtualText` (the "fallback", linked to `NonText`) and
+`NvimDapViewVirtualTextUpdated` (linked to `NvimDapViewWatchUpdated`, but
+dimmed as well).
+
+==============================================================================
+CONTROL BAR                                             *dap-view-control-bar*
+
+The control bar can be used to control a session with clickable "buttons".
+
+It is disabled by default. It can be enabled by setting
+`winbar.controls.enable`.
+
+See |dap-view-configuration| to check all of its configuration options.
+
+Custom Buttons ~
+
+nvim-dap-view provides some default buttons for the control bar, but you can
+also add your own. To do that, use the `winbar.controls.custom_buttons` table
+to declare your new button, and then add it at the position you want in the
+`winbar.controls.buttons` list.
+
+A custom button has 2 methods:
+
+1. `render`, returning a string used to display the button (typically an emoji
+   or a NerdFont glyph wrapped in a highlight group). Receives the focused
+   session as a parameter.
+2. `action`, a function that will be executed when the button is clicked. The
+   function receives 3 arguments:
+    - `clicks`, the number of clicks
+    - `button`, the button clicked (l, r, m)
+    - `modifiers`, a list with the modifiers pressed (c for control, s for
+    shift, a for alt and m for meta)
+
+See the `@ N` section in |statusline| for the complete specifications of a
+click handler.
+
+Example ~
+
+An example adding 2 buttons:
+
+- `fun`: the most basic button possible, just prints "🎊" when clicked
+- `term_restart`: a hybrid button that acts as a stop or restart button. If
+the button is triggered by anything else than a single left click (middle
+click, right click, double click or click with a modifier), it will disconnect
+the session instead of stopping.
+
+    >lua
+    return {
+        winbar = {
+            controls = {
+                enabled = true,
+                buttons = { "play", "step_into", "step_over", "step_out", "term_restart", "fun" },
+                custom_buttons = {
+                    fun = {
+                        render = function()
+                            return "🎉"
+                        end,
+                        action = function()
+                            vim.print("🎊")
+                        end,
+                    },
+                    -- Stop | Restart
+                    -- Double click, middle click or click with a modifier disconnect instead of stopping
+                    term_restart = {
+                        render = function(session)
+                            local group = session and "ControlTerminate" or "ControlRunLast"
+                            local icon = session and "" or ""
+                            return "%#NvimDapView" .. group .. "#" .. icon .. "%*"
+                        end,
+                        action = function(clicks, button, modifiers)
+                            local dap = require("dap")
+                            local alt = clicks > 1 or button ~= "l" or modifiers:gsub(" ", "") ~= ""
+                            if not dap.session() then
+                                dap.run_last()
+                            elseif alt then
+                                dap.disconnect()
+                            else
+                                dap.terminate()
+                            end
+                        end,
+                    },
+                },
+            },
+        },
+    }
+    <
+
+==============================================================================
+CUSTOM FORMATTING                                 *dap-view-custom-formatting*
+
+You can control how the text is displayed for some views, using special format
+functions. Each customizable view has its own parameters, but the expected
+return type is the same: an array of 
+`{text: string, hl?: string, separator?: string}`. 
+The `text` is the "content" itself, `hl` is one of nvim-dap-view's
+highlight groups (without the `NvimDapView` prefix) and the separator can be
+used to customize the divider between the current part and the next one.
+
+The separator must be a single character. A pipe is used if not specified.
+
+Additionally, both threads and breakpoints support a flag for aligning their
+columns.
+
+Threads ~
+
+You can manipulate the frame name (usually the function name), its line number
+and path.
+
+Examples:
+
+- Display just the file name, instead of relative path
+
+    >lua
+    return {
+        render = {
+            threads = {
+                format = function(name, lnum, path)
+                    return {
+                        { text = name, separator = " " },
+                        -- See :h filename-modifiers
+                        { text = vim.fn.fnamemodify(buf_name, ":t"), hl = "FileName", separator = ":" },
+                        { text = lnum, hl = "LineNumber" },
+                    }
+                end,
+            },
+        },
+    }
+    <
+
+- Restore pre v1.0.0 behavior
+
+    >lua
+    return {
+        render = {
+            threads = {
+                format = function(name, lnum, path)
+                    return {
+                        { text = path, hl = "FileName" },
+                        { text = lnum, hl = "LineNumber" },
+                        { text = name },
+                    }
+                end,
+            },
+        },
+    }
+    <
+
+Breakpoints ~
+
+Besides the path (and line number) to the breakpoint, one can also manipulate
+the content of the line itself. It can be highlighted with treesitter by
+setting `hl` as true.
+
+Example:
+
+    >lua
+    return {
+        render = {
+            breakpoints = {
+                -- The line number HATER
+                format = function(line, _, path)
+                    return {
+                        { text = path, hl = "FileName" },
+                        { text = line, hl = true },
+                    }
+                end,
+                -- Alignment enjoyer
+                align = true,
+            },
+        },
+    }
+    <
+
+==============================================================================
+CUSTOM VIEWS                                           *dap-view-custom-views*
+
+You can write your own views.
+
+Writing a custom view is similar to writing a custom button. A view consists
+of an ID and 4 fields:
+
+1. A `label`, the string that will show up in the user's winbar
+2. An `action` function to render the component
+3. A `keymap`, which will trigger the action
+4. A `buffer` function that will create a new buffer and return its `bufnr`
+
+The logic after the action is triggered is not handled by nvim-dap-view.
+
+Example:
+
+- A bare bones view would consist of:
+
+    >lua
+    return {
+        winbar = {
+            custom_sections = {
+                my_new_view = { -- the ID
+                    label = "My new view",
+                    action = function()
+                        vim.print("Hi from view")
+                    end,
+                    keymap = "M",
+                    buffer = function()
+                        return vim.api.nvim_create_buf(true, false)
+                    end,
+                },
+            },
+        },
+    }
+    <
+
+To add a custom view to your config, just add it to the sections table as if
+it was a regular view:
+
+    >lua
+    return {
+        winbar = {
+            sections = {
+                "my_new_view",
+                -- ...
+            },
+        },
+    }
+    <
+
+Register View ~
+
+If you are a plugin author, you can use the `register_view` function to ensure
+your view is loaded. By doing that, users don't have to create the custom view
+"manually".
+
+==============================================================================
+ADVANCED SWITCHBUF                                        *dap-view-switchbuf*
+
+You can tune the behavior of nvim-dap-view's jump to breakpoint and frame
+features, by using nvim-dap-view's own |switchbuf| config option. Similarly to
+the built-in option, you can combine different behaviors with a comma
+separated list. Available options include:
+
+- `newtab`: always creates a new tab
+- `useopen`: tries to find the buffer to jump to only in the current tab
+- `usetab`: like useopen, but searches every tab (default)
+- `uselast`: jump to the previously used window, if eligible
+
+For instance, with `useopen,newtab`, if the buffer is not found in the current
+tab, a new tab is created.
+
+For more advanced use cases, you can write your own switchbuf function. It
+receives 2 arguments: the current window number and the buffer number to jump
+to. It should (optionally) return a window number for the jump's destination
+window.
+
+If a combination of options does not yield a valid window number for the
+destination (e.g., `useopen` but the buffer is hidden), there's a fallback to
+create a top-level split.
+
+Force Behavior ~
+
+Sometimes, having a custom switchbuf is not enough. In these scenarios, you
+can override your own setting by using <C-w><CR> to bring a list with all
+available options, affecting only the current jump.
+
+==============================================================================
+DYNAMIC LAYOUT                                       *dap-view-dynamic-layout*
+
+You can assign different positions and sizes to nvim-dap-view's windows using
+functions.
+
+Example ~
+
+When there's a single window in the current tab, you can use a vertical layout
+to make the most of the available space. In other scenarios you fallback to a
+regular horizontal layout:
+
+    >lua
+    return {
+        windows = {
+            -- `prev` is the last used position, might be nil
+            position = function(prev)
+                local wins = vim.api.nvim_tabpage_list_wins(0)
+
+                -- Restores previous position if terminal is visible
+                if
+                    vim.iter(wins):find(function(win)
+                        return vim.w[win].dapview_win_term
+                    end)
+                then
+                    return prev
+                end
+
+                return vim.tbl_count(vim.iter(wins)
+                    :filter(function(win)
+                        local buf = vim.api.nvim_win_get_buf(win)
+                        local valid_buftype =
+                            vim.tbl_contains({ "", "help", "prompt", "quickfix", "terminal" }, vim.bo[buf].buftype)
+                        local dapview_win = vim.w[win].dapview_win or vim.w[win].dapview_win_term
+                        return valid_buftype and not dapview_win
+                    end)
+                    :totable()) > 1 and "below" or "right"
+            end,
+            size = function(pos)
+                return pos == "below" and 0.25 or 0.5
+            end,
+            terminal = {
+                -- `pos` is the position for the regular window
+                position = function(pos)
+                    return pos == "below" and "right" or "below"
+                end,
+                size = 0.5,
+            },
+        },
+    }
+    <
+
+==============================================================================
+RESTORING SESSIONS                               *dap-view-restoring-sessions*
+
+Vim offers a powerful way of restoring the state of the editor: sessions (see
+|Session|). nvim-dap-view hooks into this session system to restore its
+internal state. Currently, the following data is restored:
+
+- The selected "view" (section)
+- The full state of watched expressions, including expansions of variables
+
+Setup ~
+
+Note: if you're using a "session manager" plugin, check if it uses vim
+sessions as its backbone (i.e., it does not rely on its own implementation).
+Custom session implementations may not work, or may require additional
+configuration.
+
+To let nvim-dap-view restore its state, ensure the following criteria are met:
+
+- 'sessionoptions' includes `global`
+- nvim-dap-view is NOT being lazy loaded
+
+The plugin lazy loads itself. By manually lazy loading, you may prevent the
+"session restoration" hook from triggering.
+
+vim:ft=help
