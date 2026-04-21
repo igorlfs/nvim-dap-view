@@ -194,8 +194,7 @@ M.config = {
     virtual_text = {
         enabled = false,
         format = function(variable, _, _)
-            -- Strip out excessive whitespace
-            return " " .. variable.value:gsub("%s+", " ")
+            return " " .. variable.value
         end,
     },
     switchbuf = "usetab,uselast",

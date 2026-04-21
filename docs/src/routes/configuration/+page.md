@@ -123,8 +123,7 @@ return {
         -- Control with `DapViewVirtualTextToggle`
         enabled = false,
         format = function(variable, _, _)
-            -- Strip out excessive whitespace
-            return " " .. variable.value:gsub("%s+", " ")
+            return " " .. variable.value
         end,
     },
     -- Controls how to jump when selecting a breakpoint or navigating the stack

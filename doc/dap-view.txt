@@ -203,8 +203,7 @@ You don't have to copy and paste these options. Use them as a reference.
             -- Control with `DapViewVirtualTextToggle`
             enabled = false,
             format = function(variable)
-                -- Strip out excessive whitespace
-                return " " .. variable.value:gsub("%s+", " ")
+                return " " .. variable.value
             end,
         },
         -- Controls how to jump when selecting a breakpoint or navigating the stack
