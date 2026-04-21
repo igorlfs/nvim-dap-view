@@ -123,8 +123,7 @@ return {
         -- Control with `DapViewVirtualTextToggle`
         enabled = false,
         format = function(variable, _, _)
-            -- Strip out excessive whitespace
-            return " " .. variable.value:gsub("%s+", " ")
+            return " " .. variable.value
         end,
         -- Supported options include "inline", "eol", and "eol_right_align"
         position = "inline",

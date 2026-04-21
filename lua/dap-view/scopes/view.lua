@@ -68,7 +68,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
         local content = prefix .. variable_name .. (#value > 0 and " = " or "") .. value
 
         -- Can't have linebreaks with nvim_buf_set_lines
-        local trimmed_content = content:gsub("%s+", " ")
+        local trimmed_content = content:gsub("\n+", " ")
 
         local indented_content = string.rep("\t", depth) .. trimmed_content
 
