@@ -92,7 +92,7 @@ local M = {}
 ---@class dapview.VirtualTextConfig
 ---@field enabled boolean
 ---@field format fun(variable: dap.Variable, frame: dap.StackFrame, node: TSNode): string?
----@field position "eol"|"eol_right_align"|"inline"
+---@field position "eol"|"eol_right_align"|"inline"|"overlay"|"right_align"
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
