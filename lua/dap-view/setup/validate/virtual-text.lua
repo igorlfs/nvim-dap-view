@@ -6,7 +6,10 @@ function M.validate(config)
 
     validate("virtual_text", {
         enabled = { config.enabled, "boolean" },
+        position = { config.position, "string" },
         format = { config.format, "function" },
+        prefix = { config.prefix, "function" },
+        suffix = { config.suffix, "function" },
     }, config)
 end
 

@@ -200,18 +200,37 @@ M.virtual_text = function()
             end
         end
 
+        local is_position_inline = vt_config.position == "inline"
+
         for _, content in pairs(virt_lines) do
-            for _, virt_text in ipairs(content) do
+            for i, virt_text in ipairs(content) do
                 local node_range = { virt_text.node:range() }
 
+                ---@type [string, string][]
+                local virt_text_chunks = {}
+
+                local prefix = vt_config.prefix(vt_config.position, virt_text.node, bufnr, i, #content)
+
+                if prefix then
+                    virt_text_chunks[#virt_text_chunks + 1] = { prefix, "NvimDapViewVirtualText" }
+                end
+
+                virt_text_chunks[#virt_text_chunks + 1] = { virt_text[1], virt_text[2] }
+
+                local suffix = vt_config.suffix(vt_config.position, virt_text.node, bufnr, i, #content)
+
+                if suffix then
+                    virt_text_chunks[#virt_text_chunks + 1] = { suffix, "NvimDapViewVirtualText" }
+                end
+
                 api.nvim_buf_set_extmark(bufnr, ns, node_range[3], node_range[4], {
-                    end_line = node_range[3],
-                    end_col = node_range[4],
+                    end_line = is_position_inline and node_range[3] or nil,
+                    end_col = is_position_inline and node_range[4] or nil,
                     hl_mode = "combine",
                     -- clear extmark after, e.g., commenting the line
                     invalidate = true,
-                    virt_text = { { virt_text[1], virt_text[2] } },
-                    virt_text_pos = "inline",
+                    virt_text = virt_text_chunks,
+                    virt_text_pos = vt_config.position,
                 })
             end
         end
