@@ -131,5 +131,11 @@ Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get
 
 `nvim-dap-view` is fully customizable! Visit the [config](configuration) page to learn what you can do.
 
+## Altenatives
+
+Versus specific alternatives, `nvim-dap-view` offers:
+
+- [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui): a keyboard driven workflow, focusing on a **single** window.
+
 [^1]: Inline virtual text requires 0.12+
 [^2]: Nerd font icons can be disabled in the [configuration](configuration)
