@@ -1,4 +1,3 @@
-local global = require("dap-view.globals")
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 local controls = require("dap-view.options.controls")
@@ -109,44 +108,42 @@ M.set_winbar_opt = function()
         for k, v in ipairs(winbar.sections) do
             local section = winbar.custom_sections[v] or winbar.base_sections[v]
 
-            if section ~= nil then
-                local is_current = state.current_section == v
+            local is_current = state.current_section == v
 
-                local sep = winbar.separators
+            local sep = winbar.separators
 
-                local hl_sep = is_current and "TabSelectedSeparator" or "TabSeparator"
+            local hl_sep = is_current and "TabSelectedSeparator" or "TabSeparator"
 
-                local prefix = ""
+            local prefix = ""
 
-                if sep and sep[1] then
-                    prefix = "%#" .. global.HL_PREFIX .. hl_sep .. "#" .. sep[1] .. "%*"
-                end
-
-                local label = type(section.label) == "function" and section.label(win_width, state.current_section)
-                    or section.label
-
-                ---@cast label string
-
-                local desc = " " .. label .. " "
-                if winbar.show_keymap_hints then
-                    desc = desc .. "[" .. section.keymap .. "]" .. " "
-                end
-                desc = statusline.clickable(desc, module, "on_click", k)
-
-                if is_current then
-                    desc = statusline.hl(desc, "TabSelected")
-                else
-                    desc = statusline.hl(desc, "Tab")
-                end
-
-                local suffix = ""
-
-                if sep and sep[2] then
-                    suffix = "%#" .. global.HL_PREFIX .. hl_sep .. "#" .. sep[2] .. "%*"
-                end
-
-                table.insert(winbar_title, prefix .. desc .. suffix)
+            if sep and sep[1] then
+                prefix = statusline.hl(sep[1], hl_sep)
             end
+
+            local label = type(section.label) == "function" and section.label(win_width, state.current_section)
+                or section.label
+
+            ---@cast label string
+
+            local desc = " " .. label .. " "
+            if winbar.show_keymap_hints then
+                desc = desc .. "[" .. section.keymap .. "]" .. " "
+            end
+            desc = statusline.clickable(desc, module, "on_click", k)
+
+            if is_current then
+                desc = statusline.hl(desc, "TabSelected")
+            else
+                desc = statusline.hl(desc, "Tab")
+            end
+
+            local suffix = ""
+
+            if sep and sep[2] then
+                suffix = statusline.hl(sep[2], hl_sep)
+            end
+
+            table.insert(winbar_title, prefix .. desc .. suffix)
         end
 
         table.insert(winbar_title, statusline.hl("", "TabFill", nil, false))

@@ -201,7 +201,7 @@ M.config = {
     virtual_text = {
         enabled = false,
         position = "inline",
-        format = function(variable, _, _)
+        format = function(variable)
             return " " .. variable.value
         end,
         prefix = function(position, node, bufnr)
