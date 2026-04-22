@@ -202,37 +202,36 @@ M.virtual_text = function()
 
         local is_eol_position = vt_config.position == "eol" or vt_config.position == "eol_right_align"
 
-        for line, content in pairs(virt_lines) do
-            if #content > 1 and is_eol_position then
+        for _, content in pairs(virt_lines) do
+            for i, virt_text in ipairs(content) do
+                local node_range = { virt_text.node:range() }
+
                 ---@type [string, string][]
-                local chunks = {}
-                for i, virt_text in ipairs(content) do
-                    local name = ts.get_node_text(virt_text.node, bufnr)
-                    local prefix = i == 1 and " " or ", "
-                    table.insert(chunks, { prefix .. name .. " =", "NvimDapViewVirtualText" })
-                    table.insert(chunks, { virt_text[1], virt_text[2] })
+                local virt_text_chunks = {}
+
+                local prefix = vt_config.prefix(vt_config.position, virt_text.node, bufnr, i, #content)
+
+                if prefix then
+                    virt_text_chunks[#virt_text_chunks + 1] = { prefix, "NvimDapViewVirtualText" }
                 end
 
-                api.nvim_buf_set_extmark(bufnr, ns, line, 0, {
+                virt_text_chunks[#virt_text_chunks + 1] = { virt_text[1], virt_text[2] }
+
+                local suffix = vt_config.suffix(vt_config.position, virt_text.node, bufnr, i, #content)
+
+                if suffix then
+                    virt_text_chunks[#virt_text_chunks + 1] = { suffix, "NvimDapViewVirtualText" }
+                end
+
+                api.nvim_buf_set_extmark(bufnr, ns, node_range[3], node_range[4], {
+                    end_line = not is_eol_position and node_range[3] or nil,
+                    end_col = not is_eol_position and node_range[4] or nil,
                     hl_mode = "combine",
+                    -- clear extmark after, e.g., commenting the line
                     invalidate = true,
-                    virt_text = chunks,
+                    virt_text = virt_text_chunks,
                     virt_text_pos = vt_config.position,
                 })
-            else
-                for _, virt_text in ipairs(content) do
-                    local node_range = { virt_text.node:range() }
-
-                    api.nvim_buf_set_extmark(bufnr, ns, node_range[3], node_range[4], {
-                        end_line = node_range[3],
-                        end_col = node_range[4],
-                        hl_mode = "combine",
-                        -- clear extmark after, e.g., commenting the line
-                        invalidate = true,
-                        virt_text = { { virt_text[1], virt_text[2] } },
-                        virt_text_pos = vt_config.position,
-                    })
-                end
             end
         end
     end)

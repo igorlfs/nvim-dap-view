@@ -10,6 +10,10 @@ local M = {}
 
 ---@alias dapview.Position 'right' | 'left' | 'above' | 'below'
 
+---@alias dapview.VirtualTextPosition "eol"|"eol_right_align"|"inline"
+
+---@alias dapview.VirtualTextFormatter fun(position: dapview.VirtualTextPosition, node: TSNode, bufnr: integer, var_index: integer, num_var_line: integer): string?
+
 ---@class dapview.Content
 ---@field text string
 ---@field hl? string|boolean
@@ -92,7 +96,9 @@ local M = {}
 ---@class dapview.VirtualTextConfig
 ---@field enabled boolean
 ---@field format fun(variable: dap.Variable, frame: dap.StackFrame, node: TSNode): string?
----@field position "eol"|"eol_right_align"|"inline"|"overlay"|"right_align"
+---@field prefix dapview.VirtualTextFormatter
+---@field suffix dapview.VirtualTextFormatter
+---@field position dapview.VirtualTextPosition
 
 ---@class (exact) dapview.ConfigStrict
 ---@field winbar dapview.WinbarConfig
@@ -194,10 +200,22 @@ M.config = {
     },
     virtual_text = {
         enabled = false,
+        position = "inline",
         format = function(variable, _, _)
             return " " .. variable.value
         end,
-        position = "inline",
+        prefix = function(position, node, bufnr)
+            if position == "eol" or position == "eol_right_align" then
+                local name = vim.treesitter.get_node_text(node, bufnr)
+
+                return name .. " ="
+            end
+        end,
+        suffix = function(position, _, _, var_index, num_var_line)
+            if position == "eol" or position == "eol_right_align" then
+                return var_index == num_var_line and "" or ","
+            end
+        end,
     },
     switchbuf = "usetab,uselast",
     auto_toggle = false,
