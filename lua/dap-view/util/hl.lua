@@ -38,6 +38,7 @@ M.types_to_hl_group = {
     undefined = "Constant",
     ["nil"] = "Constant",
     ["function"] = "Function",
+    asyncfunction = "Function",
 }
 
 return M
