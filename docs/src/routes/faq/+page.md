@@ -14,10 +14,6 @@ return {
 }
 ```
 
-## How can I see the value of an expression under cursor (hover)?
-
-You can use `nvim-dap`'s built-in hover widget by calling `require("dap.ui.widgets").hover()`. See `:help dap-widgets` for details.
-
 ## Why is `DapViewWatch` not adding the whole variable?
 
 In normal mode, `:DapViewWatch` expands the `<cexpr>` under the cursor (see `:help <cexpr>`). By default, this setting works really well for C-like languages, but it can be cumbersome for others. To handle that, you can tweak the value for the `'iskeyword'` option (see `:h 'iskeyword'`). For instance, with PHP, you can use `set iskeyword+=$`.

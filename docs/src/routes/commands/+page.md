@@ -32,6 +32,10 @@ Shows a given view. If the specified view is already the current one, jumps to i
 
 Switches from the current view to another one by taking the current view's index (in the winbar) and adding a count (`number`). Can optionally specify a bang to allow wrapping. Has some default [keymaps](keymaps).
 
+### `DapViewHover`
+
+In normal mode, opens the hover window with the variable under the cursor. In visual mode, opens the hover window with the selection. Also accepts sending an expression directly (i.e., `:DapViewHover foo[1].bar`), which takes precedence. Accepts a bang (i.e., `DapViewHover!`) to focus the window. If the window exists, but it's not focused, calling `DapViewHover` will always focus the window.
+
 ## Virtual Text
 
 Fine grained control over displaying [virtual text](home#Virtual-text).

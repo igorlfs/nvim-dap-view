@@ -8,6 +8,15 @@ end, {})
 command("DapViewClose", function(opts)
     require("dap-view").close(opts.bang)
 end, { bang = true })
+command("DapViewHover", function(opts)
+    local expr = nil
+    if opts.range > 0 then
+        expr = require("dap-view.util.exprs").get_trimmed_selection()
+    elseif #opts.fargs > 0 then
+        expr = table.concat(opts.fargs, " ")
+    end
+    require("dap-view").hover(expr, opts.bang)
+end, { bang = true, nargs = "*" })
 command("DapViewToggle", function(opts)
     require("dap-view").toggle(opts.bang)
 end, { bang = true })

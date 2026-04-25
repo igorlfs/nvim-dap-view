@@ -93,7 +93,6 @@ merged with the defaults, so you only have to override what you actually want
 to change.
 
 You don't have to copy and paste these options. Use them as a reference.
-
     >lua
     return {
         winbar = {
@@ -291,6 +290,15 @@ Switches from the current view to another one by taking the current view's
 index (in the winbar) and adding a count. Can optionally specify a bang to
 allow wrapping. Has some default keymaps.
 
+DapViewHover ~
+
+In normal mode, opens the hover window with the variable under the cursor. In
+visual mode, opens the hover window with the selection. Also accepts sending
+an expression directly (i.e., `:DapViewHover foo[1].bar`), which takes
+precedence. Accepts a bang (i.e., `DapViewHover!`) to focus the window. If the
+window exists, but it's not focused, calling `DapViewHover` will always focus
+the window.
+
 Virtual Text ~
 
 Fine grained control over displaying virtual text:
@@ -304,7 +312,6 @@ API                                                             *dap-view-api*
 The API offers the same functionality as the commands.
 
 Open ~
-
     >lua
     require("dap-view").open()
     <
@@ -312,7 +319,6 @@ Open ~
 Opens both nvim-dap-view windows: views + console.
 
 Close ~
-
     >lua
     ---@param hide_terminal? boolean
     require("dap-view").close()
@@ -321,7 +327,6 @@ Close ~
 Closes the views window. Can also hide the terminal window if specified.
 
 Toggle ~
-
     >lua
     ---@param hide_terminal? boolean
     require("dap-view").toggle()
@@ -331,7 +336,6 @@ Calls `require("dap-view").open()` if there's no views window. Else, behaves
 like `require("dap-view").close()`
 
 Add Expression ~
-
     >lua
     ---@param expr? string
     ---@param default_expanded? boolean
@@ -345,7 +349,6 @@ expanded (non recursively): this behavior can be overridden by setting
 `default_expanded` to false.
 
 Jump To View ~
-
     >lua
     ---@param view dapview.Section
     require("dap-view").jump_to_view(view)
@@ -354,7 +357,6 @@ Jump To View ~
 Shows a given view and jumps to its window.
 
 Show View ~
-
     >lua
     ---@param view dapview.Section
     require("dap-view").show_view(view)
@@ -364,7 +366,6 @@ Shows a given view. If the specified view is already the current one, jumps to
 its window.
 
 Navigate ~
-
     >lua
     ---@param opts {count: number, wrap: boolean, type?: 'views' | 'sessions'}
     require("dap-view").navigate(opts)
@@ -374,10 +375,22 @@ Switches from the current view to another one by taking the current view's
 index (in the winbar) and adding a count. Can also be used to navigate within
 sessions, if specified. Has some default keymaps.
 
+Hover ~
+    >lua
+    ---@param expr? string
+    ---@param enter? boolean
+    require("dap-view").hover(expr, enter)
+    <
+
+In normal mode, opens the hover window with the variable under the cursor. In
+visual mode, opens the hover window with the selection. If `expr` is not
+`nil`, it is evaluated directly, skipping previous conditions. `enter` focuses
+the window, but if the window exists and it's not focused, the window will be
+focused regardless of this parameter.
+
 Virtual Text ~
 
 Fine grained control over displaying virtual text:
-
     >lua
     require("dap-view").virtual_text_enable()
     require("dap-view").virtual_text_disable()
@@ -387,12 +400,12 @@ Fine grained control over displaying virtual text:
 ==============================================================================
 FILETYPES                                                 *dap-view-filetypes*
 
-nvim-dap-view sets the following filetypes: dap-view, dap-view-term and
-dap-view-help.
+nvim-dap-view sets the following filetypes: `dap-view`, `dap-view-term`,
+`dap-view-hover` and `dap-view-help`.
 
 They can be used to override buffer and window options.
 
-If the REPL is enabled, the dap-repl filetype (which is set by nvim-dap) is
+If the REPL is enabled, the `dap-repl` filetype (which is set by nvim-dap) is
 also used.
 
 Custom views may also set their own filetypes.
@@ -406,7 +419,6 @@ nvim-dap-view's defaults aim to be unintrusive: it won't be invoked if not
 called explicitly. Which means that, by default, it won't reopen when
 switching tabs. If you would rather have nvim-dap-view's windows "follow" the
 current tab, you can toggle the `follow_tab` option:
-
     >lua
     -- Your nvim-dap-view config
     return {
@@ -415,18 +427,12 @@ current tab, you can toggle the `follow_tab` option:
     }
     <
 
-How can I see the value of an expression under cursor (hover)? ~
-
-You can use nvim-dap's built-in hover widget by calling
-`require("dap.ui.widgets").hover()`. See |dap-widgets| for details.
-
 Why is `DapViewWatch` not adding the whole variable? ~
 
 In normal mode, `:DapViewWatch` expands the <cexpr> under the cursor. By
 default, this setting works really well for C-like languages, but it can be
 cumbersome for others. To handle that, you can tweak the value for the
 'iskeyword' option. For instance, with PHP, you can use:
-
     >vim
     set iskeyword+=$
     <
@@ -436,7 +442,6 @@ How to control which window to jump to? ~
 nvim-dap-view ships its own |switchbuf|, which supports a subset of Neovim's
 built-in options: newtab, useopen, usetab and uselast. You can customize it
 with:
-
     >lua
     -- Your nvim-dap-view config
     return {
@@ -455,7 +460,6 @@ When `windows.terminal.position` is set to right, the main window may be used
 to display the current frame, because nvim-dap has its own internal
 |switchbuf| setting, which defaults to the global value. A common solution is
 to set nvim-dap's switchbuf to another value. For instance:
-
     >lua
     -- Don't change focus if the window is visible,
     -- otherwise jump to the first window (from any tab) containing the buffer
@@ -664,7 +668,6 @@ the content of the line itself. It can be highlighted with treesitter by
 setting `hl` as true.
 
 Example:
-
     >lua
     return {
         render = {
@@ -723,7 +726,6 @@ Example:
 
 To add a custom view to your config, just add it to the sections table as if
 it was a regular view:
-
     >lua
     return {
         winbar = {
@@ -783,7 +785,6 @@ Example ~
 When there's a single window in the current tab, you can use a vertical layout
 to make the most of the available space. In other scenarios you fallback to a
 regular horizontal layout:
-
     >lua
     return {
         windows = {

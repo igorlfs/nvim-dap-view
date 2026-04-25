@@ -59,6 +59,10 @@ return {
 
 <img src="https://i.ibb.co/gb2sD9c0/image.png>" alt="image" />
 
+- Hover
+
+<img src="https://i.ibb.co/XhJB9jx/image.png" alt="image" />
+
 - And more!
 
 ## Getting Started
