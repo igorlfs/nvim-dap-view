@@ -189,6 +189,68 @@ M.open = function(hide_terminal)
 end
 
 ---@param expr? string
+---@param enter? boolean
+M.hover = function(expr, enter)
+    if state.hover_winnr then
+        api.nvim_set_current_win(state.hover_winnr)
+        return
+    end
+
+    state.hover = expr or require("dap-view.util.exprs").get_current_expr()
+
+    coroutine.wrap(function()
+        local has_session = require("dap").session()
+
+        local bufnr = api.nvim_create_buf(false, false)
+
+        state.hover_bufnr = bufnr
+
+        for _, buf in ipairs(api.nvim_list_bufs()) do
+            local name = api.nvim_buf_get_name(buf)
+            if name == globals.HOVER_BUF_NAME then
+                api.nvim_buf_delete(buf, { force = true })
+            end
+        end
+
+        api.nvim_buf_set_name(bufnr, globals.HOVER_BUF_NAME)
+
+        local default_message = "No active session"
+
+        local height = 1
+        local width = #default_message
+
+        if has_session then
+            require("dap-view.hover.eval").evaluate_expression(state.hover)
+
+            height, width = unpack(require("dap-view.hover.view").show(bufnr))
+        else
+            require("dap-view.util").set_lines(bufnr, 0, 1, true, { default_message })
+        end
+
+        local anchor_y, anchor_x = require("dap-view.util.float").get_anchor(width)
+
+        local row = anchor_y == "N" and 1 or 0
+        local col = anchor_x == "E" and 1 or 0
+
+        local winnr = api.nvim_open_win(bufnr, enter or enter == nil, {
+            relative = "cursor",
+            row = row,
+            col = col,
+            anchor = anchor_y .. anchor_x,
+            width = width,
+            height = height,
+        })
+
+        state.hover_winnr = winnr
+
+        require("dap-view.hover").set_win_options(winnr)
+        require("dap-view.hover").set_buf_options(bufnr)
+        require("dap-view.hover").set_keymaps(bufnr)
+        require("dap-view.hover").set_autocmds(bufnr)
+    end)()
+end
+
+---@param expr? string
 ---@param default_expanded boolean
 M.add_expr = function(expr, default_expanded)
     local expr_ = expr or require("dap-view.util.exprs").get_current_expr()

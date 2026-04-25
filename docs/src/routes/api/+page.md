@@ -67,6 +67,16 @@ require("dap-view").navigate(opts)
 
 Switches from the current view to another one by taking the current view's index (in the winbar) and adding a count (default behavior). Can also be used to navigate within sessions, if specified. Has some default [keymaps](keymaps).
 
+### Hover
+
+```lua
+---@param expr? string
+---@param enter? boolean
+require("dap-view").hover(expr, enter)
+```
+
+In normal mode, opens the hover window with the variable under the cursor. In visual mode, opens the hover window with the selection. If `expr` is not `nil`, it is evaluated directly, skipping previous conditions. `enter` focuses the window, but if the window exists and it's not focused, the window will be focused regardless of this parameter.
+
 ## Virtual Text
 
 Fine grained control over displaying [virtual text](home#Virtual-text).

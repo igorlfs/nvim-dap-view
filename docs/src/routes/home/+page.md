@@ -41,7 +41,7 @@ If using a plugin that overrides the `'winbar'` option, make sure to disable it 
 
 The plugin provides 8 "views" (aka "sections") that (mostly) share the same window (so there's clutter).
 
-It also previews variables with inline virtual text.
+It also previews variables with inline virtual text and via hover.
 
 ### Watches view
 
@@ -115,13 +115,19 @@ A custom view is used to power the [disassembly view](disassembly), an integrati
 
 `nvim-dap-view` also provides a "non view" component: the control bar, which exposes some clickable buttons to control your session. It's disabled by default. See details on how to enable and configure it [here](control-bar).
 
-<img src="https://i.ibb.co/Fkm7HwYj/image.png" alt="control bar">
+<img src="https://i.ibb.co/Fkm7HwYj/image.png" alt="control bar" />
 
 ### Virtual text
 
 `nvim-dap-view` ships a minimal reimplementation of [nvim-dap-virtual-text](https://github.com/thehamsta/nvim-dap-virtual-text): it displays the values of variables using "inline" virtual text. It has some advantages over the original implementation: it leverages asynchronous treesitter parsing and highlights variables based on their type (instead of using a single group for everything). Being a "minimal" reimplementation, it lacks some features. If you miss anything, open a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml). **Disabled by default**.
 
-<img src="https://i.ibb.co/gb2sD9c0/image.png" alt="image" />
+<img src="https://i.ibb.co/gb2sD9c0/image.png" alt="virtual text" />
+
+### Hover
+
+`nvim-dap-view` ships its own hover: it allows you to use a keymap to inspect the state of a given variable. Within the hover window, you have the same actions as the "scopes" view: expanding and collapsing variables and setting values.
+
+<img src="https://i.ibb.co/XhJB9jx/image.png" alt="image" />
 
 ## Usage
 
@@ -131,7 +137,7 @@ Learn about `nvim-dap-view`'s [commands](commands) and [keymaps](keymaps) to get
 
 `nvim-dap-view` is fully customizable! Visit the [config](configuration) page to learn what you can do.
 
-## Altenatives
+## Alternatives
 
 Versus specific alternatives, `nvim-dap-view` offers:
 

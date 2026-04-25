@@ -48,6 +48,8 @@ The help window itself has only 1 mapping: it can be closed with `q`.
 
 Additionally, when jumping to a frame or breakpoint you can use `<C-w><CR>` to pick a specific [jump behavior](advanced-switchbuf#). Similarly, `<2-LeftMouse>` (double click) can be used instead of `<CR>`, for every `<CR>` mapping.
 
+The hover window has the same keymaps as the scopes view, with the addition of `q`, which quits the window.
+
 `nvim-dap-view` doesn't define any keybindings outside its own buffers: you have to create your own bindings to call `open`, `close` or `toggle` and other API [functions](api) (or [commands](commands)).
 
 [^1]: Read `:help lua-pattern` to learn more. You can also read the full documentation [here](https://www.lua.org/pil/20.2.html).

@@ -18,9 +18,16 @@
 ---@field expanded boolean
 ---@field updated boolean
 
+---@class dapview.HoverView
+---@field response? dap.EvaluateResponse
+---@field err? dap.ErrorResponse
+---@field expanded boolean
+
 ---@class dapview.State
 ---@field bufnr? integer
+---@field hover_bufnr? integer
 ---@field winnr? integer
+---@field hover_winnr? integer
 ---@field term_winnr? integer
 ---@field last_term_winnr? integer
 ---@field threads_filter string
@@ -43,6 +50,13 @@
 ---@field sessions_by_line table<integer, dap.Session>
 ---@field collapsed_scopes string[]
 ---@field line_to_scope_name table<integer,string>
+---@field hover_path_is_expanded table<string,boolean>
+---@field hover_path_to_parent_line table<string,integer>
+---@field hover_path_to_value table<string,string>
+---@field hover_path_to_parent_reference table<string,integer>
+---@field hover_path_to_name table<string,string>
+---@field hover_path_to_evaluate_name table<string,string>
+---@field line_to_hover_path table<integer,string>
 ---@field variable_path_to_name table<string,string>
 ---@field variable_path_to_evaluate_name table<string,string>
 ---@field variable_path_to_value table<string,string>
@@ -52,6 +66,8 @@
 ---@field variable_path_to_set_variables table<string, boolean>
 ---@field line_to_variable_path table<integer,string>
 ---@field watched_expressions table<string, dapview.ExpressionView>
+---@field hovered_expression dapview.HoverView?
+---@field hover string?
 ---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,[integer, integer]?>
 ---@field win_pos? dapview.Position
@@ -74,6 +90,13 @@ local M = {
     line_to_scope_name = {},
     subtle_frames = false,
     watched_expressions = {},
+    hover_path_is_expanded = {},
+    hover_path_to_value = {},
+    hover_path_to_parent_reference = {},
+    hover_path_to_name = {},
+    hover_path_to_evaluate_name = {},
+    hover_path_to_parent_line = {},
+    line_to_hover_path = {},
     variable_path_is_expanded = {},
     variable_path_to_evaluate_name = {},
     variable_path_to_value = {},

@@ -71,17 +71,19 @@ M.jump_to_location = function(file_path, line, column, switchbuffun)
     api.nvim_set_current_win(win)
 end
 
----@param jump_to_line number
-M.jump_to_parent = function(jump_to_line)
-    local _, cursor_col = unpack(api.nvim_win_get_cursor(state.winnr))
+---@param jump_to_line integer
+---@param winnr integer?
+---@param bufnr integer?
+M.jump_to_parent = function(jump_to_line, winnr, bufnr)
+    local _, cursor_col = unpack(api.nvim_win_get_cursor(winnr or state.winnr))
 
-    local buf_line_count = api.nvim_buf_line_count(state.bufnr)
+    local buf_line_count = api.nvim_buf_line_count(bufnr or state.bufnr)
 
     if jump_to_line <= buf_line_count then
-        local line_len = #api.nvim_buf_get_lines(state.bufnr, jump_to_line - 1, jump_to_line, true)[1]
+        local line_len = #api.nvim_buf_get_lines(bufnr or state.bufnr, jump_to_line - 1, jump_to_line, true)[1]
         local col = math.min(cursor_col, line_len)
 
-        api.nvim_win_set_cursor(state.winnr, { jump_to_line, col })
+        api.nvim_win_set_cursor(winnr or state.winnr, { jump_to_line, col })
     end
 end
 

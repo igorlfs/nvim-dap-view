@@ -1,9 +1,9 @@
 local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 
-local api = vim.api
-
 local M = {}
+
+local api = vim.api
 
 ---@param tabpage integer
 ---@param term? boolean
