@@ -25,6 +25,20 @@
 
 ---@class dapview.VirtualTextConfigPartial : dapview.VirtualTextConfig, {}
 
+---@class dapview.HoverKeymapsConfigPartial : dapview.HoverKeymapsConfig, {}
+
+---@class dapview.HelpKeymapsConfigPartial : dapview.HelpKeymapsConfig, {}
+
+---@class dapview.ConsoleKeymapsConfigPartial : dapview.ConsoleKeymapsConfig, {}
+
+---@class dapview.BaseKeymapsConfigPartial : dapview.BaseKeymapsConfig, {}
+
+---@class dapview.KeymapsConfigPartial : dapview.KeymapsConfig, {}
+---@field hover? dapview.HoverKeymapsConfigPartial
+---@field help? dapview.HelpKeymapsConfigPartial
+---@field console? dapview.ConsoleKeymapsConfigPartial
+---@field base? dapview.BaseKeymapsConfigPartial
+
 ---@class dapview.Config : dapview.ConfigStrict, {}
 ---@field winbar? dapview.WinbarConfigPartial
 ---@field windows? dapview.WindowsConfigPartial

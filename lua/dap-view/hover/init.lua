@@ -1,4 +1,5 @@
 local state = require("dap-view.state")
+local setup = require("dap-view.setup")
 
 local keymap = require("dap-view.views.keymaps.util").keymap
 
@@ -32,9 +33,11 @@ end
 
 ---@param bufnr integer
 M.set_keymaps = function(bufnr)
-    keymap("q", "<C-w>q", bufnr)
+    local keys = setup.config.keymaps.hover
 
-    keymap({ "<CR>", "<2-LeftMouse>" }, function()
+    keymap(keys.quit, "<C-w>q", bufnr)
+
+    keymap(keys.toggle, function()
         local cursor_line = api.nvim_win_get_cursor(state.hover_winnr)[1]
 
         coroutine.wrap(function()
@@ -49,13 +52,13 @@ M.set_keymaps = function(bufnr)
         end)()
     end, bufnr)
 
-    keymap("[[", function()
+    keymap(keys.jump_to_parent, function()
         local cursor_line = api.nvim_win_get_cursor(state.hover_winnr)[1]
 
         require("dap-view.hover.actions").jump_to_parent(cursor_line)
     end, bufnr)
 
-    keymap("s", function()
+    keymap(keys.set_value, function()
         local cursor_line = api.nvim_win_get_cursor(state.hover_winnr)[1]
 
         coroutine.wrap(function()

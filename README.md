@@ -71,7 +71,7 @@ Start a regular debugging session. When desired, you can use `:DapViewOpen` to s
 
 Once you're done debugging, you can close the plugin with `:DapViewClose` and then terminate your session as usual.
 
-There's a lot more you can do: `nvim-dap-view` is highly customizable. To learn all the options, commands, tips and tricks, visit the full documentation on the [website](https://igorlfs.github.io/nvim-dap-view/home).
+There's a lot more you can do: `nvim-dap-view` is highly customizable. To learn all the options, commands, tips and tricks, visit the full documentation on the [website](https://igorlfs.github.io/nvim-dap-view/home) or use the built-in help doc via `:help dap-view.txt`.
 
 ## Contributing
 

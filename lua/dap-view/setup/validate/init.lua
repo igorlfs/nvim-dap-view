@@ -8,6 +8,7 @@ function M.validate(config)
         help = { config.help, "table" },
         render = { config.render, "table" },
         switchbuf = { config.switchbuf, { "string", "function" } },
+        keymaps = { config.keymaps, { "table" } },
         icons = { config.icons, "table" },
         virtual_text = { config.virtual_text, "table" },
         auto_toggle = { config.auto_toggle, { "boolean", "string" } },

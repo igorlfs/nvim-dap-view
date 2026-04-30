@@ -67,6 +67,29 @@ return {
             hide = {},
         },
     },
+    -- WIP: some keymaps are not overrideable yet!
+    keymaps = {
+        hover = {
+            quit = "q",
+            toggle = { "<CR>", "<2-LeftMouse>" },
+            jump_to_parent = "[[",
+            set_value = "s",
+        },
+        help = {
+            quit = "q",
+        },
+        console = {
+            next_session = "]s",
+            prev_session = "[s",
+        },
+        base = {
+            next_view = "]v",
+            prev_view = "[v",
+            jump_to_first = "[V",
+            jump_to_last = "]V",
+            help = "g?",
+        },
+    },
     icons = {
         collapsed = "󰅂 ",
         disabled = "",

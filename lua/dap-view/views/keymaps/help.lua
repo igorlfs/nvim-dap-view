@@ -1,6 +1,8 @@
 local setup = require("dap-view.setup")
 local util = require("dap-view.util")
 
+local keymap = require("dap-view.views.keymaps.util").keymap
+
 local M = {}
 
 local api = vim.api
@@ -20,7 +22,7 @@ local create_win = function(height)
         height = height,
         border = setup.config.help.border,
         style = "minimal",
-        title = "Keymaps",
+        title = "Default Keymaps",
         title_pos = "center",
     })
 
@@ -58,6 +60,11 @@ M.show_help = function()
         "### Console",
         "  `]s`  Go to next session",
         "  `[s`  Go to previous session",
+        "## Hover",
+        "`<CR>`  Expand or collapse a variable",
+        "   `s`  Set the value of a variable",
+        "  `[[`  Jump to parent",
+        "   `q`  Close",
         "## Navigation",
         "  `]v`  Go to next view",
         "  `[v`  Go to previous view",
@@ -69,9 +76,9 @@ M.show_help = function()
 
     local help_buf, help_win = create_win(#content)
 
-    vim.keymap.set("n", "q", function()
+    keymap(setup.config.keymaps.help.quit, function()
         api.nvim_win_close(help_win, true)
-    end, { buffer = help_buf })
+    end, help_buf)
 
     util.set_lines(help_buf, 0, -1, true, content)
 

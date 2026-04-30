@@ -8,6 +8,8 @@ There are also some default keybindings for navigating to other views.
 
 The help window itself has only 1 mapping: it can be closed with `q`.
 
+**Some keymaps are overridable**. Check the [config](configuration) for details.
+
 | Key    | Action                                       |
 | ------ | -------------------------------------------- |
 | **Threads**                                           |

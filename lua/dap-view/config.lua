@@ -93,6 +93,34 @@ local M = {}
 ---@field threads dapview.RenderThreadsConfig
 ---@field breakpoints dapview.RenderBreakpointsConfig
 
+---@alias dapview.Keymap string|string[]
+
+---@class dapview.HoverKeymapsConfig
+---@field quit dapview.Keymap
+---@field toggle dapview.Keymap
+---@field jump_to_parent dapview.Keymap
+---@field set_value dapview.Keymap
+
+---@class dapview.HelpKeymapsConfig
+---@field quit dapview.Keymap
+
+---@class dapview.ConsoleKeymapsConfig
+---@field next_session dapview.Keymap
+---@field prev_session dapview.Keymap
+
+---@class dapview.BaseKeymapsConfig
+---@field next_view dapview.Keymap
+---@field prev_view dapview.Keymap
+---@field jump_to_first dapview.Keymap
+---@field jump_to_last dapview.Keymap
+---@field help dapview.Keymap
+
+---@class dapview.KeymapsConfig
+---@field hover dapview.HoverKeymapsConfig
+---@field help dapview.HelpKeymapsConfig
+---@field console dapview.ConsoleKeymapsConfig
+---@field base dapview.BaseKeymapsConfig
+
 ---@class dapview.VirtualTextConfig
 ---@field enabled boolean
 ---@field format fun(variable: dap.Variable, frame: dap.StackFrame, node: TSNode): string?
@@ -105,6 +133,7 @@ local M = {}
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
 ---@field render dapview.RenderConfig
+---@field keymaps dapview.KeymapsConfig
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field virtual_text dapview.VirtualTextConfig
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
@@ -153,6 +182,28 @@ M.config = {
             size = 0.5,
             position = "left",
             hide = {},
+        },
+    },
+    keymaps = {
+        hover = {
+            quit = "q",
+            toggle = { "<CR>", "<2-LeftMouse>" },
+            jump_to_parent = "[[",
+            set_value = "s",
+        },
+        help = {
+            quit = "q",
+        },
+        console = {
+            next_session = "]s",
+            prev_session = "[s",
+        },
+        base = {
+            next_view = "]v",
+            prev_view = "[v",
+            jump_to_first = "[V",
+            jump_to_last = "]V",
+            help = "g?",
         },
     },
     icons = {
