@@ -4,15 +4,20 @@ local M = {}
 
 ---@param lhs string|string[]
 ---@param rhs string|function
----@param buf? integer
+---@param opts? vim.keymap.set.Opts
 ---@param mode? string|string[]
-function M.keymap(lhs, rhs, buf, mode)
+function M.keymap(lhs, rhs, opts, mode)
     mode = mode or "n"
     if type(lhs) == "string" then
         lhs = { lhs }
     end
+
+    opts = opts or {}
+    opts.nowait = true
+    opts.buf = opts.buf or state.bufnr
+
     for _, v in ipairs(lhs) do
-        vim.keymap.set(mode, v, rhs, { buffer = buf or state.bufnr, nowait = true })
+        vim.keymap.set(mode, v, rhs, opts)
     end
 end
 

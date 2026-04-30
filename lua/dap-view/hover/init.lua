@@ -31,11 +31,11 @@ M.set_buf_options = function(bufnr)
     buf.filetype = "dap-view-hover"
 end
 
----@param bufnr integer
-M.set_keymaps = function(bufnr)
+---@param buf integer
+M.set_keymaps = function(buf)
     local keys = setup.config.keymaps.hover
 
-    keymap(keys.quit, "<C-w>q", bufnr)
+    keymap(keys.quit, "<C-w>q", { buf = buf, desc = "close" })
 
     keymap(keys.toggle, function()
         local cursor_line = api.nvim_win_get_cursor(state.hover_winnr)[1]
@@ -44,19 +44,19 @@ M.set_keymaps = function(bufnr)
             if require("dap-view.hover.actions").expand_or_collapse(cursor_line) then
                 require("dap-view.hover.eval").evaluate_expression(state.hover)
 
-                local line, width = unpack(require("dap-view.hover.view").show(bufnr))
+                local line, width = unpack(require("dap-view.hover.view").show(buf))
 
                 api.nvim_win_set_height(state.hover_winnr, line)
                 api.nvim_win_set_width(state.hover_winnr, width)
             end
         end)()
-    end, bufnr)
+    end, { buf = buf, desc = "toggle" })
 
     keymap(keys.jump_to_parent, function()
         local cursor_line = api.nvim_win_get_cursor(state.hover_winnr)[1]
 
         require("dap-view.hover.actions").jump_to_parent(cursor_line)
-    end, bufnr)
+    end, { buf = buf, desc = "jump to parent" })
 
     keymap(keys.set_value, function()
         local cursor_line = api.nvim_win_get_cursor(state.hover_winnr)[1]
@@ -66,13 +66,13 @@ M.set_keymaps = function(bufnr)
                 -- This is a little redundant
                 require("dap-view.hover.eval").evaluate_expression(state.hover)
 
-                local line, width = unpack(require("dap-view.hover.view").show(bufnr))
+                local line, width = unpack(require("dap-view.hover.view").show(buf))
 
                 api.nvim_win_set_height(state.hover_winnr, line)
                 api.nvim_win_set_width(state.hover_winnr, width)
             end
         end)()
-    end, bufnr)
+    end, { buf = buf, desc = "set value" })
 end
 
 ---@param bufnr integer
