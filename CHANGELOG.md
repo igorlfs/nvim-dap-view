@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.1...v1.2.0) (2026-04-30)
+
+
+### Features
+
+* configurable keymaps (WIP) ([#159](https://github.com/igorlfs/nvim-dap-view/issues/159)) ([10139a3](https://github.com/igorlfs/nvim-dap-view/commit/10139a388619ab5d5b1107fd3f721ed23ecfbb73))
+* highlight "asyncfunction" var type ([01ad453](https://github.com/igorlfs/nvim-dap-view/commit/01ad4537bac9a0843e72c9615fa7fcaa69b119eb))
+* highlight "undefined" var type ([3d4c116](https://github.com/igorlfs/nvim-dap-view/commit/3d4c116afe5e22e500dc2b64d391473f968758ae))
+* hover ([6e7c49a](https://github.com/igorlfs/nvim-dap-view/commit/6e7c49a107f70af237543413690a60a63d8d7725))
+* **keymaps:** add descriptions (WIP) ([#164](https://github.com/igorlfs/nvim-dap-view/issues/164)) ([516c118](https://github.com/igorlfs/nvim-dap-view/commit/516c1187cbae16bc08593bbcb0c9b03d53048fdc))
+* **virtual-text:** eol position, prefix and suffix functions ([#171](https://github.com/igorlfs/nvim-dap-view/issues/171)) ([134c018](https://github.com/igorlfs/nvim-dap-view/commit/134c018903abc2c9b6fd5fc34c64d906db468c9f))
+* **winbar:** configurable separators ([#173](https://github.com/igorlfs/nvim-dap-view/issues/173)) ([1dd4ba2](https://github.com/igorlfs/nvim-dap-view/commit/1dd4ba2307245ca9517a4b9d99f3bf80830e4397))
+
+
+### Bug Fixes
+
+* **autoscroll:** handle early win closing ([#178](https://github.com/igorlfs/nvim-dap-view/issues/178)) ([57961b3](https://github.com/igorlfs/nvim-dap-view/commit/57961b30d2d4054d2e1f549a2edad2e47731007f))
+* strip whitespace (newlines only) when strictly necessary ([#179](https://github.com/igorlfs/nvim-dap-view/issues/179)) ([dd43736](https://github.com/igorlfs/nvim-dap-view/commit/dd43736f30ed70571a02e8c560ab69746ad7a1ed))
+* **virtual-text:** clear extmarks from all bufs on exit ([0a0cafc](https://github.com/igorlfs/nvim-dap-view/commit/0a0cafc020137c7111a8212cdd9cd24b0f7650da))
+* **virtual-text:** handle injections ([6be5247](https://github.com/igorlfs/nvim-dap-view/commit/6be52475fe770495a3ca20b5beec090c5d02a126))
+
 ## [1.1.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.0...v1.1.1) (2026-04-12)
 
 
