@@ -86,8 +86,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
         state.variable_path_to_evaluate_name[path] = variable.evaluateName
         state.variable_path_to_parent_reference[path] = variables_reference
 
-        local type_hl_group = (updated and "WatchUpdated")
-            or (variable.type and hl.types_to_hl_group[variable.type:lower()])
+        local type_hl_group = (updated and "WatchUpdated") or hl.hl_from_variable(variable)
 
         local hl_start = depth + #prefix
         canvas.highlights[#canvas.highlights + 1] = {

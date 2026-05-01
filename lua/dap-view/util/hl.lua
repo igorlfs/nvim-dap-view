@@ -42,4 +42,19 @@ M.types_to_hl_group = {
     asyncfunction = "Function",
 }
 
+---@param v dap.Variable|dap.EvaluateResponse
+M.hl_from_variable = function(v)
+    local hl = v.type and M.types_to_hl_group[v.type:lower()]
+
+    if
+        globals.HAS_0_12
+        and v.presentationHint
+        and vim.tbl_contains(v.presentationHint.attributes or {}, "readOnly")
+    then
+        hl = hl .. "Dim"
+    end
+
+    return hl
+end
+
 return M

@@ -2,8 +2,6 @@ local globals = require("dap-view.globals")
 
 local api = vim.api
 
-local has_0_12 = vim.fn.has("nvim-0.12") == 1
-
 ---@param name string
 ---@param link string?
 ---@param opts vim.api.keyset.highlight?
@@ -54,7 +52,7 @@ local define_base_links = function()
     hl_create("Function", "Function")
     hl_create("Constant", "Constant")
 
-    if not has_0_12 then
+    if not globals.HAS_0_12 then
         return
     end
 

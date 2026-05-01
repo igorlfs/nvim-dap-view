@@ -79,7 +79,7 @@ local function show_variables(variables_reference, parent_path, line, depth, can
         state.hover_path_to_evaluate_name[path] = variable.evaluateName
         state.hover_path_to_parent_reference[path] = variables_reference
 
-        local type_hl_group = variable.type and hl.types_to_hl_group[variable.type:lower()]
+        local type_hl_group = hl.hl_from_variable(variable)
 
         local hl_start = depth + #prefix
         canvas.highlights[#canvas.highlights + 1] = {
@@ -135,7 +135,7 @@ M.show = function(bufnr)
 
             canvas.contents[#canvas.contents + 1] = trimmed_content
 
-            local type_hl_group = hover.response.type and hl.types_to_hl_group[hover.response.type:lower()]
+            local type_hl_group = hl.hl_from_variable(hover.response)
 
             local hl_start = #prefix
             canvas.highlights[#canvas.highlights + 1] = {
@@ -157,7 +157,7 @@ M.show = function(bufnr)
 
             width = #result
 
-            local type_hl_group = hover.response.type and hl.types_to_hl_group[hover.response.type:lower()]
+            local type_hl_group = hl.hl_from_variable(hover.response)
 
             canvas.highlights[#canvas.highlights + 1] = {
                 type_hl_group and { type_hl_group, { height, 0 }, { height, -1 } } or nil,

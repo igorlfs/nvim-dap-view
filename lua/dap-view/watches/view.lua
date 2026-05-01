@@ -38,8 +38,7 @@ local function show_variables(children, reference, line, depth)
         local hl_start = depth + #prefix
         hl.hl_range("WatchExpr", { line, hl_start }, { line, hl_start + #variable.name })
 
-        local hl_group = (child.updated and "WatchUpdated")
-            or (variable.type and hl.types_to_hl_group[variable.type:lower()])
+        local hl_group = (child.updated and "WatchUpdated") or hl.hl_from_variable(variable)
 
         if hl_group then
             hl.hl_range(hl_group, { line, hl_start + #variable.name + 3 }, { line, -1 })
@@ -131,7 +130,7 @@ M.show = function()
 
             local hl_group = err and "WatchError"
                 or view.updated and "WatchUpdated"
-                or response and response.type and hl.types_to_hl_group[response.type:lower()]
+                or response and hl.hl_from_variable(response)
 
             if hl_group then
                 local hl_start = #prefix + #expression + 3
