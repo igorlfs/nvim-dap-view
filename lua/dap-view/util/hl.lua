@@ -48,6 +48,7 @@ M.hl_from_variable = function(v)
 
     if
         globals.HAS_0_12
+        and hl
         and v.presentationHint
         and vim.tbl_contains(v.presentationHint.attributes or {}, "readOnly")
     then
