@@ -106,9 +106,12 @@ M.set_action_keymaps = function(bufnr)
                 vim.notify_once("View '" .. view .. "' not found, skipping setup", log.WARN)
                 winbar.sections[k] = nil
             else
+                local label = type(section.label) == "string" and section.label or nil
+                ---@cast label string?
+
                 vim.keymap.set("n", section.keymap, function()
                     M.wrapped_action(view)
-                end, { buffer = bufnr or state.bufnr })
+                end, { buffer = bufnr or state.bufnr, desc = label })
             end
         end
     end
