@@ -39,7 +39,7 @@ M.switch_to_view = function(view, skip_restore_cursor)
     if
         not vim.tbl_contains(
             { "scopes", "watches", "threads", "exceptions", "breakpoints", "sessions" },
-            state.current_section
+            state.last_section
         )
     then
         api.nvim_win_call(state.winnr, function()
@@ -49,7 +49,7 @@ M.switch_to_view = function(view, skip_restore_cursor)
         end)
     end
 
-    require("dap-view.options.winbar").refresh_winbar(view)
+    require("dap-view.options.winbar").refresh_winbar()
 
     require("dap-view." .. view .. ".view").show()
 

@@ -87,4 +87,24 @@ M.jump_to_parent = function(jump_to_line, winnr, bufnr)
     end
 end
 
+---@param view dapview.Section
+M.delete_keymaps = function(view)
+    for _, key in pairs(setup.config.keymaps[view] or {}) do
+        require("dap-view.views.keymaps.util").keymap_del(key)
+    end
+end
+
+---@param view dapview.Section
+M.set_keymaps = function(view)
+    for k, key in pairs(setup.config.keymaps[view] or {}) do
+        local keymaps = require("dap-view." .. view .. ".keymaps")
+
+        require("dap-view.views.keymaps.util").keymap(
+            key,
+            keymaps[k].action,
+            { buf = state.bufnr, desc = keymaps[k].desc }
+        )
+    end
+end
+
 return M

@@ -86,8 +86,8 @@ M.show_help = function()
 
     local buf = vim.bo[help_buf]
 
+    buf.buftype = "nofile"
     buf.filetype = "dap-view-help"
-    buf.modifiable = false
 
     local win = vim.wo[help_win][0]
 

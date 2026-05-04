@@ -10,7 +10,7 @@ local M = {}
 
 ---@alias dapview.Position 'right' | 'left' | 'above' | 'below'
 
----@alias dapview.VirtualTextPosition "eol"|"eol_right_align"|"inline"
+---@alias dapview.VirtualTextPosition "eol" | "eol_right_align" | "inline"
 
 ---@alias dapview.VirtualTextFormatter fun(position: dapview.VirtualTextPosition, node: TSNode, bufnr: integer, var_index: integer, num_var_line: integer): string?
 
@@ -95,12 +95,6 @@ local M = {}
 
 ---@alias dapview.Keymap string|string[]
 
----@class dapview.HoverKeymapsConfig
----@field quit dapview.Keymap
----@field toggle dapview.Keymap
----@field jump_to_parent dapview.Keymap
----@field set_value dapview.Keymap
-
 ---@class dapview.HelpKeymapsConfig
 ---@field quit dapview.Keymap
 
@@ -115,10 +109,49 @@ local M = {}
 ---@field jump_to_last dapview.Keymap
 ---@field help dapview.Keymap
 
+---@class dapview.ThreadsKeymapsConfig
+---@field toggle_subtle_frames dapview.Keymap
+---@field filter dapview.Keymap
+---@field invert_filter dapview.Keymap
+---@field jump_to_frame dapview.Keymap
+---@field force_jump dapview.Keymap
+
+---@class dapview.ExceptionsKeymapsConfig
+---@field toggle_filter dapview.Keymap
+
+---@class dapview.SessionsKeymapsConfig
+---@field switch_session dapview.Keymap
+
+---@class dapview.BreakpointsKeymapsConfig
+---@field jump_to_breakpoint dapview.Keymap
+---@field delete_breakpoint dapview.Keymap
+---@field force_jump dapview.Keymap
+
+---@class dapview.ScopesKeymapsConfig
+---@field toggle dapview.Keymap
+---@field jump_to_parent dapview.Keymap
+---@field set_value dapview.Keymap
+
+---@class dapview.HoverKeymapsConfig : dapview.ScopesKeymapsConfig
+---@field quit dapview.Keymap
+
+---@class dapview.WatchesKeymapsConfig : dapview.ScopesKeymapsConfig
+---@field copy_value dapview.Keymap
+---@field delete_expression dapview.Keymap
+---@field append_expression dapview.Keymap
+---@field insert_expression dapview.Keymap
+---@field edit_expression dapview.Keymap
+
 ---@class dapview.KeymapsConfig
+---@field scopes dapview.ScopesKeymapsConfig
+---@field watches dapview.WatchesKeymapsConfig
 ---@field hover dapview.HoverKeymapsConfig
 ---@field help dapview.HelpKeymapsConfig
 ---@field console dapview.ConsoleKeymapsConfig
+---@field threads dapview.ThreadsKeymapsConfig
+---@field exceptions dapview.ExceptionsKeymapsConfig
+---@field sessions dapview.SessionsKeymapsConfig
+---@field breakpoints dapview.BreakpointsKeymapsConfig
 ---@field base dapview.BaseKeymapsConfig
 
 ---@class dapview.VirtualTextConfig
@@ -185,6 +218,21 @@ M.config = {
         },
     },
     keymaps = {
+        scopes = {
+            toggle = { "<CR>", "<2-LeftMouse>" },
+            jump_to_parent = "[[",
+            set_value = "s",
+        },
+        watches = {
+            toggle = { "<CR>", "<2-LeftMouse>" },
+            jump_to_parent = "[[",
+            set_value = "s",
+            copy_value = "c",
+            delete_expression = "d",
+            append_expression = "a",
+            insert_expression = "i",
+            edit_expression = "e",
+        },
         hover = {
             quit = "q",
             toggle = { "<CR>", "<2-LeftMouse>" },
@@ -197,6 +245,24 @@ M.config = {
         console = {
             next_session = "]s",
             prev_session = "[s",
+        },
+        threads = {
+            toggle_subtle_frames = "t",
+            filter = "f",
+            invert_filter = "o",
+            jump_to_frame = { "<CR>", "<2-LeftMouse>" },
+            force_jump = "<C-w><CR>",
+        },
+        exceptions = {
+            toggle_filter = { "<CR>", "<2-LeftMouse>" },
+        },
+        sessions = {
+            switch_session = { "<CR>", "<2-LeftMouse>" },
+        },
+        breakpoints = {
+            delete_breakpoint = "d",
+            jump_to_breakpoint = { "<CR>", "<2-LeftMouse>" },
+            force_jump = "<C-w><CR>",
         },
         base = {
             next_view = "]v",

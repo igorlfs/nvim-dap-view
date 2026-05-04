@@ -38,15 +38,47 @@ local custom_action_wrapper = function(view)
         end)
     end
 
-    M.refresh_winbar(view)
+    M.refresh_winbar()
 end
 
----@param view dapview.Section
----@param action fun(): nil
-local wrapped_action = function(view, action)
+---@param view? dapview.Section
+---@param force_keymap? boolean
+M.wrapped_action = function(view, force_keymap)
     if not util.is_win_valid(state.winnr) then
         return
     end
+
+    local winbar = setup.config.winbar
+    view = view or winbar.default_section
+
+    local section = winbar.custom_sections[view] or winbar.base_sections[view]
+    if not section then
+        vim.notify_once("View '" .. view .. "' not found", log.WARN)
+        return
+    end
+    local action = section.action
+
+    state.last_section = state.current_section
+    state.current_section = view
+
+    local new_view = state.last_section ~= state.current_section
+
+    if new_view and state.last_section then
+        require("dap-view.views.util").delete_keymaps(state.last_section)
+    end
+
+    -- Assigning the keymaps when a new view is selected is not enough.
+    -- When "follow_tab" is enabled, the "TabEnter" callback may trigger `open`
+    -- If it does, it deletes and recreates the buffer. Therefore, the keymaps are gone,
+    -- without having changed the view.
+    --
+    -- As a safeguard, always reassign keymaps on open.
+    --
+    -- This also handles reassigning when restoring a vim session.
+    if new_view or force_keymap then
+        require("dap-view.views.util").set_keymaps(state.current_section)
+    end
+
     if setup.config.winbar.custom_sections[view] ~= nil then
         ---@cast view dapview.CustomSection
         custom_action_wrapper(view)
@@ -70,12 +102,12 @@ M.set_action_keymaps = function(bufnr)
         for k, view in pairs(winbar.sections) do
             local section = winbar.custom_sections[view] or winbar.base_sections[view]
 
-            if not section then
+            if section == nil then
                 vim.notify_once("View '" .. view .. "' not found, skipping setup", log.WARN)
                 winbar.sections[k] = nil
             else
                 vim.keymap.set("n", section.keymap, function()
-                    wrapped_action(view, section.action)
+                    M.wrapped_action(view)
                 end, { buffer = bufnr or state.bufnr })
             end
         end
@@ -86,8 +118,7 @@ end
 M.on_click = function(idx)
     local winbar = setup.config.winbar
     local view = winbar.sections[idx]
-    local section = winbar.custom_sections[view] or winbar.base_sections[view]
-    wrapped_action(view, section.action)
+    M.wrapped_action(view)
 end
 
 M.set_winbar_opt = function()
@@ -158,19 +189,13 @@ M.set_winbar_opt = function()
     end
 end
 
----@param view dapview.Section
-M.show_content = function(view)
-    local winbar = setup.config.winbar
-    local section = winbar.custom_sections[view] or winbar.base_sections[view]
-    wrapped_action(view, section.action)
-end
-
 ---@param new_view? dapview.Section
 M.refresh_winbar = function(new_view)
+    if new_view then
+        state.last_section = state.current_section
+        state.current_section = new_view
+    end
     if setup.config.winbar.show then
-        if new_view then
-            state.current_section = new_view
-        end
         M.set_winbar_opt()
     end
 end

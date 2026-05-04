@@ -25,10 +25,6 @@ M.set_keymaps = function(buf)
         require("dap-view").navigate({ count = -vim._maxint, wrap = false })
     end, { buf = buf, desc = "jump to first view" })
 
-    if not buf then
-        require("dap-view.views.keymaps.views").views_keymaps()
-    end
-
     keymap(keys.help, function()
         help.show_help()
     end, { buf = buf, desc = "show help" })

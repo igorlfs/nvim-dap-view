@@ -71,11 +71,7 @@ end
 
 ---@param value string
 ---@param line number
-M.set_watch_expr = function(value, line)
-    if not guard.expect_stopped() then
-        return
-    end
-
+local set_expr = function(value, line)
     local expression_view = state.expression_views_by_line[line]
 
     if expression_view then
@@ -98,9 +94,39 @@ M.set_watch_expr = function(value, line)
     end
 end
 
+---@param line integer
+M.set_value = function(line)
+    -- Can only set value if stopped
+    if not require("dap-view.guard").expect_stopped() then
+        return
+    end
+
+    local get_default = function()
+        local expression_view = state.expression_views_by_line[line]
+        if expression_view and expression_view.view and expression_view.view.response then
+            return expression_view.view.response.result
+        end
+
+        local variable_reference = state.variable_views_by_line[line]
+        if variable_reference then
+            return variable_reference.view.variable.value
+        end
+
+        return ""
+    end
+
+    local default = get_default()
+
+    vim.ui.input({ prompt = "New value: ", default = default }, function(input)
+        if input then
+            set_expr(input, line)
+        end
+    end)
+end
+
 ---@param expr string
 ---@param line number
-M.edit_watch_expr = function(expr, line)
+local edit_expr = function(expr, line)
     if #expr == 0 or not guard.expect_stopped() then
         return false
     end
@@ -115,6 +141,23 @@ M.edit_watch_expr = function(expr, line)
     eval.evaluate_expression(expr, expression_view.view.expanded)
 
     return true
+end
+
+---@param line integer
+M.edit_watch_expr = function(line)
+    local expression_view = state.expression_views_by_line[line]
+
+    if expression_view then
+        vim.ui.input({ prompt = "Expression: ", default = expression_view.expression }, function(input)
+            if input then
+                coroutine.wrap(function()
+                    if edit_expr(input, line) then
+                        require("dap-view.views").switch_to_view("watches")
+                    end
+                end)()
+            end
+        end)
+    end
 end
 
 ---@param line number

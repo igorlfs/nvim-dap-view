@@ -21,4 +21,21 @@ function M.keymap(lhs, rhs, opts, mode)
     end
 end
 
+---@param lhs string|string[]
+---@param opts? vim.keymap.del.Opts
+---@param mode? string|string[]
+function M.keymap_del(lhs, opts, mode)
+    mode = mode or "n"
+    if type(lhs) == "string" then
+        lhs = { lhs }
+    end
+
+    opts = opts or {}
+    opts.buf = opts.buf or state.bufnr
+
+    for _, v in ipairs(lhs) do
+        vim.keymap.del(mode, v, opts)
+    end
+end
+
 return M

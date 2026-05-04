@@ -85,7 +85,7 @@ api.nvim_create_autocmd("TabEnter", {
         state.term_winnr = term_winnr
 
         if winnr ~= nil then
-            winbar.show_content(state.current_section)
+            winbar.wrapped_action(state.current_section)
         end
     end,
 })

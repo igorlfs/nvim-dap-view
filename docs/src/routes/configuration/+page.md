@@ -67,8 +67,22 @@ return {
             hide = {},
         },
     },
-    -- WIP: some keymaps are not overrideable yet!
     keymaps = {
+        scopes = {
+            toggle = { "<CR>", "<2-LeftMouse>" },
+            jump_to_parent = "[[",
+            set_value = "s",
+        },
+        watches = {
+            toggle = { "<CR>", "<2-LeftMouse>" },
+            jump_to_parent = "[[",
+            set_value = "s",
+            copy_value = "c",
+            delete_expression = "d",
+            append_expression = "a",
+            insert_expression = "i",
+            edit_expression = "e",
+        },
         hover = {
             quit = "q",
             toggle = { "<CR>", "<2-LeftMouse>" },
@@ -81,6 +95,24 @@ return {
         console = {
             next_session = "]s",
             prev_session = "[s",
+        },
+        threads = {
+            toggle_subtle_frames = "t",
+            filter = "f",
+            invert_filter = "o",
+            jump_to_frame = { "<CR>", "<2-LeftMouse>" },
+            force_jump = "<C-w><CR>",
+        },
+        exceptions = {
+            toggle_filter = { "<CR>", "<2-LeftMouse>" },
+        },
+        sessions = {
+            switch_session = { "<CR>", "<2-LeftMouse>" },
+        },
+        breakpoints = {
+            delete_breakpoint = "d",
+            jump_to_breakpoint = { "<CR>", "<2-LeftMouse>" },
+            force_jump = "<C-w><CR>",
         },
         base = {
             next_view = "]v",

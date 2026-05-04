@@ -15,7 +15,7 @@ M.show = function()
 
     require("dap-view.views.keymaps").set_keymaps(repl_buf)
 
-    winbar.refresh_winbar("repl")
+    winbar.refresh_winbar()
 end
 
 return M

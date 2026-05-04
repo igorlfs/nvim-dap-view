@@ -25,6 +25,10 @@
 
 ---@class dapview.VirtualTextConfigPartial : dapview.VirtualTextConfig, {}
 
+---@class dapview.ScopesKeymapsConfigPartial : dapview.ScopesKeymapsConfig, {}
+
+---@class dapview.WatchesKeymapsConfigPartial : dapview.WatchesKeymapsConfig, {}
+
 ---@class dapview.HoverKeymapsConfigPartial : dapview.HoverKeymapsConfig, {}
 
 ---@class dapview.HelpKeymapsConfigPartial : dapview.HelpKeymapsConfig, {}
@@ -33,10 +37,24 @@
 
 ---@class dapview.BaseKeymapsConfigPartial : dapview.BaseKeymapsConfig, {}
 
+---@class dapview.ThreadsKeymapsConfigPartial : dapview.ThreadsKeymapsConfig, {}
+
+---@class dapview.ExceptionsKeymapsConfigPartial : dapview.ExceptionsKeymapsConfig, {}
+
+---@class dapview.SessionsKeymapsConfigPartial : dapview.SessionsKeymapsConfig, {}
+
+---@class dapview.BreakpointsKeymapsConfigPartial : dapview.BreakpointsKeymapsConfig, {}
+
 ---@class dapview.KeymapsConfigPartial : dapview.KeymapsConfig, {}
+---@field scopes? dapview.ScopesKeymapsConfigPartial
+---@field watches? dapview.ScopesKeymapsConfigPartial
 ---@field hover? dapview.HoverKeymapsConfigPartial
 ---@field help? dapview.HelpKeymapsConfigPartial
 ---@field console? dapview.ConsoleKeymapsConfigPartial
+---@field threads? dapview.ThreadsKeymapsConfigPartial
+---@field exceptions? dapview.ExceptionsKeymapsConfigPartial
+---@field sessions? dapview.SessionsKeymapsConfigPartial
+---@field breakpoints? dapview.BreakpointsKeymapsConfigPartial
 ---@field base? dapview.BaseKeymapsConfigPartial
 
 ---@class dapview.Config : dapview.ConfigStrict, {}

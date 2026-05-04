@@ -174,10 +174,8 @@ M.open = function(hide_terminal)
     require("dap-view.views.options").set_options()
     require("dap-view.views.keymaps").set_keymaps()
 
-    state.current_section = state.current_section or setup.config.winbar.default_section
-
     winbar.set_action_keymaps()
-    winbar.show_content(state.current_section)
+    winbar.wrapped_action(state.current_section, true)
 
     -- Clean up states dap-view buffer is wiped out
     autocmd.quit_buf_autocmd(state.bufnr, function()
@@ -256,7 +254,7 @@ M.add_expr = function(expr, default_expanded)
     local expr_ = expr or require("dap-view.util.exprs").get_current_expr()
     coroutine.wrap(function()
         if require("dap-view.watches.actions").add_watch_expr(expr_, default_expanded) then
-            require("dap-view.views").switch_to_view("watches")
+            winbar.wrapped_action("watches")
         end
     end)()
 end
@@ -269,7 +267,7 @@ M.jump_to_view = function(view)
     end
     if util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
         api.nvim_set_current_win(state.winnr)
-        winbar.show_content(view)
+        winbar.wrapped_action(view)
     else
         vim.notify("Can't jump to view: couldn't find the window")
     end
@@ -284,7 +282,7 @@ M.show_view = function(view)
     if state.current_section == view then
         M.jump_to_view(view)
     elseif util.is_buf_valid(state.bufnr) and util.is_win_valid(state.winnr) then
-        winbar.show_content(view)
+        winbar.wrapped_action(view)
     else
         vim.notify("Can't show view: couldn't find the window")
     end
@@ -343,7 +341,7 @@ M.navigate = function(opts)
         ---@cast array dapview.Section[]
         local new_view = array[sorted_keys[new_idx]]
 
-        winbar.show_content(new_view)
+        winbar.wrapped_action(new_view)
     end
 end
 

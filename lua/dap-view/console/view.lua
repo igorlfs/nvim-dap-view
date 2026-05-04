@@ -233,6 +233,7 @@ M.setup_term_buf = function()
     end
 
     require("dap-view.console.keymaps").set_keymaps(term_bufnr)
+    require("dap-view.views.keymaps").set_keymaps(term_bufnr)
 
     scroll.setup_autoscroll(term_bufnr)
 end
