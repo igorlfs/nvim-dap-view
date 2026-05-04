@@ -30,57 +30,58 @@ local create_win = function(height)
 end
 
 M.show_help = function()
-    local content = {
-        "## Views",
-        "### Scopes",
-        "`<CR>`  Expand or collapse a variable",
-        "   `s`  Set the value of a variable",
-        "  `[[`  Jump to parent",
-        "### Threads",
-        "`<CR>`  Jump to a frame. Use `<C-w><CR>` to force a specific behavior.",
-        "   `t`  Toggle subtle frames",
-        "   `f`  Filter frames (via Lua patterns)",
-        "   `o`  Omit results matching filter (invert filter)",
-        "### Breakpoints",
-        "`<CR>`  Jump to a breakpoint. Use `<C-w><CR>` to force a specific behavior.",
-        "   `d`  Delete a breakpoint",
-        "### Watches",
-        "`<CR>`  Expand or collapse a variable or expression",
-        "   `a`  Append an expression",
-        "   `i`  Insert an expression",
-        "   `d`  Delete an expression",
-        "   `e`  Edit an expression",
-        "   `c`  Copy the value of an expression or variable",
-        "   `s`  Set the value of an expression or variable",
-        "  `[[`  Jump to parent",
-        "### Exceptions",
-        "`<CR>`  Toggle filter",
-        "### Sessions",
-        "`<CR>`  Switch to another session",
-        "### Console",
-        "  `]s`  Go to next session",
-        "  `[s`  Go to previous session",
-        "## Hover",
-        "`<CR>`  Expand or collapse a variable",
-        "   `s`  Set the value of a variable",
-        "  `[[`  Jump to parent",
-        "   `q`  Close",
-        "## Navigation",
-        "  `]v`  Go to next view",
-        "  `[v`  Go to previous view",
-        "  `[V`  Go to first view",
-        "  `]V`  Go to last view",
-        "## Help",
-        "   `q`  Close",
-    }
+    local content = [[
+## Views
+### Scopes
+ `<CR>`  Expand or collapse a variable
+    `s`  Set the value of a variable
+   `[[`  Jump to parent
+### Threads
+ `<CR>`  Jump to a frame. Use `<C-w><CR>` to force a specific behavior.
+    `t`  Toggle subtle frames
+    `f`  Filter frames (via Lua patterns)
+    `o`  Omit results matching filter (invert filter)
+### Breakpoints
+ `<CR>`  Jump to a breakpoint. Use `<C-w><CR>` to force a specific behavior.
+    `d`  Delete a breakpoint
+### Watches
+ `<CR>`  Expand or collapse a variable or expression
+    `a`  Append an expression
+    `i`  Insert an expression
+    `d`  Delete an expression
+    `e`  Edit an expression
+    `c`  Copy the value of an expression or variable
+    `s`  Set the value of an expression or variable
+   `[[`  Jump to parent
+### Exceptions
+ `<CR>`  Toggle filter
+### Sessions
+ `<CR>`  Switch to another session
+### Console
+   `]s`  Go to next session
+   `[s`  Go to previous session
+## Hover
+ `<CR>`  Expand or collapse a variable
+   `s`  Set the value of a variable
+  `[[`  Jump to parent
+   `q`  Close
+## Navigation
+  `]v`  Go to next view
+  `[v`  Go to previous view
+  `[V`  Go to first view
+  `]V`  Go to last view
+## Help
+  `q`  Close]]
 
-    local help_buf, help_win = create_win(#content)
+    local split_content = vim.split(content, "\n")
+
+    local help_buf, help_win = create_win(#split_content)
 
     keymap(setup.config.keymaps.help.quit, function()
         api.nvim_win_close(help_win, true)
     end, { buf = help_buf, desc = "close" })
 
-    util.set_lines(help_buf, 0, -1, true, content)
+    util.set_lines(help_buf, 0, -1, true, split_content)
 
     vim.treesitter.language.register("markdown", "dap-view-help")
 
