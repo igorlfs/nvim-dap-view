@@ -47,7 +47,7 @@
 
 ---@class dapview.KeymapsConfigPartial : dapview.KeymapsConfig, {}
 ---@field scopes? dapview.ScopesKeymapsConfigPartial
----@field watches? dapview.ScopesKeymapsConfigPartial
+---@field watches? dapview.WatchesKeymapsConfigPartial
 ---@field hover? dapview.HoverKeymapsConfigPartial
 ---@field help? dapview.HelpKeymapsConfigPartial
 ---@field console? dapview.ConsoleKeymapsConfigPartial
@@ -62,5 +62,6 @@
 ---@field windows? dapview.WindowsConfigPartial
 ---@field render? dapview.RenderConfigPartial
 ---@field help? dapview.HelpConfigPartial
+---@field keymaps? dapview.KeymapsConfigPartial
 ---@field icons? dapview.IconsConfigPartial
 ---@field virtual_text? dapview.VirtualTextConfigPartial
