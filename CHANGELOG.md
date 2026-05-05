@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.2.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.1...v1.2.0) (2026-05-05)
+
+
+### Features
+
+* configurable keymaps (WIP) ([#159](https://github.com/igorlfs/nvim-dap-view/issues/159)) ([10139a3](https://github.com/igorlfs/nvim-dap-view/commit/10139a388619ab5d5b1107fd3f721ed23ecfbb73))
+* dim readOnly variables ([e8199a2](https://github.com/igorlfs/nvim-dap-view/commit/e8199a2c2202415785b65799fa92e1a1cd2f4d4f))
+* fully configurable keymaps ([#164](https://github.com/igorlfs/nvim-dap-view/issues/164)) ([#159](https://github.com/igorlfs/nvim-dap-view/issues/159)) ([3dc38f1](https://github.com/igorlfs/nvim-dap-view/commit/3dc38f1ac1fa042eb7fd9f37f6d9d82579e07f99))
+* highlight "asyncfunction" var type ([01ad453](https://github.com/igorlfs/nvim-dap-view/commit/01ad4537bac9a0843e72c9615fa7fcaa69b119eb))
+* highlight "undefined" var type ([3d4c116](https://github.com/igorlfs/nvim-dap-view/commit/3d4c116afe5e22e500dc2b64d391473f968758ae))
+* hover ([6e7c49a](https://github.com/igorlfs/nvim-dap-view/commit/6e7c49a107f70af237543413690a60a63d8d7725))
+* **hover:** allow overriding context ([#181](https://github.com/igorlfs/nvim-dap-view/issues/181)) ([e541ff9](https://github.com/igorlfs/nvim-dap-view/commit/e541ff9ed4b209a9620413c9fc43ae23fccc257a))
+* **keymaps:** add descriptions (WIP) ([#164](https://github.com/igorlfs/nvim-dap-view/issues/164)) ([516c118](https://github.com/igorlfs/nvim-dap-view/commit/516c1187cbae16bc08593bbcb0c9b03d53048fdc))
+* **keymaps:** add descriptions to winbar keymaps ([#183](https://github.com/igorlfs/nvim-dap-view/issues/183)) ([bee02fb](https://github.com/igorlfs/nvim-dap-view/commit/bee02fbea056adf46de06ed49da7bcd1dee76c84))
+* **virtual-text:** eol position, prefix and suffix functions ([#171](https://github.com/igorlfs/nvim-dap-view/issues/171)) ([134c018](https://github.com/igorlfs/nvim-dap-view/commit/134c018903abc2c9b6fd5fc34c64d906db468c9f))
+* **winbar:** configurable separators ([#173](https://github.com/igorlfs/nvim-dap-view/issues/173)) ([1dd4ba2](https://github.com/igorlfs/nvim-dap-view/commit/1dd4ba2307245ca9517a4b9d99f3bf80830e4397))
+
+
+### Bug Fixes
+
+* **autoscroll:** handle early win closing ([#178](https://github.com/igorlfs/nvim-dap-view/issues/178)) ([57961b3](https://github.com/igorlfs/nvim-dap-view/commit/57961b30d2d4054d2e1f549a2edad2e47731007f))
+* change key 'buf' to 'buffer' to support 0.11 ([#184](https://github.com/igorlfs/nvim-dap-view/issues/184)) ([988c0cf](https://github.com/igorlfs/nvim-dap-view/commit/988c0cfa8740fcf6c0528ddf11e2651d2d0ae792))
+* guard readOnly dim highlight ([c9f3a7b](https://github.com/igorlfs/nvim-dap-view/commit/c9f3a7b81fa40ff4ba804f93b7777225154eeae6))
+* strip whitespace (newlines only) when strictly necessary ([#179](https://github.com/igorlfs/nvim-dap-view/issues/179)) ([dd43736](https://github.com/igorlfs/nvim-dap-view/commit/dd43736f30ed70571a02e8c560ab69746ad7a1ed))
+* **types:** minor keymap related fixes ([f227b1f](https://github.com/igorlfs/nvim-dap-view/commit/f227b1fa7456f1f3771db5e210b5f99c7bf25630))
+* **virtual-text:** clear extmarks from all bufs on exit ([0a0cafc](https://github.com/igorlfs/nvim-dap-view/commit/0a0cafc020137c7111a8212cdd9cd24b0f7650da))
+* **virtual-text:** handle injections ([6be5247](https://github.com/igorlfs/nvim-dap-view/commit/6be52475fe770495a3ca20b5beec090c5d02a126))
+
 ## [1.1.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.0...v1.1.1) (2026-04-12)
 
 
