@@ -14,7 +14,7 @@ function M.keymap(lhs, rhs, opts, mode)
 
     opts = opts or {}
     opts.nowait = true
-    opts.buf = opts.buf or state.bufnr
+    opts.buffer = opts.buffer or state.bufnr
 
     for _, v in ipairs(lhs) do
         vim.keymap.set(mode, v, rhs, opts)
@@ -31,7 +31,7 @@ function M.keymap_del(lhs, opts, mode)
     end
 
     opts = opts or {}
-    opts.buf = opts.buf or state.bufnr
+    opts.buffer = opts.buffer or state.bufnr
 
     for _, v in ipairs(lhs) do
         vim.keymap.del(mode, v, opts)

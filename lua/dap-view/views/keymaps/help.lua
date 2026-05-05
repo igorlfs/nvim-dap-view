@@ -79,7 +79,7 @@ M.show_help = function()
 
     keymap(setup.config.keymaps.help.quit, function()
         api.nvim_win_close(help_win, true)
-    end, { buf = help_buf, desc = "close" })
+    end, { buffer = help_buf, desc = "close" })
 
     util.set_lines(help_buf, 0, -1, true, split_content)
 
