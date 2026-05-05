@@ -188,7 +188,8 @@ end
 
 ---@param expr? string
 ---@param enter? boolean
-M.hover = function(expr, enter)
+---@param opts? dapview.EvaluateOpts
+M.hover = function(expr, enter, opts)
     if state.hover_winnr then
         api.nvim_set_current_win(state.hover_winnr)
         return
@@ -218,7 +219,7 @@ M.hover = function(expr, enter)
         local width = #default_message
 
         if has_session then
-            require("dap-view.hover.eval").evaluate_expression(state.hover)
+            require("dap-view.hover.eval").evaluate_expression(state.hover, opts and opts.context)
 
             height, width = unpack(require("dap-view.hover.view").show(bufnr))
         else

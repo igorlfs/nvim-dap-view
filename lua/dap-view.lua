@@ -40,8 +40,9 @@ end
 
 ---@param expr? string
 ---@param enter? boolean
-M.hover = function(expr, enter)
-    actions.hover(expr, enter)
+---@param opts? dapview.EvaluateOpts
+M.hover = function(expr, enter, opts)
+    actions.hover(expr, enter, opts)
 end
 
 ---@param expr? string
