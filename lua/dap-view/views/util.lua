@@ -102,7 +102,7 @@ M.set_keymaps = function(view)
         require("dap-view.views.keymaps.util").keymap(
             key,
             keymaps[k].action,
-            { buf = state.bufnr, desc = keymaps[k].desc }
+            { buffer = state.bufnr, desc = keymaps[k].desc }
         )
     end
 end
