@@ -99,6 +99,8 @@ M.set_action_keymaps = function(bufnr)
     if bufnr or state.bufnr then
         local winbar = setup.config.winbar
 
+        local win_width = api.nvim_win_get_width(state.winnr)
+
         for k, view in pairs(winbar.sections) do
             local section = winbar.custom_sections[view] or winbar.base_sections[view]
 
@@ -106,9 +108,14 @@ M.set_action_keymaps = function(bufnr)
                 vim.notify_once("View '" .. view .. "' not found, skipping setup", log.WARN)
                 winbar.sections[k] = nil
             else
+                local desc = type(section.label) == "function" and section.label(win_width, state.current_section)
+                    or section.label
+
+                ---@cast desc string
+
                 vim.keymap.set("n", section.keymap, function()
                     M.wrapped_action(view)
-                end, { buffer = bufnr or state.bufnr })
+                end, { buffer = bufnr or state.bufnr, desc = desc })
             end
         end
     end
