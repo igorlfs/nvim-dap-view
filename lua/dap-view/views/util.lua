@@ -95,14 +95,15 @@ M.delete_keymaps = function(view)
 end
 
 ---@param view dapview.Section
-M.set_keymaps = function(view)
+---@param bufnr integer?
+M.set_keymaps = function(view, bufnr)
     for k, key in pairs(setup.config.keymaps[view] or {}) do
         local keymaps = require("dap-view." .. view .. ".keymaps")
 
         require("dap-view.views.keymaps.util").keymap(
             key,
             keymaps[k].action,
-            { buffer = state.bufnr, desc = keymaps[k].desc }
+            { buffer = bufnr or state.bufnr, desc = keymaps[k].desc }
         )
     end
 end

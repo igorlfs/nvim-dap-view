@@ -232,7 +232,7 @@ M.setup_term_buf = function()
         winbar.set_action_keymaps(term_bufnr)
     end
 
-    require("dap-view.console.keymaps").set_keymaps(term_bufnr)
+    require("dap-view.views.util").set_keymaps("console", term_bufnr)
     require("dap-view.views.keymaps").set_keymaps(term_bufnr)
 
     scroll.setup_autoscroll(term_bufnr)

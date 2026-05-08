@@ -63,7 +63,7 @@ M.wrapped_action = function(view, force_keymap)
 
     local new_view = state.last_section ~= state.current_section
 
-    if new_view and state.last_section then
+    if new_view and state.last_section and state.last_section ~= "console" then
         require("dap-view.views.util").delete_keymaps(state.last_section)
     end
 
@@ -75,7 +75,7 @@ M.wrapped_action = function(view, force_keymap)
     -- As a safeguard, always reassign keymaps on open.
     --
     -- This also handles reassigning when restoring a vim session.
-    if new_view or force_keymap then
+    if (new_view or force_keymap) and state.current_section ~= "console" then
         require("dap-view.views.util").set_keymaps(state.current_section)
     end
 
