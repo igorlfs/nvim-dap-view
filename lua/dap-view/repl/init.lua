@@ -13,7 +13,7 @@ M.show = function()
     -- The REPL is a new buffer, so we need to set the winbar keymaps again
     winbar.set_action_keymaps(repl_buf)
 
-    require("dap-view.views.keymaps").set_keymaps(repl_buf)
+    require("dap-view.views.util").set_keymaps("base", repl_buf)
 
     winbar.refresh_winbar()
 end

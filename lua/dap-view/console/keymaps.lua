@@ -1,3 +1,4 @@
+---@type {[string]: {action: fun():(nil), desc: string}}
 return {
     next_session = {
         action = function()

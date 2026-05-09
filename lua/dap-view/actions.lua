@@ -172,7 +172,7 @@ M.open = function(hide_terminal)
     vim.w[state.winnr].dapview_win = true
 
     require("dap-view.views.options").set_options()
-    require("dap-view.views.keymaps").set_keymaps()
+    require("dap-view.views.util").set_keymaps("base")
 
     winbar.set_action_keymaps()
     winbar.wrapped_action(state.current_section, true)

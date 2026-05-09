@@ -94,7 +94,7 @@ M.delete_keymaps = function(view)
     end
 end
 
----@param view dapview.Section
+---@param view dapview.Section|"base"
 ---@param bufnr integer?
 M.set_keymaps = function(view, bufnr)
     for k, key in pairs(setup.config.keymaps[view] or {}) do
