@@ -6,6 +6,7 @@ function M.validate(config)
         windows = { config.windows, "table" },
         winbar = { config.winbar, "table" },
         help = { config.help, "table" },
+        hover = { config.hover, "table" },
         render = { config.render, "table" },
         switchbuf = { config.switchbuf, { "string", "function" } },
         keymaps = { config.keymaps, { "table" } },
@@ -25,6 +26,7 @@ function M.validate(config)
     require("dap-view.setup.validate.winbar").validate(config.winbar)
     require("dap-view.setup.validate.windows").validate(config.windows)
     require("dap-view.setup.validate.help").validate(config.help)
+    require("dap-view.setup.validate.hover").validate(config.hover)
     require("dap-view.setup.validate.icons").validate(config.icons)
     require("dap-view.setup.validate.virtual-text").validate(config.virtual_text)
     require("dap-view.setup.validate.render").validate(config.render)
