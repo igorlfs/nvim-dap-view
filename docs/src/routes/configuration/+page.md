@@ -142,6 +142,9 @@ return {
     help = {
         border = nil,
     },
+    hover = {
+        border = nil,
+    },
     render = {
         -- Optionally a function that takes two `dap.Variable`'s as arguments
         -- and is forwarded to a `table.sort` when rendering variables in the scopes view
