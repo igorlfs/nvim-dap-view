@@ -232,6 +232,7 @@ M.hover = function(expr, enter, opts)
         local col = anchor_x == "E" and 1 or 0
 
         local winnr = api.nvim_open_win(bufnr, enter or enter == nil, {
+            border = setup.config.hover.border,
             relative = "cursor",
             row = row,
             col = col,
