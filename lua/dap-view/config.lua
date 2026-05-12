@@ -80,6 +80,9 @@ local M = {}
 ---@class dapview.HelpConfig
 ---@field border? string|string[] Override `winborder` in the help window
 
+---@class dapview.HoverConfig
+---@field border? string|string[] Override `winborder` in the hover window
+
 ---@class dapview.RenderBreakpointsConfig
 ---@field format fun(line: string, lnum: string, path: string): dapview.Content[]
 ---@field align boolean
@@ -165,6 +168,7 @@ local M = {}
 ---@field winbar dapview.WinbarConfig
 ---@field windows dapview.WindowsConfig
 ---@field help dapview.HelpConfig
+---@field hover dapview.HoverConfig
 ---@field render dapview.RenderConfig
 ---@field keymaps dapview.KeymapsConfig
 ---@field icons dapview.IconsConfig Icons for each button
