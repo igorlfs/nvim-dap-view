@@ -96,7 +96,7 @@ end
 
 ---@param bufnr? integer
 M.set_action_keymaps = function(bufnr)
-    if bufnr or state.bufnr then
+    if (bufnr or state.bufnr) and util.is_win_valid(state.winnr) then
         local winbar = setup.config.winbar
 
         local win_width = api.nvim_win_get_width(state.winnr)
