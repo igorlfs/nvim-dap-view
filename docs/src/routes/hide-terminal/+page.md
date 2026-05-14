@@ -15,6 +15,8 @@ return {
 }
 ```
 
+Alteranitely, one can also set `hide = true` to achieve the same effect, for every adapter.
+
 ## Anchoring
 
 In some scenarios, it's useful to use another window as if it was `nvim-dap-view`'s terminal. By doing that, `nvim-dap-view`'s main window will "follow" another window. Watch this [video](https://github.com/user-attachments/assets/5dce4b3d-fc01-4be6-9a72-b0f969e34b14) to see what this looks like.

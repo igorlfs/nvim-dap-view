@@ -20,7 +20,9 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
         state.current_adapter = new.config.type
 
         -- Handle switching the buf if session is already initialized
-        if term.fetch_term_buf(new) and not vim.tbl_contains(term_config.hide, state.current_adapter) then
+        local hide = term_config.hide
+        local hidden = (type(hide) == "table" and vim.tbl_contains(hide, state.current_adapter)) or hide == true
+        if term.fetch_term_buf(new) and not hidden then
             term.switch_term_buf()
         end
 
@@ -65,7 +67,9 @@ dap.listeners.after.configurationDone[SUBSCRIPTION_ID] = function()
     local term_config = config.windows.terminal
 
     local has_console = vim.tbl_contains(config.winbar.sections, "console")
-    local hidden_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
+
+    local hide = term_config.hide
+    local hidden_adapter = (type(hide) == "table" and vim.tbl_contains(hide, state.current_adapter)) or hide == true
     local open_term = config.auto_toggle == "open_term" and not has_console and not hidden_adapter
 
     -- Setting up the terminal must happen after `configurationDone`

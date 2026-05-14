@@ -125,7 +125,8 @@ M.open_term_buf_win = function()
     local windows_config = setup.config.windows
     local term_config = setup.config.windows.terminal
 
-    local hide_adapter = vim.tbl_contains(term_config.hide, state.current_adapter)
+    local hide = term_config.hide
+    local hide_adapter = type(hide) == "table" and vim.tbl_contains(hide, state.current_adapter) or hide == true
 
     if term_bufnr and not hide_adapter and not util.is_win_valid(state.term_winnr) then
         local is_win_valid = util.is_win_valid(state.winnr)

@@ -13,7 +13,7 @@ function M.validate(config)
 
     validate("windows.terminal", {
         position = { config.terminal.position, { "string", "function" } },
-        hide = { config.terminal.hide, "table" },
+        hide = { config.terminal.hide, { "table", "boolean" } },
         size = { config.terminal.size, { "number", "function" } },
     }, config.terminal)
 end

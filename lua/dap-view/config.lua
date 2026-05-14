@@ -20,7 +20,7 @@ local M = {}
 ---@field separator? string
 
 ---@class dapview.TerminalConfig
----@field hide string[] List of adapters for which the terminal should be hidden
+---@field hide string[]|true List of adapters for which the terminal should be hidden. If true, terminal is never shown.
 ---@field position dapview.Position|fun(position: dapview.Position): dapview.Position Can be a function, receiving the main window's position as its argument
 ---@field size number|fun(position: dapview.Position): number Size of the terminal window's split. Either a number, where if > 1 it's the absolute size, or else the percentage. Can also be a function, receiving the position and returning a number, that then follows the same logic.
 
