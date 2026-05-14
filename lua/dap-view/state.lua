@@ -35,6 +35,8 @@
 ---@field current_adapter? string
 ---@field subtle_frames boolean
 ---@field current_section? dapview.Section
+---@field og_height? integer
+---@field og_width? integer
 ---@field last_section? dapview.Section
 ---@field last_session_buf? integer
 ---@field exceptions_options table<string,dapview.ExceptionsOption[]>

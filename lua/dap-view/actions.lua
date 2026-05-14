@@ -145,19 +145,24 @@ M.open = function(hide_terminal)
 
     local term_size = term_size__ < 1 and math.floor(go_max * term_size__) or math.floor(term_size__)
 
+    -- Oh lord
+    local height = (
+        is_win_valid and (term_is_vertical and ((is_vertical and size or go.lines) - term_size) or size)
+        or (is_vertical and size or nil)
+    )
+    local width = (
+        is_win_valid and (not term_is_vertical and ((not is_vertical and size or go.columns) - term_size) or size)
+        or (not is_vertical and size or nil)
+    )
+
+    state.og_height = height
+    state.og_width = width
+
     local winnr = api.nvim_open_win(bufnr, false, {
         split = is_win_valid and inv_term_position or win_pos,
         win = is_anchor_win_valid and anchor_win or is_term_win_valid and term_winnr or -1,
-        -- Oh lord
-        height = (
-            is_win_valid and (term_is_vertical and ((is_vertical and size or go.lines) - term_size) or size)
-            or (is_vertical and size or nil)
-        ),
-        width = (
-            is_win_valid
-                and (not term_is_vertical and ((not is_vertical and size or go.columns) - term_size) or size)
-            or (not is_vertical and size or nil)
-        ),
+        height = height,
+        width = width,
     })
 
     -- Restore fixed size

@@ -9,27 +9,22 @@ local winbar = require("dap-view.options.winbar")
 
 local api = vim.api
 
-api.nvim_create_autocmd("WinClosed", {
-    callback = function(args)
-        local w = vim.w[tonumber(args.file)]
-
-        -- Resize main window on term close to
-        if w.dapview_win_term and util.is_win_valid(state.winnr) then
-            require("dap-view.util.window").resize(state.winnr)
-        end
-
-        -- Similarly for closing main
-        if w.dapview_win and util.is_win_valid(state.term_winnr) then
-            require("dap-view.util.window").resize(state.term_winnr)
-        end
-    end,
-})
-
 api.nvim_create_autocmd({ "WinClosed", "WinNew" }, {
     callback = function()
         vim.schedule(function()
             if util.is_win_valid(state.winnr) then
+                -- Recalculate function labels
                 winbar.refresh_winbar()
+
+                -- Resize when closing unrelated windows (#190)
+                -- We assume that keeping the original size is more important than recalculating
+                -- (if the size was a function)
+                if state.og_height then
+                    api.nvim_win_set_height(state.winnr, state.og_height)
+                end
+                if state.og_width then
+                    api.nvim_win_set_width(state.winnr, state.og_width)
+                end
             end
         end)
     end,
