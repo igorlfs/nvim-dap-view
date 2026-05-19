@@ -30,9 +30,10 @@ local function show_variables(variables_reference, parent_path, line, depth, can
 
         canvas.contents[#canvas.contents + 1] = err_content
 
-        width = math.max(width, fn.strdisplaywidth(err_content))
+        local err_width = fn.strdisplaywidth(err_content)
+        width = math.max(width, err_width)
 
-        canvas.highlights[#canvas.highlights + 1] = { { "WatchError", { line, 0 }, { line, #err_content } } }
+        canvas.highlights[#canvas.highlights + 1] = { { "WatchError", { line, 0 }, { line, err_width } } }
 
         line = line + 1
 
@@ -118,7 +119,8 @@ M.show = function(bufnr)
         canvas.contents[#canvas.contents + 1] = err_msg
         canvas.highlights[#canvas.highlights + 1] = { { "WatchError", { height, 0 }, { height, -1 } } }
 
-        width = #err_msg
+        local err_width = fn.strdisplaywidth(err_msg)
+        width = err_width
 
         height = height + 1
     elseif hover.response then
@@ -155,7 +157,7 @@ M.show = function(bufnr)
 
             canvas.contents[#canvas.contents + 1] = result
 
-            width = #result
+            width = fn.strdisplaywidth(result)
 
             local type_hl_group = hl.hl_from_variable(hover.response)
 
