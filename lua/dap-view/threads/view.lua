@@ -109,7 +109,7 @@ M.show = function()
                 :filter(
                     ---@param f dap.StackFrame
                     function(f)
-                        return require("dap-view.util.source").source_exists(f)
+                        return require("dap-view.util.source").source_exists(f) and vim.uv.fs_stat(f.source.path) ~= nil
                     end
                 )
                 :totable()

@@ -19,9 +19,22 @@ end
 ---@param session dap.Session?
 M.clear_virtual_text = function(session)
     if session and session.current_frame and require("dap-view.util.source").source_exists(session.current_frame) then
-        local buf = vim.uri_to_bufnr(vim.uri_from_fname(session.current_frame.source.path))
+        local fname = session.current_frame.source.path
+        ---@cast fname string
+        if vim.uv.fs_stat(fname) == nil then
+            for _, buf in ipairs(api.nvim_list_bufs()) do
+                local name = api.nvim_buf_get_name(buf)
+                local _, _, source_path = name:match("dap%-src://(%d+)/(%d+)/(.*)")
+                if source_path == fname then
+                    api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+                    return
+                end
+            end
+        else
+            local buf = vim.uri_to_bufnr(vim.uri_from_fname(session.current_frame.source.path))
 
-        api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+            api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+        end
     else
         for _, buf in ipairs(api.nvim_list_bufs()) do
             api.nvim_buf_clear_namespace(buf, ns, 0, -1)
