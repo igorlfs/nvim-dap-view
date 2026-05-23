@@ -17,20 +17,10 @@ title: NVIM DAP View
 
 A nerd font is a "soft requirement"[^2].
 
-### Via lazy.nvim
-
 ```lua
-return {
-    {
-        "igorlfs/nvim-dap-view",
-        -- let the plugin lazy load itself
-        lazy = false,
-        version = "1.*",
-        ---@module 'dap-view'
-        ---@type dapview.Config
-        opts = {},
-    },
-}
+vim.pack.add({
+ { src = "https://github.com/igorlfs/nvim-dap-view", version = vim.version.range("1.*")  },
+})
 ```
 
 :::caution

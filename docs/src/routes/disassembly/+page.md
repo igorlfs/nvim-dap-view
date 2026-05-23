@@ -16,17 +16,3 @@ return {
     },
 }
 ```
-
-:::note
-If using `lazy.nvim` (or any means of lazy loading, in general), make sure to add `nvim-dap-view` as a dependency for `nvim-dap-disasm` and **NOT** the other way around. That's necessary for `nvim-dap-disasm` to recognize `nvim-dap-view`'s installation. A sample (`lazy.nvim`'s) spec would be:
-:::
-
-```lua
-return {
-    {
-        url = "https://codeberg.org/Jorenar/nvim-dap-disasm.git",
-        dependencies = "igorlfs/nvim-dap-view",
-        config = true,
-    },
-}
-```

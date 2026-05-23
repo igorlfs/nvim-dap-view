@@ -10,27 +10,17 @@
 
 ## Introduction
 
-A UI for [`nvim-dap`](https://github.com/mfussenegger/nvim-dap) (the quasi canonical neovim implementation of [`DAP`](https://microsoft.github.io/debug-adapter-protocol/); the protocol that enhances text editors with IDE-like debugging capabilities).
+A UI for [`nvim-dap`](https://github.com/mfussenegger/nvim-dap)[^1].
 
 ## Installation
 
 > [!WARNING]  
 > **Requires neovim 0.11+**
 
-### Via lazy.nvim
-
 ```lua
-return {
-    {
-        "igorlfs/nvim-dap-view",
-        -- let the plugin lazy load itself
-        lazy = false,
-        version = "1.*",
-        ---@module 'dap-view'
-        ---@type dapview.Config
-        opts = {},
-    },
-}
+vim.pack.add({
+ { src = "https://github.com/igorlfs/nvim-dap-view", version = vim.version.range("1.*")  },
+})
 ```
 
 ## Features
@@ -81,3 +71,5 @@ You can contribute in many ways:
 - If something isn't working, create a [bug report](https://github.com/igorlfs/nvim-dap-view/issues/new?template=bug_report.yml).
 - If you have an idea, file a [feature request](https://github.com/igorlfs/nvim-dap-view/issues/new?template=feature_request.yml). You can also go ahead and implement it yourself with a [PR](https://github.com/igorlfs/nvim-dap-view/compare).
 - If you have some spare bucks, consider becoming a [sponsor](https://github.com/sponsors/igorlfs).
+
+[^1]: the quasi canonical neovim implementation of [`DAP`](https://microsoft.github.io/debug-adapter-protocol/); the protocol that enhances text editors with IDE-like debugging capabilities
