@@ -17,7 +17,9 @@ function M.keymap(lhs, rhs, opts, mode)
     opts.buffer = opts.buffer or state.bufnr
 
     for _, v in ipairs(lhs) do
-        vim.keymap.set(mode, v, rhs, opts)
+        if type(v) == "string" and v ~= "" then
+            vim.keymap.set(mode, v, rhs, opts)
+        end
     end
 end
 
@@ -34,7 +36,9 @@ function M.keymap_del(lhs, opts, mode)
     opts.buffer = opts.buffer or state.bufnr
 
     for _, v in ipairs(lhs) do
-        vim.keymap.del(mode, v, opts)
+        if type(v) == "string" and v ~= "" then
+            vim.keymap.del(mode, v, opts)
+        end
     end
 end
 
