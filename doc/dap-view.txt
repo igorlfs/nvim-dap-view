@@ -147,6 +147,7 @@ You don't have to copy and paste these options. Use them as a reference.
                 hide = {},
             },
         },
+        -- Bindings can be disabled by assigning to an empty table
         keymaps = {
             scopes = {
                 toggle = { "<CR>", "<2-LeftMouse>" },
