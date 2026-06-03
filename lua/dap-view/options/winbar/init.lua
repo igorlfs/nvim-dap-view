@@ -96,10 +96,10 @@ end
 
 ---@param bufnr? integer
 M.set_action_keymaps = function(bufnr)
-    if (bufnr or state.bufnr) and util.is_win_valid(state.winnr) then
+    if bufnr or state.bufnr then
         local winbar = setup.config.winbar
 
-        local win_width = api.nvim_win_get_width(state.winnr)
+        local win_width = state.winnr and api.nvim_win_get_width(state.winnr) or 0
 
         for k, view in pairs(winbar.sections) do
             local section = winbar.custom_sections[view] or winbar.base_sections[view]
