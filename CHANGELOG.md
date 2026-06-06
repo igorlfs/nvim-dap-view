@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.2.0...v1.2.1) (2026-06-06)
+
+
+### Bug Fixes
+
+* **switchbuf:** missing parameter to `position` on some calls ([91a2b0e](https://github.com/igorlfs/nvim-dap-view/commit/91a2b0eab74cc889499587166cc6e3d53a7e1e45))
+
 ## [1.2.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.1...v1.2.0) (2026-06-03)
 
 
