@@ -1,3 +1,4 @@
+local state = require("dap-view.state")
 local setup = require("dap-view.setup")
 
 local M = {}
@@ -15,7 +16,8 @@ M.set_win_options = function(winnr)
     win.winfixbuf = true
 
     local position = setup.config.windows.position
-    local pos = (type(position) == "function" and position and position()) or (type(position) == "string" and position)
+    local pos = (type(position) == "function" and position and position(state.win_pos))
+        or (type(position) == "string" and position)
 
     -- That's a bit confusing, but since the terminal split is just created from a top level split,
     -- to keep the proportions consistent, we just have to follow what the top level split says

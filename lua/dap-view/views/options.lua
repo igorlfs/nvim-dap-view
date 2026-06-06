@@ -16,7 +16,8 @@ M.set_options = function()
     win.winfixbuf = true
 
     local position = setup.config.windows.position
-    local pos = (type(position) == "function" and position and position()) or (type(position) == "string" and position)
+    local pos = (type(position) == "function" and position and position(state.win_pos))
+        or (type(position) == "string" and position)
 
     if pos == "above" or pos == "below" then
         win.winfixheight = true
