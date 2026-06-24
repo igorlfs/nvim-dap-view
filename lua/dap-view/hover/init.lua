@@ -16,6 +16,7 @@ M.set_win_options = function(winnr)
     win.foldcolumn = "0"
     win.number = false
     win.relativenumber = false
+    win.signcolumn = "no"
 
     -- If not focused, NormalFloat won't be applied right away
     win.winhighlight = "Normal:NormalFloat"
