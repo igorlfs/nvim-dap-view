@@ -195,7 +195,7 @@ end
 ---@param enter? boolean
 ---@param opts? dapview.EvaluateOpts
 M.hover = function(expr, enter, opts)
-    if state.hover_winnr then
+    if util.is_win_valid(state.hover_winnr) then
         api.nvim_set_current_win(state.hover_winnr)
         return
     end
