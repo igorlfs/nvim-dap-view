@@ -84,13 +84,13 @@ M.wrapped_action = function(view, force_keymap)
         custom_action_wrapper(view)
         action()
     else
-        if view == "repl" then
-            require("dap-view.repl").show()
-        else
-            coroutine.wrap(function()
-                require("dap-view.views").switch_to_view(view)
-            end)()
-        end
+        -- if view == "repl" then
+        --     require("dap-view.repl").show()
+        -- else
+        coroutine.wrap(function()
+            require("dap-view.views").switch_to_view(view)
+        end)()
+        -- end
     end
 end
 
