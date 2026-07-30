@@ -15,7 +15,7 @@ title: NVIM DAP View
 **Requires neovim 0.11+[^1]**
 :::
 
-A nerd font is a "soft requirement"[^2].
+A nerd font is a "soft requirement"[^2]. Treesitter queries (aka [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)) are required for the virtual text functionality[^3].
 
 ```lua
 vim.pack.add({
@@ -135,3 +135,4 @@ Versus specific alternatives, `nvim-dap-view` offers:
 
 [^1]: Inline virtual text requires 0.12+
 [^2]: Nerd font icons can be disabled in the [configuration](configuration)
+[^3]: You can write `locals` queries yourself, or pull them from another source, if you don't want to use nvim-treesitter
