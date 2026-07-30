@@ -5,4 +5,5 @@ return {
     NAMESPACE_VT = vim.api.nvim_create_namespace("dap-view-vt"),
     HL_PREFIX = "NvimDapView",
     HAS_0_12 = vim.fn.has("nvim-0.12") == 1,
+    HAS_0_13 = vim.fn.has("nvim-0.13") == 1,
 }
