@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.2.0...v1.2.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* **hover:** disable sign column in hover window ([#196](https://github.com/igorlfs/nvim-dap-view/issues/196)) ([440ec66](https://github.com/igorlfs/nvim-dap-view/commit/440ec66c2b26470ec97cd4d6667cdd4b51cbc7cb))
+* **hover:** ensure win is valid ([#198](https://github.com/igorlfs/nvim-dap-view/issues/198)) ([b8c8aa9](https://github.com/igorlfs/nvim-dap-view/commit/b8c8aa91f42055d7f69012587cde4f1d99f2a701))
+* **session:** use SessionWritePre to save session if available ([de3a490](https://github.com/igorlfs/nvim-dap-view/commit/de3a490c6006d4cd7d0fca3023cc78ad800d2faa))
+* **switchbuf:** missing parameter to `position` on some calls ([91a2b0e](https://github.com/igorlfs/nvim-dap-view/commit/91a2b0eab74cc889499587166cc6e3d53a7e1e45))
+
 ## [1.2.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.1.1...v1.2.0) (2026-06-03)
 
 
