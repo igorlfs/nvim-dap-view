@@ -39,6 +39,7 @@
 ---@field og_width? integer
 ---@field last_section? dapview.Section
 ---@field last_session_buf? integer
+---@field last_repl_buf? integer
 ---@field exceptions_options table<string,dapview.ExceptionsOption[]>
 ---@field stack_trace_errors string[]
 ---@field threads_error? string
@@ -74,6 +75,8 @@
 ---@field expr_count integer
 ---@field cur_pos table<dapview.DefaultSection,[integer, integer]?>
 ---@field win_pos? dapview.Position
+---@field saved_context table<dapview.Section, string>
+---@field saved_view table<dapview.Section, vim.fn.winrestview.dict>
 local M = {
     expr_count = 0,
     threads_filter = "",
