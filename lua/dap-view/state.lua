@@ -30,6 +30,7 @@
 ---@field hover_winnr? integer
 ---@field term_winnr? integer
 ---@field last_term_winnr? integer
+---@field anchor_winnr? integer
 ---@field threads_filter string
 ---@field threads_filter_invert boolean
 ---@field current_adapter? string
