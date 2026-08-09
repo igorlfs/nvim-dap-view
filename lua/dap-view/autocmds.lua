@@ -17,12 +17,12 @@ api.nvim_create_autocmd({ "WinClosed", "WinNew" }, {
                 winbar.refresh_winbar()
 
                 -- Resize when closing unrelated windows (#190)
-                -- We assume that keeping the original size is more important than recalculating
-                -- (if the size was a function)
-                if state.og_height then
+                -- Only if not manually resized (#203)
+                local height, width = require("lua.dap-view.util.size").size()
+                if state.og_height and height == state.og_height then
                     api.nvim_win_set_height(state.winnr, state.og_height)
                 end
-                if state.og_width then
+                if state.og_width and width == state.og_width then
                     api.nvim_win_set_width(state.winnr, state.og_width)
                 end
             end
