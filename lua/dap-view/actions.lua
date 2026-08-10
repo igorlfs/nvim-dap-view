@@ -122,7 +122,7 @@ M.open = function(hide_terminal)
         vim.wo[state.term_winnr][winfix_setting] = false
     end
 
-    local height, width = require("lua.dap-view.util.size").size()
+    local height, width = require("dap-view.util.size").size()
 
     state.og_height = height
     state.og_width = width
