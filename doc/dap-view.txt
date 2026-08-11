@@ -297,7 +297,6 @@ You don't have to copy and paste these options. Use them as a reference.
         -- If a function, receives the name of the adapter for the current session as an argument
         follow_tab = false,
     }
-    <
 ==============================================================================
 KEYMAPS                                                     *dap-view-keymaps*
 
@@ -374,7 +373,6 @@ The API offers the same functionality as the commands.
 Open ~
     >lua
     require("dap-view").open()
-    <
 
 Opens both nvim-dap-view windows: views + console.
 
@@ -382,7 +380,6 @@ Close ~
     >lua
     ---@param hide_terminal? boolean
     require("dap-view").close()
-    <
 
 Closes the views window. Can also hide the terminal window if specified.
 
@@ -390,7 +387,6 @@ Toggle ~
     >lua
     ---@param hide_terminal? boolean
     require("dap-view").toggle()
-    <
 
 Calls `require("dap-view").open()` if there's no views window. Else, behaves
 like `require("dap-view").close()`
@@ -400,7 +396,6 @@ Add Expression ~
     ---@param expr? string
     ---@param default_expanded? boolean
     require("dap-view").add_expr(expr, default_expanded)
-    <
 
 In normal mode, adds the expression under the cursor to the watch list. In
 visual mode, adds the selection to the watch list. If expr is specified,
@@ -412,7 +407,6 @@ Jump To View ~
     >lua
     ---@param view dapview.Section
     require("dap-view").jump_to_view(view)
-    <
 
 Shows a given view and jumps to its window.
 
@@ -420,7 +414,6 @@ Show View ~
     >lua
     ---@param view dapview.Section
     require("dap-view").show_view(view)
-    <
 
 Shows a given view. If the specified view is already the current one, jumps to
 its window.
@@ -429,7 +422,6 @@ Navigate ~
     >lua
     ---@param opts {count: number, wrap: boolean, type?: 'views' | 'sessions'}
     require("dap-view").navigate(opts)
-    <
 
 Switches from the current view to another one by taking the current view's
 index (in the winbar) and adding a count. Can also be used to navigate within
@@ -441,7 +433,6 @@ Hover ~
     ---@param enter? boolean
     ---@param opts? {context: "watch" | "repl" | "hover" | "clipboard" | "variables" | string}
     require("dap-view").hover(expr, enter, opts)
-    <
 
 In normal mode, opens the hover window with the variable under the cursor. In
 visual mode, opens the hover window with the selection. If `expr` is not
@@ -459,7 +450,6 @@ Fine grained control over displaying virtual text:
     require("dap-view").virtual_text_enable()
     require("dap-view").virtual_text_disable()
     require("dap-view").virtual_text_toggle()
-    <
 
 ==============================================================================
 FILETYPES                                                 *dap-view-filetypes*
@@ -489,7 +479,6 @@ current tab, you can toggle the `follow_tab` option:
         -- Can also be a function to dynamically choose when to follow, by returning a boolean
         follow_tab = true,
     }
-    <
 
 Why is `DapViewWatch` not adding the whole variable? ~
 
@@ -499,7 +488,6 @@ cumbersome for others. To handle that, you can tweak the value for the
 'iskeyword' option. For instance, with PHP, you can use:
     >vim
     set iskeyword+=$
-    <
 
 How to control which window to jump to? ~
 
@@ -511,7 +499,6 @@ with:
     return {
         switchbuf = "useopen",
     }
-    <
 
 You can use commas to define fallback behavior (e.g., `useopen,newtab` creates
 a new tab if the buffer is not found). If there's no match even for the
@@ -532,7 +519,6 @@ to set nvim-dap's switchbuf to another value. For instance:
     --
     -- See :help dap-defaults to learn more
     require("dap").defaults.fallback.switchbuf = "usevisible,usetab,newtab"
-    <
 ==============================================================================
 HIGHLIGHT GROUPS                                   *dap-view-highlight-groups*
 
@@ -663,7 +649,6 @@ the session instead of stopping.
             },
         },
     }
-    <
 
 ==============================================================================
 CUSTOM FORMATTING                                 *dap-view-custom-formatting*
@@ -705,7 +690,6 @@ Examples:
             },
         },
     }
-    <
 
 - Restore pre v1.0.0 behavior
 
@@ -723,7 +707,6 @@ Examples:
             },
         },
     }
-    <
 
 Breakpoints ~
 
@@ -748,7 +731,6 @@ Example:
             },
         },
     }
-    <
 
 ==============================================================================
 CUSTOM VIEWS                                           *dap-view-custom-views*
@@ -786,7 +768,6 @@ Example:
             },
         },
     }
-    <
 
 To add a custom view to your config, just add it to the sections table as if
 it was a regular view:
@@ -799,7 +780,6 @@ it was a regular view:
             },
         },
     }
-    <
 
 Register View ~
 
@@ -842,13 +822,13 @@ available options, affecting only the current jump.
 DYNAMIC LAYOUT                                       *dap-view-dynamic-layout*
 
 You can assign different positions and sizes to nvim-dap-view's windows using
-functions.
+functions. This gives high flexibility, check the examples below.
 
-Example ~
+Automatic switch between vertical and horizontal layouts ~
 
-When there's a single window in the current tab, you can use a vertical layout
-to make the most of the available space. In other scenarios you fallback to a
-regular horizontal layout:
+When there's a single window in the current tab, use a vertical layout to make
+the most of the available space. In other scenarios, fallback to a regular
+horizontal layout:
     >lua
     return {
         windows = {
@@ -887,7 +867,73 @@ regular horizontal layout:
             },
         },
     }
-    <
+
+Manual switch between vertical and horizontal layouts ~
+
+If you'd rather be more explicit about when each layout is used, you can use
+multiple keybindings:
+    
+    >lua
+    -- Assign one keymap to
+    local horizontal_layout = function()
+        if not vim.g._dv_below then
+            require("dap-view").close(true)
+        end
+        vim.g._dv_below = true
+        require("dap-view").toggle()
+    end
+
+    -- And the other one to
+    local vertical_layout = function()
+        if vim.g._dv_below then
+            require("dap-view").close(true)
+        end
+        vim.g._dv_below = nil
+        require("dap-view").toggle()
+    end
+
+    -- your nvim-dap-view config
+    return {
+        windows = {
+            position = function()
+                return vim.g._dv_below and "below" or "right"
+            end,
+        }
+    }
+
+Keep manual resizes ~
+
+nvim-dap-view always attempts to respect the predefined size. If you'd rather
+have if follow manual resizes, use the following:
+
+    >lua
+    local api = vim.api
+
+    api.nvim_create_autocmd("WinResized", {
+        callback = function()
+            local win = require("dap-view.state").winnr
+
+            if not win then
+                return
+            end
+
+            local cfg = require("dap-view.setup").config
+
+            local pos_ = cfg.windows.position
+            local pos = type(pos_) == "function" and pos_() or pos_
+
+            vim.g._dv_size = pos == "below" and api.nvim_win_get_height(win) or api.nvim_win_get_width(win)
+        end,
+    })
+
+    return {
+        -- your nvim-dap-view config
+        windows = {
+            size = function()
+                return vim.g._dv_size or 0.4 -- a reasonable default
+            end,
+        },
+    }
 
 ==============================================================================
 RESTORING SESSIONS                               *dap-view-restoring-sessions*
