@@ -156,9 +156,9 @@ return {
             -- Choose which items to display and how
             format = function(name, lnum, path)
                 return {
-                    { part = name, separator = " " },
-                    { part = path, hl = "FileName", separator = ":" },
-                    { part = lnum, hl = "LineNumber" },
+                    { text = name, separator = " " },
+                    { text = path, hl = "FileName", separator = ":" },
+                    { text = lnum, hl = "LineNumber" },
                 }
             end,
             -- Align columns
@@ -169,9 +169,9 @@ return {
             -- Choose which items to display and how
             format = function(line, lnum, path)
                 return {
-                    { part = path, hl = "FileName" },
-                    { part = lnum, hl = "LineNumber" },
-                    { part = line, hl = true },
+                    { text = path, hl = "FileName" },
+                    { text = lnum, hl = "LineNumber" },
+                    { text = line, hl = true },
                 }
             end,
             -- Align columns
@@ -184,7 +184,7 @@ return {
         enabled = false,
         -- Supported options include "inline", "eol", and "eol_right_align"
         position = "inline",
-        format = function(variable, _, _)
+        format = function(variable)
             return " " .. variable.value
         end,
         -- Prepend the variable name (when using eol positioning)
