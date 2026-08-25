@@ -18,7 +18,7 @@ function M.validate(config)
 
     if
         type(config.auto_toggle) == "string"
-        and not vim.tbl_contains({ "keep_terminal", "open_term" }, config.auto_toggle)
+        and not vim.tbl_contains({ "keep_terminal", "open_term", "open" }, config.auto_toggle)
     then
         error("Unknown auto_toggle option: " .. config.auto_toggle)
     end

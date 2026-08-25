@@ -174,7 +174,7 @@ local M = {}
 ---@field icons dapview.IconsConfig Icons for each button
 ---@field virtual_text dapview.VirtualTextConfig
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
----@field auto_toggle boolean|"keep_terminal"|"open_term"
+---@field auto_toggle boolean|"keep_terminal"|"open_term"|"open"
 ---@field follow_tab boolean|fun(adapter?: string): boolean Reopen dapview when switching tabs
 
 ---@type dapview.ConfigStrict

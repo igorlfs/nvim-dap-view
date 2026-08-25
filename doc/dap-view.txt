@@ -291,6 +291,7 @@ You don't have to copy and paste these options. Use them as a reference.
         -- Alternatively, can be a string:
         -- - "keep_terminal": as above, but keeps the terminal when the session finishes
         -- - "open_term": open the terminal when starting a new session, nothing else
+        -- - "open": self explanatory
         auto_toggle = false,
         -- Reopen dapview when switching to a different tab
         -- Can also be a function to dynamically choose when to follow, by returning a boolean
