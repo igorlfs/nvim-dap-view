@@ -176,9 +176,11 @@ local M = {}
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"|"open_term"|"open"
 ---@field follow_tab boolean|fun(adapter?: string): boolean Reopen dapview when switching tabs
+---@field debug_mode boolean
 
 ---@type dapview.ConfigStrict
 M.config = {
+    debug_mode = false,
     winbar = {
         show = true,
         sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },

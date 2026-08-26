@@ -3,6 +3,7 @@ local M = {}
 ---@param config dapview.ConfigStrict
 function M.validate(config)
     require("dap-view.setup.validate.util").validate("config", {
+        debug_mode = { config.debug_mode, "boolean" },
         windows = { config.windows, "table" },
         winbar = { config.winbar, "table" },
         help = { config.help, "table" },
