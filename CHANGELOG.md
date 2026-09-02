@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.2.1...v1.3.0) (2026-08-25)
+
+
+### Features
+
+* `open` as auto_toggle option ([#205](https://github.com/igorlfs/nvim-dap-view/issues/205)) ([b9d8e6c](https://github.com/igorlfs/nvim-dap-view/commit/b9d8e6ce7e4c5d2b9bb35f57578948ff7e183b71))
+
+
+### Bug Fixes
+
+* allow manually resizing windows ([#203](https://github.com/igorlfs/nvim-dap-view/issues/203)) ([a89b819](https://github.com/igorlfs/nvim-dap-view/commit/a89b81930b726c573073738f8a61bfe7d99941af))
+* sometimes lua_ls is cringy with renames ([43a2ccf](https://github.com/igorlfs/nvim-dap-view/commit/43a2ccf5618ea26a9b11575ff18ded1cc82746bf))
+
 ## [1.2.1](https://github.com/igorlfs/nvim-dap-view/compare/v1.2.0...v1.2.1) (2026-07-31)
 
 
