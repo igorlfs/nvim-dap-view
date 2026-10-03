@@ -37,8 +37,7 @@ dap.listeners.on_session[SUBSCRIPTION_ID] = function(_, new)
             -- Handle autoscrolling when switching sessions
             -- Straightforward way of taking into account "console" not being set
             if util.is_buf_valid(new.term_buf) and scroll.is_autoscrolling(new.term_buf) then
-                local winnr = vim.tbl_contains(setup.config.winbar.sections, "console") and state.winnr
-                    or state.term_winnr
+                local winnr = vim.tbl_contains(config.winbar.sections, "console") and state.winnr or state.term_winnr
                 if util.is_win_valid(winnr) and state.current_section == "console" then
                     ---@cast winnr integer
                     scroll.scroll_to_bottom(winnr, new.term_buf)

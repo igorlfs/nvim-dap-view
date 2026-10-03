@@ -250,7 +250,7 @@ M.show = function()
             end
         end
 
-        if setup.config.render.breakpoints.align then
+        if config.render.breakpoints.align then
             require("dap-view.util.align").align(num_parts, lengths, 1, row_offsets)
         end
 

@@ -31,7 +31,7 @@ M.clear_virtual_text = function(session)
                 end
             end
         else
-            local buf = vim.uri_to_bufnr(vim.uri_from_fname(session.current_frame.source.path))
+            local buf = vim.uri_to_bufnr(vim.uri_from_fname(fname))
 
             api.nvim_buf_clear_namespace(buf, ns, 0, -1)
         end

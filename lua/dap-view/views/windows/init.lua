@@ -21,7 +21,7 @@ M.get_win_respecting_switchbuf = function(switchbufopt, bufnr)
 
     local opts = vim.split(switchbufopt, ",", { plain = true })
     for _, opt in pairs(opts) do
-        local winfn = switchbuf.switchbuf_winfn[opt]
+        local winfn = switchbuf_winfn[opt]
         if winfn then
             local win = winfn(bufnr, winnr)
             if win then

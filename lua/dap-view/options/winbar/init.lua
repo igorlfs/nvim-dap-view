@@ -79,7 +79,7 @@ M.wrapped_action = function(view, force_keymap)
         require("dap-view.views.util").set_keymaps(state.current_section)
     end
 
-    if setup.config.winbar.custom_sections[view] ~= nil then
+    if winbar.custom_sections[view] ~= nil then
         ---@cast view dapview.CustomSection
         custom_action_wrapper(view)
         action()

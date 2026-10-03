@@ -123,7 +123,7 @@ M.open_term_buf_win = function()
     end
 
     local windows_config = setup.config.windows
-    local term_config = setup.config.windows.terminal
+    local term_config = windows_config.terminal
 
     local hide = term_config.hide
     local hide_adapter = type(hide) == "table" and vim.tbl_contains(hide, state.current_adapter) or hide == true
