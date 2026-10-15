@@ -15,7 +15,17 @@ And [everyone else](https://github.com/igorlfs/nvim-dap-view/graphs/contributors
 
 ### Sponsors
 
-You can make your nickname show up here by making a small, one-time, [donation](https://github.com/sponsors/igorlfs)
+You get a shout-out when you make a [donation](https://github.com/sponsors/igorlfs)
+
+#### Recurring
+
+Maybe you? ;)
+
+#### Recurring (inactive)
+
+- [@Demorome](https://github.com/Demorome) - Demorome
+
+#### One-time
 
 - [@pscschn](https://github.com/pscschn) - Pascal Schneider
 - [@chkhetiani](https://github.com/chkhetiani) - Irakli Chkhetiaini
