@@ -1,5 +1,5 @@
 export const sidebar = {
-    'docs': [
+    '/': [
         {
             title: '',
             items: [

@@ -1,11 +1,13 @@
 {
-    "extends": "./.svelte-kit/tsconfig.json",
+    "extends": "$app/tsconfig",
+    "$schema": "https://json.schemastore.org/tsconfig.json",
     "compilerOptions": {
         "lib": [
             "ESNext"
         ],
-        "module": "ESNext",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "allowJs": true,
         "checkJs": true,

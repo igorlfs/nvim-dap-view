@@ -1,11 +1,21 @@
+import adapter from '@sveltejs/adapter-static'
 import { defaultTheme } from '@sveltepress/theme-default'
 import { sveltepress } from '@sveltepress/vite'
 import { defineConfig } from 'vite'
-import { sidebar } from './sidebar'
+import { sidebar } from './sidebar.ts'
 
 const config = defineConfig({
     plugins: [
         sveltepress({
+            svelteKitOptions: {
+                adapter: adapter({
+                    pages: 'dist',
+                }),
+                paths: {
+                    base: process.env.NODE_ENV === 'production' ? '/nvim-dap-view' : ''
+                }
+
+            },
             theme: defaultTheme({
                 logo: 'debug.svg',
                 navbar: [

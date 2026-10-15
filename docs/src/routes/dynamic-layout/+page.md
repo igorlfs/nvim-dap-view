@@ -86,7 +86,7 @@ return {
 
 ### Keep manual resizes
 
-`nvim-dap-view` always attempts to respect the predefined size. If you'd rather have if follow manual resizes, use the following:
+`nvim-dap-view` always attempts to respect the predefined size. If you'd rather have it follow manual resizes, use the following:
 
 ```lua
 local api = vim.api
@@ -118,4 +118,4 @@ return {
 }
 ```
 
-Tip: you can both these approaches. Check [this comment](https://github.com/igorlfs/nvim-dap-view/issues/203#issuecomment-5235248001)
+Tip: you can use both of these approaches. Check [this comment](https://github.com/igorlfs/nvim-dap-view/issues/203#issuecomment-5235248001)

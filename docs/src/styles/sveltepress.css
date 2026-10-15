@@ -1,44 +1,186 @@
-.theme-default--page-layout,
-.header {
-    color: var(--text-color) !important;
-    background-color: var(--primary-background-color);
+html {
+    color-scheme: dark;
 }
 
-.toc:visited {
+body,
+.theme-default--page-layout {
+    color: var(--text-color) !important;
+    background-color: var(--primary-background-color) !important;
+}
+
+.theme-default--page-layout h1,
+.theme-default--page-layout h2,
+.theme-default--page-layout h3,
+.theme-default--page-layout h4 {
+    color: var(--text-color) !important;
+}
+
+.header {
+    background-color: var(--primary-background-color) !important;
+    border-bottom-color: var(--tertiary-background-color) !important;
+}
+
+.nav-item {
+    color: var(--accent-color) !important;
+}
+
+.nav-item:hover {
     color: var(--primary-color) !important;
 }
 
-.title,
+.nav-item--icon::after,
+.navbar-pc .toggle::after {
+    background-color: var(--color-subtext) !important;
+}
+
+.logo .title {
+    color: var(--accent-color) !important;
+    font-weight: bold;
+}
+
+.theme-default-sidebar {
+    background-color: var(--tertiary-background-color) !important;
+    border-right-color: var(--tertiary-background-color) !important;
+}
+
+.sidebar-logo {
+    border-bottom-color: var(--color-subtext) !important;
+}
+
+.sidebar-group:not(:last-of-type) {
+    border-bottom-color: var(--color-subtext) !important;
+}
+
+a > code:hover {
+    color: var(--primary-color) !important;
+}
+
+code {
+    color: var(--accent-color) !important;
+}
+
+
 .group-title {
     color: var(--text-color) !important;
     font-weight: bold;
 }
 
-.nav-item .title {
+.links>.link {
+    font-size: 16px;
     color: var(--accent-color) !important;
+    font-weight: bold;
 }
 
-.nav-item .title:hover {
+.links>.link:not(.active):hover {
     color: var(--primary-color) !important;
-    cursor: pointer;
+    background-color: var(--secondary-background-color) !important;
 }
 
-.active-bar {
-    border-left-color: var(--primary-color) !important;
-}
-
-.svp-code-block-wrapper {
+.links>.link.active {
+    color: var(--primary-color) !important;
     background-color: var(--primary-background-color) !important;
 }
 
-.theme-default-sidebar {
-    background-color: var(--tertiary-background-color) !important;
+.collapse-control:hover {
+    background-color: var(--secondary-background-color) !important;
+}
+
+.dropdown,
+.navbar-mobile,
+.sub-nav {
+    background-color: var(--secondary-background-color) !important;
+}
+
+.toc {
+    color: var(--accent-color) !important;
+}
+
+.toc .title {
+    color: var(--text-color) !important;
+}
+
+.toc a {
+    color: var(--accent-color) !important;
+}
+
+.toc a.active,
+.toc .item:hover {
+    color: var(--primary-color) !important;
+}
+
+.circuit-line {
+    background-color: var(--color-subtext) !important;
+    opacity: 0.4;
+}
+
+.active-bar {
+    background-color: var(--primary-color) !important;
+}
+
+.svp-code-block-wrapper {
+    --svp-code-bg: var(--tertiary-background-color) !important;
+    border: none
+}
+
+.svp-code-block {
+    background-color: var(--primary-background-color) !important;
+}
+
+.svp-code-block--lang {
+    color: var(--color-subtext) !important;
+    background-color: transparent !important;
+    text-transform: none !important;
+}
+
+.theme-default--page-layout .content blockquote {
+    border-left-color: var(--color-subtext) !important;
+    font-style: normal;
+}
+
+.page-title,
+.theme-default--page-layout h2 {
+    border-top-color: var(--color-subtext) !important;
 }
 
 .progress {
     background-color: var(--primary-color) !important;
 }
 
+.switcher {
+    border-color: var(--tertiary-background-color) !important;
+}
+
 .switcher:hover {
     border-color: var(--accent-color) !important;
+}
+
+.highlight {
+    text-decoration: none !important;
+}
+
+.theme-default--page-layout .content table {
+    border-color: var(--tertiary-background-color) !important;
+}
+
+.theme-default--page-layout .content th,
+.theme-default--page-layout .content td {
+    border-color: var(--tertiary-background-color) !important;
+}
+
+.theme-default--page-layout .content th {
+    color: var(--text-color) !important;
+    background-color: var(--tertiary-background-color) !important;
+}
+
+.theme-default--page-layout .content tr,
+.theme-default--page-layout .content tbody tr:nth-child(odd) {
+    background-color: var(--primary-background-color) !important;
+}
+
+.theme-default--page-layout .content tbody tr:nth-child(even) {
+    background-color: var(--secondary-background-color) !important;
+}
+
+.theme-default--page-layout .content tbody tr:hover {
+    background-color: var(--surface-color) !important;
 }
