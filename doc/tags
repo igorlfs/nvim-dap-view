@@ -1,5 +1,6 @@
 dap-view-api	dap-view.txt	/*dap-view-api*
 dap-view-commands	dap-view.txt	/*dap-view-commands*
+dap-view-completion	dap-view.txt	/*dap-view-completion*
 dap-view-configuration	dap-view.txt	/*dap-view-configuration*
 dap-view-control-bar	dap-view.txt	/*dap-view-control-bar*
 dap-view-custom-formatting	dap-view.txt	/*dap-view-custom-formatting*

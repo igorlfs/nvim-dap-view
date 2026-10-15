@@ -1,5 +1,5 @@
 ---
-title: Filetypes & Autocmds
+title: Filetypes
 ---
 
 `nvim-dap-view` sets the following filetypes:

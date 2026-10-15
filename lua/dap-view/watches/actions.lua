@@ -117,7 +117,11 @@ M.set_value = function(line)
 
     local default = get_default()
 
-    vim.ui.input({ prompt = "New value: ", default = default }, function(input)
+    vim.ui.input({
+        prompt = "New value: ",
+        default = default,
+        completion = "customlist,v:lua.require('dap-view').complete",
+    }, function(input)
         if input then
             set_expr(input, line)
         end
@@ -148,7 +152,11 @@ M.edit_watch_expr = function(line)
     local expression_view = state.expression_views_by_line[line]
 
     if expression_view then
-        vim.ui.input({ prompt = "Expression: ", default = expression_view.expression }, function(input)
+        vim.ui.input({
+            prompt = "Expression: ",
+            default = expression_view.expression,
+            completion = "customlist,v:lua.require('dap-view').complete",
+        }, function(input)
             if input then
                 coroutine.wrap(function()
                     if edit_expr(input, line) then

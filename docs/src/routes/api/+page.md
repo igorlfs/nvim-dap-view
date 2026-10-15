@@ -80,6 +80,17 @@ In normal mode, opens the hover window with the variable under the cursor. In vi
 
 Use `opts` to further customize the hover. Particularly, using `opts.context` as "repl" might be useful for some adapters. See [#181](https://github.com/igorlfs/nvim-dap-view/issues/181).
 
+### Complete
+
+```lua
+---@param arg_lead string
+---@param cmdline string
+---@param cursor_pos number
+require("dap-view").complete(arg_lead, cmdline, cursor_pos)
+```
+
+Emits completion candidates for the given input (see `:help vim.ui.input`, `:help :command-completion`). Used internally by `nvim-dap-view`, but you can use it to hook up your own completions (e.g., for conditonal breakpoints). See [completion](completion).
+
 ## Virtual Text
 
 Fine grained control over displaying [virtual text](home#Virtual-text).

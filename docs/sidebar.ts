@@ -32,7 +32,7 @@ export const sidebar = {
                     to: '/faq',
                 },
                 {
-                    title: 'Filetypes & Autocmds',
+                    title: 'Filetypes',
                     to: '/filetypes-autocmds',
                 },
                 {
@@ -56,6 +56,10 @@ export const sidebar = {
                 {
                     title: "Advanced 'switchbuf'",
                     to: '/advanced-switchbuf'
+                },
+                {
+                    title: 'Advanced completion',
+                    to: '/completion',
                 },
                 {
                     title: 'Custom Formatting',

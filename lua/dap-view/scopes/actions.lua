@@ -18,7 +18,11 @@ M.set_value = function(line)
         local variable_name = state.variable_path_to_name[variable_path]
         local evaluate_name = state.variable_path_to_evaluate_name[variable_path]
 
-        vim.ui.input({ prompt = "New value: ", default = variable_value }, function(value)
+        vim.ui.input({
+            prompt = "New value: ",
+            default = variable_value,
+            completion = "customlist,v:lua.require('dap-view').complete",
+        }, function(value)
             if value then
                 require("dap-view.views.set").set_value(
                     parent_reference,

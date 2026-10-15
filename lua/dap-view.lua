@@ -72,4 +72,11 @@ M.navigate = function(opts)
     actions.navigate(opts)
 end
 
+---@param arg_lead string
+---@param cmdline string
+---@param cursor_pos number
+M.complete = function(arg_lead, cmdline, cursor_pos)
+    return require("dap-view.complete").input_completion(arg_lead, cmdline, cursor_pos)
+end
+
 return M
