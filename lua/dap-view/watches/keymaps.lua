@@ -4,7 +4,7 @@ local trigger = require("dap-view.util.trigger")
 local new_expression = function(append)
     vim.ui.input({
         prompt = "Expression: ",
-        completion = "customlist,v:lua.require('dap-view').complete",
+        completion = "customlist,v:lua.require'dap-view'.complete",
     }, function(input)
         if input then
             coroutine.wrap(function()

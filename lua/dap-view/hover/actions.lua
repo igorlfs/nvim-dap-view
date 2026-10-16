@@ -19,7 +19,7 @@ M.set_hover_expr = function(line)
         vim.ui.input({
             prompt = "New value: ",
             default = default,
-            completion = "customlist,v:lua.require('dap-view').complete",
+            completion = "customlist,v:lua.require'dap-view'.complete",
         }, function(input)
             if input then
                 set.set_expr(state.hover, input)
@@ -39,7 +39,7 @@ M.set_hover_expr = function(line)
             vim.ui.input({
                 prompt = "New value: ",
                 default = default,
-                completion = "customlist,v:lua.require('dap-view').complete",
+                completion = "customlist,v:lua.require'dap-view'.complete",
             }, function(input)
                 if input then
                     require("dap-view.views.set").set_value(parent_reference, name, input, evaluate_name, path)

@@ -21,7 +21,7 @@ M.set_value = function(line)
         vim.ui.input({
             prompt = "New value: ",
             default = variable_value,
-            completion = "customlist,v:lua.require('dap-view').complete",
+            completion = "customlist,v:lua.require'dap-view'.complete",
         }, function(value)
             if value then
                 require("dap-view.views.set").set_value(

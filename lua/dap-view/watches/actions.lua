@@ -120,7 +120,7 @@ M.set_value = function(line)
     vim.ui.input({
         prompt = "New value: ",
         default = default,
-        completion = "customlist,v:lua.require('dap-view').complete",
+        completion = "customlist,v:lua.require'dap-view'.complete",
     }, function(input)
         if input then
             set_expr(input, line)
@@ -155,7 +155,7 @@ M.edit_watch_expr = function(line)
         vim.ui.input({
             prompt = "Expression: ",
             default = expression_view.expression,
-            completion = "customlist,v:lua.require('dap-view').complete",
+            completion = "customlist,v:lua.require'dap-view'.complete",
         }, function(input)
             if input then
                 coroutine.wrap(function()

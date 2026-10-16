@@ -32,7 +32,7 @@ vim.keymap.set("n", "<F21>", function()
     vim.ui.input({
         prompt = "Breakpoint condition: ",
         -- Note that the function is not called directly
-        completion = "customlist,v:lua.require('dap-view').complete",
+        completion = "customlist,v:lua.require'dap-view'.complete",
         default = default and default.condition,
     }, function(input)
         if input then
@@ -52,7 +52,7 @@ vim.keymap.set("n", "<F8>", function()
 
     vim.ui.input({
         prompt = "Log point message: ",
-        completion = "customlist,v:lua.require('dap-view').complete",
+        completion = "customlist,v:lua.require'dap-view'.complete",
         default = default and default.logMessage,
     }, function(input)
         if input then

@@ -506,7 +506,7 @@ Conditional Breakpoints ~
         vim.ui.input({
             prompt = "Breakpoint condition: ",
             -- Note that the function is not called directly
-            completion = "customlist,v:lua.require('dap-view').complete",
+            completion = "customlist,v:lua.require'dap-view'.complete",
             default = default and default.condition,
         }, function(input)
             if input then
@@ -525,7 +525,7 @@ within `{}` are interpolated, elsewhere text is interpreted literally.
 
         vim.ui.input({
             prompt = "Log point message: ",
-            completion = "customlist,v:lua.require('dap-view').complete",
+            completion = "customlist,v:lua.require'dap-view'.complete",
             default = default and default.logMessage,
         }, function(input)
             if input then
