@@ -15,9 +15,22 @@ M.complete_sections = function(arg_lead)
         :totable()
 end
 
+---@param text string
+---@param arg_lead string
+---@return integer
+local function arg_lead_offset(text, arg_lead)
+    for i = #text, 0, -1 do
+        if (i == 0 or text:sub(i, i):match("%s")) and text:sub(i + 1, i + #arg_lead) == arg_lead then
+            return i
+        end
+    end
+    return 0
+end
+
+---@param arg_lead string
 ---@param cmdline string
 ---@param cursor_pos number
-M.input_completion = function(_, cmdline, cursor_pos)
+M.input_completion = function(arg_lead, cmdline, cursor_pos)
     local dap = require("dap")
     local session = dap.session()
     if not session or not session.capabilities.supportsCompletionsRequest then
@@ -43,9 +56,26 @@ M.input_completion = function(_, cmdline, cursor_pos)
             return (a.sortText or a.label) < (b.sortText or b.label)
         end)
 
+        local word_start = vim.fn.match(text, [[\k*$]])
+        local lead_start = arg_lead_offset(text, arg_lead or "")
+
         local result = {}
         for _, item in ipairs(items) do
-            result[#result + 1] = item.text or item.label
+            local new_text = item.text or item.label
+
+            local start, finish = word_start, #text
+            if item.start and (item.length or 0) > 0 then
+                start = item.start
+                finish = item.start + item.length
+            end
+
+            local full = text:sub(1, start) .. new_text .. text:sub(finish + 1)
+
+            if full:sub(1, lead_start) == text:sub(1, lead_start) then
+                full = full:sub(lead_start + 1)
+            end
+
+            result[#result + 1] = full
         end
         words = result
     end)
