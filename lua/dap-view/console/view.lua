@@ -260,6 +260,15 @@ M.switch_term_buf = function()
     if util.is_win_valid(winnr) and (is_console_active or not has_console) then
         ---@cast winnr integer
 
+        -- nvim-dap reuses term bufs and sizes them as half of 'lines', which can hide the output (#202)
+        -- If the buf is already in the window, setting it won't fit the terminal to the window,
+        -- but resizing the window does (`jobresize` doesn't, it only resizes the pty)
+        if api.nvim_win_get_buf(winnr) == term_bufnr then
+            local height = api.nvim_win_get_height(winnr)
+            api.nvim_win_set_height(winnr, height + (height > 1 and -1 or 1))
+            api.nvim_win_set_height(winnr, height)
+        end
+
         api.nvim_win_call(winnr, function()
             vim.wo[winnr][0].winfixbuf = false
             api.nvim_set_current_buf(term_bufnr)
