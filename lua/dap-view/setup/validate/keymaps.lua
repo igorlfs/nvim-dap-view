@@ -66,7 +66,9 @@ function M.validate(config)
 
     local exceptions = config.exceptions
     validate("keymaps.exceptions", {
-        toggle_fitler = { exceptions.toggle_filter, { "table", "string" } },
+        toggle_filter = { exceptions.toggle_filter, { "table", "string" } },
+        set_condition = { exceptions.set_condition, { "table", "string" } },
+        clear_condition = { exceptions.clear_condition, { "table", "string" } },
     }, exceptions)
 
     local sessions = config.sessions

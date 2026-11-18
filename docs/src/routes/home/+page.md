@@ -67,6 +67,8 @@ List all breakpoints with full syntax highlighting, including treesitter and sem
 
 Control when the debugger should stop, outside of regular breakpoints (e.g., whenever an exception is thrown)
 
+- Set conditions for exception breakpoints
+
 ### Scopes view
 
 <img src="https://i.ibb.co/3yvcM6tw/image.png" alt="scopes view" />

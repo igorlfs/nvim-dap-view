@@ -121,6 +121,8 @@ local M = {}
 
 ---@class dapview.ExceptionsKeymapsConfig
 ---@field toggle_filter dapview.Keymap
+---@field set_condition dapview.Keymap
+---@field clear_condition dapview.Keymap
 
 ---@class dapview.SessionsKeymapsConfig
 ---@field switch_session dapview.Keymap
@@ -259,6 +261,8 @@ M.config = {
         },
         exceptions = {
             toggle_filter = { "<CR>", "<2-LeftMouse>" },
+            set_condition = { "s" },
+            clear_condition = { "x" },
         },
         sessions = {
             switch_session = { "<CR>", "<2-LeftMouse>" },

@@ -107,6 +107,8 @@ return {
         },
         exceptions = {
             toggle_filter = { "<CR>", "<2-LeftMouse>" },
+            set_condition = { "s" },
+            clear_condition = { "x" },
         },
         sessions = {
             switch_session = { "<CR>", "<2-LeftMouse>" },

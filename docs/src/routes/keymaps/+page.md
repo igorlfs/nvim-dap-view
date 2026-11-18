@@ -35,6 +35,8 @@ Keymaps are configurable. Check the [config](configuration) page for details.
 |   `[[` | Jump to parent                               |
 | **Exceptions**                                        |
 | `<CR>` | Toggle filter                                |
+|    `s` | Set filter conditon                          |
+|    `x` | Clear filter conditon                        |
 | **Sessions**                                          |
 | `<CR>` | Switch to a session                          |
 | **Console**                                           |

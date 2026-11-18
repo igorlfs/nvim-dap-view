@@ -9,9 +9,12 @@ local ll = vim.log.levels
 M.complete_sections = function(arg_lead)
     local sections = setup.config.winbar.sections
     return vim.iter(sections)
-        :filter(function(section)
-            return section:find(arg_lead or "") == 1
-        end)
+        :filter(
+            ---@param section string
+            function(section)
+                return section:find(arg_lead or "") == 1
+            end
+        )
         :totable()
 end
 

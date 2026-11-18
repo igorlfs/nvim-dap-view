@@ -183,6 +183,9 @@ end
 
 dap.listeners.after.initialize[SUBSCRIPTION_ID] = function(session)
     local adapter = session.config.type
+    if state.exception_filter_options_by_adapter[state.current_adapter] == nil then
+        state.exception_filter_options_by_adapter[state.current_adapter] = {}
+    end
     if state.exceptions_options[adapter] == nil then
         state.exceptions_options[adapter] = vim.iter(session.capabilities.exceptionBreakpointFilters or {})
             :map(

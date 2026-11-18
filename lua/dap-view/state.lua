@@ -41,6 +41,7 @@
 ---@field last_section? dapview.Section
 ---@field last_session_buf? integer
 ---@field exceptions_options table<string,dapview.ExceptionsOption[]>
+---@field exception_filter_options_by_adapter table<string,table<string,dap.ExceptionFilterOptions>>
 ---@field stack_trace_errors string[]
 ---@field threads_error? string
 ---@field last_frames table<integer,dap.StackFrame>
@@ -80,6 +81,7 @@ local M = {
     threads_filter = "",
     threads_filter_invert = false,
     exceptions_options = {},
+    exception_filter_options_by_adapter = {},
     stack_trace_errors = {},
     last_frames = {},
     frames_by_line = {},

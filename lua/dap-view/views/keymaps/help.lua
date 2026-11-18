@@ -55,6 +55,8 @@ M.show_help = function()
    `[[`  Jump to parent
 ### Exceptions
  `<CR>`  Toggle filter
+    `s`  Set filter condition
+    `x`  Clear filter condition
 ### Sessions
  `<CR>`  Switch to another session
 ### Console

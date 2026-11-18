@@ -6,18 +6,45 @@ local traversal = require("dap-view.tree.traversal")
 local M = {}
 
 M.update_exception_breakpoints_filters = function()
+    ---@type dapview.ExceptionsOption[]
     local adapter_exception_options = state.exceptions_options[state.current_adapter] or {}
     if vim.tbl_isempty(adapter_exception_options) then
         return
     end
 
     local filters = vim.iter(adapter_exception_options)
-        :filter(function(x)
-            return x.enabled
-        end)
-        :map(function(x)
-            return x.exception_filter.filter
-        end)
+        :filter(
+            ---@param x dapview.ExceptionsOption
+            function(x)
+                return x.enabled
+            end
+        )
+        :map(
+            ---@param x dapview.ExceptionsOption
+            function(x)
+                return x.exception_filter.filter
+            end
+        )
+        :totable()
+
+    ---@type table<string,dap.ExceptionFilterOptions>
+    local exception_filter_options = state.exception_filter_options_by_adapter[state.current_adapter] or {}
+
+    ---@type dap.ExceptionFilterOptions[]
+    local filter_options = vim.iter(exception_filter_options)
+        :filter(
+            ---@param exception_filter_option dap.ExceptionFilterOptions
+            function(_, exception_filter_option)
+                return vim.tbl_contains(filters, exception_filter_option.filterId)
+            end
+        )
+        :map(
+            ---@param v dap.ExceptionFilterOptions
+            ---@return dap.ExceptionFilterOptions
+            function(_, v)
+                return v
+            end
+        )
         :totable()
 
     -- Apply exception breakpoints to all sessions, including children
@@ -29,7 +56,7 @@ M.update_exception_breakpoints_filters = function()
         if session.config.type == state.current_adapter and session.initialized then
             -- Dirty workaround for #148
             if not (vim.tbl_contains({ "delve", "go" }, state.current_adapter) and not session.stopped_thread_id) then
-                session:set_exception_breakpoints(filters)
+                session:request("setExceptionBreakpoints", { filters = filters, filterOptions = filter_options })
             end
         end
     end
