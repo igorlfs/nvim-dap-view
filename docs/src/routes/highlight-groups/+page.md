@@ -2,7 +2,7 @@
 title: Highlight Groups
 ---
 
-`nvim-dap-view` defines 34* highlight groups linked to (somewhat) reasonable defaults.
+`nvim-dap-view` defines 35* highlight groups linked to (somewhat) reasonable defaults.
 
 If the colors look odd with your colorscheme, consider submiting a PR to add support to `nvim-dap-view`!
 
@@ -42,6 +42,7 @@ If the links aren't defined at all, no highlighting will be applied. To fix that
 | `NvimDapViewThreadStopped`           | Conditional               |
 | `NvimDapViewThread`                  | Tag                       |
 | `NvimDapViewWatchError`              | DiagnosticError           |
+| `NvimDapViewWatchPending`            | DiagnosticHint            |
 | `NvimDapViewWatchExpr`               | Identifier                |
 | `NvimDapViewWatchUpdated`            | DiagnosticVirtualTextWarn |
 

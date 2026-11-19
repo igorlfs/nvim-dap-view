@@ -19,7 +19,7 @@ M.evaluate_expression = function(expression, default_expanded, id)
         and previous_expression_view.response
         and previous_expression_view.response.result
 
-    if previous_expression_view and response then
+    if previous_expression_view and response and not previous_expression_view.pending then
         previous_expression_view.updated = previous_result ~= response.result
     end
 
@@ -40,6 +40,7 @@ M.evaluate_expression = function(expression, default_expanded, id)
     }
 
     if previous_expression_view then
+        previous_expression_view.pending = false
         previous_expression_view.response = response
         previous_expression_view.err = err
     end

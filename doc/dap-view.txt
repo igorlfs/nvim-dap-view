@@ -631,6 +631,7 @@ Highlight Group                       Default Link
 `NvimDapViewThreadStopped`            Conditional
 `NvimDapViewThread`                   Tag
 `NvimDapViewWatchError`               DiagnosticError
+`NvimDapViewWatchPending`             DiagnosticHint
 `NvimDapViewWatchExpr`                Identifier
 `NvimDapViewWatchUpdated`             DiagnosticVirtualTextWarn
 

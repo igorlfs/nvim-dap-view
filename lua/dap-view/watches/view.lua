@@ -105,6 +105,8 @@ M.show = function()
             end
         )
 
+        local icons = setup.config.icons
+
         for _, expression_view in ipairs(expressions) do
             local expression, view = unpack(expression_view)
             local response = view.response
@@ -114,12 +116,11 @@ M.show = function()
 
             local prefix = ""
 
-            local icons = setup.config.icons
             if view.children ~= nil then
                 prefix = view.expanded and icons.expanded or icons.collapsed
             end
 
-            local content = prefix .. expression .. " = " .. result
+            local content = prefix .. expression .. (view.pending and " " .. icons.pending or " = " .. result)
 
             -- Can't have linebreaks with nvim_buf_set_lines
             local trimmed_content = content:gsub("\n+", " ")
@@ -130,10 +131,11 @@ M.show = function()
 
             local hl_group = err and "WatchError"
                 or view.updated and "WatchUpdated"
+                or view.pending and "WatchPending"
                 or response and hl.hl_from_variable(response)
 
             if hl_group then
-                local hl_start = #prefix + #expression + 3
+                local hl_start = #prefix + #expression + (view.pending and 1 or 3)
                 hl.hl_range(hl_group, { line, hl_start }, { line, -1 })
             end
 
@@ -141,7 +143,7 @@ M.show = function()
 
             state.expression_views_by_line[line] = { expression = expression, view = view }
 
-            if err == nil and view.children ~= nil and view.expanded and response ~= nil then
+            if err == nil and view.children ~= nil and view.expanded and response ~= nil and not view.pending then
                 line = show_variables(view.children, response.variablesReference, line, 1)
             end
         end

@@ -5,6 +5,7 @@ local validate = require("dap-view.setup.validate.util").validate
 ---@param config dapview.IconsConfig
 function M.validate(config)
     validate("icons", {
+        pending = { config.pending, "string" },
         collapsed = { config.collapsed, "string" },
         disabled = { config.disabled, "string" },
         disconnect = { config.disconnect, "string" },

@@ -17,6 +17,7 @@
 ---@field children? dapview.VariableView[]
 ---@field expanded boolean
 ---@field updated boolean
+---@field pending? boolean
 
 ---@class dapview.HoverView
 ---@field response? dap.EvaluateResponse

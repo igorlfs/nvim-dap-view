@@ -22,11 +22,24 @@ end
 ---@param default_expanded boolean
 ---@param append? boolean
 M.add_watch_expr = function(expr, default_expanded, append)
-    if #expr == 0 or not guard.expect_stopped() then
+    if #expr == 0 then
         return false
     end
 
-    eval.evaluate_expression(expr, default_expanded, (append and 1 or -1) * state.expr_count)
+    if guard.expect_stopped(true) then
+        eval.evaluate_expression(expr, default_expanded, (append and 1 or -1) * state.expr_count)
+    else
+        ---@type dapview.ExpressionView
+        local pending_expression_view = {
+            id = state.expr_count,
+            updated = false,
+            expanded = default_expanded,
+            children = nil,
+            pending = true,
+        }
+
+        state.watched_expressions[expr] = pending_expression_view
+    end
 
     state.expr_count = state.expr_count + 1
 

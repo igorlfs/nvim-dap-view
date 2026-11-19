@@ -33,6 +33,7 @@ local M = {}
 ---@alias dapview.DefaultIcons dapview.DefaultButton | "pause"
 
 ---@class dapview.IconsConfig
+---@field pending string
 ---@field collapsed string
 ---@field disabled string
 ---@field disconnect string
@@ -173,7 +174,7 @@ local M = {}
 ---@field hover dapview.HoverConfig
 ---@field render dapview.RenderConfig
 ---@field keymaps dapview.KeymapsConfig
----@field icons dapview.IconsConfig Icons for each button
+---@field icons dapview.IconsConfig
 ---@field virtual_text dapview.VirtualTextConfig
 ---@field switchbuf string|dapview.SwitchBufFun Control how to jump when selecting a breakpoint or a call in the stack
 ---@field auto_toggle boolean|"keep_terminal"|"open_term"|"open"
@@ -281,6 +282,7 @@ M.config = {
         },
     },
     icons = {
+        pending = "",
         collapsed = "󰅂 ",
         disabled = "",
         disconnect = "",
