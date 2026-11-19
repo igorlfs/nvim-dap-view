@@ -72,7 +72,12 @@ M.set_value = function(parent_reference, variable_name, value, evaluate_name, va
 
     if hasExpression and hasVariable then
         if evaluate_name then
-            M.set_expr(evaluate_name, value, variable_path)
+            -- See https://github.com/microsoft/vscode-js-debug/issues/2466
+            if adapter.is_js_adapter(session.config.type) and vim.startswith(evaluate_name, "Return value") then
+                set_var(variable_name, value, parent_reference)
+            else
+                M.set_expr(evaluate_name, value, variable_path)
+            end
         else
             set_var(variable_name, value, parent_reference)
         end
