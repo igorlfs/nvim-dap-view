@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.3.0...v1.4.0) (2026-11-19)
+
+
+### Features
+
+* conditional exception breakpoints ([1b33ce8](https://github.com/igorlfs/nvim-dap-view/commit/1b33ce898479c7b0e32c95f16d392c98a5b37e68))
+* **watches:** allow adding expressions when not stopped ([#210](https://github.com/igorlfs/nvim-dap-view/issues/210)) ([1c3b9cc](https://github.com/igorlfs/nvim-dap-view/commit/1c3b9cc295303fc173f24d442739a8557e23e987))
+
+
+### Bug Fixes
+
+* handle `setExpression` discrepancy from vscode-js-debug ([1133aab](https://github.com/igorlfs/nvim-dap-view/commit/1133aab106ac9454165dd5411475f15f167c7858))
+
 ## [1.3.0](https://github.com/igorlfs/nvim-dap-view/compare/v1.2.1...v1.3.0) (2026-11-05)
 
 
